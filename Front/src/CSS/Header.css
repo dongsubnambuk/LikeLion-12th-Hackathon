@@ -1,0 +1,43 @@
+.header {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 50%;
+    height: 10%; /* 고정된 높이로 변경 */
+    background-color: antiquewhite;
+}
+
+@media (max-width: 450px){
+    /* 최대 가로 크기가 1000px 이하일 때 */
+    .header {
+        width: 100%;
+    }
+}
+
+.contents {
+    display: flex;
+    width: 90%;
+    max-width: 1100px;
+    height: 100%;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navigation {
+    width: auto;
+}
+
+.navigation ul {
+    display: flex;
+    list-style: none;
+}
+
+.navigation li + li {
+    margin-left: 30px;
+}
+
+.logoImage {
+    width: 25%;
+    margin: 0;
+}

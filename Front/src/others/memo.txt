@@ -1,0 +1,12 @@
+<FontAwesomeIcon> 아이콘은 여기서 사용
+
+- npm i @fortawesome/fontawesome-svg-core
+- npm i @fortawesome/free-solid-svg-icons @fortawesome/free-regular-svg-icons @fortawesome/free-brands-svg-icons
+- npm i @fortawesome/react-fontawesome
+다운로드 후 
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+임포트하기
+
+
+백엔드가 수정해야 할 코드는 주석으로 'backEnd : '붙이기
