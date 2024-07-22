@@ -1,8 +1,15 @@
-import './App.css';
-import MainPage from './pages/MainPage';
+import React from 'react';
+import'./App.css';
+import BottomNav from './components/BottomNav';
+import Header from'./components/Header';
 
-function App() {
-  return <MainPage/>;
-}
+const App = () => (
+  <div className="mobile-container">
+  
+  <Header/>
+  <BottomNav/>
+
+</div>
+);
 
 export default App;
