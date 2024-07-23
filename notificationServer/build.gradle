@@ -34,6 +34,12 @@ dependencies {
     //mySQL
     implementation 'mysql:mysql-connector-java:8.0.33'
 
+    //scheduler
+    implementation 'org.springframework.boot:spring-boot-starter-scheduling'
+
+    //WebSocket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 }
 

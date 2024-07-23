@@ -2,6 +2,7 @@ package Service;
 
 import DAO.FoodMenuDAO;
 import DTO.FoodMenuDTO;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -43,6 +44,12 @@ public class FoodMenuServiceImpl implements FoodMenuService {
         foodMenuDAO.delete(id);
     }
 
+    //자동 저장
+    @Scheduled(cron = "0 0 7")
+    public void fetchAndSendFoodMenuNotification(){
+        String url = "http://diet/user/diets"; //예시임
+        FoodMenuDTO foodMenuDTO = restTemplate.getForObject(url, FoodMenuDTO.class);
+    }
     //알림 보내기
     public void sendFoodMenuNotifications() {
         // 식단 알림 보내기 구현해야됨
