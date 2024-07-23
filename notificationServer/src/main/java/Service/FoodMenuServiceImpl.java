@@ -45,7 +45,7 @@ public class FoodMenuServiceImpl implements FoodMenuService {
     }
 
     //자동 저장
-    @Scheduled(cron = "0 0 7")
+    @Scheduled(cron = "0 0 7")// 이게 7시 발송이라던데
     public void fetchAndSendFoodMenuNotification(){
         String url = "http://diet/user/diets"; //예시임
         FoodMenuDTO foodMenuDTO = restTemplate.getForObject(url, FoodMenuDTO.class);
