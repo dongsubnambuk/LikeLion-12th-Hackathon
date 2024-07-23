@@ -9,6 +9,7 @@
 
 
 .contents {
+ 
     display: flex;
     /* padding-left: 10px; */
     max-width: 390px;
@@ -33,7 +34,7 @@
 }
 
 .logoImage {
-    width: 23%;
+    width: 15%;
     margin-left: 30px;
 }
 

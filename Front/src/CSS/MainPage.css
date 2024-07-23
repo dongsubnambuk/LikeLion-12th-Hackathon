@@ -1,0 +1,57 @@
+.swiper-container {
+  position: relative;
+
+}
+.swiper-button-next, .swiper-button-prev{
+  display: none;
+}
+
+.swiper-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px; /* 선의 두께 */
+  background-color: #ccc; /* 선의 색상 */
+  z-index: 1; /* 선이 Swiper 콘텐츠 아래에 표시되도록 함 */
+}
+
+.slide-content {
+  /* max-width: 390px; */
+  display: flex;
+  justify-content: center; /* 수평 중앙 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
+
+}
+
+
+.swiper-container h4 {
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+.user-food-detail {
+  max-width: 100%; /* 전체 너비로 조정 */
+  margin: 0 auto; /* 중앙 정렬 */
+  overflow: hidden; /* 넘치는 부분 숨기기 */
+  padding-bottom: 50px;
+}
+
+.food-slide {
+  height: calc(100vh - 50% ); 
+  overflow-y: visible; /* 세로 스크롤 활성화 */
+
+}
+
+.slide-content1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 30px;
+}
+
+.swiper-slide {
+  margin-right: 8px; /* 슬라이드 간의 간격 조정 */
+  padding-bottom: 30px;
+}
