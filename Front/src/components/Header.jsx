@@ -9,13 +9,13 @@ const Header = () => {
     return (
         <header className="header">
             <div className="contents">
-                <div>
+                <div className="user-name">
                     {/* back : 고객 이름 */}
-                    OOO님!
+                    OOO님
                 </div>
-                <div>
-                    <img src={logo} className="logoImage"/>
-                </div>
+               
+                    <img src={logo} className="logoImage" alt="logo"/>
+              
                 <nav className="navigation">
                     <ul>
                         <li>
