@@ -3,6 +3,7 @@ package Service;
 import DAO.FoodMenuDAO;
 import DTO.FoodMenuDTO;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -10,9 +11,11 @@ import java.util.List;
 public class FoodMenuServiceImpl implements FoodMenuService {
 
     private final FoodMenuDAO foodMenuDAO;
+    private final RestTemplate restTemplate;
 
-    public FoodMenuServiceImpl(FoodMenuDAO foodMenuDAO) {
+    public FoodMenuServiceImpl(FoodMenuDAO foodMenuDAO, RestTemplate restTemplate) {
         this.foodMenuDAO = foodMenuDAO;
+        this.restTemplate = restTemplate;
     }
 
     @Override
@@ -38,5 +41,10 @@ public class FoodMenuServiceImpl implements FoodMenuService {
     @Override
     public void deleteFoodMenu(Long id) {
         foodMenuDAO.delete(id);
+    }
+
+    //알림 보내기
+    public void sendFoodMenuNotifications() {
+        // 식단 알림 보내기 구현해야됨
     }
 }
