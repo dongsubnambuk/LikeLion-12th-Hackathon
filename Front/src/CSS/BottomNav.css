@@ -11,6 +11,10 @@
     display: flex;
     flex-direction: column;
   }
+
+  .buttom-text {
+    font-size: 13px;
+  }
   
   .wrapper {
     display: flex;

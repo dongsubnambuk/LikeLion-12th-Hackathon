@@ -1,22 +1,24 @@
 import React from "react";
 import '../CSS/Header.css';
 import logo from '../images/logo.png'
-
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faFileLines } from '@fortawesome/free-regular-svg-icons'
 
 const Header = () => {
     return (
-        <header className="header">
+        <header>
             <div className="contents">
-                <div className="user-name">
+                <div className="header_contents">
                     {/* back : 고객 이름 */}
                     OOO님
                 </div>
-               
-                    <img src={logo} className="logoImage" alt="logo"/>
-              
-                <nav className="navigation">
+
+                <div className="header_contents">
+                    <img src={logo} className="logoImage" alt="logo" />
+                </div>
+
+                <div className="header_contents">
                     <ul>
                         <li>
                             <FontAwesomeIcon icon={faBell} size="2x" />
@@ -25,7 +27,7 @@ const Header = () => {
                             <FontAwesomeIcon icon={faFileLines} size="2x" />
                         </li>
                     </ul>
-                </nav>
+                </div>
             </div>
         </header>
     );
