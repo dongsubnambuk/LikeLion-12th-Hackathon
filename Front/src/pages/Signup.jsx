@@ -17,6 +17,7 @@ function Signup(){
     const [roadAddress, setRoadAddress] = useState("");
     const [detailAddress, setDetailAddress] = useState("");    // 추가
     const [isOpen, setIsOpen] = useState(false); // 추가
+    const [error, setError] = useState("");
 
     const completeHandler = (data) => {
         setZipcode(data.zonecode);
@@ -68,7 +69,13 @@ function Signup(){
     const handleBack = () => {
         navigate(-1); //뒤로가기
       };
-
+      const validatePasswords = (password, confirmPassword) => {
+        if (password !== confirmPassword) {
+            setError("비밀번호가 일치하지 않습니다.");
+        } else {
+            setError("");
+        }
+    };
 
     return(
         <>
@@ -98,7 +105,10 @@ function Signup(){
                     value={password}
                     className="signup-password"
                     placeholder="비밀번호를 입력해주세요"
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => {
+                        setPassword(e.target.value);
+                        validatePasswords(e.target.value, confirmPassword);
+                    }}
                 />
             </div>
 
@@ -109,8 +119,12 @@ function Signup(){
                     id="confirm-password"
                     value={confirmPassword}
                     placeholder="비밀번호를 다시 입력해 주세요"
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    onChange={(e) => {
+                        setConfirmPassword(e.target.value);
+                        validatePasswords(password, e.target.value);
+                    }}
                 />
+                    {error && <div className="error-message">{error}</div>} {/* 에러 메시지 표시 */}
             </div>
 
             <div className="form-group">
@@ -122,6 +136,7 @@ function Signup(){
                     placeholder="이름을 입력해주세요."
                     onChange={(e) => setUserName(e.target.value)}
                 />
+             
             </div>
 
             <div className="form-group">
