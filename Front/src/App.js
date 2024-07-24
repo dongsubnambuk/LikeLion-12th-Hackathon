@@ -1,15 +1,17 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import'./App.css';
-import BottomNav from './components/BottomNav';
-import Header from'./components/Header';
 import MainPage from './pages/MainPage';
+import Login from './pages/Login';
 
 const App = () => (
   <div className="mobile-container">
-  
-  <Header/>
-  <BottomNav/>
-  <MainPage/>
+        <Router>
+            <Routes>
+                <Route path="/" element={<MainPage/>} />
+                <Route path="/login" element={<Login/>} />
+            </Routes>
+        </Router>
 
 </div>
 );
