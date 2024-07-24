@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import'./App.css';
 import MainPage from './pages/MainPage';
 import Login from './pages/Login';
+import Signup from './pages/Signup';
 
 const App = () => (
   <div className="mobile-container">
@@ -10,6 +11,7 @@ const App = () => (
             <Routes>
                 <Route path="/" element={<MainPage/>} />
                 <Route path="/login" element={<Login/>} />
+                <Route path="/signup" element={<Signup/>} />
             </Routes>
         </Router>
 
