@@ -7,8 +7,15 @@ import { faBowlFood } from "@fortawesome/free-solid-svg-icons";
 import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from 'react-router-dom';
 
 const BottomNav = () => {
+  const navigate = useNavigate();
+
+  const handleNavigationMainPage = () => {
+    navigate('/');
+};
+
   return (
     <nav className="wrapper">
       {/* 하단 네비게이션 최상위 태그 */}
@@ -21,10 +28,10 @@ const BottomNav = () => {
       <FontAwesomeIcon icon={faCartPlus} />
       주문하기
       </div>
-      <div className="button-naming">
-      <FontAwesomeIcon icon={faHouse} />
-      홈
-      </div>
+      <div className="button-naming" onClick={handleNavigationMainPage}>
+                <FontAwesomeIcon icon={faHouse} />
+                홈
+            </div>
       <div className="button-naming">
       <FontAwesomeIcon icon={faBowlFood} />
       내 식단
