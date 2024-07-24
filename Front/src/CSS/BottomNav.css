@@ -1,17 +1,16 @@
-  
-  nav > div {
+  nav>div {
     text-align: center;
     float: left;
     width: 20%;
     height: 45px;
     line-height: 45px;
   }
-  
+
   .button-naming {
     display: flex;
     flex-direction: column;
   }
-  
+
   .wrapper {
     cursor: pointer;
     display: flex;
@@ -30,5 +29,3 @@
     margin-right: auto;
     z-index: 9999;
   }
-  
- 

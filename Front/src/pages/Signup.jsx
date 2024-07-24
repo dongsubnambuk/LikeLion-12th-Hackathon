@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft} from '@fortawesome/free-solid-svg-icons';
 import '../CSS/Signup.css';
+import Header from '../components/Header';
 import BottomNav from '../components/BottomNav';
 import Modal from "react-modal"; // 추가
 import DaumPostcode from "react-daum-postcode";
@@ -79,10 +78,7 @@ function Signup(){
 
     return(
         <>
-            <div className="signup-topbar">
-                <FontAwesomeIcon icon={faArrowLeft} onClick={handleBack} className="back-btn"/>
-                <h2>회원가입</h2>
-            </div>
+            <Header/>
 
             <div className="signup-inner">
             <div className="form-group">

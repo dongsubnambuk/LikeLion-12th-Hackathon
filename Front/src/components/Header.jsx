@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import '../CSS/Header.css';
 import logo from '../images/logo.png';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faFileLines } from '@fortawesome/free-regular-svg-icons';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userName, setUserName] = useState('서동섭');
-    const navigate = useNavigate(); // useNavigate 훅을 사용하여 페이지 이동
+    const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
-        // 여기에 로그인 상태와 사용자 이름을 가져오는 로직을 추가하세요.
-        // 예를 들어, 로컬 스토리지나 API 요청을 통해 상태를 확인할 수 있습니다.
         const user = JSON.parse(localStorage.getItem('user'));
         if (user) {
             setIsLoggedIn(true);
@@ -21,28 +21,57 @@ const Header = () => {
     }, []);
 
     const handleLoginClick = () => {
-        // 로그인 페이지로 이동합니다.
         navigate('/login');
     };
 
+    const handleBackClick = () => {
+        navigate(-1);
+    };
+
+    const getPageTitle = () => {
+        switch (location.pathname) {
+            // 페이지 타이틀 추가
+            case '/login':
+                return '로그인';
+            case '/signup':
+                return '회원가입'; // Add more cases as needed
+            default:
+                return 'Main Page';
+        }
+    };
+
+    const isMainPage = location.pathname === '/';
+
     return (
-        <header className="header">
+        <header>
             <div className="contents">
-                <div className="user-name">
-                    {/* 사용자가 로그인되어 있으면 이름을 표시하고, 아니면 "로그인"을 표시합니다 */}
-                    {isLoggedIn ? `${userName} 님` : <span onClick={handleLoginClick} className="Login-btn">로그인</span>}
-                </div>
-                <img src={logo} className="logoImage" alt="logo"/>
-                <nav className="navigation">
-                    <ul>
-                        <li>
-                            <FontAwesomeIcon icon={faBell} size="2x" />
-                        </li>
-                        <li>
-                            <FontAwesomeIcon icon={faFileLines} size="2x" />
-                        </li>
-                    </ul>
-                </nav>
+                {/* 메인 페이지가 아니면 뒤로가기 버튼과 타이틀 보임 */}
+                {!isMainPage && (
+                    <div className="otherPageHeader">
+                        <FontAwesomeIcon icon={faArrowLeft} size="2x" onClick={handleBackClick} className="faArrowLeft" />
+                        <span className="pageTitle" style={{fontSize: 20, fontWeight: 600}}>{getPageTitle()}</span>
+                    </div>
+                )}
+                {isMainPage && (
+                    <>
+                        <div className="header_contents">
+                            {isLoggedIn ? `${userName} 님` : <span onClick={handleLoginClick} className="Login-btn">로그인</span>}
+                        </div>
+                        <div className="header_contents">
+                            <img src={logo} className="logoImage" alt="logo" />
+                        </div>
+                        <div className="header_contents">
+                            <ul>
+                                <li>
+                                    <FontAwesomeIcon icon={faBell} size="2x" />
+                                </li>
+                                <li>
+                                    <FontAwesomeIcon icon={faFileLines} size="2x" />
+                                </li>
+                            </ul>
+                        </div>
+                    </>
+                )}
             </div>
         </header>
     );

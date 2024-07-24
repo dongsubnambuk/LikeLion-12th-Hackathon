@@ -1,19 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft} from '@fortawesome/free-solid-svg-icons';
 import '../CSS/Login.css';
 import logo from '../images/logo.png';
+import Header from '../components/Header';
 import BottomNav from '../components/BottomNav';
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-
-
-    const handleBack = () => {
-        navigate(-1); //뒤로가기
-      };
 
     const handleSignupClick = () => {
         navigate('/signup'); // 회원가입 페이지로 이동
@@ -30,10 +24,7 @@ function Login() {
 
     return(
         <>
-        <div className="login-topbar">
-        <FontAwesomeIcon icon={faArrowLeft} onClick={handleBack} className="back-btn"/>
-        <h2>로그인</h2>
-        </div>
+        <Header/>
 
         <div className="login-inner">
         <img src={logo} className="logoImage-login" alt="logo"/>
@@ -56,17 +47,9 @@ function Login() {
             </p>
         </div>
 
-
-
-
-
-
-
-
-
         <BottomNav/>
-        </>
 
+        </>
     );
 }
 
