@@ -26,7 +26,7 @@ const Header = () => {
     };
 
     return (
-        <header className="header">
+        <header>
             <div className="contents">
                 <div className="header_contents">
                     {/* 사용자가 로그인되어 있으면 이름을 표시하고, 아니면 "로그인"을 표시합니다 */}
