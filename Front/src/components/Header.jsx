@@ -28,12 +28,14 @@ const Header = () => {
     return (
         <header className="header">
             <div className="contents">
-                <div className="user-name">
+                <div className="header_contents">
                     {/* 사용자가 로그인되어 있으면 이름을 표시하고, 아니면 "로그인"을 표시합니다 */}
                     {isLoggedIn ? `${userName} 님` : <span onClick={handleLoginClick} className="Login-btn">로그인</span>}
                 </div>
-                <img src={logo} className="logoImage" alt="logo"/>
-                <nav className="navigation">
+                <div className="header_contents">
+                    <img src={logo} className="logoImage" alt="logo" />
+                </div>
+                <div className="header_contents">
                     <ul>
                         <li>
                             <FontAwesomeIcon icon={faBell} size="2x" />
@@ -42,7 +44,7 @@ const Header = () => {
                             <FontAwesomeIcon icon={faFileLines} size="2x" />
                         </li>
                     </ul>
-                </nav>
+                </div>
             </div>
         </header>
     );
