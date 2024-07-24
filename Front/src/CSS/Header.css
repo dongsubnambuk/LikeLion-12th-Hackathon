@@ -27,6 +27,7 @@
 .navigation ul {
     display: flex;
     list-style: none;
+    cursor: pointer;
 }
 
 .navigation li + li {
@@ -36,8 +37,13 @@
 .logoImage {
     width: 15%;
     margin-left: 30px;
+    cursor: pointer;
 }
 
 .user-name{
     width: 20%;
+}
+
+.Login-btn{
+    cursor: pointer;
 }

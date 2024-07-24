@@ -7,10 +7,13 @@ import '../CSS/MainPage.css';
 import '../components/Meals';
 import { Navigation, Pagination ,Autoplay} from 'swiper/modules'; // 모듈을 swiper/modules에서 가져오기
 import Meals from '../components/Meals';
+import Header from '../components/Header';
+import BottomNav from '../components/BottomNav';
 
 function MainPage() {
   return (
     <>
+      <Header/>
     <div className="swiper-container">
     <Swiper
       spaceBetween={50}
@@ -43,6 +46,7 @@ function MainPage() {
           <SwiperSlide className='slide-content1'><Meals /></SwiperSlide>
         </Swiper>
   </div>
+  <BottomNav/>
   </>
  
   );
