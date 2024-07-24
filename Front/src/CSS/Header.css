@@ -1,10 +1,11 @@
 .contents {
     display: flex;
     max-width: 390px;
-    height: 100%;
+    height: 60px;
     margin: 0 auto;
     align-items: center;
     justify-content: space-around;
+    border-bottom: 1px solid #000;
 }
 
 .header_contents {
@@ -18,7 +19,7 @@
     list-style: none;
 }
 
-.header_contents li+li {
+.header_contents li + li {
     margin-left: 30px;
 }
 
@@ -27,6 +28,26 @@
     cursor: pointer;
 }
 
-.Login-btn{
+.Login-btn {
     cursor: pointer;
+}
+
+.otherPageHeader {
+    width: 100%;
+    height: 60px;
+    padding: 0 5%;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.otherPageHeader .faArrowLeft {
+    position: absolute;
+    left: 5%;
+}
+
+.pageTitle {
+    margin: 0 auto;
+    text-align: center;
+    flex-grow: 1;
 }
