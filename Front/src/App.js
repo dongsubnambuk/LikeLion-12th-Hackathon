@@ -4,6 +4,7 @@ import'./App.css';
 import MainPage from './pages/MainPage';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import AllDiet from './pages/AllDietPage';
 
 const App = () => (
   <div className="mobile-container">
@@ -12,6 +13,7 @@ const App = () => (
                 <Route path="/" element={<MainPage/>} />
                 <Route path="/login" element={<Login/>} />
                 <Route path="/signup" element={<Signup/>} />
+                <Route path="/alldiet" element={<AllDiet />} />
             </Routes>
         </Router>
 

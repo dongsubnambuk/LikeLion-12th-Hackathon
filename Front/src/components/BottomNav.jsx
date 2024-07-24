@@ -16,11 +16,15 @@ const BottomNav = () => {
     navigate('/');
   };
 
+  const handleNavigationAllDietPage = () => {
+    navigate('/alldiet');
+  };
+
   return (
     <nav className="wrapper">
       {/* 하단 네비게이션 최상위 태그 */}
       <div className="button-naming">
-        <FontAwesomeIcon icon={faBars} />
+        <FontAwesomeIcon icon={faBars} onClick={handleNavigationAllDietPage} />
         전체식단
       </div>
 

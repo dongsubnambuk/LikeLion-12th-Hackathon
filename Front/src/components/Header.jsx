@@ -34,7 +34,9 @@ const Header = () => {
             case '/login':
                 return '로그인';
             case '/signup':
-                return '회원가입'; // Add more cases as needed
+                return '회원가입';
+            case '/alldiet':
+                return '모든 식단 목록';
             default:
                 return 'Main Page';
         }
