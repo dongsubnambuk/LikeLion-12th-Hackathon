@@ -1,11 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import'./App.css';
-import MainPage from './pages/MainPage';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import AllDiet from './pages/AllDietPage';
 import DietInfo from "./pages/DietInfoPage";
+import MainPage from './pages/MainPage';
+import MyPage from './pages/MyPage';
 
 const App = () => (
   <div className="mobile-container">
@@ -16,6 +17,7 @@ const App = () => (
                 <Route path="/signup" element={<Signup/>} />
                 <Route path="/alldiet" element={<AllDiet />} />
                 <Route path="/dietinfo" element={<DietInfo />} />
+                <Route path="/mypage" element={<MyPage />} />
             </Routes>
         </Router>
 

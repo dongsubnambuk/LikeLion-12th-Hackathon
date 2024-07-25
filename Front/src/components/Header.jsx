@@ -39,6 +39,8 @@ const Header = () => {
                 return '모든 식단 목록';
             case '/dietinfo':
                 return '식단 상세 정보';
+                case '/mypage':
+                    return '내정보';
             default:
                 return 'Main Page';
         }

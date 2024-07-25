@@ -20,6 +20,10 @@ const BottomNav = () => {
     navigate('/alldiet');
   };
 
+  const handleNavigationMyPage = () => {
+    navigate('/mypage');
+  };
+
   return (
     <nav className="wrapper">
       {/* 하단 네비게이션 최상위 태그 */}
@@ -40,7 +44,7 @@ const BottomNav = () => {
         <FontAwesomeIcon icon={faBowlFood} />
         내 식단
       </div>
-      <div className="button-naming">
+      <div className="button-naming" onClick={handleNavigationMyPage}>
         <FontAwesomeIcon icon={faUser} />
         내 정보
       </div>
