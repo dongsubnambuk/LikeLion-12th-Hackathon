@@ -56,7 +56,7 @@ const Header = () => {
                 {/* 메인 페이지가 아니면 뒤로가기 버튼과 타이틀 보임 */}
                 {!isMainPage && (
                     <div className="otherPageHeader">
-                        <FontAwesomeIcon icon={faArrowLeft} size="2x" onClick={handleBackClick} className="faArrowLeft" style={{cursor: 'pointer'}}/>
+                        <FontAwesomeIcon icon={faArrowLeft}  onClick={handleBackClick} className="faArrowLeft" style={{cursor: 'pointer'}}/>
                         <span className="pageTitle" style={{fontSize: 20, fontWeight: 600}}>{getPageTitle()}</span>
                     </div>
                 )}

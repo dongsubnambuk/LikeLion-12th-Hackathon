@@ -79,7 +79,6 @@ function Signup(){
     return(
         <>
             <Header/>
-
             <div className="signup-inner">
             <div className="form-group">
                 <label htmlFor="email">아이디</label>

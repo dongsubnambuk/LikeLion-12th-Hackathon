@@ -9,6 +9,10 @@ import { Navigation, Pagination ,Autoplay} from 'swiper/modules'; // 모듈을 s
 import Meals from '../components/Meals';
 import Header from '../components/Header';
 import BottomNav from '../components/BottomNav';
+import logo from '../images/logo.png';
+import cat from '../images/cat.png';
+import cat2 from '../images/cat2.png';
+import food from '../images/food.png';
 
 function MainPage() {
   return (
@@ -24,10 +28,10 @@ function MainPage() {
       modules={[Navigation, Pagination, Autoplay]} // Swiper에서 사용할 모듈을 추가
       style={{ height: '25vh' }} // 원하는 높이를 설정
     >
-      <SwiperSlide className="slide-content">Slide 1</SwiperSlide>
-      <SwiperSlide className="slide-content">Slide 2</SwiperSlide>
-      <SwiperSlide className="slide-content">Slide 3</SwiperSlide>
-      <SwiperSlide className="slide-content">Slide 4</SwiperSlide>
+      <SwiperSlide className="slide-content">  <img src={logo} className="logoImage" alt="logo" /></SwiperSlide>
+      <SwiperSlide className="slide-content"> <img src={cat} className="cat" alt="cat" /> </SwiperSlide>
+      <SwiperSlide className="slide-content"><img src={cat} className="cat" alt="cat" /> </SwiperSlide>
+      <SwiperSlide className="slide-content"><img src={food} className="cat" alt="food" /> </SwiperSlide>
     </Swiper>
      
   </div>

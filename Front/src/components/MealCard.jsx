@@ -1,12 +1,13 @@
 import React from 'react';
 import '../CSS/MealCard.css';
+import logo from '../images/logo.png'; //임시로 로고 임포트
 
 const MealCard = ({ mealType, title, description, imageSrc, carbs, protein, fat }) => {
   return (
     <div className="meal-card">
       <div className="meal-card-body">
         <div className="meal-card-image-container">
-          <img src={imageSrc} alt={title} className="meal-card-image" />
+          <img src={logo} alt={title} className="meal-card-image" />
         </div>
         <div className="meal-card-content">
           <h3>{title}</h3>
