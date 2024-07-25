@@ -37,6 +37,8 @@ const Header = () => {
                 return '회원가입';
             case '/alldiet':
                 return '모든 식단 목록';
+            case '/dietinfo':
+                return '식단 상세 정보';
             default:
                 return 'Main Page';
         }
