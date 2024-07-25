@@ -24,15 +24,15 @@ function DietInfoPage() {
                         <div className="DIPtitle">{item.title}</div>
                     </div>
                     <div className="DIPmenu">
-                        <span style={{fontWeight: 600}}>&lt; 메뉴 소개 &gt;</span>
-                        <br /><br /><br />
+                        <span style={{ fontWeight: 600 }}>&lt; 메뉴 소개 &gt;</span>
+                        <br /><br />
                         {item.menu}
                     </div>
                     <div className="DIPnutrient">
                         <span style={{ fontWeight: 600 }}>&lt; 영양성분 &gt;</span>
-                        <br /><br /><br />{item.nutrient}
+                        <br /><br />{item.nutrient}
                     </div>
-                    <br /><br /><br />
+                    <br /><br />
                     <span style={{ fontWeight: 600 }}>{item.kcal}</span>
                     <div className="DIPprice">
                         <span style={{ fontSize: 18,fontWeight: 600 }}>가격 : {item.price}</span>
