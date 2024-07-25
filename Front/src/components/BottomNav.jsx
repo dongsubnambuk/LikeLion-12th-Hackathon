@@ -23,8 +23,8 @@ const BottomNav = () => {
   return (
     <nav className="wrapper">
       {/* 하단 네비게이션 최상위 태그 */}
-      <div className="button-naming">
-        <FontAwesomeIcon icon={faBars} onClick={handleNavigationAllDietPage} />
+      <div className="button-naming" onClick={handleNavigationAllDietPage}>
+        <FontAwesomeIcon icon={faBars} />
         전체식단
       </div>
 

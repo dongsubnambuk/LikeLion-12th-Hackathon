@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import '../CSS/AllDietPage.css';
 import Header from '../components/Header';
 import BottomNav from '../components/BottomNav';
+import logo from '../images/logo.png';
 
 function AllDietPage() {
     const items = Array(30).fill({ title: "김치찌개 정식", price: "3,840원" });
@@ -21,7 +22,9 @@ function AllDietPage() {
                     {items.map((item, index) => (
                         <div key={index} className="ADPitemCard" onClick={() => handleItemClick(item)}>
                             <div className="ADPitemTitle">{item.title}</div>
-                            <div className="ADPitemImage" />
+                            <div className="ADPitemImage">
+                                <img src={logo} style={{width: '100%', height: '100%'}} alt="logo" />
+                            </div>
                             <div className="ADPitemPrice">{item.price}</div>
                         </div>
                     ))}

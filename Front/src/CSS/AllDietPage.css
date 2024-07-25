@@ -37,12 +37,12 @@
     border-radius: 15px;
     justify-content: space-around;
     padding: 2px 0;
-    height: 110px;
+    height: 125px;
 }
 
 .ADPitemImage {
     width: 100%;
-    height: 75%;
+    height: 70%;
     background-color: #ccc;
     border-top: solid 1px black;
     border-bottom: solid 1px black;
