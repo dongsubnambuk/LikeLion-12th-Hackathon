@@ -1,46 +1,12 @@
-.signup-topbar{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative; 
-    padding: 10px;
-    border-bottom: 1px solid #000; 
-}
-
-.back-btn {
-    position: absolute;
-    left: 5%;
-    cursor: pointer;
-}
-
-.signup-topbar h2 {
-    margin: 0; 
-    text-align: center; /* 중앙 정렬 */
-    flex: 1; 
-}
-
-
-.signup-inner {
+.info-update{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-top: 30px;
+    /* padding-top: 30px; */
     align-items: center;
 }
 
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    width: 80%; 
-    margin-bottom: 11px; /* 각 그룹 사이에 여백 추가 */
-}
-
-.form-group label {
-    margin-bottom: 5px; /* 라벨과 input 사이의 간격 */
-}
-
-.signup-inner input {
+.info-update input{
     box-sizing: border-box;
     /* width: 90%;  */
     height: 6vh;
@@ -50,31 +16,45 @@
     padding-left: 10px; /* 입력 텍스트와 플레이스홀더에 왼쪽 여백 추가 */
 }
 
+.update-form-group{
+    display: flex;
+    flex-direction: column;
+    width: 80%; 
+    margin-bottom: 11px; /* 각 그룹 사이에 여백 추가 */
+}
 
-.address{
+.update-form-group label{
+    margin-bottom: 5px; /* 라벨과 input 사이의 간격 */
+}
+
+.update-address{
     display: flex;
     justify-content: center;
     flex-direction: column;
     width: 100%;
 }
-
-.address-serch{
+.update-address-serch{
     display: flex;
     justify-content: space-between;
     margin-bottom: 11px; /* 각 그룹 사이에 여백 추가 */
 }
-.address-serch button{
+.update-address-detail input{
+    width: 100%;
+    margin-bottom: 11px;
+}
+
+.update-address-serch button{
     background-color: #FFFFFF;
     border-radius: 7px;
     width: 30%;
     cursor: pointer;
 }
 
-.address-serch :first-child{
+.update-address-serch :first-child{
     width: 30%;
 }
 
-.signup-btn{
+.update-btn{
     cursor: pointer;
     width: 80%;
     height: 6vh;
@@ -88,18 +68,5 @@
     color: #000000 !important; /* 텍스트 색상을 검정색으로 설정합니다 */
     -webkit-appearance: none; /* 사파리 기본 스타일을 없앱니다 */
     -moz-appearance: none; /* 파이어폭스 기본 스타일을 없앱니다 */
-    appearance: none; /* 기본 스타일을 없앱니다 */
+    appearance: none; /* 기본 스타일을 없앱니다 */ 
 }
-
-.address-detail input {
-    width: 100%;
-    margin-bottom: 11px;
-}
-
-
-.error-message {
-    color: red;
-    margin-top: 10px;
-}
-
-

@@ -1,6 +1,5 @@
 import React, { useState,useRef } from "react";
 import { useNavigate } from 'react-router-dom';
-
 import Header from "../components/Header";
 import BottomNav from "../components/BottomNav"
 import {Avatar} from 'antd';
@@ -67,7 +66,7 @@ const handleImageSave = (newImage) => {
 
         <div className="mypage-pages">
 
-            <div className="mypage-link" onClick={() => navigate('/edit-info')}>
+            <div className="mypage-link" onClick={() => navigate('/userinfoupdate')}>
             <FontAwesomeIcon icon={faPenToSquare} size="2x"/>
                 <span>내 정보 수정</span>
                 <span className="arrow">&gt;</span>
