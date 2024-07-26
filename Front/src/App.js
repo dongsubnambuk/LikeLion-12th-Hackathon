@@ -8,6 +8,8 @@ import DietInfo from "./pages/DietInfoPage";
 import MainPage from './pages/MainPage';
 import MyPage from './pages/MyPage';
 import UserInfoUpdate from './pages/UserInfoUpdate';
+import OrderList from './pages/OrderList';
+import WeeklyFoodMenu from './pages/WeeklyFoodMenu';
 
 const App = () => (
   <div className="mobile-container">
@@ -20,6 +22,8 @@ const App = () => (
                 <Route path="/dietinfo" element={<DietInfo />} />
                 <Route path="/mypage" element={<MyPage />} />
                 <Route path="/userinfoupdate" element={<UserInfoUpdate />} />
+                <Route path="/orderlist" element={<OrderList />} />
+                <Route path="/weeklyfoodmenu" element={<WeeklyFoodMenu />} />
             </Routes>
         </Router>
 

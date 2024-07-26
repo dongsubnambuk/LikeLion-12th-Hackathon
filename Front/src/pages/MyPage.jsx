@@ -72,7 +72,7 @@ const handleImageSave = (newImage) => {
                 <span className="arrow">&gt;</span>
             </div>
             
-            <div className="mypage-link" onClick={() => navigate('/order-history')}>
+            <div className="mypage-link" onClick={() => navigate('/orderlist')}>
             <FontAwesomeIcon icon={faReceipt} size="2x" />
                 <span>주문 내역 확인</span>
                 <span className="arrow">&gt;</span>

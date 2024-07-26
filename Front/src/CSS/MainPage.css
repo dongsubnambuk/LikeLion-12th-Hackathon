@@ -22,7 +22,7 @@
   max-width: 100%; /* 전체 너비로 조정 */
   margin: 0 auto; /* 중앙 정렬 */
   overflow: hidden; /* 넘치는 부분 숨기기 */
-  padding-bottom: 50px;
+  padding-bottom: 70px;
 }
 
 .food-slide {

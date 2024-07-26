@@ -1,0 +1,36 @@
+.order-date{
+    font-size: 12px;
+    padding-top: 20px;
+    padding-left: 30px;
+    color: #C3B5B5;
+}
+
+.order-detail-container{
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.order-detail-inner{
+    cursor: pointer;
+    flex-direction: column;
+    display: flex;
+    align-items: flex-start;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 10px;
+    text-decoration: none;
+    color: black;
+    width: 80%;
+}
+
+.order-detail-inner p{
+    margin-top: 20px;
+}
+
+.order-list-detail{
+    margin-top: 25px;
+    margin-left: auto;
+}

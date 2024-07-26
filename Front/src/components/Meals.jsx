@@ -21,6 +21,7 @@ const Meals = () => {
             carbs: 72,
             protein: 32,
             fat: 8,
+            count: 2,
           },
           {
             mealType: '점심',
@@ -30,15 +31,17 @@ const Meals = () => {
             carbs: 65,
             protein: 30,
             fat: 10,
+            count: 3,
           },
           {
             mealType: '저녁',
             title: '불고기 정식',
-            description: '불고기, 잡채, 무생채 ...',
+            description: '된장찌개, 고등어 구이, 시금치 나물 ...',
             imageSrc: 'path/to/image3.jpg',
             carbs: 80,
             protein: 35,
             fat: 12,
+            count: 1,
           },
         ],
       });
@@ -55,6 +58,7 @@ const Meals = () => {
             carbs: 70,
             protein: 30,
             fat: 9,
+        
           },
           {
             mealType: '점심',
@@ -64,15 +68,17 @@ const Meals = () => {
             carbs: 68,
             protein: 28,
             fat: 11,
+      
           },
           {
             mealType: '저녁',
             title: '비회원 인기 불고기 정식',
-            description: '불고기, 잡채, 무생채 ...',
+            description: '된장찌개, 고등어 구이, 시금치 나물 ...',
             imageSrc: 'path/to/image3.jpg',
             carbs: 78,
             protein: 34,
             fat: 13,
+
           },
         ],
       });
@@ -97,6 +103,7 @@ const Meals = () => {
           carbs={meal.carbs} // 탄수화물 정보 전달
           protein={meal.protein} // 단백질 정보 전달
           fat={meal.fat} // 지방 정보 전달
+          count={meal.count} // 개수 전달
         />
       ))}
     </div>

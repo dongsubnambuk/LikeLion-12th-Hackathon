@@ -43,6 +43,10 @@ const Header = () => {
                 return '내정보';
             case '/userinfoupdate':
                 return '내 정보 수정';
+            case '/orderlist':
+                return '주문 내역';
+            case '/weeklyfoodmenu':
+                return '1주 전체 식단';
             default:
                 return 'Main Page';
         }

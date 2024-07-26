@@ -68,3 +68,15 @@
     color: #333;
   }
   
+  
+
+  .title{
+    display: flex;
+    justify-content: center;
+  }
+
+  .count{
+    text-align: right;
+    padding-right: 10px;
+  }
+
