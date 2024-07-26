@@ -7,7 +7,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css'; // Swiper 기본 CSS
 import 'swiper/css/navigation'; // Navigation 모듈의 CSS
 import 'swiper/css/pagination'; // Pagination 모듈의 CSS
-import { Navigation, Pagination ,Autoplay} from 'swiper/modules'; // 모듈을 swiper/modules에서 가져오기
+import { Navigation, Pagination} from 'swiper/modules'; // 모듈을 swiper/modules에서 가져오기
 import Meals from "../components/Meals";
 
 function WeeklyFoodMenu(){

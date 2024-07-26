@@ -78,11 +78,7 @@ const handleImageSave = (newImage) => {
                 <span className="arrow">&gt;</span>
             </div>
 
-            <div className="mypage-link" onClick={() => navigate('/subscription-status')}>
-            <FontAwesomeIcon icon={faCalendarDays} size="2x"/>
-                <span>구독 상태 확인</span>
-                <span className="arrow">&gt;</span>
-            </div>
+    
               
         </div>
         <div className="mypage-link unsubscribe" onClick={handleUnsubscribeClick}>
