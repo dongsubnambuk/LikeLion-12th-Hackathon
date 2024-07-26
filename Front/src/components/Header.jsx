@@ -47,6 +47,10 @@ const Header = () => {
                 return '주문 내역';
             case '/weeklyfoodmenu':
                 return '1주 전체 식단';
+            case '/survey':
+                return '설문조사';
+            case '/survey-detail':
+                return '설문조사';
             default:
                 return 'Main Page';
         }
@@ -75,10 +79,10 @@ const Header = () => {
                         <div className="header_contents">
                             <ul>
                                 <li>
-                                    <FontAwesomeIcon icon={faBell} size="2x" />
+                                    <FontAwesomeIcon icon={faBell} size="2x" onClick={() => navigate('/notification')} />
                                 </li>
                                 <li>
-                                    <FontAwesomeIcon icon={faFileLines} size="2x" />
+                                    <FontAwesomeIcon icon={faFileLines} size="2x"  onClick={() => navigate('/survey')}/>
                                 </li>
                             </ul>
                         </div>
