@@ -53,6 +53,10 @@ const Header = () => {
                 return '설문조사';
             case '/notification':
                 return '알림';
+            case '/dietselection':
+                return '식단 선택';
+            case '/menuselection':
+                return '메뉴 선택';
             default:
                 return 'Main Page';
         }

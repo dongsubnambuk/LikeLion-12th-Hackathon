@@ -1,0 +1,100 @@
+.selection-menu-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin: 8px;
+    overflow: hidden;
+    width: 100%;
+    flex-shrink: 0;
+
+}
+
+.selection-menu-card-body {
+    display: flex;
+    padding: 8px;
+}
+
+.selection-menu-card-image-container {
+    width: 30%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.selection-menu-card-image {
+    top: 0;
+    left: 0;
+    width: 95%;
+    height: auto;
+    object-fit: cover;
+    /* 이미지가 컨테이너를 덮도록 설정 */
+    border-radius: 8px;
+    border: 1px solid black;
+}
+
+.selection-menu-card-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.selection-menu-card-info-content {
+    padding: 0px 5px;
+    width: 80%;
+}
+
+.selection-menu-card-info-content h3 {
+    margin: 8px 0 4px;
+    font-size: 14px;
+    color: #333;
+}
+
+.selection-menu-card-info-content p {
+    margin: 0 0 8px;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.selection-menu-card-nutrition {
+    display: flex;
+    justify-content: space-around;
+    margin: 8px 0px;
+}
+
+.selection-nutrition-item {
+    text-align: center;
+}
+
+.selection-nutrition-label {
+    display: block;
+    font-size: 12px;
+    color: #888;
+}
+
+.selection-nutrition-value {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.selection-menu-choice-area {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.selection-menu-choice-btn {
+    height: 40%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px black solid;
+    border-radius: 15px;
+    font-size: 16px;
+    cursor: pointer;
+}
