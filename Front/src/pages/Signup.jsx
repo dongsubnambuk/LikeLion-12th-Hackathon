@@ -17,6 +17,7 @@ function Signup(){
     const [detailAddress, setDetailAddress] = useState("");    // 추가
     const [isOpen, setIsOpen] = useState(false); // 추가
     const [error, setError] = useState("");
+    const navigate = useNavigate();
 
     const completeHandler = (data) => {
         setZipcode(data.zonecode);
@@ -54,20 +55,8 @@ function Signup(){
             setDetailAddress(e.target.value);
         };
     
-     
-        const clickHandler = () => {
-            if (detailAddress === "") {
-                alert("상세주소를 입력해주세요.");
-            } else {
-                console.log(zipCode, roadAddress, detailAddress);
-            }
-        };
-    
-    const navigate = useNavigate();
 
-    const handleBack = () => {
-        navigate(-1); //뒤로가기
-      };
+
       const validatePasswords = (password, confirmPassword) => {
         if (password !== confirmPassword) {
             setError("비밀번호가 일치하지 않습니다.");
@@ -86,6 +75,39 @@ function Signup(){
             roadAddress,
             detailAddress,
         });
+    };
+
+    //회원가입 fetch
+    const handleSignup = async (event) => {
+        event.preventDefault();
+
+        const response = await fetch('https://your-server-url.com/signup', { // 서버 URL을 실제 API 엔드포인트로 변경하세요
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password,
+                userName: userName,
+                phoneNumber: phoneNumber,
+                zipCode: zipCode,
+                roadAddress: roadAddress,
+                detailAddress: detailAddress,
+            }),
+        });
+
+        const result = await response.json(); // 응답이 JSON 형식일 경우 이를 JavaScript 객체로 변환
+
+        if (response.status === 200) { // 응답 status가 200 OK 일 경우
+            // 회원가입 성공 후 로직
+            console.log("회원가입 성공");
+            alert("회원가입 성공");
+            navigate('/'); // 회원가입 성공 후 메인 페이지로 이동
+        } else {
+            console.log("회원가입 실패");
+            alert("회원가입 실패: " + result.message);
+        }
     };
 
     return(
