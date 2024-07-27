@@ -12,6 +12,7 @@
     width: 33%;
     display: flex;
     justify-content: center;
+    cursor: pointer;
 }
 
 .header_contents ul {

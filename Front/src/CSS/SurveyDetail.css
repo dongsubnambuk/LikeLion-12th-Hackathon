@@ -1,0 +1,95 @@
+/* src/SurveyForm.css */
+.survey-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+  
+  .survey-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: 16px;
+    margin: 16px 0;
+    background-color: white;
+  }
+  
+  .survey-left {
+    font-size: 15px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .food-image {
+    margin-top: 10px;
+    width: 100%;
+    height: 9vh;
+    background-color: #eee;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8px;
+    border: 1px solid #ccc;
+    background-size: cover;
+  }
+  
+  .logoImage-survey {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 이미지가 컨테이너 크기에 맞게 조정됨 */
+  }
+  
+  .survey-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .survey-label {
+    display: flex;
+    align-items: center;
+    /* justify-content: flex-start; */
+    margin-bottom: 8px;
+  }
+  
+  .survey-label input {
+    margin-right: 8px;
+  }
+  
+  button {
+    cursor: pointer;
+    width: 100%;
+    height: 5vh;
+    background: none; /* 내부 색상을 없앱니다 */
+    border: 1px solid #04C600; /* 테두리 색상과 두께를 설정합니다 */
+    border-radius: 7px;
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    outline: none; /* 아웃라인을 없앱니다 */
+    color: #000000 !important; /* 텍스트 색상을 검정색으로 설정합니다 */
+    -webkit-appearance: none; /* 사파리 기본 스타일을 없앱니다 */
+    -moz-appearance: none; /* 파이어폭스 기본 스타일을 없앱니다 */
+    appearance: none; /* 기본 스타일을 없앱니다 */
+  }
+  
+  button:hover {
+    background-color: rgba(4, 198, 0, 0.8); /* 불투명도 80% */
+    transition-duration: 0.5s;
+  }
+
+  .survey-submit{
+    display: flex;
+    justify-content: center;
+
+  }
+  

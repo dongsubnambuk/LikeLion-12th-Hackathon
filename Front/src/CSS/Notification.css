@@ -1,0 +1,20 @@
+.notification-container{
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+}
+
+.notification-link{
+    cursor: pointer;
+    width: 80%;
+    display: flex;
+    padding-left: 20px;
+    align-items: center;
+    box-sizing: border-box;
+    height: 5vh;
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    border-radius: 15px;
+}
+
+

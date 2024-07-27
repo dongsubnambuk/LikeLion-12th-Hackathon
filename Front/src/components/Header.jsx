@@ -51,6 +51,8 @@ const Header = () => {
                 return '설문조사';
             case '/survey-detail':
                 return '설문조사';
+            case '/notification':
+                return '알림';
             default:
                 return 'Main Page';
         }

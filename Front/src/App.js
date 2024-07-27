@@ -12,6 +12,7 @@ import OrderList from './pages/OrderList';
 import WeeklyFoodMenu from './pages/WeeklyFoodMenu';
 import Survey from './pages/Survey';
 import SurveyDetail from './pages/SurveyDetail';
+import Notification from './pages/Notification';
 
 const App = () => (
   <div className="mobile-container">
@@ -28,6 +29,7 @@ const App = () => (
                 <Route path="/weeklyfoodmenu" element={<WeeklyFoodMenu />} />
                 <Route path="/survey" element={<Survey />} />
                 <Route path="/survey-detail" element={<SurveyDetail />} />
+                <Route path="/notification" element={<Notification />} />
             </Routes>
         </Router>
 

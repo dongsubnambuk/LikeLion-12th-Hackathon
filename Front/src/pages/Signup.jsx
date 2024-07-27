@@ -76,6 +76,18 @@ function Signup(){
         }
     };
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log({
+            email,
+            password,
+            userName,
+            phoneNumber,
+            roadAddress,
+            detailAddress,
+        });
+    };
+
     return(
         <>
             <Header/>
@@ -168,7 +180,7 @@ function Signup(){
                     
                 </div>
             </div>
-            <button className="signup-btn">회원가입</button>
+            <button className="signup-btn" onClick={handleSubmit}>회원가입</button>
         </div>
      
             <BottomNav/>
