@@ -98,3 +98,8 @@
     font-size: 16px;
     cursor: pointer;
 }
+
+.selection-menu-meal-option {
+    font-size: 15px;
+    text-align: center;
+}

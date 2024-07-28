@@ -1,6 +1,24 @@
-.diet-selection-container {
+.diet-selection-user-weekly-food-detail {
+    display: flex;
+        align-items: center;
+        justify-content: center;
+}
+
+.selection-meal-confirm {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-top: 50px;
+}
+
+.selection-meal-confirm-text {
+    font-size: 17px;
+    padding: 15px;
+    border-radius: 10px;
+    width: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(4, 198, 0, 0.5);
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }

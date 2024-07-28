@@ -57,6 +57,10 @@ const Header = () => {
                 return '식단 선택';
             case '/menuselection':
                 return '메뉴 선택';
+            case '/dietpaymentmain':
+                return '식단 결제';
+            case '/dietpayment':
+                return '식단 결제';
             default:
                 return 'Main Page';
         }

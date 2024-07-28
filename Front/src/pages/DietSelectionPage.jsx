@@ -11,26 +11,34 @@ import { Navigation, Pagination } from 'swiper/modules'; // 모듈을 swiper/mod
 import SelectionMeals from "../components/SelectionMeals";
 
 function DietSelectionpPage() {
+    const navigate = useNavigate();
+
+    const handleConfirmClick = (item) => {
+        navigate(`/dietpaymentmain`);
+    };
     return (
         <>
             <Header />
+            <div className="diet-selection-main-container">
+                <div className='diet-selection-user-weekly-food-detail'>
+                    <Swiper
+                        spaceBetween={50} /* 슬라이드 간의 간격 조정 */
+                        slidesPerView={1} /* 화면에 보일 슬라이드 수 설정 */
+                        navigation
+                        pagination={{ clickable: true }}
+                        modules={[Navigation, Pagination]}
+                        className='weekly-food-slide'
+                    >
 
-            <div className='user-weekly-food-detail'>
-                <Swiper
-                    spaceBetween={50} /* 슬라이드 간의 간격 조정 */
-                    slidesPerView={1} /* 화면에 보일 슬라이드 수 설정 */
-                    navigation
-                    pagination={{ clickable: true }}
-                    modules={[Navigation, Pagination]}
-                    className='weekly-food-slide'
-                >
-
-                    <SwiperSlide className='slide-content1'><SelectionMeals /></SwiperSlide>
-                    <SwiperSlide className='slide-content1'><SelectionMeals /></SwiperSlide>
-                    <SwiperSlide className='slide-content1'><SelectionMeals /></SwiperSlide>
-                </Swiper>
+                        <SwiperSlide className='slide-content1'><SelectionMeals /></SwiperSlide>
+                        <SwiperSlide className='slide-content1'><SelectionMeals /></SwiperSlide>
+                        <SwiperSlide className='slide-content1'><SelectionMeals /></SwiperSlide>
+                    </Swiper>
+                </div>
+                <div className="selection-meal-confirm" onClick={() => handleConfirmClick()}>
+                    <p className="selection-meal-confirm-text">결제 화면으로 이동</p>
+                </div>
             </div>
-
             <BottomNav />
         </>
     );

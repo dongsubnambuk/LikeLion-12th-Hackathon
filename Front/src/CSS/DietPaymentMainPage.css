@@ -1,0 +1,96 @@
+.DPMPcontainer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 85%;
+    margin-top: 20px;
+    flex-direction: column;
+}
+
+.DPMPdateRange {
+    font-size: 13px;
+    margin-bottom: 5%;
+    font-weight: bold;
+}
+
+.DPMPlistContainer {
+    width: 85%;
+    height: 70%;
+    max-height: 90%;
+    padding: 10px;
+    background-color: white;
+    border-radius: 15px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+
+.DPMPlistContainer::-webkit-scrollbar {
+    display: none;
+}
+
+.DPMPdayContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.DPMPdate {
+    grid-column: span 3;
+}
+
+.DPMPitemCard {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    text-align: center;
+    border-radius: 15px;
+    justify-content: space-around;
+    padding: 2px 0;
+    height: 125px;
+}
+
+.DPMPitemImage {
+    width: 100%;
+    height: 70%;
+    background-color: #ccc;
+    border-top: solid 1px black;
+    border-bottom: solid 1px black;
+    margin: 2px 0px;
+}
+
+.DPMPitemTitle {
+    font-size: 13px;
+}
+
+.DPMPitemPrice {
+    font-size: 14px;
+}
+
+.DPMPitemAllPrice {
+    margin-top: 5%;
+    font-size: 18px;
+}
+
+.DPMPpaymentConfirm {
+    display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+}
+
+.DPMPpaymentConfirmText {
+    font-size: 17px;
+        margin-top: 5%;
+        padding: 15px;
+        border-radius: 10px;
+        width: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgb(4, 198, 0, 0.5);
+        cursor: pointer;
+}

@@ -12,7 +12,7 @@ const SelectionMenus = () => {
                 date: '2024년 7월 20일 토요일',
                 meals: [
                     {
-                        mealType: '아침',
+                        mealOption: '옵션 1',
                         title: '김치찌개 정식',
                         description: '김치찌개, 시금치 나물, 가지볶음 ...',
                         imageSrc: '../images/logo.png',
@@ -23,7 +23,7 @@ const SelectionMenus = () => {
                         price: '6,800원',
                     },
                     {
-                        mealType: '점심',
+                        mealOption: '옵션 2',
                         title: '된장찌개 정식',
                         description: '된장찌개, 고등어 구이, 시금치 나물 ...',
                         imageSrc: 'path/to/image2.jpg',
@@ -34,7 +34,7 @@ const SelectionMenus = () => {
                         price: '6,200원',
                     },
                     {
-                        mealType: '저녁',
+                        mealOption: '옵션 3',
                         title: '불고기 정식',
                         description: '된장찌개, 고등어 구이, 시금치 나물 ...',
                         imageSrc: 'path/to/image3.jpg',

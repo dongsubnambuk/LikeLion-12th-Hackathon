@@ -12,6 +12,7 @@ const SelectionMenuCard = ({ meals, onChangeMenu }) => {
 
     return (
         <div className="selection-menu-card">
+            <h2 className="selection-menu-meal-option">[{meals.mealOption}]</h2>
             <div className="selection-menu-card-body">
                 <div className="selection-menu-card-image-container">
                     <img src={logo} alt={meals.title} className="selection-menu-card-image" />
