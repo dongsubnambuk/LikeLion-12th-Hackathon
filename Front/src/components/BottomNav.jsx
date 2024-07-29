@@ -20,6 +20,10 @@ const BottomNav = () => {
     navigate('/alldiet');
   };
 
+  const handleNavigationDietSelectionPage = () => {
+    navigate('/dietselection');
+  };
+
   const handleNavigationMyPage = () => {
     navigate('/mypage');
   };
@@ -36,7 +40,7 @@ const BottomNav = () => {
         전체식단
       </div>
 
-      <div className="button-naming">
+      <div className="button-naming" onClick={handleNavigationDietSelectionPage}>
         <FontAwesomeIcon icon={faCartPlus} />
         주문하기
       </div>
@@ -44,8 +48,8 @@ const BottomNav = () => {
         <FontAwesomeIcon icon={faHouse} />
         홈
       </div>
-      <div className="button-naming">
-        <FontAwesomeIcon icon={faBowlFood} onClick={handleNavigationMyFood}/>
+      <div className="button-naming" onClick={handleNavigationMyFood}>
+        <FontAwesomeIcon icon={faBowlFood} />
         내 식단
       </div>
       <div className="button-naming" onClick={handleNavigationMyPage}>
