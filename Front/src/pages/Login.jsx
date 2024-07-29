@@ -27,7 +27,7 @@ function Login() {
     const handleLogin = async (event) => {
         event.preventDefault();
 
-        const response = await fetch('https://your-server-url.com/login', { // 서버 URL을 실제 API 엔드포인트로 변경하세요
+        const response = await fetch('http://3.37.64.39:8000/users/login', { // 서버 URL을 실제 API 엔드포인트로 변경하세요
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -42,8 +42,11 @@ function Login() {
 
         if (response.status === 200) { // 응답 status가 200 OK 일 경우
             // Store token in local storage
-            localStorage.setItem("token", result.accessToken);  // 로그인 성공 시 보내주는 토큰 localStorage에 저장
-            navigate('/'); // 로그인 성공 후 메인 페이지로 이동
+            localStorage.setItem("token", result.token);  // 로그인 성공 시 보내주는 토큰 localStorage에 저장
+            localStorage.setItem("email",result.email);
+            // console.log(result)
+            navigate('/'); 
+
         } else {
             console.log("로그인 실패");
             alert("로그인 실패: " + result.message);

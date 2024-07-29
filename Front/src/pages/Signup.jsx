@@ -81,7 +81,7 @@ function Signup(){
     const handleSignup = async (event) => {
         event.preventDefault();
 
-        const response = await fetch('https://your-server-url.com/signup', { // 서버 URL을 실제 API 엔드포인트로 변경하세요
+        const response = await fetch('http://3.37.64.39:8000/users/signup', { // 서버 URL을 실제 API 엔드포인트로 변경하세요
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -89,7 +89,7 @@ function Signup(){
             body: JSON.stringify({
                 email: email,
                 password: password,
-                userName: userName,
+                name: userName,
                 phoneNumber: phoneNumber,
                 roadAddress: roadAddress,
                 detailAddress: detailAddress,
@@ -98,9 +98,10 @@ function Signup(){
 
         const result = await response.json(); // 응답이 JSON 형식일 경우 이를 JavaScript 객체로 변환
 
-        if (response.status === 200) { // 응답 status가 200 OK 일 경우
+        if (response.status === 201) { // 응답 status가 200 OK 일 경우
             // 회원가입 성공 후 로직
             console.log("회원가입 성공");
+            console.log(result);
             alert("회원가입 성공");
             navigate('/'); // 회원가입 성공 후 메인 페이지로 이동
         } else {
@@ -201,7 +202,7 @@ function Signup(){
                     
                 </div>
             </div>
-            <button className="signup-btn" onClick={handleSubmit}>회원가입</button>
+            <button className="signup-btn" onClick={handleSignup}>회원가입</button>
         </div>
      
             <BottomNav/>

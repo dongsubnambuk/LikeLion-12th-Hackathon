@@ -1,31 +1,57 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../CSS/BottomNav.css";
-// FontAwesomIcon 컴포넌트를 사용하기 위해 import
+// FontAwesomeIcon 컴포넌트를 사용하기 위해 import
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHouse } from "@fortawesome/free-solid-svg-icons";
-import { faBowlFood } from "@fortawesome/free-solid-svg-icons";
-import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faHouse, faBowlFood, faCartPlus, faUser, faBars } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from 'react-router-dom';
 
 const BottomNav = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
 
   const handleNavigationMainPage = () => {
     navigate('/');
   };
 
   const handleNavigationAllDietPage = () => {
-    navigate('/alldiet');
+    if (isLoggedIn) {
+      navigate('/alldiet');
+    } else {
+      navigate('/login');
+    }
   };
 
   const handleNavigationMyPage = () => {
-    navigate('/mypage');
+    if (isLoggedIn) {
+      navigate('/mypage');
+    } else {
+      navigate('/login');
+    }
   };
 
   const handleNavigationMyFood = () => {
-    navigate('/weeklyfoodmenu');
+    if (isLoggedIn) {
+      navigate('/weeklyfoodmenu');
+    } else {
+      navigate('/login');
+    }
+  };
+
+  const handleNavigationOrder = () => {
+    if (isLoggedIn) {
+      navigate('/order');
+    } else {
+      navigate('/login');
+    }
   };
 
   return (
@@ -36,7 +62,7 @@ const BottomNav = () => {
         전체식단
       </div>
 
-      <div className="button-naming">
+      <div className="button-naming" onClick={handleNavigationOrder}>
         <FontAwesomeIcon icon={faCartPlus} />
         주문하기
       </div>
@@ -44,15 +70,14 @@ const BottomNav = () => {
         <FontAwesomeIcon icon={faHouse} />
         홈
       </div>
-      <div className="button-naming">
-        <FontAwesomeIcon icon={faBowlFood} onClick={handleNavigationMyFood}/>
+      <div className="button-naming" onClick={handleNavigationMyFood}>
+        <FontAwesomeIcon icon={faBowlFood} />
         내 식단
       </div>
       <div className="button-naming" onClick={handleNavigationMyPage}>
         <FontAwesomeIcon icon={faUser} />
         내 정보
       </div>
-
     </nav>
   );
 };
