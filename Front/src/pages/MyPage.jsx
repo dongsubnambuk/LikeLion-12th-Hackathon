@@ -1,4 +1,4 @@
-import React, { useState,useRef } from "react";
+import React, { useState,useRef,useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import Header from "../components/Header";
 import BottomNav from "../components/BottomNav"
@@ -11,7 +11,9 @@ function MyPage(){
 
 const [Image, setImage] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
 
-const [userName, setUserName] = useState('서동섭'); // 하드코딩된 유저 이름
+const [userName, setUserName] = useState(''); // 하드코딩된 유저 이름
+const [address, setAddress] = useState({ roadAddress: '', detailAddress: '' });
+const [phoneNumber, setphoneNumber] = useState(''); // 하드코딩된 유저 이름
 const [showPopup, setShowPopup] = useState(false);
 const navigate = useNavigate();
 
@@ -22,12 +24,10 @@ const handleImageSave = (newImage) => {
     //로그아웃 함수
     const handleLogout = () => {
 
-
-    	// sessionStorage.removeItem("token");
-    	// sessionStorage.removeItem("email");
-    	// sessionStorage.removeItem("role");
-    	// 페이지 이동
+    	localStorage.removeItem("token");
+    	localStorage.removeItem("email");
     	navigate("/");
+        
   	};
 
       const handleUnsubscribeClick = () => {
@@ -44,6 +44,44 @@ const handleImageSave = (newImage) => {
         setShowPopup(false);
     };
 
+    useEffect(() => {
+        const handleget = async () => {
+            const token = localStorage.getItem("token");
+            const email = localStorage.getItem("email");
+            console.log(token);
+      
+          
+            const response = await fetch(`http://3.37.64.39:8000/users?email=${email}`, { // 서버 URL을 실제 API 엔드포인트로 변경하세요
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json", 
+                    "Authorization": token,
+                }
+            });
+      
+            const result = await response.json(); // 응답이 JSON 형식일 경우 이를 JavaScript 객체로 변환
+      
+            if (response.status === 200) { // 응답 status가 200 OK 일 경우
+                // Store token in local storage
+                
+                setUserName(result.name);
+                setphoneNumber(result.phoneNumber)
+                setAddress({
+                    roadAddress: result.roadAddress,
+                    detailAddress: result.detailAddress,
+                  });
+
+                console.log(result)
+                console.log("유저 이름 : "+userName)
+            
+      
+            } else {
+                console.log("로그인 실패");
+                alert("로그인 실패: " + result.message);
+            }
+        };
+        handleget();
+    })
 
     return(
         <>
@@ -59,8 +97,8 @@ const handleImageSave = (newImage) => {
         </div>
         
         <div className="mypage-info">
-            <p>주소: 대구 달서구 계대동문로 3안길 13-5</p> {/*back user db에서 주소, 연락처 read*/}
-            <p>연락처: 010- 1234 - 5678</p>
+            <p>주소: {address.roadAddress} {address.detailAddress}</p> 
+            <p>연락처: {phoneNumber}</p>
             <hr/>
         </div>
 

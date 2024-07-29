@@ -3,9 +3,44 @@ import MealCard from './MealCard';
 import '../CSS/Meals.css';
 
 const Meals = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // 로그인 상태 관리
-  const [userName, setUserName] = useState('서동섭'); // 하드코딩된 유저 이름
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 관리
+  const [userName, setUserName] = useState(''); // 하드코딩된 유저 이름
   const [mealData, setMealData] = useState(null); // 식단 데이터
+
+  useEffect(() => {
+    const handleGetUser = async () => {
+      const token = localStorage.getItem("token");
+      const email = localStorage.getItem("email");
+
+      if (token && email) {
+        try {
+          const response = await fetch(`http://3.37.64.39:8000/users?email=${email}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": token,
+            }
+          });
+
+          const result = await response.json();
+
+          if (response.status === 200) {
+            setUserName(result.name);
+            setIsLoggedIn(true);
+          } else {
+            console.log("로그인 실패: ", result.message);
+            alert("로그인 실패: " + result.message);
+          }
+        } catch (error) {
+          console.error("Fetch error: ", error);
+        }
+      } else {
+        setIsLoggedIn(false);
+      }
+    };
+
+    handleGetUser();
+  }, []);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -58,7 +93,6 @@ const Meals = () => {
             carbs: 70,
             protein: 30,
             fat: 9,
-        
           },
           {
             mealType: '점심',
@@ -68,7 +102,6 @@ const Meals = () => {
             carbs: 68,
             protein: 28,
             fat: 11,
-      
           },
           {
             mealType: '저녁',
@@ -78,7 +111,6 @@ const Meals = () => {
             carbs: 78,
             protein: 34,
             fat: 13,
-
           },
         ],
       });
@@ -104,6 +136,7 @@ const Meals = () => {
           protein={meal.protein} // 단백질 정보 전달
           fat={meal.fat} // 지방 정보 전달
           count={meal.count} // 개수 전달
+          isLoggedIn={isLoggedIn} // 로그인 상태 전달
         />
       ))}
     </div>
