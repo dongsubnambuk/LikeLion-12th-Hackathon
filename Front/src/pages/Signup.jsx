@@ -91,7 +91,6 @@ function Signup(){
                 password: password,
                 userName: userName,
                 phoneNumber: phoneNumber,
-                zipCode: zipCode,
                 roadAddress: roadAddress,
                 detailAddress: detailAddress,
             }),

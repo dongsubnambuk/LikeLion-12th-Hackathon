@@ -47,7 +47,11 @@ function SurveyDetail(){
           <div key={mealType} className="survey-section">
             <div className="survey-left">
               <h3>{`2024년 8월 1일 - ${mealType === 'breakfast' ? '아침' : mealType === 'lunch' ? '점심' : '저녁'}`}</h3>
-              <div className="food-image"><img src={logo} className="logoImage-survey" alt="logo" /></div>
+              
+              <div className="food-image">
+                <img src={logo} className="logoImage-survey" alt="logo" />
+                </div>
+
               <p>[{meals[mealType]}]</p>
             </div>
             <div className="survey-right">
