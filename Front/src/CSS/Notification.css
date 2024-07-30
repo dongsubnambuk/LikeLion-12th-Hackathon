@@ -1,20 +1,15 @@
-.notification-container{
+.notification-container {
     display: flex;
-    justify-content: center;
-    padding-top: 30px;
+    flex-direction: column; /* 세로 방향으로 정렬 */
+    padding: 20px;
 }
 
-.notification-link{
-    cursor: pointer;
-    width: 80%;
-    display: flex;
-    padding-left: 20px;
-    align-items: center;
-    box-sizing: border-box;
-    height: 5vh;
-    background: #FFFFFF;
-    border: 1px solid #000000;
-    border-radius: 15px;
+.notification-link {
+    display: block;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    text-align: left; /* 텍스트를 왼쪽으로 정렬 */
+    word-break: break-word; /* 긴 단어가 있을 경우 줄 바꿈을 적용 */
 }
-
-
