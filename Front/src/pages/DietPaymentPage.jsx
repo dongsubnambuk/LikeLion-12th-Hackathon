@@ -9,32 +9,14 @@ function DietPaymentPage() {
     const navigate = useNavigate();
     const { price } = location.state;
 
-    const onSuccess = async (response) => {
+    const onVerification = async (response) => {
         console.log('결제 성공', response);
 
         if (response.error_code != null) {
             return alert(`결제에 실패하였습니다. 에러 내용: ${response.error_msg}`);
-            // 실패시 실패 페이지로 이동
         }
 
-        // 검증 완료시 완료 페이지로 이동
-        //navigate(`/dietpaymentverification`);
-
-        // 백으로 코드 주소 검증 확인 요청
-
-        // 고객사 서버에서 /payment/complete 엔드포인트를 구현해야 합니다.
-        // (다음 목차에서 설명합니다)
-        const notified = await fetch(`http://localhost:3000/dietpaymentverification`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            // imp_uid와 merchant_uid, 주문 정보를 서버에 전달합니다
-            body: JSON.stringify({
-                //imp_uid: response.imp_uid,
-                //merchant_uid: response.merchant_uid,
-                // 주문 정보...
-            }),
-        });
-
+        navigate(`/dietpaymentverification`, { state: { imp_uid: response.imp_uid, merchant_uid: response.merchant_uid } });
     };
 
     const requestPay = () => {
@@ -55,19 +37,22 @@ function DietPaymentPage() {
             m_redirect_url: 'http://localhost:3000/dietpaymentverification', // 결제 후 리디렉션될 URL
         };
 
-        IMP.request_pay(data, onSuccess);
+        IMP.request_pay(data, onVerification);
     };
 
     return (
         <>
             <Header />
-
-            <div>
-                <button onClick={requestPay}>결제하기</button>
-            </div>
-            <div>
-                결제금액 : {price.toLocaleString()}원
-            </div>
+            <div className="DPPcontainer">
+                <div className="DPPpayText">
+                    결제금액 : {price.toLocaleString()}원<br /><br />
+                    아래 '결제하기' 버튼을 눌러
+                    <br />결제를 진행해주세요.
+                </div>
+                <div className="DPPpayBtn">
+                    <button onClick={requestPay}>결제하기</button>
+                </div>
+            </div >
 
             <BottomNav />
         </>

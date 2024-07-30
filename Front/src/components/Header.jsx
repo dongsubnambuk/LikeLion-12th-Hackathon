@@ -61,14 +61,15 @@ const Header = () => {
                 return '식단 결제';
             case '/dietpayment':
                 return '식단 결제';
-                case '/dietpaymentsuccess':
-                return '결제 완료';
+            case '/dietpaymentverification':
+                return '식단 결제';
             default:
                 return 'Main Page';
         }
     };
 
     const isMainPage = location.pathname === '/';
+    const isVerificationPage = location.pathname === '/dietpaymentverification';
 
     return (
         <header>
@@ -76,8 +77,10 @@ const Header = () => {
                 {/* 메인 페이지가 아니면 뒤로가기 버튼과 타이틀 보임 */}
                 {!isMainPage && (
                     <div className="otherPageHeader">
-                        <FontAwesomeIcon icon={faArrowLeft}  onClick={handleBackClick} className="faArrowLeft" style={{cursor: 'pointer'}}/>
-                        <span className="pageTitle" style={{fontSize: 20, fontWeight: 600}}>{getPageTitle()}</span>
+                        {!isVerificationPage && (
+                            <FontAwesomeIcon icon={faArrowLeft} onClick={handleBackClick} className="faArrowLeft" style={{ cursor: 'pointer' }} />
+                        )}
+                        <span className="pageTitle" style={{ fontSize: 20, fontWeight: 600 }}>{getPageTitle()}</span>
                     </div>
                 )}
                 {isMainPage && (
@@ -94,7 +97,7 @@ const Header = () => {
                                     <FontAwesomeIcon icon={faBell} size="2x" onClick={() => navigate('/notification')} />
                                 </li>
                                 <li>
-                                    <FontAwesomeIcon icon={faFileLines} size="2x"  onClick={() => navigate('/survey')}/>
+                                    <FontAwesomeIcon icon={faFileLines} size="2x" onClick={() => navigate('/survey')} />
                                 </li>
                             </ul>
                         </div>
