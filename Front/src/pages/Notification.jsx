@@ -46,11 +46,11 @@ function Notification() {
 
         console.log("Setting up WebSocket connection...");
 
-        const socket = new SockJS('http://localhost:13306/ws');
+        const socket = new SockJS('http://nutrihub.kro.kr:8080/ws');
         const client = Stomp.over(socket);
 
-        const onConnected = frame => {
-            console.log('Connected: ' + frame);
+        client.connect({}, () => {
+            console.log('Connected');
 
             client.subscribe(`/topic/notification/diet/${email}`, message => {
                 console.log('Message received: ', message);
@@ -62,15 +62,16 @@ function Notification() {
                     notification.id = uuidv4();
                 }
 
+                // 상태 업데이트를 안전하게 처리
                 setMessages(prevMessages => {
-                    // 중복된 알림을 방지하기 위해 고유한 ID를 사용하여 새로운 알림만 추가합니다.
-                    const isDuplicate = prevMessages.some(msg => msg.id === notification.id);
+                    const isDuplicate = prevMessages.some(msg => msg.notificationContent === notification.notificationContent);
                     if (!isDuplicate) {
                         const newMessages = [...prevMessages, notification];
                         // 로컬 스토리지에 알림을 저장합니다.
                         localStorage.setItem(`messages_${email}`, JSON.stringify(newMessages));
+                        // 토스트 알림 표시
                         toast.info(`Notification: ${notification.notificationContent}`, {
-                            position: "top-right",  // 직접 위치 문자열 사용
+                            position: "top-right",
                             autoClose: 5000,
                             hideProgressBar: false,
                             closeOnClick: true,
@@ -83,15 +84,13 @@ function Notification() {
                     return prevMessages;
                 });
             });
-        };
-
-        client.connect({}, onConnected, error => {
+        }, error => {
             console.error('Connection error: ', error);
         });
 
         return () => {
             console.log("Disconnecting WebSocket...");
-            if (client.connected) {
+            if (client && client.connected) {
                 client.disconnect(() => {
                     console.log('Disconnected');
                 });
