@@ -61,6 +61,8 @@ const Header = () => {
                 return '식단 결제';
             case '/dietpayment':
                 return '식단 결제';
+                case '/dietpaymentsuccess':
+                return '결제 완료';
             default:
                 return 'Main Page';
         }
