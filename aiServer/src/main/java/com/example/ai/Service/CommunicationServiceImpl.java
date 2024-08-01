@@ -37,8 +37,7 @@ public class CommunicationServiceImpl implements CommunicationService{
             headers.setContentType(MediaType.APPLICATION_JSON);
             http = new HttpEntity<>(bodyMap, headers);
 
-//            URI uri = new URI(imageService.getUri() + "/image/byteImage");
-            URI uri = new URI("http://3.37.64.39:11000/image/byteImage");
+            URI uri = new URI(imageService.getUri() + "/image/byteImage");
             ResponseEntity response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
@@ -46,6 +45,7 @@ public class CommunicationServiceImpl implements CommunicationService{
                 LinkedHashMap responseBody = (LinkedHashMap) response.getBody();
                 List<String> images = (List) responseBody.get("images");
                 String imageUri = (String) images.get(0);
+                logger.info("Image URI: {}", imageUri);
 
                 return imageUri;
             }

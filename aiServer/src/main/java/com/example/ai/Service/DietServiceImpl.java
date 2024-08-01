@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URISyntaxException;
 import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,6 +19,7 @@ import java.util.regex.Pattern;
 @Service
 public class DietServiceImpl implements DietService{
     private final DietDao dietDao;
+    private final CommunicationService communicationService;
     private final RestTemplate template;
     private final Logger logger = LoggerFactory.getLogger(DietServiceImpl.class);
 
@@ -34,13 +36,16 @@ public class DietServiceImpl implements DietService{
     private String imageModel;
 
     @Autowired
-    public DietServiceImpl(DietDao dietDao, RestTemplate template) {
+    public DietServiceImpl(DietDao dietDao,
+                           RestTemplate template,
+                           CommunicationService communicationService) {
         this.dietDao = dietDao;
         this.template = template;
+        this.communicationService = communicationService;
     }
 
     @Override
-    public FoodMenuDTO createDiet(String price){
+    public FoodMenuDTO createDiet(String price) {
         String prompt = "가격: " + price + "원\n이 가격에 맞는 영양 있는 식단을 구성해줘. 식단은 MainMenu 2개와 SideMenu 3개로 구성되어야 해. 식단의 이름도 정해줘.";
         ChatRequest request = new ChatRequest(chatModel, prompt);
         ChatResponse chatResponse =  template.postForObject(chatApiURL, request, ChatResponse.class);
@@ -55,8 +60,13 @@ public class DietServiceImpl implements DietService{
             throw new IllegalStateException("API 응답 내용이 비어 있습니다.");
         }
 
-        // 문자열을 엔티티로 변환
-        FoodMenu foodMenu = toEntity(answer);
+
+        FoodMenu foodMenu = null;
+        try {
+            foodMenu = toEntity(answer);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
         if (foodMenu == null) {
             throw new IllegalStateException("응답을 FoodMenu 엔티티로 변환하는 데 실패했습니다.");
         }
@@ -66,15 +76,15 @@ public class DietServiceImpl implements DietService{
         return toFoodMenuDTO(foodMenu);
     }
 
-    public String createDietImage(String foodMenu){
-        String prompt = foodMenu + "다음 식단 메뉴 5가지로만 구성된 이미지를 생성해줘, 다른 부가적인 요소들은 빼고 테이블과 메뉴 5가지만 보여줘";
+    public String createDietImage(String foodMenu) throws URISyntaxException {
+        String prompt = foodMenu + "\n다음 식단 메뉴 5가지로만 구성된 이미지를 생성해줘, 다른 부가적인 요소들은 빼고 테이블과 메뉴 5가지만 보여줘";
         logger.info(prompt);
         ImageRequest imageRequest = new ImageRequest(imageModel, prompt, "b64_json");
         ImageResponse imageResponse = template.postForObject(imageApiURL, imageRequest, ImageResponse.class);
         String b64_image = imageResponse.getData().get(0).getB64_json();
         byte[] decodedBytes = Base64.getDecoder().decode(b64_image);
-        String image = new String(decodedBytes);
-        return image;
+
+        return communicationService.imageUpload(decodedBytes);
     }
 
     public FoodMenuDTO toFoodMenuDTO(FoodMenu foodMenu){
@@ -97,7 +107,7 @@ public class DietServiceImpl implements DietService{
                 .build();
     }
 
-    public FoodMenu toEntity(String input) {
+    public FoodMenu toEntity(String input) throws URISyntaxException {
 
         Pattern namePattern = Pattern.compile("식단 이름: (.+)");
         Pattern pricePattern = Pattern.compile("가격: (.+)");
