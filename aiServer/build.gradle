@@ -34,7 +34,6 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     //swagger
     implementation 'org.springdoc:springdoc-openapi-ui:1.7.0' // 최신 버전 확인 필요
-    implementation 'org.springdoc:springdoc-openapi-data-rest:1.7.0' // 필요시
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
