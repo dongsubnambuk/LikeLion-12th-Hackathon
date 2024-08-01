@@ -1,15 +1,19 @@
 .notification-container {
-    display: flex;
-    flex-direction: column; /* 세로 방향으로 정렬 */
-    padding: 20px;
+    height: 70vh; 
+    overflow-y: auto; /* 세로 스크롤 가능하게 설정 */
+    padding: 10px; /* 내부 여백 추가 */
+    border: none; /* 컨테이너 테두리 제거 */
+    margin: 20px; /* 선택 사항: 외부 여백 추가 */
 }
 
 .notification-link {
-    display: block;
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 7px;
-    text-align: left; /* 텍스트를 왼쪽으로 정렬 */
-    word-break: break-word; /* 긴 단어가 있을 경우 줄 바꿈을 적용 */
+    padding: 10px; /* 알림 항목 내부 여백 추가 */
+    border: 1px solid #eee; /* 알림 항목 테두리 추가 */
+    background-color: #fff; /* 알림 항목 배경 색상 설정 */
+    margin-bottom: 10px; /* 알림 항목 사이 여백 추가 */
+    border-radius: 12px; /* 알림 항목 모서리를 둥글게 */
+}
+
+.notification-link:hover {
+    background-color: #f1f1f1; /* 선택 사항: 마우스 오버 시 배경 색상 변경 */
 }
