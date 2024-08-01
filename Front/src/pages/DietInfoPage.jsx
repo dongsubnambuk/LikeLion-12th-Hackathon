@@ -24,12 +24,12 @@ function DietInfoPage() {
                         <div className="DIPtitle">{item.title}</div>
                     </div>
                     <div className="DIPmenu">
-                        <span style={{ fontWeight: 600 }}>&lt; 메뉴 소개 &gt;</span>
+                        <span style={{ fontWeight: 'bold', fontSize: 17 }}>&lt; 메뉴 소개 &gt;</span>
                         <br /><br />
                         {item.menu}
                     </div>
                     <div className="DIPnutrient">
-                        <span style={{ fontWeight: 600 }}>&lt; 영양성분 &gt;</span>
+                        <span style={{ fontWeight: 'bold', fontSize: 17 }}>&lt; 영양성분 &gt;</span>
                         <br /><br />{item.nutrient}
                     </div>
                     <br /><br />

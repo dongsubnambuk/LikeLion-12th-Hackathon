@@ -6,6 +6,7 @@ import logo from '../images/logo.png';
 
 const SelectionMealCard = ({ meals, mealType, title, description, carbs, protein, fat, count, onCountChange, price }) => {
     const navigate = useNavigate();
+
     const handleIncrement = (e) => {
         e.stopPropagation(); // 이벤트 버블링 방지
         onCountChange(1);
@@ -23,7 +24,7 @@ const SelectionMealCard = ({ meals, mealType, title, description, carbs, protein
     return (
         <div className="selection-meal-card">
             <div className='title'>
-                <h2 className='mealtype'>[{meals.mealType}]</h2>
+                <h2 className='mealtype'>&lt;{meals.mealType}&gt;</h2>
             </div>
             <div className="selection-meal-card-body">
                 <div className="selection-meal-card-image-container">

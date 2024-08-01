@@ -5,6 +5,7 @@
     overflow: hidden;
     width: 100%;
     flex-shrink: 0;
+    padding-top: 5px;
 
 }
 
@@ -28,7 +29,6 @@
     object-fit: cover;
     /* 이미지가 컨테이너를 덮도록 설정 */
     border-radius: 8px;
-    border: 1px solid black;
 }
 
 .selection-menu-card-content {
@@ -36,6 +36,7 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
+    width: 70%;
 }
 
 .selection-menu-card-info-content {
@@ -53,6 +54,9 @@
     margin: 0 0 8px;
     color: #666;
     font-size: 14px;
+    overflow: hidden; /* 넘치는 내용 숨기기 */
+    text-overflow: ellipsis; /* 넘치는 부분을 ...으로 표시 */
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
     margin-bottom: 10px;
     margin-top: 10px;
 }
@@ -61,6 +65,7 @@
     display: flex;
     justify-content: space-around;
     margin: 8px 0px;
+    width: 100%;
 }
 
 .selection-nutrition-item {

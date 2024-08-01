@@ -5,13 +5,8 @@ import logo from '../images/logo.png'; //임시로 로고 임포트
 const MealCard = ({ mealType, title, description, carbs, protein, fat, count }) => {
   return (
     <div className="meal-card">
-      <div className='title'>
-        <h2 className='mealtype'>[{mealType}]</h2>
-      </div>
-      <div className="count">
-        <span className="count-title">메뉴 개수 : </span>
-        <span className="count-value">{count}개</span>
-      </div>
+
+      <h2 className='mealtype'>&lt;{mealType}&gt;</h2>
 
       <div className="meal-card-body">
 
@@ -20,8 +15,10 @@ const MealCard = ({ mealType, title, description, carbs, protein, fat, count }) 
         </div>
 
         <div className="meal-card-content">
-
-          <h3>[{title}]</h3>
+          <div className="title-and-count">
+            <h3>[{title}]</h3>
+            <h2>{count}인분</h2>
+          </div>
           <p>{description}</p>
           <div className="meal-card-nutrition">
             <div className="nutrition-item">
