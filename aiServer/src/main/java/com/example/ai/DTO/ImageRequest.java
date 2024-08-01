@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class ImageRequest {
     private String model;
     private String prompt;
+    private String response_format;
 }

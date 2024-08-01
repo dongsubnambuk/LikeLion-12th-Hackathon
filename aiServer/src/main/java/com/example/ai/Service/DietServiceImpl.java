@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,9 +69,12 @@ public class DietServiceImpl implements DietService{
     public String createDietImage(String foodMenu){
         String prompt = foodMenu + "다음 식단 메뉴 5가지로만 구성된 이미지를 생성해줘, 다른 부가적인 요소들은 빼고 테이블과 메뉴 5가지만 보여줘";
         logger.info(prompt);
-        ImageRequest imageRequest = new ImageRequest(imageModel, prompt);
+        ImageRequest imageRequest = new ImageRequest(imageModel, prompt, "b64_json");
         ImageResponse imageResponse = template.postForObject(imageApiURL, imageRequest, ImageResponse.class);
-        return imageResponse.getData().get(0).getUrl();
+        String b64_image = imageResponse.getData().get(0).getB64_json();
+        byte[] decodedBytes = Base64.getDecoder().decode(b64_image);
+        String image = new String(decodedBytes);
+        return image;
     }
 
     public FoodMenuDTO toFoodMenuDTO(FoodMenu foodMenu){

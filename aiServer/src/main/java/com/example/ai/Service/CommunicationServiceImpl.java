@@ -25,19 +25,20 @@ public class CommunicationServiceImpl implements CommunicationService{
     }
 
     @Override
-    public String imageUpload(String image) throws URISyntaxException {
+    public String imageUpload(byte[] image) throws URISyntaxException {
         try {
             ServiceInstance imageService = discoveryClient.getInstances("IMAGESERVER").get(0);
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             HttpEntity<?> http;
 
-            Map<String, String> bodyMap = new HashMap<>();
+            Map<String, byte[]> bodyMap = new HashMap<>();
             bodyMap.put("image", image);
             headers.setContentType(MediaType.APPLICATION_JSON);
             http = new HttpEntity<>(bodyMap, headers);
 
-            URI uri = new URI(imageService.getUri() + "/api/image/upload");
+//            URI uri = new URI(imageService.getUri() + "/image/byteImage");
+            URI uri = new URI("http://3.37.64.39:11000/image/byteImage");
             ResponseEntity response = restTemplate.exchange(uri, HttpMethod.POST, http, LinkedHashMap.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {

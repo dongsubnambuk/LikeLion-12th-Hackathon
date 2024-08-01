@@ -10,4 +10,5 @@ import lombok.ToString;
 @AllArgsConstructor
 public class ImageData {
     private String url;
+    private String b64_json;
 }
