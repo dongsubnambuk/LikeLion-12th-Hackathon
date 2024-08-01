@@ -22,7 +22,7 @@ import java.util.List;
 @Service
 public class CommunicationServiceImpl implements CommunicationService{
     private final DiscoveryClient discoveryClient;
-    private final static Logger logger = LoggerFactory.getLogger(CommunicationServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(CommunicationServiceImpl.class);
 
     public CommunicationServiceImpl(DiscoveryClient discoveryClient) {
         this.discoveryClient = discoveryClient;
