@@ -107,19 +107,24 @@ const Header = () => {
                 return '식단 결제';
             case '/dietpayment':
                 return '식단 결제';
+            case '/dietpaymentverification':
+                return '식단 결제';
             default:
                 return 'Main Page';
         }
     };
 
     const isMainPage = location.pathname === '/';
+    const isVerificationPage = location.pathname === '/dietpaymentverification';
 
     return (
         <header>
             <div className="contents">
                 {!isMainPage && (
                     <div className="otherPageHeader">
-                        <FontAwesomeIcon icon={faArrowLeft} onClick={handleBackClick} className="faArrowLeft" style={{ cursor: 'pointer' }} />
+                        {!isVerificationPage && (
+                            <FontAwesomeIcon icon={faArrowLeft} onClick={handleBackClick} className="faArrowLeft" style={{ cursor: 'pointer' }} />
+                        )}
                         <span className="pageTitle" style={{ fontSize: 20, fontWeight: 600 }}>{getPageTitle()}</span>
                     </div>
                 )}

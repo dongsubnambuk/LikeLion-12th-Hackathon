@@ -124,7 +124,7 @@ const Meals = () => {
   return (
     <div className="meals-container">
       <h4>{isLoggedIn ? `${userName}님의 식단` : '가장 많이 선택한 식단'}</h4>
-      <p>{mealData.date}</p> {/* 식단 날짜 */}
+      <p style={{marginTop: 10, marginBottom: 10}}>{mealData.date}</p> {/* 식단 날짜 */}
       {mealData.meals.map((meal, index) => (
         <MealCard
           key={index}
