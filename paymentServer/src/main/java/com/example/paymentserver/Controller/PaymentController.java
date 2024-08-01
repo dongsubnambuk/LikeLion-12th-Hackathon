@@ -1,0 +1,41 @@
+package com.example.paymentserver.Controller;
+
+import com.example.paymentserver.DTO.PaymentRequestDTO;
+import com.example.paymentserver.DTO.PaymentResponseDTO;
+import com.example.paymentserver.DTO.PaymentResponseDTOS;
+import com.example.paymentserver.Service.PaymentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/payment")
+public class PaymentController {
+    private final PaymentService paymentService;
+    private final  Logger logger = LoggerFactory.getLogger(PaymentController.class);
+
+    public PaymentController(@Autowired PaymentService paymentService) {
+        this.paymentService = paymentService;
+    }
+
+    @PostMapping("/newPayment")
+    public PaymentResponseDTO createPayment(@RequestBody PaymentRequestDTO paymentRequestDTO){
+        return paymentService.createImportPayment(paymentRequestDTO);
+    }
+
+    @GetMapping("/read/{paymentId}")
+    public PaymentResponseDTO readPaymentByPaymentId(@PathVariable("paymentId") String paymentId){
+        return paymentService.readPaymentByPaymentId(paymentId);
+    }
+
+    @GetMapping("/read/user/{purchaser}")
+    public PaymentResponseDTOS readPaymentByPurchaser(@PathVariable String purchaser){
+        return paymentService.readPaymentByPurchaser(purchaser);
+    }
+
+    @DeleteMapping("/delete/{paymentId}")
+    public PaymentResponseDTO deletePayment(@PathVariable String paymentId){
+        return paymentService.deletePayment(paymentId);
+    }
+}
