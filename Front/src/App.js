@@ -17,7 +17,7 @@ import DietSelection from './pages/DietSelectionPage';
 import MenuSelection from './pages/MenuSelectionPage';
 import DietPaymentMain from './pages/DietPaymentMainPage';
 import DietPayment from './pages/DietPaymentPage';
-import DietPaymentVerification from './pages/DietPaymentVerificationPage';
+import Admin from './pages/Admin';
 
 const App = () => (
   <div className="mobile-container">
@@ -39,7 +39,7 @@ const App = () => (
                 <Route path="/menuselection" element={<MenuSelection />} />
                 <Route path="/dietpaymentmain" element={<DietPaymentMain />} />
                 <Route path="/dietpayment" element={<DietPayment />} />
-                <Route path="/dietpaymentverification" element={<DietPaymentVerification />} />
+                <Route path="/admin" element={<Admin />} />
             </Routes>
         </Router>
 

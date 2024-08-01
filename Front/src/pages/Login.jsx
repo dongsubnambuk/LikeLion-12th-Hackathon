@@ -46,10 +46,10 @@ function Login() {
             localStorage.setItem("role", result.role); // 역할 저장
             // console.log(result)
 
-            if (result.role === 'admin') {
-                navigate('/admin'); // 관리자 페이지로 이동
+            if (result.role === 'ROLE_ADMIN') {
+                navigate('/admin'); 
             } else {
-                navigate('/'); // 사용자 페이지로 이동
+                navigate('/');
             }
 
         } else {
