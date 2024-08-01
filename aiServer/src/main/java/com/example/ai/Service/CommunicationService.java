@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 public interface CommunicationService {
-    public String imageUpload(@NotNull MultipartFile image) throws URISyntaxException, IOException;
-    public String imageUpdate(@NotNull MultipartFile image, String imageKey) throws URISyntaxException, IOException;
+    public String imageUpload(String image) throws URISyntaxException;
+    public String imageUpdate(String image, String imageKey) throws URISyntaxException;
     public Boolean imageDelete(String imageKey) throws URISyntaxException;
 }
