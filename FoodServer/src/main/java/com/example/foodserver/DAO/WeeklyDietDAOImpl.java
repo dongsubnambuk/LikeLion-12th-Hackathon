@@ -1,6 +1,5 @@
 package com.example.foodserver.DAO;
 
-import com.example.foodserver.DTO.WeeklyDietDTO;
 import com.example.foodserver.Entity.WeeklyDietEntity;
 import com.example.foodserver.Repository.WeeklyDietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class WeeklyDietDAOImpl implements WeeklyDietDAO {
@@ -21,45 +19,26 @@ public class WeeklyDietDAOImpl implements WeeklyDietDAO {
     }
 
     @Override
-    public WeeklyDietDTO create(WeeklyDietDTO weeklyDietDTO) {
-        WeeklyDietEntity entity = convertToEntity(weeklyDietDTO);
-        WeeklyDietEntity savedEntity = weeklyDietRepository.save(entity);
-        return convertToDTO(savedEntity);
+    public WeeklyDietEntity create(WeeklyDietEntity weeklyDietEntity) {
+        return weeklyDietRepository.save(weeklyDietEntity);
     }
 
     @Override
-    public Optional<WeeklyDietDTO> getById(Long id) {
-        return weeklyDietRepository.findById(id).map(this::convertToDTO);
+    public Optional<WeeklyDietEntity> getByWeeklyId(Long weeklyId) {
+        return weeklyDietRepository.findById(weeklyId);
     }
 
     @Override
-    public List<WeeklyDietDTO> getAll() {
-        return weeklyDietRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
+    public List<WeeklyDietEntity> getAll() {
+        return weeklyDietRepository.findAll();
     }
 
     @Override
-    public void delete(Long id) {
-        if (weeklyDietRepository.existsById(id)) {
-            weeklyDietRepository.deleteById(id);
+    public void delete(Long weeklyId) {
+        if (weeklyDietRepository.existsById(weeklyId)) {
+            weeklyDietRepository.deleteById(weeklyId);
         } else {
-            throw new RuntimeException("WeeklyDiet not found with id " + id);
+            throw new RuntimeException(weeklyId + "삭제하지 못했습니다.");
         }
-    }
-
-    private WeeklyDietEntity convertToEntity(WeeklyDietDTO dto) {
-        return WeeklyDietEntity.builder()
-                .userId(dto.getUserId())
-                .startDate(dto.getStartDate())
-                .endDate(dto.getEndDate())
-                .build();
-    }
-
-    private WeeklyDietDTO convertToDTO(WeeklyDietEntity entity) {
-        return WeeklyDietDTO.builder()
-                .id(entity.getId())
-                .userId(entity.getUserId())
-                .startDate(entity.getStartDate())
-                .endDate(entity.getEndDate())
-                .build();
     }
 }

@@ -18,26 +18,35 @@ public class DailyDietController {
         this.dailyDietService = dailyDietService;
     }
 
-    @PostMapping("/create") // 요일 식단 셍상
-    public DailyDietDTO createDailyDiet(@RequestBody DailyDietDTO dailyDietDTO) {
-       DailyDietDTO createdDietDTO;
-        createdDietDTO = dailyDietService.createDailyDiet(dailyDietDTO);
-        return createdDietDTO;
-    }
-
-    @GetMapping// 모든 요일 식단 조회
+    @GetMapping // 전체 요일 식단 조회
     public List<DailyDietDTO> getAllDailyDiets() {
-        return dailyDietService.getAllDailyDiets();
+        return dailyDietService.getAll();
     }
 
-    @GetMapping("/{id}") // 특정 요일 식단 조회
-    public DailyDietDTO getDailyDietById(@PathVariable Long id) {
-        return dailyDietService.getDailyDietById(id)
-                .orElseThrow(() -> new RuntimeException("DailyDiet not found with id " + id));
+    @GetMapping("read/{dailyId}") // 특정 요일 식단 조회
+    public DailyDietDTO getDailyDietById(@PathVariable Long dailyId) {
+        return dailyDietService.getDailyDietById(dailyId)
+                .orElseThrow(() -> new RuntimeException("DailyDiet not found with id " + dailyId));
     }
 
-    @DeleteMapping("/{id}") // 특정 요일 식단 삭제
-    public void deleteDailyDiet(@PathVariable Long id) {
-        dailyDietService.deleteDailyDiet(id);
+    @PostMapping("/create") // 요일 식단 생성
+    public DailyDietDTO createDailyDiet(@RequestBody DailyDietDTO dailyDietDTO) {
+        return dailyDietService.create(dailyDietDTO);
+    }
+
+    @GetMapping("read/dayByDay") // 주어진 요일에 대한 그 요일의 전체 식단 조회
+    public List<DailyDietDTO> getByDayOfWeek(@RequestParam String dayOfWeek) {
+        return dailyDietService.getByDayOfWeek(dayOfWeek);
+        // http://localhost:8080/daily/read/dayByDay?dayOfWeek=월요일 로 사용해야 됨
+    }
+
+    @PutMapping("update/{dailyId}") // 특정 요일 식단 업데이트
+    public DailyDietDTO updateDailyDiet(@PathVariable Long dailyId, @RequestBody DailyDietDTO dailyDietDTO) {
+        return dailyDietService.update(dailyId, dailyDietDTO);
+    }
+
+    @DeleteMapping("delete/{dailyId}") // 특정 요일 식단 삭제
+    public void deleteDailyDiet(@PathVariable Long dailyId) {
+        dailyDietService.delete(dailyId);
     }
 }

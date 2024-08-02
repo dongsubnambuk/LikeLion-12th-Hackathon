@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface WeeklyDietService {
     WeeklyDietDTO createWeeklyDiet(WeeklyDietDTO weeklyDietDTO);
-    Optional<WeeklyDietDTO> getWeeklyDietById(Long id);
+    Optional<WeeklyDietDTO> getWeeklyDietById(Long weeklyId);
     List<WeeklyDietDTO> getAllWeeklyDiets();
-    void deleteWeeklyDiet(Long id);
+    void deleteWeeklyDiet(Long weeklyId);
 }

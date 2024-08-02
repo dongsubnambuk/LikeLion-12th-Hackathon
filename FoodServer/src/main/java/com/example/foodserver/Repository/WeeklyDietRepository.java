@@ -8,6 +8,4 @@ import java.util.List;
 
 @Repository
 public interface WeeklyDietRepository extends JpaRepository<WeeklyDietEntity, Long> {
-    // 특정 사용자에 대한 WeeklyDiet 목록을 조회하는 메서드
-    List<WeeklyDietEntity> findByUserId(Long userId);
-}
+  }

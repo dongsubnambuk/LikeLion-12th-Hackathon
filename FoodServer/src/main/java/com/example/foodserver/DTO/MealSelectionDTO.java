@@ -9,7 +9,7 @@ import lombok.*;
 @ToString
 @Builder
 public class MealSelectionDTO {
-    private Long id;
+    private Long mealSelectionId;
     private Long userId;
     private Long dailyDietId;
     private Long foodMenuId;

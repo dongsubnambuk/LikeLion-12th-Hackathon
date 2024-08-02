@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DailyDietService {
-    DailyDietDTO createDailyDiet(DailyDietDTO dailyDietDTO);
-    Optional<DailyDietDTO> getDailyDietById(Long id);
-    List<DailyDietDTO> getAllDailyDiets();
-    void deleteDailyDiet(Long id);
+    DailyDietDTO create(DailyDietDTO dailyDietDTO);
+    Optional<DailyDietDTO> getDailyDietById(Long dailyDietId);
+    List<DailyDietDTO> getAll();
+    DailyDietDTO update(Long dailyId, DailyDietDTO dailyDietDTO);
+    void delete(Long dailyDietId);
+    List<DailyDietDTO> getByDayOfWeek(String dayOfWeek);
 }
