@@ -18,24 +18,24 @@ public class WeeklyDietController {
         this.weeklyDietService = weeklyDietService;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create") // 일주일 식단 생성
     public WeeklyDietDTO createWeeklyDiet(@RequestBody WeeklyDietDTO weeklyDietDTO) {
         return weeklyDietService.createWeeklyDiet(weeklyDietDTO);
     }
 
-    @GetMapping
+    @GetMapping("read/all") // 전체 조회
     public List<WeeklyDietDTO> getAllWeeklyDiets() {
         return weeklyDietService.getAllWeeklyDiets();
     }
 
-    @GetMapping("/{id}")
-    public WeeklyDietDTO getWeeklyDietById(@PathVariable Long id) {
-        return weeklyDietService.getWeeklyDietById(id)
-                .orElseThrow(() -> new RuntimeException("WeeklyDiet not found with id " + id));
+    @GetMapping("read/{weeklyId}") // 특정 일주일 식단 조회
+    public WeeklyDietDTO getWeeklyDietById(@PathVariable Long weeklyId) {
+        return weeklyDietService.getWeeklyDietById(weeklyId)
+                .orElseThrow(() -> new RuntimeException(weeklyId + "특정 식단을 조회하지 못했습니다."));
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteWeeklyDiet(@PathVariable Long id) {
-        weeklyDietService.deleteWeeklyDiet(id);
+    @DeleteMapping("delete/{weeklyId}") // id ( 특정 일주일 식단 삭제)
+    public void deleteWeeklyDiet(@PathVariable Long weeklyId) {
+        weeklyDietService.deleteWeeklyDiet(weeklyId);
     }
 }

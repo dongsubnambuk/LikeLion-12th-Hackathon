@@ -15,16 +15,10 @@ import lombok.*;
 public class DailyDietEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long dailyId;
 
     @Column(nullable = false)
-    private String dayOfWeek; // Example: "Monday", "Tuesday", etc.
-
-    @Column(nullable = false)
-    private String mealTime; // Example: "아침", "점심", "저녁"
-
-    @Column(nullable = false)
-    private int count;
+    private String dayOfWeek;
 
     @Column(nullable = false)
     private Long foodMenuId;

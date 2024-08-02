@@ -1,13 +1,12 @@
 package com.example.foodserver.DAO;
 
-import com.example.foodserver.DTO.WeeklyDietDTO;
-
+import com.example.foodserver.Entity.WeeklyDietEntity;
 import java.util.List;
 import java.util.Optional;
 
 public interface WeeklyDietDAO {
-    WeeklyDietDTO create(WeeklyDietDTO weeklyDietDTO);
-    Optional<WeeklyDietDTO> getById(Long id);
-    List<WeeklyDietDTO> getAll();
-    void delete(Long id);
+    WeeklyDietEntity create(WeeklyDietEntity weeklyDietEntity);
+    Optional<WeeklyDietEntity> getByWeeklyId(Long weeklyId);
+    List<WeeklyDietEntity> getAll();
+    void delete(Long weeklyId);
 }

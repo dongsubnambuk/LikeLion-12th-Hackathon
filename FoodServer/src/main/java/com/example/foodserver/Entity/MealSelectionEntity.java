@@ -15,7 +15,7 @@ import lombok.*;
 public class MealSelectionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long mealSelectionId;
 
     @Column(nullable = false)
     private Long userId;

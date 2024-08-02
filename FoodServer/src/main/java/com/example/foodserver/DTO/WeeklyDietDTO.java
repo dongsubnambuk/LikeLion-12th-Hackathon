@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @ToString
 @Builder
 public class WeeklyDietDTO {
-    private Long id;
+    private Long weeklyId;
     private Long userId;
     private LocalDate startDate;
     private LocalDate endDate;

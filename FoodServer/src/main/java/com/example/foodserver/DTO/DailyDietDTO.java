@@ -9,9 +9,7 @@ import lombok.*;
 @ToString
 @Builder
 public class DailyDietDTO {
-    private Long id;
+    private Long dailyId;
     private String dayOfWeek;
-    private String mealTime;
-    private int count;
     private Long foodMenuId;
 }

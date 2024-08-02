@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class WeeklyDietEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long weeklyId;
 
     @Column(nullable = false)
     private Long userId;

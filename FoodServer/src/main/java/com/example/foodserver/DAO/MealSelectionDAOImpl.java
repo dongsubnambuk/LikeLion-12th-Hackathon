@@ -1,6 +1,5 @@
 package com.example.foodserver.DAO;
 
-import com.example.foodserver.DTO.MealSelectionDTO;
 import com.example.foodserver.Entity.MealSelectionEntity;
 import com.example.foodserver.Repository.MealSelectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class MealSelectionDAOImpl implements MealSelectionDAO {
@@ -21,76 +19,51 @@ public class MealSelectionDAOImpl implements MealSelectionDAO {
     }
 
     @Override
-    public MealSelectionDTO create(MealSelectionDTO mealSelectionDTO) {
-        MealSelectionEntity entity = convertToEntity(mealSelectionDTO);
-        MealSelectionEntity savedEntity = mealSelectionRepository.save(entity);
-        return convertToDTO(savedEntity);
+    public MealSelectionEntity create(MealSelectionEntity mealSelectionEntity) {
+        return mealSelectionRepository.save(mealSelectionEntity);
     }
 
     @Override
-    public Optional<MealSelectionDTO> getById(Long id) {
-        return mealSelectionRepository.findById(id).map(this::convertToDTO);
+    public Optional<MealSelectionEntity> getById(Long mealSelectionId) {
+        return mealSelectionRepository.findById(mealSelectionId);
     }
 
     @Override
-    public List<MealSelectionDTO> getAll() {
-        return mealSelectionRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
+    public List<MealSelectionEntity> getAll() {
+        return mealSelectionRepository.findAll();
     }
 
     @Override
-    public List<MealSelectionDTO> getByUserId(Long userId) {
-        return mealSelectionRepository.findByUserId(userId).stream().map(this::convertToDTO).collect(Collectors.toList());
+    public List<MealSelectionEntity> getByUserId(Long userId) {
+        return mealSelectionRepository.findByUserId(userId);
     }
 
     @Override
-    public List<MealSelectionDTO> getByDailyDietId(Long dailyDietId) {
-        return mealSelectionRepository.findByDailyDietId(dailyDietId).stream().map(this::convertToDTO).collect(Collectors.toList());
+    public List<MealSelectionEntity> getByDailyDietId(Long dailyDietId) {
+        return mealSelectionRepository.findByDailyDietId(dailyDietId);
     }
 
     @Override
-    public List<MealSelectionDTO> getByMealTime(String mealTime) {
-        return mealSelectionRepository.findByMealTime(mealTime).stream().map(this::convertToDTO).collect(Collectors.toList());
+    public List<MealSelectionEntity> getByMealTime(String mealTime) {
+        return mealSelectionRepository.findByMealTime(mealTime);
     }
 
     @Override
-    public MealSelectionDTO update(Long id, MealSelectionDTO mealSelectionDTO) {
-        if (mealSelectionRepository.existsById(id)) {
-            MealSelectionEntity entity = convertToEntity(mealSelectionDTO);
-            entity.setId(id); // Ensure the ID is set for the update
-            MealSelectionEntity updatedEntity = mealSelectionRepository.save(entity);
-            return convertToDTO(updatedEntity);
+    public MealSelectionEntity update(Long mealSelectionId, MealSelectionEntity mealSelectionEntity) {
+        if (mealSelectionRepository.existsById(mealSelectionId)) {
+            mealSelectionEntity.setMealSelectionId(mealSelectionId);
+            return mealSelectionRepository.save(mealSelectionEntity);
         } else {
-            throw new RuntimeException("MealSelection not found with id " + id);
+            throw new RuntimeException(mealSelectionId + "선택한 식단을 업데이트하지 못했습니다.");
         }
     }
 
     @Override
-    public void delete(Long id) {
-        if (mealSelectionRepository.existsById(id)) {
-            mealSelectionRepository.deleteById(id);
+    public void delete(Long mealSelectionId) {
+        if (mealSelectionRepository.existsById(mealSelectionId)) {
+            mealSelectionRepository.deleteById(mealSelectionId);
         } else {
-            throw new RuntimeException("MealSelection not found with id " + id);
+            throw new RuntimeException(mealSelectionId + "선택했던 식단을 삭제하지 못했습니다.");
         }
-    }
-
-    private MealSelectionEntity convertToEntity(MealSelectionDTO dto) {
-        return MealSelectionEntity.builder()
-                .userId(dto.getUserId())
-                .dailyDietId(dto.getDailyDietId())
-                .foodMenuId(dto.getFoodMenuId())
-                .mealTime(dto.getMealTime())
-                .count(dto.getCount())
-                .build();
-    }
-
-    private MealSelectionDTO convertToDTO(MealSelectionEntity entity) {
-        return MealSelectionDTO.builder()
-                .id(entity.getId())
-                .userId(entity.getUserId())
-                .dailyDietId(entity.getDailyDietId())
-                .foodMenuId(entity.getFoodMenuId())
-                .mealTime(entity.getMealTime())
-                .count(entity.getCount())
-                .build();
     }
 }

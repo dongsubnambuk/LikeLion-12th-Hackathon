@@ -1,19 +1,17 @@
 package com.example.foodserver.DAO;
 
-import com.example.foodserver.DTO.MealSelectionDTO;
+import com.example.foodserver.Entity.MealSelectionEntity;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface MealSelectionDAO {
-    MealSelectionDTO create(MealSelectionDTO mealSelectionDTO);
-    Optional<MealSelectionDTO> getById(Long id);
-
-    List<MealSelectionDTO> getAll();
-
-    List<MealSelectionDTO> getByUserId(Long userId);
-    List<MealSelectionDTO> getByDailyDietId(Long dailyDietId);
-    List<MealSelectionDTO> getByMealTime(String mealTime);
-    MealSelectionDTO update(Long id, MealSelectionDTO mealSelectionDTO);
-    void delete(Long id);
+    MealSelectionEntity create(MealSelectionEntity mealSelectionEntity);
+    Optional<MealSelectionEntity> getById(Long mealSelectionId);
+    List<MealSelectionEntity> getAll();
+    List<MealSelectionEntity> getByUserId(Long userId);
+    List<MealSelectionEntity> getByDailyDietId(Long dailyDietId);
+    List<MealSelectionEntity> getByMealTime(String mealTime);
+    MealSelectionEntity update(Long mealSelectionId, MealSelectionEntity mealSelectionEntity);
+    void delete(Long mealSelectionId);
 }
