@@ -33,21 +33,24 @@ function Admin() {
   };
 
   const handlePriceChange = (e) => {
+
     const selectedPrice = e.target.value;
     setPrice(selectedPrice);
     console.log(selectedPrice);
   };
 
+  //생성하기 fetch
   const handleButtonClick = async () => {
+    const token = localStorage.getItem("token");
     setLoading(true);
     try {
         console.log(price)
-      const response = await fetch(`http://15.165.192.29:12000/api/aiDiet/newDiet?price=${price}`, {
+      const response = await fetch(`http://3.37.64.39:8000/api/aiDiet/newDiet?price=${price}`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Authorization": token,
         },
-        // body: JSON.stringify({ price: price })
       });
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -76,6 +79,7 @@ function Admin() {
     setLoading(false);
   };
 
+  //user정보 가져오는 fetch
   useEffect(() => {
     const fetchInitialData = async () => {
       const token = localStorage.getItem("token");
@@ -109,13 +113,12 @@ function Admin() {
 
 
 const style = {
-  height: '100vh',
+  height: '70vh',
   overflowY: 'auto', // 내용이 많을 경우 스크롤 가능하게 설정
 };
 
 const imageContainerStyle = {
     width: '100%', // 컨테이너 너비를 100%로 설정
-    height: '50vh', // 컨테이너 높이를 적절히 늘림
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -125,16 +128,17 @@ const imageContainerStyle = {
   
   const imageStyle = {
     width: '100%', // 컨테이너 너비를 100%로 설정
-    height: '30vh', // 컨테이너 높이를 적절히 늘림
-
+    height: '20vh', 
     objectFit: 'contain' // 이미지를 컨테이너에 맞게 조정
   };
-const titleStyle = {
-  fontSize: '14px' // 원하는 크기로 변경
-};
 
+  const titleStyle = {
+    fontSize: '20px', // 원하는 크기로 변경
+    fontWeight: 'bold',
+    textAlign: 'center', 
+  };
 
-  // 식단서버 post fetch
+  // 적용하기 post fetch
   const handleApply = async (event) => {
     event.preventDefault();
 
