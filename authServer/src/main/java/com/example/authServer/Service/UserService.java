@@ -10,4 +10,6 @@ public interface UserService {
     public boolean existsByEmail(String email);
 
     public UserDetails getUserDetail(String email);
+
+    public UserDetails updateUser(UserDetails user);
 }

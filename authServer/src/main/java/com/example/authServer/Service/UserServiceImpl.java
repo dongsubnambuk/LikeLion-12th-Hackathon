@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
                 .phoneNumber(userDetails.getPhoneNumber())
                 .roadAddress(userDetails.getRoadAddress())
                 .detailAddress(userDetails.getDetailAddress())
-                .role("ROLE_ADMIN")
+                .role("ROLE_USER")
                 .build();
 
         userDAO.save(user);
@@ -72,6 +72,23 @@ public class UserServiceImpl implements UserService {
                 .roadAddress(user.getRoadAddress())
                 .detailAddress(user.getDetailAddress())
                 .build();
+    }
+
+    @Override
+    public UserDetails updateUser(UserDetails user) {
+        String userPassword;
+        Users userEntity = userDAO.findByEmail(user.getEmail());
+
+        if(user.getPassword() == null || user.getPassword().isEmpty()){
+            userPassword = userEntity.getPassword();
+        }
+        else {
+            userPassword = bCryptPasswordEncoder.encode(user.getPassword());
+            System.out.println(userPassword);
+        }
+        userEntity.updateUser(user, userPassword);
+        userDAO.save(userEntity);
+        return user;
     }
 
 }

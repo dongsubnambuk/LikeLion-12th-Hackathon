@@ -2,6 +2,7 @@ package com.example.authServer.Controller;
 
 import com.example.authServer.DTO.UserDTO;
 import com.example.authServer.DTO.UserDetails;
+import com.example.authServer.Entity.Users;
 import com.example.authServer.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -64,6 +65,11 @@ public class UserController {
             return "Password cannot be null or empty";
         }
         return null;
+    }
+
+    @PutMapping
+    public UserDetails updateUser(@RequestBody UserDetails user){
+        return userService.updateUser(user);
     }
 
 }
