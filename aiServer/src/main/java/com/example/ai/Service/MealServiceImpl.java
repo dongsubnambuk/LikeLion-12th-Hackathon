@@ -201,7 +201,7 @@ public class MealServiceImpl implements MealService {
             }
             DailyMealPlan dailyMealPlan = DailyMealPlan.builder()
                     .mealOptions(mealOptions)
-                    .day(day)
+                    .day(startDate.plusDays(day-1))
                     .build();
             dailyMealPlans.add(dailyMealPlan);
         }
