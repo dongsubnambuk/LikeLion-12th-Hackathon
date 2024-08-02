@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DietRepository extends JpaRepository<FoodMenu, Long> {
-    Boolean existsById(long id);
+    Boolean existsByFoodMenuId(Long foodMenuId);
 }

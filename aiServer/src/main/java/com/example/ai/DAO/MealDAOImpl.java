@@ -5,19 +5,26 @@ import com.example.ai.Repository.DietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-public class DietDaoImpl implements DietDao{
+public class MealDAOImpl implements MealDAO {
     private final DietRepository dietRepository;
 
     @Autowired
-    public DietDaoImpl(DietRepository dietRepository) {
+    public MealDAOImpl(DietRepository dietRepository) {
         this.dietRepository = dietRepository;
     }
 
     @Override
-    public Boolean createDiet(FoodMenu foodMenu) {
+    public Boolean createMeal(FoodMenu foodMenu) {
         dietRepository.save(foodMenu);
 
-        return dietRepository.existsById(foodMenu.getId());
+        return dietRepository.existsById(foodMenu.getFoodMenuId());
+    }
+
+    @Override
+    public List<FoodMenu> findAll(){
+        return dietRepository.findAll();
     }
 }

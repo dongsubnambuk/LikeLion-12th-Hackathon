@@ -15,17 +15,17 @@ import org.springframework.boot.autoconfigure.graphql.ConditionalOnGraphQlSchema
 public class NutritionFacts {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    private Long id;
     @Column
-    String calories;
+    private String calories;
     @Column
-    String carbohydrate;
+    private String carbohydrate;
     @Column
-    String protein;
+    private String protein;
     @Column
-    String fat;
+    private String fat;
     @Column
-    String sugar;
+    private String sugar;
     @Column
-    String sodium;
+    private String sodium;
 }

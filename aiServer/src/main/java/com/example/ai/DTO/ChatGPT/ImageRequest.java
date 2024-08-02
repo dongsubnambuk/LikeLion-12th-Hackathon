@@ -1,4 +1,4 @@
-package com.example.ai.DTO;
+package com.example.ai.DTO.ChatGPT;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

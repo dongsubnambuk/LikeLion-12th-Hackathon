@@ -30,7 +30,7 @@ public class CommunicationServiceImpl implements CommunicationService{
     }
 
     @Override
-    public String imageUpload(byte[] image) throws URISyntaxException {
+    public String imageUpload(byte[] image) {
         try {
             ServiceInstance imageService = discoveryClient.getInstances("IMAGE-SERVER").get(0);
             HttpHeaders headers = new HttpHeaders();

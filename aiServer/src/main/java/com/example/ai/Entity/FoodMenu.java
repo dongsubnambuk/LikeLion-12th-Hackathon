@@ -14,24 +14,24 @@ import lombok.NoArgsConstructor;
 public class FoodMenu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long foodMenuId;
     @Column
-    String name;
-    @Column(length = 1024)
-    String image;
+    private String name;
     @Column
-    String price;
+    private String image;
     @Column
-    String main1;
+    private String price;
     @Column
-    String main2;
+    private String main1;
     @Column
-    String side1;
+    private String main2;
     @Column
-    String side2;
+    private String side1;
     @Column
-    String side3;
+    private String side2;
+    @Column
+    private String side3;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn
-    NutritionFacts nutritionFacts;
+    private NutritionFacts nutritionFacts;
 }

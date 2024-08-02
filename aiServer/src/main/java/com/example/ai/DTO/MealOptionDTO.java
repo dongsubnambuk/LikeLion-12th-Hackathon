@@ -1,14 +1,17 @@
 package com.example.ai.DTO;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+
+import java.util.List;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ImageData {
-    private String url;
-    private String b64_json;
+public class MealOptionDTO {
+    private String mealType;
+    private List<FoodMenuDTO> foodMenus;
 }
