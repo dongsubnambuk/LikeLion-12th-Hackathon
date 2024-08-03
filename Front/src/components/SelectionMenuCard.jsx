@@ -4,7 +4,7 @@ import '../CSS/MealCard.css';
 import '../CSS/SelectionMenuCard.css';
 import logo from '../images/logo.png';
 
-const SelectionMenuCard = ({ meals, onChangeMenu }) => {
+const SelectionMenuCard = ({ meals, index, onChangeMenu }) => {
 
     const handleChoiceMenu = () => {
         onChangeMenu(meals);
@@ -12,27 +12,27 @@ const SelectionMenuCard = ({ meals, onChangeMenu }) => {
 
     return (
         <div className="selection-menu-card">
-            <h2 className="selection-menu-meal-option">[{meals.mealOption}]</h2>
+            <h2 className="selection-menu-meal-option">&lt;옵션{index}&gt;</h2>
             <div className="selection-menu-card-body">
                 <div className="selection-menu-card-image-container">
-                    <img src={logo} alt={meals.title} className="selection-menu-card-image" />
+                    <img src={logo} alt={meals.name} className="selection-menu-card-image" />
                 </div>
                 <div className="selection-menu-card-content">
                     <div className="selection-menu-card-info-content">
-                        <h3>[{meals.title}]</h3>
-                        <p>{meals.description}</p>
+                        <h3>[{meals.name}]</h3>
+                        <p>{meals.main1}, {meals.main2}, {meals.side1}, {meals.side2}, {meals.side3}</p>
                         <div className="selection-menu-card-nutrition">
                             <div className="nutrition-item">
                                 <span className="nutrition-label">탄수화물</span>
-                                <span className="nutrition-value">{meals.carbs}g</span>
+                                <span className="nutrition-value">{meals.carbohydrate}</span>
                             </div>
                             <div className="nutrition-item">
                                 <span className="nutrition-label">단백질</span>
-                                <span className="nutrition-value">{meals.protein}g</span>
+                                <span className="nutrition-value">{meals.protein}</span>
                             </div>
                             <div className="nutrition-item">
                                 <span className="nutrition-label">지방</span>
-                                <span className="nutrition-value">{meals.fat}g</span>
+                                <span className="nutrition-value">{meals.fat}</span>
                             </div>
                         </div>
                     </div>

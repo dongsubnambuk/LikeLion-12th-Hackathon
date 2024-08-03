@@ -11,24 +11,24 @@
 
 .selection-menu-card-body {
     display: flex;
-    padding: 8px;
+    padding: 0 8px 8px;
+    justify-content: space-between;
 }
 
 .selection-menu-card-image-container {
-    width: 30%;
-    position: relative;
-    overflow: hidden;
-    border-radius: 8px;
+    width: 25%;
+        height: 100%;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 }
 
 .selection-menu-card-image {
-    top: 0;
-    left: 0;
-    width: 95%;
-    height: auto;
-    object-fit: cover;
-    /* 이미지가 컨테이너를 덮도록 설정 */
-    border-radius: 8px;
+    width: 100%;
+        height: auto;
+        object-fit: cover;
+        border-radius: 8px;
 }
 
 .selection-menu-card-content {
@@ -36,27 +36,37 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    width: 70%;
+    width: 75%;
 }
 
 .selection-menu-card-info-content {
     padding: 0px 5px;
-    width: 80%;
+    width: 75%;
 }
 
 .selection-menu-card-info-content h3 {
     margin: 8px 0 4px;
-    font-size: 14px;
+    font-size: 16px;
     color: #333;
+    font-weight: bold;
+    overflow: hidden;
+    /* 넘치는 내용 숨기기 */
+    text-overflow: ellipsis;
+    /* 넘치는 부분을 ...으로 표시 */
+    white-space: nowrap;
+    /* 텍스트 줄바꿈 방지 */
 }
 
 .selection-menu-card-info-content p {
     margin: 0 0 8px;
     color: #666;
     font-size: 14px;
-    overflow: hidden; /* 넘치는 내용 숨기기 */
-    text-overflow: ellipsis; /* 넘치는 부분을 ...으로 표시 */
-    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    overflow: hidden;
+    /* 넘치는 내용 숨기기 */
+    text-overflow: ellipsis;
+    /* 넘치는 부분을 ...으로 표시 */
+    white-space: nowrap;
+    /* 텍스트 줄바꿈 방지 */
     margin-bottom: 10px;
     margin-top: 10px;
 }
@@ -85,6 +95,7 @@
 }
 
 .selection-menu-choice-area {
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -93,8 +104,8 @@
 }
 
 .selection-menu-choice-btn {
-    height: 40%;
-    width: 100%;
+    height: 50%;
+    width: 90%;
     display: flex;
     align-items: center;
     justify-content: center;

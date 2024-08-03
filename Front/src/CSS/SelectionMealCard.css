@@ -51,6 +51,12 @@
     font-size: 16px;
     color: #333;
     font-weight: bold;
+    overflow: hidden;
+        /* 넘치는 내용 숨기기 */
+        text-overflow: ellipsis;
+        /* 넘치는 부분을 ...으로 표시 */
+        white-space: nowrap;
+        /* 텍스트 줄바꿈 방지 */
 }
 
 .selection-meal-card-info-content p {
