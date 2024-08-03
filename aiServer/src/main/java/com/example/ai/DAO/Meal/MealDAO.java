@@ -1,4 +1,4 @@
-package com.example.ai.DAO;
+package com.example.ai.DAO.Meal;
 
 import com.example.ai.Entity.Meal.FoodMenu;
 

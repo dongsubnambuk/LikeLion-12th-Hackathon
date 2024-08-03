@@ -31,6 +31,9 @@ public class Review {
     @Column(name = "comment")
     private List<String> comment;
 
+    @ManyToMany(mappedBy = "reviews")
+    private List<DailyReview> dailyReviews;
+
     public void incrementLikes(){
         this.likes++;
     }

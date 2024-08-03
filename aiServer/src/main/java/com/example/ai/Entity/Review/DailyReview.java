@@ -22,7 +22,15 @@ public class DailyReview {
     private String userEmail;
     @Column
     private LocalDate reviewDate;
-    @OneToMany
-    @JoinColumn
+//    @OneToMany
+//    @JoinColumn
+//    private List<Review> reviews;
+
+    @ManyToMany
+    @JoinTable(
+            name = "daily_review_review",
+            joinColumns = @JoinColumn(name = "daily_review_id"),
+            inverseJoinColumns = @JoinColumn(name = "review_id")
+    )
     private List<Review> reviews;
 }

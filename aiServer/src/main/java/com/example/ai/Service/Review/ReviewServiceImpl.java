@@ -1,6 +1,6 @@
-package com.example.ai.Service;
+package com.example.ai.Service.Review;
 
-import com.example.ai.DAO.ReviewDAO;
+import com.example.ai.DAO.Review.ReviewDAO;
 import com.example.ai.DTO.Review.DailyReviewDTO;
 import com.example.ai.DTO.Review.ReviewDTO;
 import com.example.ai.DTO.Review.UserDailyMealPlanDTO;
@@ -8,6 +8,8 @@ import com.example.ai.DTO.Review.UserWeeklyMealPlanDTO;
 import com.example.ai.Entity.Meal.FoodMenu;
 import com.example.ai.Entity.Review.DailyReview;
 import com.example.ai.Entity.Review.Review;
+import com.example.ai.Service.Meal.MealService;
+import org.hibernate.annotations.DialectOverride;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -56,6 +58,12 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    public List<DailyReviewDTO> readDailyReviewDTOByDate(LocalDate date){
+        List<DailyReview> dailyReviews = reviewDAO.findByReviewDate(date);
+        return toDailyReviewDTOS(dailyReviews);
+    }
+
+    @Override
     public ReviewDTO incrementLikes(Long reviewId){
         Review review = reviewDAO.incrementLikes(reviewId);
         return toReviewDTO(review);
@@ -70,10 +78,37 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewDTO toReviewDTO(Review review){
         return ReviewDTO.builder()
                 .reviewId(review.getReviewId())
+                .foodImage(review.getFoodMenu().getImage())
+                .foodName(review.getFoodMenu().getName())
                 .likes(review.getLikes())
                 .disLikes(review.getDisLikes())
                 .comment(review.getComment())
                 .build();
+    }
+
+    public List<ReviewDTO> reviewDTOS(List<Review> reviews){
+        List<ReviewDTO> reviewDTOS = new ArrayList<>();
+        for(Review review : reviews){
+            reviewDTOS.add(toReviewDTO(review));
+        }
+        return reviewDTOS;
+    }
+
+    public DailyReviewDTO toDailyReviewDTO(DailyReview dailyReview){
+        return DailyReviewDTO.builder()
+                .dailyReviewId(dailyReview.getDailyReviewId())
+                .userEmail(dailyReview.getUserEmail())
+                .reviewDate(dailyReview.getReviewDate())
+                .reviews(reviewDTOS(dailyReview.getReviews()))
+                .build();
+    }
+
+    public List<DailyReviewDTO> toDailyReviewDTOS(List<DailyReview> dailyReviews){
+        List<DailyReviewDTO> dailyReviewDTOS = new ArrayList<>();
+        for(DailyReview dailyReview : dailyReviews){
+            dailyReviewDTOS.add(toDailyReviewDTO(dailyReview));
+        }
+        return dailyReviewDTOS;
     }
 
     public Review toReviewEntity(FoodMenu foodMenu){

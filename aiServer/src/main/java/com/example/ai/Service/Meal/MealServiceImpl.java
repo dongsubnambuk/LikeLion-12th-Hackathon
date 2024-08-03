@@ -1,7 +1,7 @@
-package com.example.ai.Service;
+package com.example.ai.Service.Meal;
 
-import com.example.ai.DAO.MealDAO;
-import com.example.ai.DAO.WeeklyMealPlanDAO;
+import com.example.ai.DAO.Meal.MealDAO;
+import com.example.ai.DAO.Meal.WeeklyMealPlanDAO;
 import com.example.ai.DTO.ChatGPT.ChatRequest;
 import com.example.ai.DTO.ChatGPT.ChatResponse;
 import com.example.ai.DTO.ChatGPT.ImageRequest;
@@ -11,11 +11,12 @@ import com.example.ai.DTO.Meal.FoodMenuDTO;
 import com.example.ai.DTO.Meal.MealOptionDTO;
 import com.example.ai.DTO.Meal.WeeklyMealPlanDTO;
 import com.example.ai.Entity.Meal.*;
+import com.example.ai.Service.Communication.CommunicationService;
+import com.example.ai.Service.Review.ReviewService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 

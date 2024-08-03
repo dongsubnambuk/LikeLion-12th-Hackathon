@@ -1,13 +1,15 @@
-package com.example.ai.DAO;
+package com.example.ai.DAO.Review;
 
 import com.example.ai.Entity.Meal.FoodMenu;
 import com.example.ai.Entity.Review.DailyReview;
 import com.example.ai.Entity.Review.Review;
-import com.example.ai.Repository.DailyReviewRepository;
-import com.example.ai.Repository.ReviewRepository;
+import com.example.ai.Repository.Review.DailyReviewRepository;
+import com.example.ai.Repository.Review.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -35,6 +37,11 @@ public class ReviewDAOImpl implements ReviewDAO{
     @Override
     public List<Review> readReviewsByFoodMenus(List<FoodMenu> foodMenus) {
         return reviewRepository.findByFoodMenuIn(foodMenus);
+    }
+
+    @Override
+    public List<DailyReview> findByReviewDate(LocalDate reviewDate) {
+        return dailyReviewRepository.findByReviewDate(reviewDate);
     }
 
     @Override

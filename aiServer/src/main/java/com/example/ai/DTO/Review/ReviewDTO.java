@@ -13,7 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ReviewDTO {
     private Long reviewId;
-    private Long foodMenuId;
+    private String foodImage;
+    private String foodName;
     private Long likes;
     private Long disLikes;
     private List<String> comment;

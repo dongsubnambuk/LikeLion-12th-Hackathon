@@ -1,4 +1,4 @@
-package com.example.ai.Repository;
+package com.example.ai.Repository.Review;
 
 import com.example.ai.Entity.Meal.FoodMenu;
 import com.example.ai.Entity.Review.Review;

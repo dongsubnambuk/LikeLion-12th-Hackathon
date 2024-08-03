@@ -1,7 +1,7 @@
-package com.example.ai.DAO;
+package com.example.ai.DAO.Meal;
 
 import com.example.ai.Entity.Meal.FoodMenu;
-import com.example.ai.Repository.MealRepository;
+import com.example.ai.Repository.Meal.MealRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

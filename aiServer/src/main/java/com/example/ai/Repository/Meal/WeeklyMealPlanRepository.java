@@ -1,4 +1,4 @@
-package com.example.ai.Repository;
+package com.example.ai.Repository.Meal;
 
 import com.example.ai.Entity.Meal.WeeklyMealPlan;
 import org.springframework.data.jpa.repository.JpaRepository;

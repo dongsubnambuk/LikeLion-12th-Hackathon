@@ -1,4 +1,4 @@
-package com.example.ai.Service;
+package com.example.ai.Service.Meal;
 
 import com.example.ai.DTO.Meal.FoodMenuDTO;
 import com.example.ai.DTO.Meal.WeeklyMealPlanDTO;
