@@ -26,17 +26,17 @@ public class PaymentController {
         return paymentService.createImportPayment(paymentRequestDTO);
     }
 
-    @GetMapping("/read/{paymentId}")
+    @GetMapping("/{paymentId}")
     public PaymentResponseDTO readPaymentByPaymentId(@PathVariable("paymentId") String paymentId){
         return paymentService.readPaymentByPaymentId(paymentId);
     }
 
-    @GetMapping("/read/user/{purchaser}")
+    @GetMapping("/{purchaser}")
     public PaymentResponseDTOS readPaymentByPurchaser(@PathVariable String purchaser){
         return paymentService.readPaymentByPurchaser(purchaser);
     }
 
-    @GetMapping("/read/unpaid-users")
+    @GetMapping("/unpaid-users")
     public UserDTO readUnpaidUsers(){
         return paymentService.readNonPurchasersThisWeek();
     }
