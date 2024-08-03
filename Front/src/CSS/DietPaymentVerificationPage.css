@@ -1,18 +1,49 @@
-.DPVPcontainer {
-    width: 100%;
-    height: 65%;
+.payment-complete-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-}
-
-.DPVPmainText {
-    font-size: 20px;
-    margin-bottom: 7%;
+    height: 80vh; /* Adjust as necessary */
+    padding: 20px;
     text-align: center;
 }
 
-.DPVPBtn {
-    width: 70%;
+/* .payment-complete-content {
+    background: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+} */
+
+.payment-complete-icon {
+    margin-bottom: 20px;
+}
+
+.payment-complete-message {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.payment-complete-details {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.payment-complete-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #28a745; /* Green background */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.payment-complete-button:hover {
+    background-color: #218838; /* Darker green on hover */
 }
