@@ -1,5 +1,6 @@
-package com.example.ai.Entity;
+package com.example.ai.Entity.Review;
 
+import com.example.ai.Entity.Meal.FoodMenu;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

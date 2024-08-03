@@ -1,7 +1,7 @@
 package com.example.ai.Controller;
 
-import com.example.ai.DTO.FoodMenuDTO;
-import com.example.ai.DTO.WeeklyMealPlanDTO;
+import com.example.ai.DTO.Meal.FoodMenuDTO;
+import com.example.ai.DTO.Meal.WeeklyMealPlanDTO;
 import com.example.ai.Service.MealService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

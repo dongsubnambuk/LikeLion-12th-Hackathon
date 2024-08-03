@@ -1,0 +1,21 @@
+package com.example.ai.DTO.Review;
+
+import com.example.ai.Entity.Review.Review;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class DailyReviewDTO {
+    private Long dailyReviewId;
+    private String userEmail;
+    private LocalDate reviewDate;
+    private List<Review> reviews;
+}

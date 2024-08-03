@@ -1,6 +1,6 @@
 package com.example.ai.DAO;
 
-import com.example.ai.Entity.WeeklyMealPlan;
+import com.example.ai.Entity.Meal.WeeklyMealPlan;
 
 import java.time.LocalDate;
 

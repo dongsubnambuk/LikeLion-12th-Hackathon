@@ -8,6 +8,4 @@ import java.net.URISyntaxException;
 
 public interface CommunicationService {
     public String imageUpload(byte[] image);
-    public String imageUpdate(String image, String imageKey) throws URISyntaxException;
-    public Boolean imageDelete(String imageKey) throws URISyntaxException;
 }

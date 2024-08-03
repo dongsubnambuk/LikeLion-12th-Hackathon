@@ -1,7 +1,7 @@
 package com.example.ai.DAO;
 
-import com.example.ai.Entity.FoodMenu;
-import com.example.ai.Repository.DietRepository;
+import com.example.ai.Entity.Meal.FoodMenu;
+import com.example.ai.Repository.MealRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -9,22 +9,27 @@ import java.util.List;
 
 @Repository
 public class MealDAOImpl implements MealDAO {
-    private final DietRepository dietRepository;
+    private final MealRepository mealRepository;
 
     @Autowired
-    public MealDAOImpl(DietRepository dietRepository) {
-        this.dietRepository = dietRepository;
+    public MealDAOImpl(MealRepository dietRepository) {
+        this.mealRepository = dietRepository;
     }
 
     @Override
     public Boolean createMeal(FoodMenu foodMenu) {
-        dietRepository.save(foodMenu);
+        mealRepository.save(foodMenu);
 
-        return dietRepository.existsById(foodMenu.getFoodMenuId());
+        return mealRepository.existsById(foodMenu.getFoodMenuId());
     }
 
     @Override
     public List<FoodMenu> findAll(){
-        return dietRepository.findAll();
+        return mealRepository.findAll();
+    }
+
+    @Override
+    public FoodMenu findById(Long foodMenuId){
+        return mealRepository.getReferenceById(foodMenuId);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.ai.DTO;
+package com.example.ai.DTO.Review;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

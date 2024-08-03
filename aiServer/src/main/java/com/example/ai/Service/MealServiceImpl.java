@@ -2,12 +2,15 @@ package com.example.ai.Service;
 
 import com.example.ai.DAO.MealDAO;
 import com.example.ai.DAO.WeeklyMealPlanDAO;
-import com.example.ai.DTO.*;
 import com.example.ai.DTO.ChatGPT.ChatRequest;
 import com.example.ai.DTO.ChatGPT.ChatResponse;
 import com.example.ai.DTO.ChatGPT.ImageRequest;
 import com.example.ai.DTO.ChatGPT.ImageResponse;
-import com.example.ai.Entity.*;
+import com.example.ai.DTO.Meal.DailyMealPlanDTO;
+import com.example.ai.DTO.Meal.FoodMenuDTO;
+import com.example.ai.DTO.Meal.MealOptionDTO;
+import com.example.ai.DTO.Meal.WeeklyMealPlanDTO;
+import com.example.ai.Entity.Meal.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,7 @@ public class MealServiceImpl implements MealService {
     private final MealDAO mealDAO;
     private final WeeklyMealPlanDAO weeklyMealPlanDAO;
     private final CommunicationService communicationService;
+    private final ReviewService reviewService;
     private final RestTemplate template;
     private final Logger logger = LoggerFactory.getLogger(MealServiceImpl.class);
 
@@ -49,11 +53,13 @@ public class MealServiceImpl implements MealService {
     public MealServiceImpl(MealDAO mealDAO,
                            WeeklyMealPlanDAO weeklyMealPlanDAO,
                            RestTemplate template,
-                           CommunicationService communicationService) {
+                           CommunicationService communicationService,
+                           ReviewService reviewService) {
         this.mealDAO = mealDAO;
         this.weeklyMealPlanDAO = weeklyMealPlanDAO;
         this.template = template;
         this.communicationService = communicationService;
+        this.reviewService = reviewService;
     }
 
     @Override
@@ -80,6 +86,7 @@ public class MealServiceImpl implements MealService {
         }
 
         mealDAO.createMeal(foodMenu);
+        reviewService.createReview(foodMenu);
 
         return toFoodMenuDTO(foodMenu);
     }
@@ -116,6 +123,11 @@ public class MealServiceImpl implements MealService {
         }
 
         return toWeeklyMealPlanDTO(weeklyMealPlan);
+    }
+
+    @Override
+    public FoodMenu readFoodMenuByFoodMenuId(Long foodMenuId){
+        return mealDAO.findById(foodMenuId);
     }
 
     private void initWeights() {

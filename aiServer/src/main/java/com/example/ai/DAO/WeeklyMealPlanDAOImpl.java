@@ -1,9 +1,8 @@
 package com.example.ai.DAO;
 
-import com.example.ai.Entity.WeeklyMealPlan;
+import com.example.ai.Entity.Meal.WeeklyMealPlan;
 import com.example.ai.Repository.WeeklyMealPlanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;

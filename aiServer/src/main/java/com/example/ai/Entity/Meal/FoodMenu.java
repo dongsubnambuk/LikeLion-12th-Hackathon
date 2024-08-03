@@ -1,4 +1,4 @@
-package com.example.ai.Entity;
+package com.example.ai.Entity.Meal;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

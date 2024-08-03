@@ -1,6 +1,5 @@
-package com.example.ai.DTO;
+package com.example.ai.DTO.Meal;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

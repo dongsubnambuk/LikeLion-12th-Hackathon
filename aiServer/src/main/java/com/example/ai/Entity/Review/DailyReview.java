@@ -1,4 +1,4 @@
-package com.example.ai.Entity;
+package com.example.ai.Entity.Review;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,15 +14,15 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WeeklyMealPlan {
+public class DailyReview {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long weeklyMealPlanId;
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "weekly_meal_plan_id")
-    private List<DailyMealPlan> dailyMealPlans;
+    private Long dailyReviewId;
     @Column
-    private LocalDate startDate;
+    private String userEmail;
     @Column
-    private LocalDate endDate;
+    private LocalDate reviewDate;
+    @OneToMany
+    @JoinColumn
+    private List<Review> reviews;
 }
