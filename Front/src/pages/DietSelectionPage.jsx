@@ -48,7 +48,7 @@ function DietSelectionPage() {
     //     console.log(mealData);
     // }, [mealData]);
 
-    if (!mealData.length) {
+    if (!mealData) {
         return <div>Loading...</div>;
     }
 

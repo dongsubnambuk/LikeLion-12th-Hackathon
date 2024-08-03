@@ -14,13 +14,14 @@
     background-color: white;
     border-radius: 15px;
     border: 1px solid black;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    /* Allow items to wrap onto multiple lines */
     gap: 15px;
-    overflow-y: scroll;
-    /* 세로 스크롤 가능하게 설정 */
-    scrollbar-width: none;
-    /* Firefox에서 스크롤 바 숨기기 */
+    /* Space between items */
+    overflow-y: auto;
+    /* Vertical scrolling if needed */
 }
 
 .ADPlistContainer::-webkit-scrollbar {
@@ -35,9 +36,14 @@
     text-align: center;
     border-radius: 15px;
     justify-content: space-around;
+    align-items: center;
     padding: 2px 0;
+    width: calc(33.33% - 15px);
+    /* 3 items per row, accounting for gaps */
     height: 125px;
     cursor: pointer;
+    box-sizing: border-box;
+    /* Ensure padding and border are included in the width */
 }
 
 .ADPitemImage {
@@ -51,6 +57,13 @@
 
 .ADPitemTitle {
     font-size: 13px;
+    width: 85%;
+    white-space: nowrap;
+    /* Prevent text from wrapping to a new line */
+    overflow: hidden;
+    /* Hide the overflowed text */
+    text-overflow: ellipsis;
+    /* Display ellipsis (...) for the truncated text */
 }
 
 .ADPitemPrice {
