@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @Data
 public class PaymentEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String paymentId;
     private String paymentUid;
     private String purchaser;

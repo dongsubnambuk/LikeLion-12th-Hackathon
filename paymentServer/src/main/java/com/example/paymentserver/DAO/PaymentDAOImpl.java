@@ -44,6 +44,11 @@ public class PaymentDAOImpl implements PaymentDAO{
     }
 
     @Override
+    public Boolean existsByPaymentId(String paymentId) {
+        return paymentRepository.existsByPaymentUid(paymentId);
+    }
+
+    @Override
     public List<String> findPurchasersThisWeek(){
         LocalDateTime startOfWeek = LocalDateTime.now().with(java.time.DayOfWeek.MONDAY).toLocalDate().atStartOfDay();
         LocalDateTime endOfWeek = startOfWeek.plusDays(6).withHour(23).withMinute(59).withSecond(59);

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,10 @@ public class PaymentServiceImpl implements PaymentService {
     private final OrderService orderService;
     private final IamportClient iamportClient;
     private final Logger logger = LoggerFactory.getLogger(PaymentServiceImpl.class);
+
+    private static final String CHARACTERS = "0123456789";
+    private static final int ID_LENGTH = 15;
+    private static final SecureRandom random = new SecureRandom();
 
     @Autowired
     public PaymentServiceImpl(PaymentDAO paymentDAO,
@@ -45,7 +50,7 @@ public class PaymentServiceImpl implements PaymentService {
             // 결제 단건 조회(아임포트)
             IamportResponse<com.siot.IamportRestClient.response.Payment> iamportResponse = iamportClient.paymentByImpUid(request.getPaymentUid());
             // 주문내역 조회
-            OrderEntity orderEntity = orderService.findByOrderId(request.getOrderUid());
+            OrderEntity orderEntity = orderService.findByOrderId(request.getOrderId());
 
             // 결제 완료가 아니면
             if (!iamportResponse.getResponse().getStatus().equals("paid")) {
@@ -120,8 +125,26 @@ public class PaymentServiceImpl implements PaymentService {
         return new PaymentResponseDTO("success", null);
     }
 
+    private String generateUniquePaymentId() {
+        String paymentId;
+        do {
+            paymentId = generateRandomId();
+        } while (paymentDAO.existsByPaymentUid(paymentId)); // Check if UID already exists
+        return paymentId;
+    }
+
+    // Generate a random 15-digit number
+    private String generateRandomId() {
+        StringBuilder sb = new StringBuilder(ID_LENGTH);
+        for (int i = 0; i < ID_LENGTH; i++) {
+            sb.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
+        }
+        return sb.toString();
+    }
+
     public PaymentEntity toPayment(OrderEntity orderEntity, String paymentUid) {
         return PaymentEntity.builder()
+                .paymentId(generateUniquePaymentId())
                 .purchaser(orderEntity.getPurchaser())
                 .weeklyId(orderEntity.getWeeklyId())
                 .paymentUid(paymentUid)

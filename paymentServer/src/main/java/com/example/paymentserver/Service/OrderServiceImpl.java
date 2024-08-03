@@ -24,7 +24,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public OrderEntity findByOrderId(Long orderId) {
+    public OrderEntity findByOrderId(String orderId) {
         return orderDAO.readOrder(orderId);
     }
 

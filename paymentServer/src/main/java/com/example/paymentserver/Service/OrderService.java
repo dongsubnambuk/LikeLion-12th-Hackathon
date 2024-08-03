@@ -6,6 +6,6 @@ import com.example.paymentserver.Entity.OrderEntity;
 
 public interface OrderService {
     public OrderResponseDTO createOrder(OrderDTO orderDTO);
-    public OrderEntity findByOrderId(Long orderId);
+    public OrderEntity findByOrderId(String orderId);
     public OrderResponseDTO deleteOrder(OrderEntity orderEntity);
 }

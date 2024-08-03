@@ -28,7 +28,7 @@ public class OrderDAOImpl implements OrderDAO{
     }
 
     @Override
-    public OrderEntity readOrder(Long orderId) {
+    public OrderEntity readOrder(String orderId) {
         return orderRepository.getReferenceById(orderId);
     }
 

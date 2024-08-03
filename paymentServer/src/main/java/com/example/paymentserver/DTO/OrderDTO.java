@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class OrderDTO {
-    private Long orderId;
+    private String orderId;
     private String purchaser;
     private Long totalPrice;
     private Long weeklyId;

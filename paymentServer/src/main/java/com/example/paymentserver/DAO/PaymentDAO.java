@@ -11,5 +11,6 @@ public interface PaymentDAO {
     public PaymentEntity readPaymentById(String paymentId);
     public void deletePaymentById(String paymentId);
     public Boolean existsByPaymentUid(String paymentUid);
+    public Boolean existsByPaymentId(String paymentId);
     public List<String> findPurchasersThisWeek();
 }
