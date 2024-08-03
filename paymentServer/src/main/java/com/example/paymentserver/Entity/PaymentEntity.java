@@ -26,7 +26,7 @@ public class PaymentEntity {
     private Long weeklyId;
     private LocalDateTime dateTime;
 
-    public void updateDateTime(LocalDateTime dateTime){
+    public void updateDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
 }

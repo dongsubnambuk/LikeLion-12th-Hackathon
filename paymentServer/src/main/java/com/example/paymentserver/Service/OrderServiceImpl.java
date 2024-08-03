@@ -30,6 +30,7 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public OrderResponseDTO deleteOrder(OrderEntity orderEntity) {
+        orderDAO.deleteOrder(orderEntity);
         return new OrderResponseDTO("success", null);
     }
 

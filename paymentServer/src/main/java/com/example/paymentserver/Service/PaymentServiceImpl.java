@@ -1,10 +1,7 @@
 package com.example.paymentserver.Service;
 
 import com.example.paymentserver.DAO.PaymentDAO;
-import com.example.paymentserver.DTO.PaymentDTO;
-import com.example.paymentserver.DTO.PaymentRequestDTO;
-import com.example.paymentserver.DTO.PaymentResponseDTO;
-import com.example.paymentserver.DTO.PaymentResponseDTOS;
+import com.example.paymentserver.DTO.*;
 import com.example.paymentserver.Entity.OrderEntity;
 import com.example.paymentserver.Entity.PaymentEntity;
 import com.siot.IamportRestClient.exception.IamportResponseException;
@@ -21,19 +18,23 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentDAO paymentDAO;
+    private final CommunicationService communicationService;
     private final OrderService orderService;
     private final IamportClient iamportClient;
     private final Logger logger = LoggerFactory.getLogger(PaymentServiceImpl.class);
 
     @Autowired
     public PaymentServiceImpl(PaymentDAO paymentDAO,
+                              CommunicationService communicationService,
                               OrderService orderService,
                               IamportClient iamportClient) {
         this.paymentDAO = paymentDAO;
+        this.communicationService = communicationService;
         this.orderService = orderService;
         this.iamportClient = iamportClient;
     }
@@ -101,6 +102,16 @@ public class PaymentServiceImpl implements PaymentService {
     public PaymentResponseDTOS readPaymentByPurchaser(String purchaser) {
         List<PaymentEntity> paymentEntities = paymentDAO.readPaymentByPurchaser(purchaser);
         return toPaymentResponseDTOS(paymentEntities);
+    }
+
+    @Override
+    public UserDTO readNonPurchasersThisWeek(){
+        List<String> purchasersThisWeek = paymentDAO.findPurchasersThisWeek();
+        List<String> allUsers = communicationService.readAllUser();
+        List<String> nonPurchasers = allUsers.stream()
+                .filter(user -> !purchasersThisWeek.contains(user))
+                .toList();
+        return new UserDTO(nonPurchasers);
     }
 
     @Override

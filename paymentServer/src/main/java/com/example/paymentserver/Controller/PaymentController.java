@@ -3,6 +3,7 @@ package com.example.paymentserver.Controller;
 import com.example.paymentserver.DTO.PaymentRequestDTO;
 import com.example.paymentserver.DTO.PaymentResponseDTO;
 import com.example.paymentserver.DTO.PaymentResponseDTOS;
+import com.example.paymentserver.DTO.UserDTO;
 import com.example.paymentserver.Service.PaymentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,8 @@ public class PaymentController {
     private final PaymentService paymentService;
     private final  Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
-    public PaymentController(@Autowired PaymentService paymentService) {
+    @Autowired
+    public PaymentController(PaymentService paymentService) {
         this.paymentService = paymentService;
     }
 
@@ -32,6 +34,11 @@ public class PaymentController {
     @GetMapping("/read/user/{purchaser}")
     public PaymentResponseDTOS readPaymentByPurchaser(@PathVariable String purchaser){
         return paymentService.readPaymentByPurchaser(purchaser);
+    }
+
+    @GetMapping("/read/unpaid-users")
+    public UserDTO readUnpaidUsers(){
+        return paymentService.readNonPurchasersThisWeek();
     }
 
     @DeleteMapping("/delete/{paymentId}")

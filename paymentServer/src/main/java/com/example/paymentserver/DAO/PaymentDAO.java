@@ -2,6 +2,7 @@ package com.example.paymentserver.DAO;
 
 import com.example.paymentserver.Entity.PaymentEntity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PaymentDAO {
@@ -10,4 +11,5 @@ public interface PaymentDAO {
     public PaymentEntity readPaymentById(String paymentId);
     public void deletePaymentById(String paymentId);
     public Boolean existsByPaymentUid(String paymentUid);
+    public List<String> findPurchasersThisWeek();
 }
