@@ -26,12 +26,12 @@ public class PaymentController {
         return paymentService.createImportPayment(paymentRequestDTO);
     }
 
-    @GetMapping("/{paymentId}")
+    @GetMapping("/paymentId/{paymentId}")
     public PaymentResponseDTO readPaymentByPaymentId(@PathVariable("paymentId") String paymentId){
         return paymentService.readPaymentByPaymentId(paymentId);
     }
 
-    @GetMapping("/{purchaser}")
+    @GetMapping("/purchaser/{purchaser}")
     public PaymentResponseDTOS readPaymentByPurchaser(@PathVariable String purchaser){
         return paymentService.readPaymentByPurchaser(purchaser);
     }
