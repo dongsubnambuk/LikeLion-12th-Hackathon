@@ -23,12 +23,12 @@ const BottomNav = () => {
   };
 
   const handleNavigationAllDietPage = () => {
-    // if (isLoggedIn) {
-    //   navigate('/alldiet');
-    // } else {
-    //   navigate('/login');
-    // }
-         navigate('/admin');
+    if (isLoggedIn) {
+      navigate('/alldiet');
+    } else {
+      navigate('/login');
+    }
+     
   };
 
   const handleNavigationDietSelectionPage = () => {
