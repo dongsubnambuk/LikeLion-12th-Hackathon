@@ -1,0 +1,9 @@
+package com.example.foodserver.Service;
+
+import com.example.foodserver.DTO.UserDailyMealPlanDTO;
+
+import java.util.List;
+
+public interface CommunicationService {
+    public String createReview(String userEmail, List<UserDailyMealPlanDTO> userDailyMealPlanDTOS);
+}
