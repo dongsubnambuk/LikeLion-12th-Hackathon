@@ -45,7 +45,8 @@ function Admin() {
     setLoading(true);
     try {
         console.log(price)
-      const response = await fetch(`http://3.37.64.39:8000/api/aiDiet/newDiet?price=${price}`, {
+      const response = await fetch(`http://3.37.64.39:8000/api/meal/food-menu?price=${price}
+      `, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -248,7 +249,7 @@ const imageContainerStyle = {
             <button className="post-all-btn" onClick={handleApply}>적용하기</button>
           </div>
         </>
-      )}
+      )} 
       <div className="admin-logout">
         <span onClick={handleLogout}>로그아웃</span>
       </div>

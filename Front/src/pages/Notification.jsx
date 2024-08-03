@@ -61,7 +61,7 @@ function Notification() {
     useEffect(() => {
         if (!email) return;
 
-        const socket = new SockJS('http://nutrihub.kro.kr:8080/ws');
+        const socket = new SockJS('http://nutrihub.kro.kr:14000/ws');
         const client = Stomp.over(socket);
 
         client.connect({}, () => {

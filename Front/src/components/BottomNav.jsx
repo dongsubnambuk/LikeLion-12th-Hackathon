@@ -28,7 +28,7 @@ const BottomNav = () => {
     // } else {
     //   navigate('/login');
     // }
-         navigate('/alldiet');
+         navigate('/admin');
   };
 
   const handleNavigationDietSelectionPage = () => {

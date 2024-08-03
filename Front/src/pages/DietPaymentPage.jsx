@@ -7,40 +7,110 @@ import BottomNav from '../components/BottomNav';
 function DietPaymentPage() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { price } = location.state;
+    const { price, weeklyId } = location.state; // weeklyId 추가
 
-    const onVerification = async (response) => {
+    const onVerification = async (response, orderId) => {
+        const token = localStorage.getItem("token");
+    
         console.log('결제 성공', response);
-
+    
         if (response.error_code != null) {
             return alert(`결제에 실패하였습니다. 에러 내용: ${response.error_msg}`);
         }
+    
+        try {
+            // Step 2: 결제 내역 생성 API 호출
+            const paymentResponse = await fetch('http://3.37.64.39:8000/api/payment/newPayment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Authorization": token,
+                },
+                body: JSON.stringify({
+                    orderId: String(response.merchant_uid), // 주문내역 응답에서 받은 orderId를 문자열로 변환
+                    paymentUid: response.imp_uid,
+                }),
+            });
+            const paymentData = await paymentResponse.json();
 
-        navigate(`/dietpaymentverification`, { state: { imp_uid: response.imp_uid, merchant_uid: response.merchant_uid } });
+            // Log the entire response to check the structure
+            console.log(paymentData);
+            if (!paymentResponse.ok) {
+                throw new Error('결제 내역 생성에 실패했습니다.');
+            }
+
+            const paymentId = paymentData.data?.paymentId;
+            if (!paymentId) {
+                throw new Error('결제 내역 생성 중 오류가 발생했습니다. paymentId를 찾을 수 없습니다.');
+            }
+            
+            navigate(`/dietpaymentcomplete`, { 
+                state: { 
+                    imp_uid: response.imp_uid, 
+                    merchant_uid: response.merchant_uid,
+                    paymentId: paymentId 
+                } 
+            });
+    
+        } catch (error) {
+            alert(`결제 내역 생성 중 오류가 발생했습니다. ${error.message}`);
+        }
     };
-
-    const requestPay = () => {
-        const { IMP } = window; // 생략 가능
-        IMP.init('imp87540676'); // 아임포트 관리자 콘솔에서 확인한 가맹점 식별코드
-
-        const data = {
-            pg: 'html5_inicis', // PG사
-            pay_method: 'card', // 결제수단
-            merchant_uid: `mid_${new Date().getTime()}`, // 주문번호
-            name: '주문명: 결제테스트',
-            //amount: price, // 실제 결제금액
-            amount: 100, // 테스트 금액(임시)
-            buyer_email: 'example@example.com',
-            buyer_name: '홍길동',
-            buyer_tel: '010-1234-5678',
-            buyer_addr: '서울특별시 강남구 삼성동',
-            buyer_postcode: '123-456',
-            m_redirect_url: 'http://localhost:3000/dietpaymentverification', // 결제 후 리디렉션될 URL
-        };
-
-        IMP.request_pay(data, onVerification);
+    
+    const requestPay = async () => {
+        const token = localStorage.getItem("token");
+        const email = localStorage.getItem("email");
+        try {
+            // Step 1: 주문내역 생성 API 호출
+            const orderResponse = await fetch('http://3.37.64.39:8000/api/payment/order/newOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Authorization": token,
+                },
+                body: JSON.stringify({
+                    purchaser: email,
+                    totalPrice: 100,
+                    weeklyId: 24, 
+                }),
+            });
+    
+            if (!orderResponse.ok) {
+                throw new Error('주문내역 생성에 실패했습니다.');
+            }
+    
+            const orderData = await orderResponse.json();
+            if (orderData.result !== 'success') {
+                throw new Error('주문내역 생성에 실패했습니다.');
+            }
+    
+            const { orderId } = orderData.data; // 서버로부터 받은 주문번호 사용
+            console.log(orderId);
+    
+            // Step 2: 결제 요청 진행
+            const { IMP } = window; // 생략 가능
+            IMP.init('imp77151582'); // 아임포트 관리자 콘솔에서 확인한 가맹점 식별코드
+    
+            const data = {
+                pg: `html5_inicis.INIpayTest`, // PG사
+                pay_method: 'card', // 결제수단
+                merchant_uid: `${orderId}`, // 주문번호를 사용하여 고유한 merchant_uid 생성
+                name: '당근 10kg',
+                amount: 100, 
+                buyer_email: email,
+                buyer_name: '홍길동',
+                buyer_tel: '010-1234-5678',
+                buyer_addr: '서울특별시 강남구 삼성동',
+                buyer_postcode: '123-456',
+                m_redirect_url: 'http://127.0.0.1:3000/dietpaymentverification', // 결제 후 리디렉션될 URL
+            };
+    
+            IMP.request_pay(data, (response) => onVerification(response, orderId));
+        } catch (error) {
+            alert(`결제 요청 중 오류가 발생했습니다. ${error.message}`);
+        }
     };
-
+    
     return (
         <>
             <Header />

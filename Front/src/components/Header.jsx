@@ -111,6 +111,8 @@ const Header = () => {
                 return '관리자 페이지';
             case '/dietpaymentverification':
                 return '식단 결제';
+            case '/dietpaymentcomplete':
+                return '결제 완료'
             default:
                 return 'Main Page';
         }
