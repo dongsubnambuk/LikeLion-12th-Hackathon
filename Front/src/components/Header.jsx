@@ -107,6 +107,8 @@ const Header = () => {
                 return '식단 결제';
             case '/dietpayment':
                 return '식단 결제';
+            case '/admin':
+                return '관리자 페이지';
             case '/dietpaymentverification':
                 return '식단 결제';
             default:
@@ -125,8 +127,6 @@ const Header = () => {
                         {!isVerificationPage && (
                             <FontAwesomeIcon icon={faArrowLeft} onClick={handleBackClick} className="faArrowLeft" style={{ cursor: 'pointer' }} />
                         )}
-                        <span className="pageTitle" style={{ fontSize: 20, fontWeight: 600 }}>{getPageTitle()}</span>
-                        <FontAwesomeIcon icon={faArrowLeft} onClick={handleBackClick} className="faArrowLeft" style={{ cursor: 'pointer' }} />
                         <span className="pageTitle" style={{ fontSize: 20, fontWeight: 600 }}>{getPageTitle()}</span>
                     </div>
                 )}
@@ -150,7 +150,6 @@ const Header = () => {
                                 </li>
                                 <li>
                                     <FontAwesomeIcon icon={faFileLines} size="2x" onClick={() => handleIconClick('/survey')} />
-                                    <FontAwesomeIcon icon={faFileLines} size="2x" onClick={() => navigate('/survey')} />
                                 </li>
                             </ul>
                         </div>

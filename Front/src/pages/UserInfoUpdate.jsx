@@ -1,4 +1,4 @@
-import React, { useState,useRef } from "react";
+import React, { useState,useRef ,useEffect} from "react";
 import { useNavigate } from 'react-router-dom';
 import Header from "../components/Header";
 import BottomNav from "../components/BottomNav"
@@ -18,6 +18,8 @@ function UserInfoUpdate(){
     const [detailAddress, setDetailAddress] = useState(""); 
     const [isOpen, setIsOpen] = useState(false); 
     const [error, setError] = useState("");
+    const [email, setEmail] = useState("");
+    const navigate = useNavigate();
 
     const completeHandler = (data) => {
         setZipcode(data.zonecode);
@@ -82,6 +84,78 @@ function UserInfoUpdate(){
             }
         }
 
+       //정보 수정fetch
+       const handlePUT = async () => {
+
+        const token = localStorage.getItem("token");
+        const email = localStorage.getItem("email");
+
+        const response = await fetch('http://3.37.64.39:8000/users', {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": token,
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password ? password : null,
+                phoneNumber: phoneNumber,
+                roadAddress: roadAddress,
+                detailAddress: detailAddress,
+            }),
+        });
+
+        const result = await response.json(); // 응답이 JSON 형식일 경우 이를 JavaScript 객체로 변환
+        
+
+        if (response.status === 200) { // 응답 status가 201 OK 일 경우
+            console.log(result);
+            console.log("회원정보 수정 성공");
+            alert("회원정보 수정 성공");
+            navigate('/'); 
+        } else {
+            console.log("회원정보 수정 실패");
+            alert("회원정보 수정 실패: " + result.message);
+        }
+    };
+    
+    useEffect(() => {
+        const handleget = async () => {
+            const token = localStorage.getItem("token");
+            const email = localStorage.getItem("email");
+
+      
+          
+            const response = await fetch(`http://3.37.64.39:8000/users?email=${email}`, { // 서버 URL을 실제 API 엔드포인트로 변경하세요
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json", 
+                    "Authorization": token,
+                }
+            });
+      
+            const result = await response.json(); // 응답이 JSON 형식일 경우 이를 JavaScript 객체로 변환
+      
+            if (response.status === 200) { // 응답 status가 200 OK 일 경우
+                // Store token in local storage
+                
+            
+                setphoneNumber(result.phoneNumber)
+                setRoadAddress(result.roadAddress);
+                setDetailAddress(result.detailAddress);
+
+            
+      
+            } else {
+                console.log("실패");
+                alert("실패: " + result.message);
+            }
+        };
+        handleget();
+    }, []);
+
+
+
     return(
         <>
         <Header/>
@@ -108,12 +182,11 @@ function UserInfoUpdate(){
             <div className="update-form-group">
                     <label htmlFor="phonenumber">연락처 수정</label>
                     <input
-                        type="text"
-                        id="phonenumber"
-                        value={phoneNumber}
-                        placeholder="예)01012345678"
-                        onChange={(e) => setphoneNumber(e.target.value)}
-                    />
+                type="text"
+                id="phonenumber"
+                value={phoneNumber}
+                onChange={(e) => setphoneNumber(e.target.value)}
+            />
                 </div>
             <div className="update-form-group">
                     <label htmlFor="password">비밀번호 변경</label>
@@ -153,23 +226,24 @@ function UserInfoUpdate(){
                             <input value={zipCode} readOnly placeholder="우편번호" />
                             <button onClick={toggle}>주소 찾기</button>
                         </div>
+
                         <div className="update-address-detail">
                             <input value={roadAddress} readOnly placeholder="도로명 주소" />
+
                             <Modal isOpen={isOpen} ariaHideApp={false} style={customStyles}>
                             <button onClick={toggle} style={{ alignSelf: 'center', padding: '10px 20px', fontSize: '16px', marginTop: '20px' }}>닫기</button> {/* 닫기 버튼 추가 및 스타일링 */}
                                 <DaumPostcode onComplete={completeHandler} height="100%" />
                             </Modal>
+                            
                             <input
                                 type="text"
-                                onChange={changeHandler}
+                                onChange={(e) => setDetailAddress(e.target.value)}
                                 value={detailAddress}
-                                placeholder="상세주소"
                             />
                         </div>
-                        
                     </div>
-                </div>
-                <button className="update-btn">저장하기</button>
+                </div> 
+                <button className="update-btn" onClick={handlePUT}>저장하기</button>
         </div>
       
         <BottomNav/>

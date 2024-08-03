@@ -26,7 +26,7 @@ function MainPage() {
       pagination={{ clickable: true }}
       autoplay={{ delay: 3000, disableOnInteraction: false }} // Autoplay 설정 추가
       modules={[Navigation, Pagination, Autoplay]} // Swiper에서 사용할 모듈을 추가
-      style={{ height: '25vh' }} // 원하는 높이를 설정
+      style={{ height: '23vh' }} // 원하는 높이를 설정
     >
       <SwiperSlide className="slide-content">  <img src={logo} className="logoImage" alt="logo" /></SwiperSlide>
       <SwiperSlide className="slide-content"> <img src={cat} className="cat" alt="cat" /> </SwiperSlide>

@@ -35,3 +35,67 @@ date - 날짜
             - 아침, 아침 카운트
             - 점심, 점심 카운트
             - 저녁, 저녁 카운트
+
+
+
+
+npm install axios
+Http 통신
+
+
+
+식단 메뉴 글자 수 설정
+
+mypage에 페치 방식 있음
+
+// 임의의 데이터 저장
+        const postData = async () => {
+            try {
+                const postResponse = await axios.post('http://15.165.192.29:8080/test/post', {
+                    id: 222,
+                    name: '홍길동',
+                    email: 'abc@naver.com',
+                    address: '대구',
+                    age: 21
+                });
+                console.log('Post Response:', postResponse.data);
+            } catch (error) {
+                console.error('Error posting data:', error);
+            }
+        };
+
+        // 사용자 이름 불러오기
+        const getData = async () => {
+            try {
+                const getResponse = await axios.get('http://15.165.192.29:8080/test/get');
+                console.log('Get Response:', getResponse.data);
+                if (Array.isArray(getResponse.data) && getResponse.data.length > 0) {
+                    // 리스트의 0번째 요소의 name을 userName에 설정
+                    setUserName(getResponse.data[0].name);
+                }
+            } catch (error) {
+                console.error('Error getting data:', error);
+            }
+        };
+
+        //postData();
+        //getData();
+
+
+
+
+
+오류 무시 실행 방법
+
+C:\>cd test
+
+C:\test>mkdir chrome-no-cors
+
+C:\test>start chrome --user-data-dir="C:\path\to\chrome-no-cors" --disable-web-security --disable-gpu
+
+
+
+npm install sockjs-client
+npm install @stomp/stompjs
+npm install react-toastify
+npm install react-toastify/dist/ReactToastify.css

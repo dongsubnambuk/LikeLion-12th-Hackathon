@@ -22,8 +22,7 @@ function Login() {
         setPassword(e.target.value);
     };
 
-
-    //login fetch함수
+    // login fetch 함수
     const handleLogin = async (event) => {
         event.preventDefault();
 
@@ -43,9 +42,15 @@ function Login() {
         if (response.status === 200) { // 응답 status가 200 OK 일 경우
             // Store token in local storage
             localStorage.setItem("token", result.token);  // 로그인 성공 시 보내주는 토큰 localStorage에 저장
-            localStorage.setItem("email",result.email);
+            localStorage.setItem("email", result.email);
+            localStorage.setItem("role", result.role); // 역할 저장
             // console.log(result)
-            navigate('/'); 
+
+            if (result.role === 'ROLE_ADMIN') {
+                navigate('/admin'); 
+            } else {
+                navigate('/');
+            }
 
         } else {
             console.log("로그인 실패");

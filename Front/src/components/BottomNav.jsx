@@ -23,11 +23,12 @@ const BottomNav = () => {
   };
 
   const handleNavigationAllDietPage = () => {
-    if (isLoggedIn) {
-      navigate('/alldiet');
-    } else {
-      navigate('/login');
-    }
+    // if (isLoggedIn) {
+    //   navigate('/alldiet');
+    // } else {
+    //   navigate('/login');
+    // }
+         navigate('/alldiet');
   };
 
   const handleNavigationDietSelectionPage = () => {
@@ -52,7 +53,7 @@ const BottomNav = () => {
 
   const handleNavigationOrder = () => {
     if (isLoggedIn) {
-      navigate('/order');
+      navigate('/dietselection');
     } else {
       navigate('/login');
     }
@@ -66,7 +67,7 @@ const BottomNav = () => {
         전체식단
       </div>
 
-      <div className="button-naming">
+      <div className="button-naming" onClick={handleNavigationOrder}>
         <FontAwesomeIcon icon={faCartPlus} />
         주문하기
       </div>

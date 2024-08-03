@@ -1,11 +1,12 @@
 import React, { useState,useRef,useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Header from "../components/Header";
-import BottomNav from "../components/BottomNav"
-import {Avatar} from 'antd';
+import BottomNav from "../components/BottomNav";
+import { Avatar } from 'antd';
 import '../CSS/Mypage.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faReceipt ,faCalendarDays} from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faReceipt } from "@fortawesome/free-solid-svg-icons";
 
 function MyPage(){
 
@@ -17,11 +18,11 @@ const [phoneNumber, setphoneNumber] = useState(''); // 하드코딩된 유저 �
 const [showPopup, setShowPopup] = useState(false);
 const navigate = useNavigate();
 
-const handleImageSave = (newImage) => {
-    setImage(newImage);
-};
+    const handleImageSave = (newImage) => {
+        setImage(newImage);
+    };
 
-    //로그아웃 함수
+    // 로그아웃 함수
     const handleLogout = () => {
 
     	localStorage.removeItem("token");
@@ -30,13 +31,13 @@ const handleImageSave = (newImage) => {
         
   	};
 
-      const handleUnsubscribeClick = () => {
+    const handleUnsubscribeClick = () => {
         setShowPopup(true);
     };
 
     const handleConfirmUnsubscribe = () => {
         setShowPopup(false);
-        alert('탈퇴가 완료되었습니다.')
+        alert('탈퇴가 완료되었습니다.');
         navigate('/');
     };
 
@@ -48,7 +49,7 @@ const handleImageSave = (newImage) => {
         const handleget = async () => {
             const token = localStorage.getItem("token");
             const email = localStorage.getItem("email");
-            console.log(token);
+
       
           
             const response = await fetch(`http://3.37.64.39:8000/users?email=${email}`, { // 서버 URL을 실제 API 엔드포인트로 변경하세요
@@ -71,8 +72,6 @@ const handleImageSave = (newImage) => {
                     detailAddress: result.detailAddress,
                   });
 
-                console.log(result)
-                console.log("유저 이름 : "+userName)
             
       
             } else {
@@ -129,19 +128,16 @@ const handleImageSave = (newImage) => {
                         <h2>회원탈퇴</h2>
                         <p>정말로 탈퇴하시겠습니까?</p>
                         <div className="popup-buttons">
-
-                        <button onClick={handleCancelUnsubscribe} className="popup-buttons-cancel">취소</button>
-                        <button onClick={handleConfirmUnsubscribe} className="popup-buttons-ok">확인</button>
-
+                            <button onClick={handleCancelUnsubscribe} className="popup-buttons-cancel">취소</button>
+                            <button onClick={handleConfirmUnsubscribe} className="popup-buttons-ok">확인</button>
                         </div>
                     </div>
                 </div>
             )}
-
-        <div className="mypage-logout">
-            <span onClick={handleLogout}>로그아웃</span>
-        </div>
-            <BottomNav/>
+            <div className="mypage-logout">
+                <span onClick={handleLogout}>로그아웃</span>
+            </div>
+            <BottomNav />
         </>
     );
 }

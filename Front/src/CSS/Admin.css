@@ -1,0 +1,64 @@
+.price-input {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-left: 20px; /* 양옆 여백 */
+    margin-right: 20px; /* 양옆 여백 */
+  }
+  
+  .admin-price {
+    flex: 7;
+    font-size: 16px;
+    margin-right: 10px; /* 버튼과의 간격 */
+    height: 40px; /* 높이 조정 */
+    line-height: 40px; /* 수직 정렬 */
+  }
+  
+  .admin-btn {
+    margin-top: 10px;
+    flex: 3;
+    font-size: 14px;
+    height: auto; /* 높이 조정 */
+    line-height: 40px; /* 수직 정렬 */
+    padding: 0 20px; /* 버튼의 패딩 조정 */
+  }
+  
+  .price-btn{
+    display: flex;
+    align-items: center;
+  }
+
+  .post-all{
+    display: flex;
+    justify-content: center;
+  }
+  .post-all-btn{
+    width: 90%;
+  }
+
+  .spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+  }
+  
+  .spinner {
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+.admin-logout{
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}

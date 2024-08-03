@@ -5,7 +5,7 @@ import Header from '../components/Header';
 import BottomNav from '../components/BottomNav';
 import logo from '../images/logo.png';
 
-function DietInfoPage() {
+function DietInfoPage({style}) {
     const location = useLocation();
     const { item } = location.state;
     item.menu = "메인 메뉴 : 김치찌개\n\n반찬 1 : 시금치 나물\n\n반찬 2 : 가지볶음\n\n반찬 3 : 치킨너겟\n\n국: 미역국\n\n밥: 잡곡밥\n\n사이드: 배추김치, 김";
@@ -17,19 +17,19 @@ function DietInfoPage() {
         <>
             <Header />
 
-            <div className="DIPcontainer">
+            <div className="DIPcontainer" style={style}>
                 <div className="DIPlistContainer">
                     <div className="DIPheader">
                         <img src={logo} className="DIPtitleImage" alt="logo" />
                         <div className="DIPtitle">{item.title}</div>
                     </div>
                     <div className="DIPmenu">
-                        <span style={{ fontWeight: 600 }}>&lt; 메뉴 소개 &gt;</span>
+                        <span style={{ fontWeight: 'bold', fontSize: 17 }}>&lt; 메뉴 소개 &gt;</span>
                         <br /><br />
                         {item.menu}
                     </div>
                     <div className="DIPnutrient">
-                        <span style={{ fontWeight: 600 }}>&lt; 영양성분 &gt;</span>
+                        <span style={{ fontWeight: 'bold', fontSize: 17 }}>&lt; 영양성분 &gt;</span>
                         <br /><br />{item.nutrient}
                     </div>
                     <br /><br />

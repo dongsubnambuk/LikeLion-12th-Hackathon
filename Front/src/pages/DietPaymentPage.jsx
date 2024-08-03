@@ -28,7 +28,8 @@ function DietPaymentPage() {
             pay_method: 'card', // 결제수단
             merchant_uid: `mid_${new Date().getTime()}`, // 주문번호
             name: '주문명: 결제테스트',
-            amount: price, // 금액
+            //amount: price, // 실제 결제금액
+            amount: 100, // 테스트 금액(임시)
             buyer_email: 'example@example.com',
             buyer_name: '홍길동',
             buyer_tel: '010-1234-5678',

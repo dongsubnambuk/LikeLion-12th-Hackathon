@@ -101,7 +101,6 @@ function Signup(){
         if (response.status === 201) { // 응답 status가 200 OK 일 경우
             // 회원가입 성공 후 로직
             console.log("회원가입 성공");
-            console.log(result);
             alert("회원가입 성공");
             navigate('/'); // 회원가입 성공 후 메인 페이지로 이동
         } else {

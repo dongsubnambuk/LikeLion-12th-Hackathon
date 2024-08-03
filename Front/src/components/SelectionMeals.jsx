@@ -14,7 +14,7 @@ const SelectionMeals = () => {
                     {
                         mealType: '아침',
                         title: '김치찌개 정식',
-                        description: '김치찌개, 시금치 나물, 가지볶음 ...',
+                        description: '김치찌개, 시금치 나물, 가지볶음, 김치찌개, 시금치 나물, 가지볶음, 김치찌개, 시금치 나물, 가지볶음',
                         imageSrc: '../images/logo.png',
                         carbs: 72,
                         protein: 32,
@@ -25,7 +25,7 @@ const SelectionMeals = () => {
                     {
                         mealType: '점심',
                         title: '된장찌개 정식',
-                        description: '된장찌개, 고등어 구이, 시금치 나물 ...',
+                        description: '된장찌개, 고등어 구이, 시금치 나물, 된장찌개, 고등어 구이, 시금치 나물, 된장찌개, 고등어 구이, 시금치 나물',
                         imageSrc: 'path/to/image2.jpg',
                         carbs: 65,
                         protein: 30,
@@ -36,7 +36,7 @@ const SelectionMeals = () => {
                     {
                         mealType: '저녁',
                         title: '불고기 정식',
-                        description: '된장찌개, 고등어 구이, 시금치 나물 ...',
+                        description: '된장찌개, 고등어 구이, 시금치 나물, 된장찌개, 고등어 구이, 시금치 나물, 된장찌개, 고등어 구이, 시금치 나물',
                         imageSrc: 'path/to/image3.jpg',
                         carbs: 80,
                         protein: 35,
