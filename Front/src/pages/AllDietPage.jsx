@@ -30,6 +30,7 @@ function AllDietPage() {
 
             if (response.status === 200) {
                 setMealData(result.dailyMealPlans);
+                console.log(result)
             } else {
                 console.log("실패");
                 alert("실패: " + result.message);

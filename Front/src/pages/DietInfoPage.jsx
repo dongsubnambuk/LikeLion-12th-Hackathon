@@ -44,7 +44,11 @@ function DietInfoPage({style}) {
                         <br /><br />
                         단백질 : {item.protein}
                         <br /><br />
-                        지방 ; {item.fat}
+                        지방 : {item.fat}
+                        <br /><br />
+                        당류 : {item.sugar}
+                        <br /><br />
+                        나트륨 : {item.sodium}
                     </div>
                     <br /><br />
                     <span style={{ fontWeight: 600 }}>{item.calories}</span>
