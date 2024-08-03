@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css'; // Swiper 기본 CSS
 import 'swiper/css/navigation'; // Navigation 모듈의 CSS
@@ -14,45 +14,136 @@ import cat from '../images/cat.png';
 import cat2 from '../images/cat2.png';
 import food from '../images/food.png';
 
-function MainPage() {
+const MainPage = () => {
+  const [mealData, setMealData] = useState(null);
+
+  useEffect(() => {
+    // 서버로부터 식단 데이터를 가져오는 부분
+    // 예시로 하드코딩된 데이터를 사용
+    setMealData([
+      {
+        date: '2024년 7월 20일 토요일',
+        meals: [
+          {
+            mealType: '아침',
+            title: '김치찌개 정식',
+            description: '김치찌개, 시금치 나물, 가지볶음,김치찌개, 시금치 나물, 가지볶음 ...',
+            imageSrc: '../images/logo.png',
+            carbs: 72,
+            protein: 32,
+            fat: 8,
+            count: 2,
+          },
+          {
+            mealType: '점심',
+            title: '된장찌개 정식',
+            description: '된장찌개, 고등어 구이, 시금치 나물 ...',
+            imageSrc: 'path/to/image2.jpg',
+            carbs: 65,
+            protein: 30,
+            fat: 10,
+            count: 3,
+          },
+          {
+            mealType: '저녁',
+            title: '불고기 정식',
+            description: '된장찌개, 고등어 구이, 시금치 나물 ...',
+            imageSrc: 'path/to/image3.jpg',
+            carbs: 80,
+            protein: 35,
+            fat: 12,
+            count: 1,
+          },
+        ],
+      },
+      {
+        date: '2024년 7월 21일 일요일',
+        meals: [
+          {
+            mealType: '아침',
+            title: '김치찌개 정식',
+            description: '김치찌개, 시금치 나물, 가지볶음,김치찌개, 시금치 나물, 가지볶음 ...',
+            imageSrc: '../images/logo.png',
+            carbs: 72,
+            protein: 32,
+            fat: 8,
+            count: 2,
+          },
+          {
+            mealType: '점심',
+            title: '된장찌개 정식',
+            description: '된장찌개, 고등어 구이, 시금치 나물 ...',
+            imageSrc: 'path/to/image2.jpg',
+            carbs: 65,
+            protein: 30,
+            fat: 10,
+            count: 3,
+          },
+          {
+            mealType: '저녁',
+            title: '불고기 정식',
+            description: '된장찌개, 고등어 구이, 시금치 나물 ...',
+            imageSrc: 'path/to/image3.jpg',
+            carbs: 80,
+            protein: 35,
+            fat: 12,
+            count: 1,
+          },
+        ],
+      }
+    ]);
+  }, []);
+
+  if (!mealData) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
-      <Header/>
-    <div className="swiper-container">
-    <Swiper
-      spaceBetween={50}
-      slidesPerView={1}
-      navigation
-      pagination={{ clickable: true }}
-      autoplay={{ delay: 3000, disableOnInteraction: false }} // Autoplay 설정 추가
-      modules={[Navigation, Pagination, Autoplay]} // Swiper에서 사용할 모듈을 추가
-      style={{ height: '23vh' }} // 원하는 높이를 설정
-    >
-      <SwiperSlide className="slide-content">  <img src={logo} className="logoImage" alt="logo" /></SwiperSlide>
-      <SwiperSlide className="slide-content"> <img src={cat} className="cat" alt="cat" /> </SwiperSlide>
-      <SwiperSlide className="slide-content"><img src={cat} className="cat" alt="cat" /> </SwiperSlide>
-      <SwiperSlide className="slide-content"><img src={food} className="cat" alt="food" /> </SwiperSlide>
-    </Swiper>
-     
-  </div>
+      <Header />
+      <div className="swiper-container">
+        <Swiper
+          spaceBetween={50}
+          slidesPerView={1}
+          navigation
+          pagination={{ clickable: true }}
+          autoplay={{ delay: 3000, disableOnInteraction: false }}
+          modules={[Navigation, Pagination, Autoplay]}
+          style={{ height: '23vh' }}
+        >
+          <SwiperSlide className="slide-content">
+            <img src={logo} className="logoImage" alt="logo" />
+          </SwiperSlide>
+          <SwiperSlide className="slide-content">
+            <img src={cat} className="cat" alt="cat" />
+          </SwiperSlide>
+          <SwiperSlide className="slide-content">
+            <img src={cat} className="cat" alt="cat" />
+          </SwiperSlide>
+          <SwiperSlide className="slide-content">
+            <img src={food} className="cat" alt="food" />
+          </SwiperSlide>
+        </Swiper>
+      </div>
 
-  <div className='user-food-detail'>
-  <Swiper
-          spaceBetween={50} /* 슬라이드 간의 간격 조정 */
-          slidesPerView={1} /* 화면에 보일 슬라이드 수 설정 */
+      <div className="user-food-detail">
+        <Swiper
+          spaceBetween={50}
+          slidesPerView={1}
           navigation
           pagination={{ clickable: true }}
           modules={[Navigation, Pagination]}
-          className='food-slide'
+          className="food-slide"
         >
-          <SwiperSlide className='slide-content1'><Meals /></SwiperSlide>
-          <SwiperSlide className='slide-content1'><Meals /></SwiperSlide>
-          <SwiperSlide className='slide-content1'><Meals /></SwiperSlide>
+          {mealData.map((data, index) => (
+            <SwiperSlide key={index} className="slide-content1">
+              <Meals mealData={data} />
+            </SwiperSlide>
+          ))}
         </Swiper>
-  </div>
-  <BottomNav/>
-  </>
- 
+      </div>
+      <BottomNav />
+    </>
   );
 }
 

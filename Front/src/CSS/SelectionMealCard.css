@@ -11,7 +11,7 @@
     display: flex;
     padding: 8px;
     padding-top: 0px;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -64,7 +64,7 @@
 
 .selection-meal-card-nutrition {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     margin: 8px 0px;
     width: 100%;
 }

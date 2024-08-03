@@ -2,36 +2,36 @@ import React from 'react';
 import '../CSS/MealCard.css';
 import logo from '../images/logo.png'; //임시로 로고 임포트
 
-const MealCard = ({ mealType, title, description, carbs, protein, fat, count, isLoggedIn }) => {
+const MealCard = ({ meals, isLoggedIn }) => {
   return (
     <div className="meal-card">
 
-      <h2 className='mealtype'>&lt;{mealType}&gt;</h2>
+      <h2 className='mealtype'>&lt;{meals.mealType}&gt;</h2>
 
       <div className="meal-card-body">
         <div className="meal-card-image-container">
-          <img src={logo} alt={title} className="meal-card-image" />
+          <img src={logo} alt={meals.title} className="meal-card-image" />
         </div>
         <div className="meal-card-content">
           <div className="title-and-count">
-            <h3>[{title}]</h3>
+            <h3>[{meals.title}]</h3>
             {isLoggedIn && (
-              <h2>{count}인분</h2>
+              <h2>{meals.count}인분</h2>
             )}
           </div>
-          <p>{description}</p>
+          <p>{meals.description}</p>
           <div className="meal-card-nutrition">
             <div className="nutrition-item">
               <span className="nutrition-label">탄수화물</span>
-              <span className="nutrition-value">{carbs}g</span>
+              <span className="nutrition-value">{meals.carbs}g</span>
             </div>
             <div className="nutrition-item">
               <span className="nutrition-label">단백질</span>
-              <span className="nutrition-value">{protein}g</span>
+              <span className="nutrition-value">{meals.protein}g</span>
             </div>
             <div className="nutrition-item">
               <span className="nutrition-label">지방</span>
-              <span className="nutrition-value">{fat}g</span>
+              <span className="nutrition-value">{meals.fat}g</span>
             </div>
           </div>
         </div>

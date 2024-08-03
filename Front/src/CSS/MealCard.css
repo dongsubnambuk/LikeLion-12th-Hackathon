@@ -10,7 +10,7 @@
   display: flex;
   padding: 8px;
   padding-top: 0px;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -32,7 +32,7 @@
 
 .meal-card-content {
   padding: 0px 5px;
-  width: 80%;
+  width: 65%;
 }
 
 .meal-card-content h3 {
@@ -53,8 +53,9 @@
 
 .meal-card-nutrition {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   margin-top: 8px;
+  width: 100%;
 }
 
 .nutrition-item {

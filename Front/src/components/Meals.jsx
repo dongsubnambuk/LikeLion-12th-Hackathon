@@ -51,7 +51,7 @@ const Meals = () => {
           {
             mealType: '아침',
             title: '김치찌개 정식',
-            description: '김치찌개, 시금치 나물, 가지볶음 ...',
+            description: '김치찌개, 시금치 나물, 가지볶음,김치찌개, 시금치 나물, 가지볶음 ...',
             imageSrc: '../images/logo.png',
             carbs: 72,
             protein: 32,
@@ -88,7 +88,7 @@ const Meals = () => {
           {
             mealType: '아침',
             title: '비회원 인기 김치찌개 정식',
-            description: '김치찌개, 시금치 나물, 가지볶음 ...',
+            description: '김치찌개, 시금치 나물, 가지볶음,김치찌개, 시금치 나물, 가지볶음 ...',
             imageSrc: '../images/logo.png',
             carbs: 70,
             protein: 30,
@@ -128,14 +128,7 @@ const Meals = () => {
       {mealData.meals.map((meal, index) => (
         <MealCard
           key={index}
-          mealType={meal.mealType}
-          title={meal.title}
-          description={meal.description}
-          imageSrc={meal.imageSrc} // 이미지 경로 전달
-          carbs={meal.carbs} // 탄수화물 정보 전달
-          protein={meal.protein} // 단백질 정보 전달
-          fat={meal.fat} // 지방 정보 전달
-          count={meal.count} // 개수 전달
+          meals={meal}
           isLoggedIn={isLoggedIn} // 로그인 상태 전달
         />
       ))}
