@@ -60,6 +60,11 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
                 return chain.filter(exchange);
             }
 
+            // 특정 경로에 대해 requiredRole을 동적으로 설정
+            if (path.startsWith("/api/meal/food-menu")) {
+                requiredRole = "role_admin";
+            }
+
 
             try {
                 token = String.valueOf(request.getQueryParams().get("token"));

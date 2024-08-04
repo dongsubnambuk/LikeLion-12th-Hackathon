@@ -2,6 +2,7 @@ package com.example.authServer.Controller;
 
 import com.example.authServer.DTO.UserDTO;
 import com.example.authServer.DTO.UserDetails;
+import com.example.authServer.DTO.UsersEmailDTO;
 import com.example.authServer.Entity.Users;
 import com.example.authServer.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,14 @@ public class UserController {
     public boolean existEmail (@RequestParam String email){
         return userService.existsByEmail(email);
     }
+
+
+
+    @GetMapping(value = "/all")
+    public UsersEmailDTO getUsersEmail (){
+        return userService.getUsersEmail();
+    }
+
 
 
     @GetMapping
