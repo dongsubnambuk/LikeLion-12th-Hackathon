@@ -22,7 +22,7 @@ function DietInfoPage({ style }) {
                     </div>
                     <Title level={4} className="DIPtitle">{item.name}</Title>
                    
-                    <Divider />
+                    <Divider/>
                     <Title level={4} className="DIPsectionTitle">메뉴 소개</Title>
                     <Paragraph>메인 메뉴1: {item.main1}</Paragraph>
                     <Paragraph>메인 메뉴2: {item.main2}</Paragraph>
