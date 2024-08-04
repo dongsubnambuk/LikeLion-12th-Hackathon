@@ -2,14 +2,14 @@ import React, { useState,useRef ,useEffect} from "react";
 import { useNavigate } from 'react-router-dom';
 import Header from "../components/Header";
 import BottomNav from "../components/BottomNav"
-import {Avatar, Flex} from 'antd';
+import {Avatar} from 'antd';
 import Modal from "react-modal"; // 추가
 import DaumPostcode from "react-daum-postcode";
 import '../CSS/UserInfoUpdate.css';
 
 function UserInfoUpdate(){
     const [Image, setImage] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
-    const [File, setFile] = useState('')
+    const [ setFile] = useState('')
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [phoneNumber, setphoneNumber] = useState("");
@@ -18,7 +18,7 @@ function UserInfoUpdate(){
     const [detailAddress, setDetailAddress] = useState(""); 
     const [isOpen, setIsOpen] = useState(false); 
     const [error, setError] = useState("");
-    const [email, setEmail] = useState("");
+
     const navigate = useNavigate();
 
     const completeHandler = (data) => {
@@ -50,11 +50,7 @@ function UserInfoUpdate(){
     const toggle = () => {
         setIsOpen(!isOpen);
     };
-
-    // 상세 주소검색 event
-    const changeHandler = (e) => {
-        setDetailAddress(e.target.value);
-    };
+;
 
  
 

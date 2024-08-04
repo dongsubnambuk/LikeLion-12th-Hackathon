@@ -65,17 +65,7 @@ function Signup(){
         }
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log({
-            email,
-            password,
-            userName,
-            phoneNumber,
-            roadAddress,
-            detailAddress,
-        });
-    };
+
 
     //회원가입 fetch
     const handleSignup = async (event) => {

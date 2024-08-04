@@ -3,18 +3,16 @@ import { useLocation } from 'react-router-dom';
 import Header from "../components/Header";
 import BottomNav from "../components/BottomNav";
 import '../CSS/SurveyDetail.css';
-import logo from '../images/logo.png';
+
 
 function SurveyDetail() {
     const location = useLocation();
     const { survey } = location.state;
-    const [meals, setMeals] = useState([]);
     const [responses, setResponses] = useState({});
     const [feedback, setFeedback] = useState({});
 
     useEffect(() => {
         if (survey) {
-            setMeals(survey.reviews);
             const initialResponses = {};
             const initialFeedback = {};
             survey.reviews.forEach(review => {
@@ -34,9 +32,48 @@ function SurveyDetail() {
         setFeedback((prevFeedback) => ({ ...prevFeedback, [reviewId]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log({ responses, feedback });
+
+        const requests = survey.reviews.map(async review => {
+            const payload = {
+                reviewId: review.reviewId,
+                foodImage: review.foodImage,
+                foodName: review.foodName,
+                likes: responses[review.reviewId] === '좋아요' ? review.likes + 1 : review.likes,
+                disLikes: responses[review.reviewId] === '별로예요' ? review.disLikes + 1 : review.disLikes,
+                comment: feedback[review.reviewId] ? [feedback[review.reviewId]] : review.comment
+            };
+
+            const url = responses[review.reviewId] === '좋아요'
+            ? `http://3.37.64.39:8000/api/meal/review/likes/${review.reviewId}`
+            : `http://3.37.64.39:8000/api/meal/review/disLikes/${review.reviewId}`;
+
+            const token = localStorage.getItem("token");
+            try {
+                const response = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": token
+
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                console.log(result);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('설문 제출에 실패했습니다.');
+            }
+        });
+
+        await Promise.all(requests);
         alert('설문이 제출되었습니다!');
     };
 
@@ -45,22 +82,22 @@ function SurveyDetail() {
             <Header />
             <div className="survey-container">
                 <form onSubmit={handleSubmit}>
-                    {meals.map((meal) => (
-                        <div key={meal.reviewId} className="survey-section">
+                    {survey.reviews.map((review) => (
+                        <div key={review.reviewId} className="survey-section">
                             <div className="survey-left">
-                                <h3>{`2024년 8월 4일 - ${meal.foodName}`}</h3>
+                                <h3>{`2024년 8월 4일 - ${review.reviewId}`}</h3>
                                 <div className="food-image">
-                                    <img src={meal.foodImage} className="logoImage-survey" alt="food" />
+                                    <img src={review.foodImage} className="logoImage-survey" alt="food" />
                                 </div>
-                                <p>[{meal.foodName}]</p>
+                                <p>[{review.foodName}]</p>
                             </div>
                             <div className="survey-right">
                                 <label className="survey-label">
                                     <input
                                         type="radio"
                                         value="좋아요"
-                                        checked={responses[meal.reviewId] === '좋아요'}
-                                        onChange={(e) => handleResponseChange(meal.reviewId, e.target.value)}
+                                        checked={responses[review.reviewId] === '좋아요'}
+                                        onChange={(e) => handleResponseChange(review.reviewId, e.target.value)}
                                     />
                                     좋아요
                                 </label>
@@ -68,8 +105,8 @@ function SurveyDetail() {
                                     <input
                                         type="radio"
                                         value="별로예요"
-                                        checked={responses[meal.reviewId] === '별로예요'}
-                                        onChange={(e) => handleResponseChange(meal.reviewId, e.target.value)}
+                                        checked={responses[review.reviewId] === '별로예요'}
+                                        onChange={(e) => handleResponseChange(review.reviewId, e.target.value)}
                                     />
                                     별로예요
                                 </label>
@@ -77,16 +114,16 @@ function SurveyDetail() {
                                     <input
                                         type="radio"
                                         value="기타"
-                                        checked={responses[meal.reviewId] === '기타'}
-                                        onChange={(e) => handleResponseChange(meal.reviewId, e.target.value)}
+                                        checked={responses[review.reviewId] === '기타'}
+                                        onChange={(e) => handleResponseChange(review.reviewId, e.target.value)}
                                     />
                                     기타 (의견을 입력해주세요.)
                                 </label>
-                                {responses[meal.reviewId] === '기타' && (
+                                {responses[review.reviewId] === '기타' && (
                                     <input
                                         type="text"
-                                        value={feedback[meal.reviewId]}
-                                        onChange={(e) => handleFeedbackChange(meal.reviewId, e.target.value)}
+                                        value={feedback[review.reviewId]}
+                                        onChange={(e) => handleFeedbackChange(review.reviewId, e.target.value)}
                                         placeholder="텍스트 박스"
                                     />
                                 )}

@@ -4,7 +4,7 @@ import { Card, Typography, Divider } from 'antd';
 import '../CSS/DietInfoPage.css';
 import Header from '../components/Header';
 import BottomNav from '../components/BottomNav';
-import logo from '../images/logo.png';
+
 
 const { Title, Paragraph } = Typography;
 
@@ -18,7 +18,7 @@ function DietInfoPage({ style }) {
             <div className="DIPcontainer" style={style}>
                 <Card className="DIPlistContainer">
                     <div className="DIPimageContainer">
-                    <img src={item.image} className="DIPtitleImage" alt="image" />
+                    <img src={item.image} className="DIPtitleImage" alt="foodimage" />
                     </div>
                     <Title level={4} className="DIPtitle">{item.name}</Title>
                    

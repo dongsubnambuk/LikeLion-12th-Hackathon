@@ -7,7 +7,7 @@ import BottomNav from '../components/BottomNav';
 function DietPaymentPage() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { price, weeklyId } = location.state; // weeklyId 추가
+    const { price} = location.state; 
 
     const onVerification = async (response, orderId) => {
         const token = localStorage.getItem("token");

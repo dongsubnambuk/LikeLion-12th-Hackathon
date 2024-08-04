@@ -1,8 +1,7 @@
 import React from 'react';
-import { useNavigate } from "react-router-dom";
 import '../CSS/MealCard.css';
 import '../CSS/SelectionMenuCard.css';
-import logo from '../images/logo.png';
+
 
 const SelectionMenuCard = ({ meals, index, onChangeMenu }) => {
 

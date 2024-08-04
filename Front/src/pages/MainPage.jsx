@@ -11,7 +11,6 @@ import Header from '../components/Header';
 import BottomNav from '../components/BottomNav';
 import logo from '../images/logo.png';
 import cat from '../images/cat.png';
-import cat2 from '../images/cat2.png';
 import food from '../images/food.png';
 
 const MainPage = () => {

@@ -12,7 +12,7 @@ function DietPaymentMainPage() {
         navigate(`/dietpayment`, { state: { price: allMealsPrice } });
     };
 
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    const [isLoggedIn] = useState(true);
     const [mealData, setMealData] = useState(null);
     const [allMealsPrice, setAllMealsPrice] = useState(0);
 

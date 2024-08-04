@@ -7,7 +7,7 @@ import '../CSS/Notification.css';
 import { v4 as uuidv4 } from 'uuid';
 
 function Notification() {
-    const [email, setEmail] = useState(localStorage.getItem("email"));
+    const [email] = useState(localStorage.getItem("email"));
     const [messages, setMessages] = useState(() => {
         const savedMessages = localStorage.getItem(`messages_${email}`);
         return savedMessages ? JSON.parse(savedMessages) : [];
