@@ -1,8 +1,8 @@
 package com.example.foodserver.Service;
 
 import com.example.foodserver.DAO.DailyDietDAO;
-import com.example.foodserver.DTO.DailyDietDTO;
-import com.example.foodserver.DTO.DailyDietRequestDTO;
+import com.example.foodserver.DTO.Response.DailyDietDTO;
+import com.example.foodserver.DTO.Request.DailyDietRequestDTO;
 import com.example.foodserver.Entity.DailyDietEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +27,11 @@ public class DailyDietServiceImpl implements DailyDietService {
     @Override
     public List<DailyDietDTO> getByUserEmailAndDate(String userEmail, LocalDate date) {
         return dailyDietDAO.getByUserEmailAndDate(userEmail, date).stream().map(this::convertToDailyDietDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DailyDietDTO> getByDate(LocalDate date){
+        return dailyDietDAO.getByDate(date).stream().map(this::convertToDailyDietDTO).collect(Collectors.toList());
     }
 
     private DailyDietEntity convertToDailyDietEntity(DailyDietRequestDTO dailyDietDTO) {

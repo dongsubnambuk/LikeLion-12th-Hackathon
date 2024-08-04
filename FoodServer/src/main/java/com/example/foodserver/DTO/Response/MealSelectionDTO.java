@@ -1,4 +1,4 @@
-package com.example.foodserver.DTO;
+package com.example.foodserver.DTO.Response;
 
 import lombok.*;
 
@@ -8,10 +8,10 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @Builder
-public class MealSelectionRequestDTO {
+public class MealSelectionDTO {
     private Long mealSelectionId;
-    private String mealTime;
-    private Long foodMenuId;
-    private int count;
     private String userEmail;
+    private String mealTime;
+    private FoodMenuDTO foodMenu;
+    private int count;
 }

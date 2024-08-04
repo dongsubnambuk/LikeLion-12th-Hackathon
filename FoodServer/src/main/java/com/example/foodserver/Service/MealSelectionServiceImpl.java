@@ -1,8 +1,8 @@
 package com.example.foodserver.Service;
 
 import com.example.foodserver.DAO.MealSelectionDAO;
-import com.example.foodserver.DTO.MealSelectionDTO;
-import com.example.foodserver.DTO.MealSelectionRequestDTO;
+import com.example.foodserver.DTO.Response.MealSelectionDTO;
+import com.example.foodserver.DTO.Request.MealSelectionRequestDTO;
 import com.example.foodserver.Entity.MealSelectionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

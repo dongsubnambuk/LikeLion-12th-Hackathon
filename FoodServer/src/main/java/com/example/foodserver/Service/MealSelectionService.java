@@ -1,7 +1,7 @@
 package com.example.foodserver.Service;
 
-import com.example.foodserver.DTO.MealSelectionDTO;
-import com.example.foodserver.DTO.MealSelectionRequestDTO;
+import com.example.foodserver.DTO.Response.MealSelectionDTO;
+import com.example.foodserver.DTO.Request.MealSelectionRequestDTO;
 import com.example.foodserver.Entity.MealSelectionEntity;
 
 import java.util.List;

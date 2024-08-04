@@ -1,4 +1,4 @@
-package com.example.foodserver.DTO;
+package com.example.foodserver.DTO.Request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

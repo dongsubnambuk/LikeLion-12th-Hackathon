@@ -5,6 +5,8 @@ import com.example.foodserver.Repository.WeeklyDietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+
 @Repository
 public class WeeklyDietDAOImpl implements WeeklyDietDAO {
 
@@ -16,12 +18,17 @@ public class WeeklyDietDAOImpl implements WeeklyDietDAO {
     }
 
     @Override
-    public WeeklyDietEntity create(WeeklyDietEntity weeklyDietEntity) {
-        return weeklyDietRepository.save(weeklyDietEntity);
+    public void create(WeeklyDietEntity weeklyDietEntity) {
+        weeklyDietRepository.save(weeklyDietEntity);
     }
 
     @Override
     public WeeklyDietEntity getByUserEmail(String userEmail) {
         return weeklyDietRepository.findByUserEmail(userEmail);
+    }
+
+    @Override
+    public Boolean existsByCurrentWeeklyMealPlan(LocalDate date, String userEmail){
+        return weeklyDietRepository.existsByCurrentWeeklyMealPlan(date, userEmail);
     }
 }

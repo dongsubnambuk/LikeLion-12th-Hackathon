@@ -1,9 +1,9 @@
 package com.example.foodserver.Service;
 
 import com.example.foodserver.DAO.WeeklyDietDAO;
-import com.example.foodserver.DTO.UserDailyMealPlanDTO;
-import com.example.foodserver.DTO.WeeklyDietDTO;
-import com.example.foodserver.DTO.WeeklyDietRequestDTO;
+import com.example.foodserver.DTO.Request.UserDailyMealPlanDTO;
+import com.example.foodserver.DTO.Response.WeeklyDietDTO;
+import com.example.foodserver.DTO.Request.WeeklyDietRequestDTO;
 import com.example.foodserver.Entity.DailyDietEntity;
 import com.example.foodserver.Entity.MealSelectionEntity;
 import com.example.foodserver.Entity.WeeklyDietEntity;
@@ -31,6 +31,9 @@ public class WeeklyDietServiceImpl implements WeeklyDietService {
 
     @Override
     public WeeklyDietDTO createWeeklyDiet(WeeklyDietRequestDTO weeklyDietDTO) {
+        if(weeklyDietDAO.existsByCurrentWeeklyMealPlan(weeklyDietDTO.getStartDate(), weeklyDietDTO.getUserEmail())){
+            return null;
+        }
         WeeklyDietEntity entity = convertToWeeklyDietEntity(weeklyDietDTO);
         weeklyDietDAO.create(entity);
         communicationService.createReview(entity.getUserEmail(), convertToDailyMealPlanDTOS(entity));

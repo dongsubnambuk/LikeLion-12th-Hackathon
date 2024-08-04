@@ -22,4 +22,9 @@ public class DailyDietDAOImpl implements DailyDietDAO {
     public List<DailyDietEntity> getByUserEmailAndDate(String userEmail, LocalDate date) {
         return dailyDietRepository.findByUserEmailAndDate(userEmail, date);
     }
+
+    @Override
+    public List<DailyDietEntity> getByDate(LocalDate date){
+        return dailyDietRepository.findByDate(date);
+    }
 }

@@ -1,7 +1,7 @@
 package com.example.foodserver.Controller;
 
-import com.example.foodserver.DTO.WeeklyDietDTO;
-import com.example.foodserver.DTO.WeeklyDietRequestDTO;
+import com.example.foodserver.DTO.Response.WeeklyDietDTO;
+import com.example.foodserver.DTO.Request.WeeklyDietRequestDTO;
 import com.example.foodserver.Service.WeeklyDietService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface DailyDietRepository extends JpaRepository<DailyDietEntity, Long> {
     List<DailyDietEntity> findByUserEmailAndDate(String userEmail, LocalDate date);
-
+    List<DailyDietEntity> findByDate(LocalDate date);
 }

@@ -1,4 +1,4 @@
-package com.example.foodserver.DTO;
+package com.example.foodserver.DTO.Response;
 
 import lombok.*;
 

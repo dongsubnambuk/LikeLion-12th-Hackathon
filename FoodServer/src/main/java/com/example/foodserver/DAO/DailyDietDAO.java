@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface DailyDietDAO {
     List<DailyDietEntity> getByUserEmailAndDate(String userEmail, LocalDate date);
+    List<DailyDietEntity> getByDate(LocalDate date);
 }
