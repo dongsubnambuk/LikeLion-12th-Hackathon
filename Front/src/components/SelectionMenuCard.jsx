@@ -15,7 +15,7 @@ const SelectionMenuCard = ({ meals, index, onChangeMenu }) => {
             <h2 className="selection-menu-meal-option">&lt;옵션{index}&gt;</h2>
             <div className="selection-menu-card-body">
                 <div className="selection-menu-card-image-container">
-                    <img src={logo} alt={meals.name} className="selection-menu-card-image" />
+                    <img src={meals.image} alt={meals.name} className="selection-menu-card-image" />
                 </div>
                 <div className="selection-menu-card-content">
                     <div className="selection-menu-card-info-content">

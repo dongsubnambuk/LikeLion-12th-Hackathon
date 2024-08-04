@@ -20,7 +20,7 @@ function DietInfoPage({style}) {
             <div className="DIPcontainer" style={style}>
                 <div className="DIPlistContainer">
                     <div className="DIPheader">
-                        <img src={logo} className="DIPtitleImage" alt="logo" />
+                        <img src={item.image} className="DIPtitleImage" alt="image" />
                         <div className="DIPtitle">{item.name}</div>
                     </div>
                     <div className="DIPmenu">

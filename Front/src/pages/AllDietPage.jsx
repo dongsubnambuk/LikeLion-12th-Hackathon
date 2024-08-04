@@ -30,7 +30,7 @@ function AllDietPage() {
 
             if (response.status === 200) {
                 setMealData(result.dailyMealPlans);
-                console.log(result)
+                //console.log(result)
             } else {
                 console.log("실패");
                 alert("실패: " + result.message);
@@ -61,7 +61,7 @@ function AllDietPage() {
                         <div key={index} className="ADPitemCard" onClick={() => handleItemClick(item)}>
                             <div className="ADPitemTitle">{item.name}</div>
                             <div className="ADPitemImage">
-                                <img src={logo} style={{ width: '100%', height: '100%' }} alt="logo" />
+                                <img src={item.image} style={{ width: '100%', height: '100%' }} alt="image" />
                             </div>
                             <div className="ADPitemPrice">{item.price}</div>
                         </div>

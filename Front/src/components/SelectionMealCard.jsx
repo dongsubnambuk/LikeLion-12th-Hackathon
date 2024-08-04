@@ -32,7 +32,7 @@ const SelectionMealCard = ({ meals, mealType, optionIndex, dateIndex }) => {
             </div>
             <div className="selection-meal-card-body">
                 <div className="selection-meal-card-image-container">
-                    <img src={logo} alt={meals.name} className="selection-meal-card-image" />
+                    <img src={meals.image} alt={meals.name} className="selection-meal-card-image" />
                 </div>
                 <div className="selection-meal-card-content">
                     <div className="selection-meal-card-info-content" onClick={handleChangeMenu}>
