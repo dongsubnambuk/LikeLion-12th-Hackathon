@@ -20,7 +20,7 @@ public class DailyMealPlan {
     private Long dailyMealPlanId;
     @Column
     private LocalDate day;
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "daily_meal_plan_id")
     private List<MealOption> mealOptions;
 }
