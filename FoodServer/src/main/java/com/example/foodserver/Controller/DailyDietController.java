@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/daily")
+@RequestMapping("/api/userMeal/daily")
 public class DailyDietController {
 
     private final DailyDietService dailyDietService;

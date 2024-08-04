@@ -13,8 +13,8 @@ import java.util.List;
 @Builder
 public class WeeklyDietDTO {
     private Long weeklyId;
+    private String userEmail;
     private LocalDate startDate;
     private LocalDate endDate;
     private List<DailyDietDTO> dailyDiets;
-    private String userEmail;
 }

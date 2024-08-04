@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 public class DailyDietDTO {
     private Long dailyDietId;
+    private String userEmail;
     private LocalDate date;
     private List<MealSelectionDTO> mealSelections;
-    private String userEmail;
 }

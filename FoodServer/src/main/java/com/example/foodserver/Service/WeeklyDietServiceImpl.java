@@ -1,29 +1,39 @@
 package com.example.foodserver.Service;
 
 import com.example.foodserver.DAO.WeeklyDietDAO;
+import com.example.foodserver.DTO.UserDailyMealPlanDTO;
 import com.example.foodserver.DTO.WeeklyDietDTO;
 import com.example.foodserver.DTO.WeeklyDietRequestDTO;
+import com.example.foodserver.Entity.DailyDietEntity;
+import com.example.foodserver.Entity.MealSelectionEntity;
 import com.example.foodserver.Entity.WeeklyDietEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class WeeklyDietServiceImpl implements WeeklyDietService {
 
     private final WeeklyDietDAO weeklyDietDAO;
     private final DailyDietService dailyDietService;
+    private final CommunicationService communicationService;
 
     @Autowired
     public WeeklyDietServiceImpl(WeeklyDietDAO weeklyDietDAO,
-                                 DailyDietService dailyDietService) {
+                                 DailyDietService dailyDietService,
+                                 CommunicationService communicationService) {
         this.weeklyDietDAO = weeklyDietDAO;
         this.dailyDietService = dailyDietService;
+        this.communicationService = communicationService;
     }
 
     @Override
     public WeeklyDietDTO createWeeklyDiet(WeeklyDietRequestDTO weeklyDietDTO) {
         WeeklyDietEntity entity = convertToWeeklyDietEntity(weeklyDietDTO);
         weeklyDietDAO.create(entity);
+        communicationService.createReview(entity.getUserEmail(), convertToDailyMealPlanDTOS(entity));
         return convertToWeeklyDietDTO(entity);
     }
 
@@ -49,5 +59,28 @@ public class WeeklyDietServiceImpl implements WeeklyDietService {
                 .endDate(weeklyDietEntity.getEndDate())
                 .dailyDiets(dailyDietService.convertToDailyDietDTOS(weeklyDietEntity.getDailyDiets()))
                 .build();
+    }
+
+    public List<Long> convertToFoodMenuIds(DailyDietEntity dailyDietEntity){
+        List<Long> foodMenuIds = new ArrayList<>();
+        for(MealSelectionEntity mealSelectionEntity : dailyDietEntity.getMealSelections()) {
+            foodMenuIds.add(mealSelectionEntity.getFoodMenuId());
+        }
+        return foodMenuIds;
+    }
+
+    public UserDailyMealPlanDTO convertToDailyMealPlanDTO(DailyDietEntity dailyDietEntity) {
+        return UserDailyMealPlanDTO.builder()
+                .date(dailyDietEntity.getDate())
+                .foodMenuIds(convertToFoodMenuIds(dailyDietEntity))
+                .build();
+    }
+
+    public List<UserDailyMealPlanDTO> convertToDailyMealPlanDTOS(WeeklyDietEntity weeklyDietEntity) {
+        List<UserDailyMealPlanDTO> userDailyMealPlanDTOS = new ArrayList<>();
+        for(DailyDietEntity dailyDietEntity : weeklyDietEntity.getDailyDiets()) {
+            userDailyMealPlanDTOS.add(convertToDailyMealPlanDTO(dailyDietEntity));
+        }
+        return userDailyMealPlanDTOS;
     }
 }
