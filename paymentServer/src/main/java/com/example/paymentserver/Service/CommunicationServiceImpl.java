@@ -29,12 +29,12 @@ public class CommunicationServiceImpl implements CommunicationService{
     @Override
     public List<String> readAllUser() {
         try {
-            ServiceInstance userService = discoveryClient.getInstances("USER-SERVER").get(0);
+            ServiceInstance userService = discoveryClient.getInstances("AUTH-SERVER").get(0);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
             HttpEntity<Void> http = new HttpEntity<>(headers);
-            logger.info("userService URL : " + userService.getUri().toString());
+            logger.info("AuthService URL : " + userService.getUri().toString());
             URI uri = new URI(userService.getUri() + "/users/all");
             ResponseEntity<UserDTO> response = restTemplate.exchange(uri, HttpMethod.GET, http, UserDTO.class);
 
@@ -53,5 +53,4 @@ public class CommunicationServiceImpl implements CommunicationService{
             throw new RuntimeException("Failed to fetch users", e);
         }
     }
-
 }
