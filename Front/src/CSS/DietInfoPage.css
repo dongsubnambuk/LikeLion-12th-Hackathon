@@ -1,15 +1,17 @@
 .DIPcontainer {
     display: flex;
     justify-content: center;
+    align-items: center;
     width: 100%;
-    padding: 10px;
+
     box-sizing: border-box;
+
 }
 
 .DIPlistContainer {
-    margin-top: 10px;
-    width: 100%;
-
+    margin-top: 5px;
+    height: 84vh;
+    width: 90%; /* Adjusted width */
     background-color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
     border-radius: 15px;
@@ -17,41 +19,45 @@
     flex-direction: column;
     align-items: center;
 
+    box-sizing: border-box;
 }
 
 .DIPimageContainer {
-    width: 100%;
+    width: 100%; /* Adjust the width as needed */
     display: flex;
     justify-content: center;
-    margin-bottom: 10px;
+    margin-top: -10px; /* Move image upwards */
+
 }
 
-.DIPimage {
-    max-width: 30%;
-    max-height: 100px; /* Adjusted height */
+.DIPtitleImage {
+    width: 50%; /* Adjust the width to make the image smaller */
+    max-width: 300px; /* Add a max-width to prevent it from being too large */
     border-radius: 15px;
-    object-fit: cover;
-    margin: 0 auto;
+
 }
 
 .DIPtitle {
     text-align: center;
     font-size: 20px; /* Adjusted font size */
-    margin-bottom: 5px; /* Reduced margin */
+    margin-top: 5px; /* Reduced top margin */
+    margin-bottom: 5px; /* Reduced bottom margin */
+}
+
+.DIPsectionTitle{
+    margin-top: -20px;
 }
 
 .DIPdescription {
     text-align: center;
     font-size: 14px; /* Adjusted font size */
     color: #666;
-    margin-bottom: 10px; /* Reduced margin */
-    padding: 0 10px;
+
 }
 
 .DIPmenu, .DIPnutrient {
     width: 100%;
-    margin-bottom: 10px; /* Reduced margin */
-    padding: 10px;
+
 }
 
 .DIPnutrient {
@@ -128,7 +134,7 @@
 }
 
 /* 칼로리 강조를 위한 애니메이션 효과 */
-.calories-icon-left, .calories-icon-right{
+.calories-icon-left, .calories-icon-right {
     font-size: 24px; /* 아이콘 크기 */
     animation: bounce 2s infinite; /* 애니메이션 효과 */
     position: relative;
@@ -141,7 +147,6 @@
 .calories-icon-right {
     margin-left: -50px;
 }
-
 
 /* 애니메이션 효과 정의 */
 @keyframes bounce {
@@ -169,3 +174,4 @@
         color: red;
     }
 }
+

@@ -100,7 +100,7 @@ function Survey() {
                     <div 
                         className="survey-link" 
                         key={survey.id} 
-                        onClick={() => navigate(`/survey-detail`)}
+                        onClick={() => navigate(`/survey-detail`, { state: { survey } })}
                     >
                         <span>{survey.notificationContent || survey.content}</span>
                     </div>
