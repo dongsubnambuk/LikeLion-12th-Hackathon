@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Header from '../components/Header';
-import BottomNav from '../components/BottomNav';
 import '../CSS/Admin.css';
 import { useNavigate } from 'react-router-dom';
 import { Card, Typography, Divider } from 'antd';
@@ -129,17 +128,6 @@ const imageContainerStyle = {
     marginBottom: '10px' // 이미지와 이름 사이의 여백
   };
   
-  const imageStyle = {
-    width: '100%', // 컨테이너 너비를 100%로 설정
-    height: '20vh', 
-    objectFit: 'contain' // 이미지를 컨테이너에 맞게 조정
-  };
-
-  const titleStyle = {
-    fontSize: '20px', // 원하는 크기로 변경
-    fontWeight: 'bold',
-    textAlign: 'center', 
-  };
 
   // 적용하기 post fetch
   const handleApply = async (event) => {

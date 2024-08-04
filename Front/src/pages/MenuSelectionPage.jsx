@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useNavigate,useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import {useLocation } from 'react-router-dom';
 import Header from "../components/Header";
 import BottomNav from "../components/BottomNav"
 import '../CSS/MenuSelectionPage.css';

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import '../CSS/MealCard.css';
 import '../CSS/SelectionMealCard.css';
-import logo from '../images/logo.png';
 
 const SelectionMealCard = ({ meals, mealType, optionIndex, dateIndex }) => {
     const navigate = useNavigate();

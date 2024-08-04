@@ -31,9 +31,6 @@ const BottomNav = () => {
      
   };
 
-  const handleNavigationDietSelectionPage = () => {
-    navigate('/dietselection');
-  };
 
   const handleNavigationMyPage = () => {
     if (isLoggedIn) {

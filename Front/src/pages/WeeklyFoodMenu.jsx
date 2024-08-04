@@ -1,5 +1,4 @@
-import React, { useState,useRef } from "react";
-import { useNavigate } from 'react-router-dom';
+import React from "react";
 import Header from "../components/Header";
 import BottomNav from "../components/BottomNav"
 import'../CSS/WeeklyFoodMenu.css';

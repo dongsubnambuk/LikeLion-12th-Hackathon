@@ -3,7 +3,7 @@ import SelectionMealCard from './SelectionMealCard';
 import '../CSS/SelectionMeals.css';
 
 const SelectionMeals = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
+
     const [mealData, setMealData] = useState(null);
 
     useEffect(() => {

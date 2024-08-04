@@ -8,7 +8,7 @@ import BottomNav from '../components/BottomNav';
 function DietPaymentComplete() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { imp_uid, merchant_uid, paymentId } = location.state || {};
+    const {  paymentId } = location.state || {};
 
     return (
         <>

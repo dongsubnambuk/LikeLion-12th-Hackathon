@@ -1,7 +1,7 @@
 import React from 'react';
-import { useNavigate } from "react-router-dom";
 import '../CSS/MealCard.css';
 import '../CSS/SelectionMenuCard.css';
+
 
 const SelectionMenuCard = ({ meals, index, optionIndex, dateIndex }) => {
 
