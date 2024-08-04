@@ -3,6 +3,8 @@ import Header from '../components/Header';
 import BottomNav from '../components/BottomNav';
 import '../CSS/Admin.css';
 import { useNavigate } from 'react-router-dom';
+import { Card, Typography, Divider } from 'antd';
+const { Title, Paragraph } = Typography;
 
 function Admin() {
   const [price, setPrice] = useState('');
@@ -207,47 +209,53 @@ const imageContainerStyle = {
       )}
       {itemVisible && !loading && (
         <>
-          <div className="DIPcontainer" style={style}>
-            <div className="DIPlistContainer">
-            <div className="admin-DIPheader" style={style}>
-                {item.image && (
+           <div className="DIPcontainer" style={style}>
+                <Card className="DIPlistContainer">
+                    <div className="DIPimageContainer">
+			  {item.image && (
                     <div style={imageContainerStyle}>
-                    <img src={item.image} className="admin-DIPtitleImage" alt="menu" style={imageStyle} />
+                    <img src={item.image} className="admin-DIPtitleImage" alt="menu" />
                     </div>
-                )} {/* 이미지 추가 */}
-</div>
-<div className="admin-DIPtitle" style={titleStyle}>{item.name}</div> {/* 메뉴 이름 추가 */}
-              <div className="DIPmenu">
-                <span style={{ fontWeight: 600 }}>&lt; 메인 메뉴 &gt;</span>
-                <br /><br />
-                {item.main1}<br />
-                {item.main2}
-              </div>
-              <div className="DIPmenu">
-                <span style={{ fontWeight: 600 }}>&lt; 반찬 &gt;</span>
-                <br /><br />
-                {item.side1}<br />
-                {item.side2}<br />
-                {item.side3}
-              </div>
-              <div className="DIPnutrient">
-                <span style={{ fontWeight: 600 }}>&lt; 영양성분 &gt;</span>
-                <br /><br />
-                칼로리: {item.calories}<br />
-                탄수화물: {item.carbohydrate}<br />
-                단백질: {item.protein}<br />
-                지방: {item.fat}<br />
-                당: {item.sugar}<br />
-                나트륨: {item.sodium}<br />
-              </div>
-              <div className="DIPprice">
-                <span style={{ fontSize: 18, fontWeight: 600 }}>가격 : {item.price}</span>
-              </div>
+                )} 
+
+                    </div>
+                    <Title level={4} className="DIPtitle">{item.name}</Title>
+                   
+                    <Divider />
+                    <Title level={4} className="DIPsectionTitle">메뉴 소개</Title>
+                    <Paragraph>메인 메뉴1: {item.main1}</Paragraph>
+                    <Paragraph>메인 메뉴2: {item.main2}</Paragraph>
+                    <Paragraph>사이드 메뉴1: {item.side1}</Paragraph>
+                    <Paragraph>사이드 메뉴2: {item.side2}</Paragraph>
+                    <Paragraph>사이드 메뉴3: {item.side3}</Paragraph>
+                    <Divider />
+                    <Title level={4} className="DIPsectionTitle">영양성분</Title>
+                    <div class="nutrientContainer">
+                        <div class="nutrientListContainer">
+                            <div class="nutrientList">
+                                <div class="nutrientItem carbohydrates">탄수화물 {item.carbohydrate}</div>
+                                <div class="nutrientItem protein">단백질 {item.protein}</div>
+                                <div class="nutrientItem fat">지방 {item.fat}</div>
+                                <div class="nutrientItem sugar">당류 {item.sugar}</div>
+                                <div class="nutrientItem sodium">나트륨 {item.sodium}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <Divider />
+                    <div className="DIPfooter">
+                    <span className="calories-icon-left">🔥</span>
+                        <div className="DIPcalories">칼로리: {item.calories}</div>
+                        <span className="calories-icon-right">🔥</span>
+                        <div className="DIPprice">가격: {item.price}</div>
+                    </div>
+                </Card>
             </div>
-          </div>
-          <div className="post-all">
+            <div className="post-all">
             <button className="post-all-btn" onClick={handleApply}>적용하기</button>
           </div>
+
+
+         
         </>
       )} 
       <div className="admin-logout">
