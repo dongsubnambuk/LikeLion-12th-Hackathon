@@ -3,6 +3,7 @@ package com.example.foodserver.DTO;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,7 +13,8 @@ import java.time.LocalDate;
 @Builder
 public class WeeklyDietDTO {
     private Long weeklyId;
-    private Long userId;
     private LocalDate startDate;
     private LocalDate endDate;
+    private List<DailyDietDTO> dailyDiets;
+    private String userEmail;
 }

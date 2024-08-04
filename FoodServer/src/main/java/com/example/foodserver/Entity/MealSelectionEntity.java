@@ -12,15 +12,14 @@ import lombok.*;
 @Builder
 public class MealSelectionEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long mealSelectionId;
-
-    private Long userId;
+    @Column
+    private String userEmail;
+    @Column
     private Long foodMenuId;
+    @Column
     private String mealTime;
+    @Column
     private int count;
-
-    @ManyToOne
-    @JoinColumn(name = "daily_diet_id")
-    private DailyDietEntity dailyDiet;
 }

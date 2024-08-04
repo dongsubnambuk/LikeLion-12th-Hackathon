@@ -2,12 +2,7 @@ package com.example.foodserver.Service;
 
 import com.example.foodserver.DTO.WeeklyDietDTO;
 
-import java.util.List;
-import java.util.Optional;
-
 public interface WeeklyDietService {
     WeeklyDietDTO createWeeklyDiet(WeeklyDietDTO weeklyDietDTO);
-    Optional<WeeklyDietDTO> getWeeklyDietById(Long weeklyId);
-    List<WeeklyDietDTO> getAllWeeklyDiets();
-    void deleteWeeklyDiet(Long weeklyId);
+    WeeklyDietDTO getWeeklyDietByUserEmail(String userEmail);
 }

@@ -5,9 +5,6 @@ import com.example.foodserver.Repository.WeeklyDietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
-
 @Repository
 public class WeeklyDietDAOImpl implements WeeklyDietDAO {
 
@@ -24,21 +21,7 @@ public class WeeklyDietDAOImpl implements WeeklyDietDAO {
     }
 
     @Override
-    public Optional<WeeklyDietEntity> getByWeeklyId(Long weeklyId) {
-        return weeklyDietRepository.findById(weeklyId);
-    }
-
-    @Override
-    public List<WeeklyDietEntity> getAll() {
-        return weeklyDietRepository.findAll();
-    }
-
-    @Override
-    public void delete(Long weeklyId) {
-        if (weeklyDietRepository.existsById(weeklyId)) {
-            weeklyDietRepository.deleteById(weeklyId);
-        } else {
-            throw new RuntimeException(weeklyId + "삭제하지 못했습니다.");
-        }
+    public WeeklyDietEntity getByUserEmail(String userEmail) {
+        return weeklyDietRepository.findByUserEmail(userEmail);
     }
 }

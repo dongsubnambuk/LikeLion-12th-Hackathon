@@ -1,119 +1,57 @@
 package com.example.foodserver.Service;
 
 import com.example.foodserver.DAO.DailyDietDAO;
-import com.example.foodserver.DAO.MealSelectionDAO;
 import com.example.foodserver.DTO.DailyDietDTO;
-import com.example.foodserver.DTO.MealSelectionDTO;
 import com.example.foodserver.Entity.DailyDietEntity;
-import com.example.foodserver.Entity.MealSelectionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class DailyDietServiceImpl implements DailyDietService {
 
     private final DailyDietDAO dailyDietDAO;
-    private final MealSelectionDAO mealSelectionDAO;
+    private final MealSelectionService mealSelectionService;
 
     @Autowired
-    public DailyDietServiceImpl(DailyDietDAO dailyDietDAO, MealSelectionDAO mealSelectionDAO) {
+    public DailyDietServiceImpl(DailyDietDAO dailyDietDAO,
+                                MealSelectionService mealSelectionService) {
         this.dailyDietDAO = dailyDietDAO;
-        this.mealSelectionDAO = mealSelectionDAO;
+        this.mealSelectionService = mealSelectionService;
     }
 
     @Override
-    public DailyDietDTO create(DailyDietDTO dailyDietDTO) {
-        DailyDietEntity entity = convertToEntity(dailyDietDTO);
-        DailyDietEntity createdEntity = dailyDietDAO.create(entity);
-        return convertToDTO(createdEntity);
+    public List<DailyDietDTO> getByUserEmailAndDate(String userEmail, LocalDate date) {
+        return dailyDietDAO.getByUserEmailAndDate(userEmail, date).stream().map(this::convertToDailyDietDTO).collect(Collectors.toList());
     }
 
-    @Override
-    public Optional<DailyDietDTO> getDailyDietById(Long dailyDietId) {
-        return dailyDietDAO.getByDailyId(dailyDietId).map(this::convertToDTO);
-    }
-
-    @Override
-    public List<DailyDietDTO> getAll() {
-        return dailyDietDAO.getAll().stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
-
-    @Override
-    public DailyDietDTO update(Long dailyDietId, DailyDietDTO dailyDietDTO) {
-        DailyDietEntity entity = convertToEntity(dailyDietDTO);
-        DailyDietEntity updatedEntity = dailyDietDAO.update(dailyDietId, entity);
-        return convertToDTO(updatedEntity);
-    }
-
-    @Override
-    public void delete(Long dailyDietId) {
-        dailyDietDAO.delete(dailyDietId);
-    }
-
-    @Override
-    public List<DailyDietDTO> getByDayOfWeek(String dayOfWeek) {
-        return dailyDietDAO.getByDayOfWeek(dayOfWeek).stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<DailyDietDTO> getByUserId(Long userId) {
-        return dailyDietDAO.getByUserId(userId).stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
-
-    private DailyDietEntity convertToEntity(DailyDietDTO dto) {
-        DailyDietEntity entity = DailyDietEntity.builder()
-                .dayOfWeek(dto.getDayOfWeek())
-                .foodMenuId(dto.getFoodMenuId())
-                .userId(dto.getUserId())
+    private DailyDietEntity convertToDailyDietEntity(DailyDietDTO dailyDietDTO) {
+        return DailyDietEntity.builder()
+                .userEmail(dailyDietDTO.getUserEmail())
+                .mealSelections(mealSelectionService.convertToMealSelectionEntities(dailyDietDTO.getMealSelections()))
+                .date(dailyDietDTO.getDate())
                 .build();
-
-        if (dto.getMealSelections() != null) {
-            List<MealSelectionEntity> mealSelections = dto.getMealSelections().stream()
-                    .map(this::convertToMealSelectionEntity)
-                    .collect(Collectors.toList());
-            entity.setMealSelections(mealSelections);
-        }
-
-        return entity;
     }
 
-    private DailyDietDTO convertToDTO(DailyDietEntity entity) {
-        List<MealSelectionDTO> mealSelections = mealSelectionDAO.getByDailyDietId(entity.getDailyDietId()).stream()
-                .map(this::convertToMealSelectionDTO)
-                .collect(Collectors.toList());
-
+    private DailyDietDTO convertToDailyDietDTO(DailyDietEntity dailyDietEntity) {
         return DailyDietDTO.builder()
-                .dailyDietId(entity.getDailyDietId())
-                .dayOfWeek(entity.getDayOfWeek())
-                .foodMenuId(entity.getFoodMenuId())
-                .userId(entity.getUserId())
-                .mealSelections(mealSelections)
+                .dailyDietId(dailyDietEntity.getDailyDietId())
+                .date(dailyDietEntity.getDate())
+                .userEmail(dailyDietEntity.getUserEmail())
+                .mealSelections(mealSelectionService.convertToMealSelectionDTOS(dailyDietEntity.getMealSelections()))
                 .build();
     }
 
-    private MealSelectionEntity convertToMealSelectionEntity(MealSelectionDTO dto) {
-        return MealSelectionEntity.builder()
-                .mealSelectionId(dto.getMealSelectionId())
-                .userId(dto.getUserId())
-                .dailyDiet(DailyDietEntity.builder().dailyDietId(dto.getDailyDietId()).build())
-                .foodMenuId(dto.getFoodMenuId())
-                .mealTime(dto.getMealTime())
-                .count(dto.getCount())
-                .build();
+    @Override
+    public List<DailyDietEntity> convertToDailyDietEntities(List<DailyDietDTO> dailyDietDTOS) {
+        return dailyDietDTOS.stream().map(this::convertToDailyDietEntity).collect(Collectors.toList());
     }
 
-    private MealSelectionDTO convertToMealSelectionDTO(MealSelectionEntity entity) {
-        return MealSelectionDTO.builder()
-                .mealSelectionId(entity.getMealSelectionId())
-                .userId(entity.getUserId())
-                .dailyDietId(entity.getDailyDiet().getDailyDietId())
-                .foodMenuId(entity.getFoodMenuId())
-                .mealTime(entity.getMealTime())
-                .count(entity.getCount())
-                .build();
+    @Override
+    public List<DailyDietDTO> convertToDailyDietDTOS(List<DailyDietEntity> dailyDietEntities){
+        return dailyDietEntities.stream().map(this::convertToDailyDietDTO).collect(Collectors.toList());
     }
 }

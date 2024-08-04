@@ -2,6 +2,8 @@ package com.example.foodserver.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -13,13 +15,13 @@ import java.util.List;
 @Builder
 public class DailyDietEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long dailyDietId;
-
-    private String dayOfWeek;
-    private Long foodMenuId;
-    private Long userId;
-
-    @OneToMany(mappedBy = "dailyDiet", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column
+    private LocalDate date;
+    @Column
+    private String userEmail;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn
     private List<MealSelectionEntity> mealSelections;
 }

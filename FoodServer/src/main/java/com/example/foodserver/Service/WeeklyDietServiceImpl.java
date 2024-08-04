@@ -6,56 +6,47 @@ import com.example.foodserver.Entity.WeeklyDietEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 @Service
 public class WeeklyDietServiceImpl implements WeeklyDietService {
 
     private final WeeklyDietDAO weeklyDietDAO;
+    private final DailyDietService dailyDietService;
 
     @Autowired
-    public WeeklyDietServiceImpl(WeeklyDietDAO weeklyDietDAO) {
+    public WeeklyDietServiceImpl(WeeklyDietDAO weeklyDietDAO,
+                                 DailyDietService dailyDietService) {
         this.weeklyDietDAO = weeklyDietDAO;
+        this.dailyDietService = dailyDietService;
     }
 
     @Override
     public WeeklyDietDTO createWeeklyDiet(WeeklyDietDTO weeklyDietDTO) {
-        WeeklyDietEntity entity = convertToEntity(weeklyDietDTO);
-        WeeklyDietEntity savedEntity = weeklyDietDAO.create(entity);
-        return convertToDTO(savedEntity);
+        WeeklyDietEntity entity = convertToWeeklyDietEntity(weeklyDietDTO);
+        weeklyDietDAO.create(entity);
+        return convertToWeeklyDietDTO(entity);
     }
 
     @Override
-    public Optional<WeeklyDietDTO> getWeeklyDietById(Long weeklyDietId) {
-        return weeklyDietDAO.getByWeeklyId(weeklyDietId).map(this::convertToDTO);
+    public WeeklyDietDTO getWeeklyDietByUserEmail(String userEmail) {
+        return convertToWeeklyDietDTO(weeklyDietDAO.getByUserEmail(userEmail));
     }
 
-    @Override
-    public List<WeeklyDietDTO> getAllWeeklyDiets() {
-        return weeklyDietDAO.getAll().stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
-
-    @Override
-    public void deleteWeeklyDiet(Long weeklyId) {
-        weeklyDietDAO.delete(weeklyId);
-    }
-
-    private WeeklyDietEntity convertToEntity(WeeklyDietDTO dto) {
+    public WeeklyDietEntity convertToWeeklyDietEntity(WeeklyDietDTO weeklyDietDTO) {
         return WeeklyDietEntity.builder()
-                .userId(dto.getUserId())
-                .startDate(dto.getStartDate())
-                .endDate(dto.getEndDate())
+                .userEmail(weeklyDietDTO.getUserEmail())
+                .startDate(weeklyDietDTO.getStartDate())
+                .endDate(weeklyDietDTO.getEndDate())
+                .dailyDiets(dailyDietService.convertToDailyDietEntities(weeklyDietDTO.getDailyDiets()))
                 .build();
     }
 
-    private WeeklyDietDTO convertToDTO(WeeklyDietEntity entity) {
+    public WeeklyDietDTO convertToWeeklyDietDTO(WeeklyDietEntity weeklyDietEntity) {
         return WeeklyDietDTO.builder()
-                .weeklyId(entity.getWeeklyId())
-                .userId(entity.getUserId())
-                .startDate(entity.getStartDate())
-                .endDate(entity.getEndDate())
+                .weeklyId(weeklyDietEntity.getWeeklyId())
+                .userEmail(weeklyDietEntity.getUserEmail())
+                .startDate(weeklyDietEntity.getStartDate())
+                .endDate(weeklyDietEntity.getEndDate())
+                .dailyDiets(dailyDietService.convertToDailyDietDTOS(weeklyDietEntity.getDailyDiets()))
                 .build();
     }
 }
