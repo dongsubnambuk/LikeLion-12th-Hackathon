@@ -1,7 +1,9 @@
 package com.example.foodserver.Service;
 
 import com.example.foodserver.DAO.MealSelectionDAO;
+import com.example.foodserver.DTO.DailyDietDTO;
 import com.example.foodserver.DTO.MealSelectionDTO;
+import com.example.foodserver.Entity.DailyDietEntity;
 import com.example.foodserver.Entity.MealSelectionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,12 @@ import java.util.stream.Collectors;
 public class MealSelectionServiceImpl implements MealSelectionService {
 
     private final MealSelectionDAO mealSelectionDAO;
+    private final DailyDietService dailyDietService;
 
     @Autowired
-    public MealSelectionServiceImpl(MealSelectionDAO mealSelectionDAO) {
+    public MealSelectionServiceImpl(MealSelectionDAO mealSelectionDAO, DailyDietService dailyDietService) {
         this.mealSelectionDAO = mealSelectionDAO;
+        this.dailyDietService = dailyDietService;
     }
 
     @Override
@@ -64,14 +68,34 @@ public class MealSelectionServiceImpl implements MealSelectionService {
         mealSelectionDAO.delete(mealSelectionId);
     }
 
+    @Override
+    public List<DailyDietDTO> createWeeklyDiet(Long userId, List<DailyDietDTO> dailyDiets) {
+        return dailyDiets.stream().map(dailyDietDTO -> {
+            dailyDietDTO.setUserId(userId);
+            return dailyDietService.create(dailyDietDTO);
+        }).collect(Collectors.toList());
+    }
+
     private MealSelectionEntity convertToEntity(MealSelectionDTO dto) {
+        DailyDietEntity dailyDietEntity = dailyDietService.getDailyDietById(dto.getDailyDietId())
+                .map(this::convertToEntity)  // Convert DTO to Entity
+                .orElse(null);
+
         return MealSelectionEntity.builder()
-                .mealSelectionId(dto.getMealSelectionId()) // Add this line to set mealSelectionId
+                .mealSelectionId(dto.getMealSelectionId())
                 .userId(dto.getUserId())
-                .dailyDietId(dto.getDailyDietId())
+                .dailyDiet(dailyDietEntity)  // Set the DailyDietEntity
                 .foodMenuId(dto.getFoodMenuId())
                 .mealTime(dto.getMealTime())
                 .count(dto.getCount())
+                .build();
+    }
+
+    private DailyDietEntity convertToEntity(DailyDietDTO dto) {
+        return DailyDietEntity.builder()
+                .dailyDietId(dto.getDailyDietId())
+                .dayOfWeek(dto.getDayOfWeek())
+                .foodMenuId(dto.getFoodMenuId())
                 .build();
     }
 
@@ -79,7 +103,7 @@ public class MealSelectionServiceImpl implements MealSelectionService {
         return MealSelectionDTO.builder()
                 .mealSelectionId(entity.getMealSelectionId())
                 .userId(entity.getUserId())
-                .dailyDietId(entity.getDailyDietId())
+                .dailyDietId(entity.getDailyDiet() != null ? entity.getDailyDiet().getDailyDietId() : null)
                 .foodMenuId(entity.getFoodMenuId())
                 .mealTime(entity.getMealTime())
                 .count(entity.getCount())

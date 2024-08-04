@@ -9,7 +9,8 @@ public interface DailyDietService {
     DailyDietDTO create(DailyDietDTO dailyDietDTO);
     Optional<DailyDietDTO> getDailyDietById(Long dailyDietId);
     List<DailyDietDTO> getAll();
-    DailyDietDTO update(Long dailyId, DailyDietDTO dailyDietDTO);
+    DailyDietDTO update(Long dailyDietId, DailyDietDTO dailyDietDTO);
     void delete(Long dailyDietId);
     List<DailyDietDTO> getByDayOfWeek(String dayOfWeek);
+    List<DailyDietDTO> getByUserId(Long userId);
 }

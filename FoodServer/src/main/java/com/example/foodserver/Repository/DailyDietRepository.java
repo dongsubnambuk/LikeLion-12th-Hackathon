@@ -6,9 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
 @Repository
 public interface DailyDietRepository extends JpaRepository<DailyDietEntity, Long> {
     List<DailyDietEntity> findByDayOfWeek(String dayOfWeek);
+    List<DailyDietEntity> findByUserId(Long userId);
 
 }

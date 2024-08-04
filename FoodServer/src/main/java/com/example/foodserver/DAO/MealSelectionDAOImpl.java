@@ -40,7 +40,7 @@ public class MealSelectionDAOImpl implements MealSelectionDAO {
 
     @Override
     public List<MealSelectionEntity> getByDailyDietId(Long dailyDietId) {
-        return mealSelectionRepository.findByDailyDietId(dailyDietId);
+        return mealSelectionRepository.findByDailyDietDailyDietId(dailyDietId); // 수정된 부분
     }
 
     @Override

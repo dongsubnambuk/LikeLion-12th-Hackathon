@@ -2,24 +2,24 @@ package com.example.foodserver.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
 @Entity
 @Table(name = "daily_diet")
-@NoArgsConstructor
 @Getter
 @Setter
-@ToString
-@Builder
+@NoArgsConstructor
 @AllArgsConstructor
-
+@Builder
 public class DailyDietEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long dailyId;
+    private Long dailyDietId;
 
-    @Column(nullable = false)
     private String dayOfWeek;
-
-    @Column(nullable = false)
     private Long foodMenuId;
+    private Long userId;
+
+    @OneToMany(mappedBy = "dailyDiet", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MealSelectionEntity> mealSelections;
 }

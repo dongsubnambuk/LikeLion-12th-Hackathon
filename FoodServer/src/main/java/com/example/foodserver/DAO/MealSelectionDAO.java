@@ -10,7 +10,7 @@ public interface MealSelectionDAO {
     Optional<MealSelectionEntity> getById(Long mealSelectionId);
     List<MealSelectionEntity> getAll();
     List<MealSelectionEntity> getByUserId(Long userId);
-    List<MealSelectionEntity> getByDailyDietId(Long dailyDietId);
+    List<MealSelectionEntity> getByDailyDietId(Long dailyDietId); // 수정된 부분
     List<MealSelectionEntity> getByMealTime(String mealTime);
     MealSelectionEntity update(Long mealSelectionId, MealSelectionEntity mealSelectionEntity);
     void delete(Long mealSelectionId);

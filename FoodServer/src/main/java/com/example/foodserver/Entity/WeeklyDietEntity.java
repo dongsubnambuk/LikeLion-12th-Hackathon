@@ -19,12 +19,12 @@ public class WeeklyDietEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long weeklyId;
 
-    @Column(nullable = false)
+    @Column
     private Long userId;
 
-    @Column(nullable = false)
+    @Column
     private LocalDate startDate;
 
-    @Column(nullable = false)
+    @Column
     private LocalDate endDate;
 }

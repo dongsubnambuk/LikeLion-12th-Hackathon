@@ -1,12 +1,13 @@
 package com.example.foodserver.Controller;
 
+import com.example.foodserver.DTO.DailyDietDTO;
 import com.example.foodserver.DTO.MealSelectionDTO;
 import com.example.foodserver.Service.MealSelectionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/selections")
@@ -19,43 +20,48 @@ public class MealSelectionController {
         this.mealSelectionService = mealSelectionService;
     }
 
-    @PostMapping("/create") // 식단 조회
-    public MealSelectionDTO create(@RequestBody MealSelectionDTO mealSelectionDTO) {
-        return mealSelectionService.create(mealSelectionDTO);
+    @PostMapping("/create")
+    public ResponseEntity<MealSelectionDTO> createMealSelection(@RequestBody MealSelectionDTO mealSelectionDTO) {
+        MealSelectionDTO createdSelection = mealSelectionService.create(mealSelectionDTO);
+        return ResponseEntity.ok(createdSelection);
     }
 
-    @GetMapping("read/{mealSelectionId}") // 특정 식단 조회
-    public Optional<MealSelectionDTO> getById(@PathVariable Long mealSelectionId) {
-        return mealSelectionService.getById(mealSelectionId);
+    @PostMapping("/weekly/create")
+    public ResponseEntity<List<DailyDietDTO>> createWeeklyDiet(@RequestParam Long userId,
+                                                               @RequestBody List<DailyDietDTO> dailyDiets) {
+        List<DailyDietDTO> createdDiets = mealSelectionService.createWeeklyDiet(userId, dailyDiets);
+        return ResponseEntity.ok(createdDiets);
     }
 
-    @GetMapping("read/All") // 전체 식단 불러오기
-    public List<MealSelectionDTO> getAll() {
-        return mealSelectionService.getAll();
+    @GetMapping("read/all")
+    public ResponseEntity<List<MealSelectionDTO>> getAllMealSelections() {
+        List<MealSelectionDTO> mealSelections = mealSelectionService.getAll();
+        return ResponseEntity.ok(mealSelections);
     }
 
-    @GetMapping("read/user/{userId}") // 사용자 식단 조회
-    public List<MealSelectionDTO> getByUserId(@PathVariable Long userId) {
-        return mealSelectionService.getByUserId(userId);
+    @GetMapping("read/{mealSelectionId}")
+    public ResponseEntity<MealSelectionDTO> getMealSelectionById(@PathVariable Long mealSelectionId) {
+        return mealSelectionService.getById(mealSelectionId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("read/daily-diet/{dailyDietId}") // 특정 일일 식단에 대한 식사 선택 항목 조회
-    public List<MealSelectionDTO> getByDailyDietId(@PathVariable Long dailyDietId) {
-        return mealSelectionService.getByDailyDietId(dailyDietId);
+    @GetMapping("read/user/{userId}")
+    public ResponseEntity<List<MealSelectionDTO>> getMealSelectionsByUserId(@PathVariable Long userId) {
+        List<MealSelectionDTO> mealSelections = mealSelectionService.getByUserId(userId);
+        return ResponseEntity.ok(mealSelections);
     }
 
-    @GetMapping("read/meal-time/{mealTime}") // 특정 식사 시간 (아점저)에 대한 식사 선택 항목 조회
-    public List<MealSelectionDTO> getByMealTime(@PathVariable String mealTime) {
-        return mealSelectionService.getByMealTime(mealTime);
+    @PutMapping("update/{mealSelectionId}")
+    public ResponseEntity<MealSelectionDTO> updateMealSelection(@PathVariable Long mealSelectionId,
+                                                                @RequestBody MealSelectionDTO mealSelectionDTO) {
+        MealSelectionDTO updatedSelection = mealSelectionService.update(mealSelectionId, mealSelectionDTO);
+        return ResponseEntity.ok(updatedSelection);
     }
 
-    @PutMapping("/update/{mealSelectionId}") //  특정 id의 식사 선택 항목 업데이트
-    public MealSelectionDTO update(@PathVariable Long mealSelectionId, @RequestBody MealSelectionDTO mealSelectionDTO) {
-        return mealSelectionService.update(mealSelectionId, mealSelectionDTO);
-    }
-
-    @DeleteMapping("/delete/{mealSelectionId}") // 특정 id의 식사 선택 항목 삭제
-    public void delete(@PathVariable Long mealSelectionId) {
+    @DeleteMapping("delete/{mealSelectionId}")
+    public ResponseEntity<Void> deleteMealSelection(@PathVariable Long mealSelectionId) {
         mealSelectionService.delete(mealSelectionId);
+        return ResponseEntity.noContent().build();
     }
 }

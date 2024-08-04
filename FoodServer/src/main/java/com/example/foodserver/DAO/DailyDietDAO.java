@@ -7,10 +7,10 @@ import java.util.Optional;
 
 public interface DailyDietDAO {
     DailyDietEntity create(DailyDietEntity dailyDietEntity);
-    Optional<DailyDietEntity> getByDailyId(Long dailyId);
+    Optional<DailyDietEntity> getByDailyId(Long dailyDietId);
     List<DailyDietEntity> getAll();
-    DailyDietEntity update(Long dailyId, DailyDietEntity dailyDietEntity);
-    void delete(Long dailyId);
-    List<DailyDietEntity> getByDayOfWeek(String dayOfWeek); // 추가된 메서드
+    DailyDietEntity update(Long dailyDietId, DailyDietEntity dailyDietEntity);
+    void delete(Long dailyDietId);
+    List<DailyDietEntity> getByDayOfWeek(String dayOfWeek);
+    List<DailyDietEntity> getByUserId(Long userId); // 메서드 선언
 }
-

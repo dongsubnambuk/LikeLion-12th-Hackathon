@@ -3,12 +3,13 @@ package com.example.foodserver.Controller;
 import com.example.foodserver.DTO.DailyDietDTO;
 import com.example.foodserver.Service.DailyDietService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/daily")
+@RequestMapping("/dailyDiets")
 public class DailyDietController {
 
     private final DailyDietService dailyDietService;
@@ -18,35 +19,47 @@ public class DailyDietController {
         this.dailyDietService = dailyDietService;
     }
 
-    @GetMapping // 전체 요일 식단 조회
-    public List<DailyDietDTO> getAllDailyDiets() {
-        return dailyDietService.getAll();
+    @PostMapping("/create")
+    public ResponseEntity<DailyDietDTO> createDailyDiet(@RequestBody DailyDietDTO dailyDietDTO) {
+        DailyDietDTO createdDiet = dailyDietService.create(dailyDietDTO);
+        return ResponseEntity.ok(createdDiet);
     }
 
-    @GetMapping("read/{dailyId}") // 특정 요일 식단 조회
-    public DailyDietDTO getDailyDietById(@PathVariable Long dailyId) {
-        return dailyDietService.getDailyDietById(dailyId)
-                .orElseThrow(() -> new RuntimeException("DailyDiet not found with id " + dailyId));
+    @GetMapping("/read/{dailyDietId}")
+    public ResponseEntity<DailyDietDTO> getDailyDietById(@PathVariable Long dailyDietId) {
+        return dailyDietService.getDailyDietById(dailyDietId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/create") // 요일 식단 생성
-    public DailyDietDTO createDailyDiet(@RequestBody DailyDietDTO dailyDietDTO) {
-        return dailyDietService.create(dailyDietDTO);
+    @GetMapping("/read/all")
+    public ResponseEntity<List<DailyDietDTO>> getAllDailyDiets() {
+        List<DailyDietDTO> dailyDiets = dailyDietService.getAll();
+        return ResponseEntity.ok(dailyDiets);
     }
 
-    @GetMapping("read/dayByDay") // 주어진 요일에 대한 그 요일의 전체 식단 조회
-    public List<DailyDietDTO> getByDayOfWeek(@RequestParam String dayOfWeek) {
-        return dailyDietService.getByDayOfWeek(dayOfWeek);
-        // http://localhost:8080/daily/read/dayByDay?dayOfWeek=월요일 로 사용해야 됨
+    @GetMapping("/read/user/{userId}")
+    public ResponseEntity<List<DailyDietDTO>> getDailyDietsByUserId(@PathVariable Long userId) {
+        List<DailyDietDTO> dailyDiets = dailyDietService.getByUserId(userId);
+        return ResponseEntity.ok(dailyDiets);
     }
 
-    @PutMapping("update/{dailyId}") // 특정 요일 식단 업데이트
-    public DailyDietDTO updateDailyDiet(@PathVariable Long dailyId, @RequestBody DailyDietDTO dailyDietDTO) {
-        return dailyDietService.update(dailyId, dailyDietDTO);
+    @GetMapping("/read/day/{dayOfWeek}")
+    public ResponseEntity<List<DailyDietDTO>> getDailyDietsByDayOfWeek(@PathVariable String dayOfWeek) {
+        List<DailyDietDTO> dailyDiets = dailyDietService.getByDayOfWeek(dayOfWeek);
+        return ResponseEntity.ok(dailyDiets);
     }
 
-    @DeleteMapping("delete/{dailyId}") // 특정 요일 식단 삭제
-    public void deleteDailyDiet(@PathVariable Long dailyId) {
-        dailyDietService.delete(dailyId);
+    @PutMapping("/update/{dailyDietId}")
+    public ResponseEntity<DailyDietDTO> updateDailyDiet(@PathVariable Long dailyDietId,
+                                                        @RequestBody DailyDietDTO dailyDietDTO) {
+        DailyDietDTO updatedDiet = dailyDietService.update(dailyDietId, dailyDietDTO);
+        return ResponseEntity.ok(updatedDiet);
+    }
+
+    @DeleteMapping("/delete/{dailyDietId}")
+    public ResponseEntity<Void> deleteDailyDiet(@PathVariable Long dailyDietId) {
+        dailyDietService.delete(dailyDietId);
+        return ResponseEntity.noContent().build();
     }
 }
