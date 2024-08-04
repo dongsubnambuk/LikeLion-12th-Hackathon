@@ -44,6 +44,7 @@ function Login() {
             localStorage.setItem("token", result.token);  // 로그인 성공 시 보내주는 토큰 localStorage에 저장
             localStorage.setItem("email", result.email);
             localStorage.setItem("role", result.role); // 역할 저장
+            localStorage.setItem("isLoggedIn", "true"); // 로그인 상태 저장
             // console.log(result)
 
             if (result.role === 'ROLE_ADMIN') {

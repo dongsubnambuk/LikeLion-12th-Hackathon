@@ -56,7 +56,7 @@ function AllDietPage() {
     }, []);
 
     if (loading) {
-        return <Spin size="large" />;
+        return <div style={{width: "100%", height: "100%", display: 'flex', alignItems: "center", justifyContent: 'center'}}><Spin size="large" /></div>;
     }
 
     return (

@@ -28,7 +28,6 @@ const BottomNav = () => {
     } else {
       navigate('/login');
     }
-     
   };
 
 

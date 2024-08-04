@@ -101,5 +101,5 @@ npm install react-toastify
 npm install react-toastify/dist/ReactToastify.css
 
 
-- meals.jsx 로그인 유무 수정
-- 
+- 메인화면 비회원 식단 로딩
+- 메인화면 식단 아직 신청 안 한 사람

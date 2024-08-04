@@ -24,10 +24,10 @@
 }
 
 .meal-card-image {
-  width: 100%; 
+  width: 100%;
   height: auto;
   object-fit: cover;
-  border-radius: 8px; 
+  border-radius: 8px;
 }
 
 .meal-card-content {
@@ -36,19 +36,30 @@
 }
 
 .meal-card-content h3 {
-  margin: 0px 0px 4px;
   font-size: 15px;
   font-weight: bold;
   color: #333;
+  overflow: hidden;
+  width: 83%;
+  /* 넘치는 내용 숨기기 */
+  text-overflow: ellipsis;
+  /* 넘치는 부분을 ...으로 표시 */
+  white-space: nowrap;
+  /* 텍스트 줄바꿈 방지 */
 }
 
 .meal-card-content p {
-  margin: 0 0 4px; /* 마진을 줄임 */
+  margin: 0 0 4px;
+  /* 마진을 줄임 */
   color: #666;
   font-size: 14px;
-  overflow: hidden; /* 넘치는 내용 숨기기 */
-    text-overflow: ellipsis; /* 넘치는 부분을 ...으로 표시 */
-    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  width: 85%;
+  overflow: hidden;
+  /* 넘치는 내용 숨기기 */
+  text-overflow: ellipsis;
+  /* 넘치는 부분을 ...으로 표시 */
+  white-space: nowrap;
+  /* 텍스트 줄바꿈 방지 */
 }
 
 .meal-card-nutrition {
@@ -64,12 +75,14 @@
 
 .nutrition-label {
   display: block;
-  font-size: 10px; /* 폰트 크기 줄임 */
+  font-size: 10px;
+  /* 폰트 크기 줄임 */
   color: #888;
 }
 
 .nutrition-value {
-  font-size: 12px; /* 폰트 크기 줄임 */
+  font-size: 12px;
+  /* 폰트 크기 줄임 */
   font-weight: bold;
   color: #333;
 }
@@ -86,6 +99,7 @@
   justify-content: space-between;
   font-size: 13px;
   align-items: center;
+  margin: 0px 0px 4px;
 }
 
 .count {

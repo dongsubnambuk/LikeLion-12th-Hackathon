@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import BottomNav from "../components/BottomNav"
 import '../CSS/DietSelectionPage.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Spin } from 'antd';
 import 'swiper/css'; // Swiper 기본 CSS
 import 'swiper/css/navigation'; // Navigation 모듈의 CSS
 import 'swiper/css/pagination'; // Pagination 모듈의 CSS
@@ -49,7 +50,7 @@ function DietSelectionPage() {
     // }, [mealData]);
 
     if (!mealData) {
-        return <div>Loading...</div>;
+        return <div style={{ width: "100%", height: "100%", display: 'flex', alignItems: "center", justifyContent: 'center' }}><Spin size="large" /></div>;
     }
 
     return (
