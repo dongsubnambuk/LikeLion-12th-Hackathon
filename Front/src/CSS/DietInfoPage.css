@@ -2,59 +2,170 @@
     display: flex;
     justify-content: center;
     width: 100%;
-    height: 93%;
-    margin-top: 20px;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 .DIPlistContainer {
-    width: 85%;
-    height: 90%;
-    max-height: 90%;
-    padding: 10px;
+    margin-top: 10px;
+    width: 100%;
+
     background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
     border-radius: 15px;
-    border: 1px solid black;
     display: flex;
     flex-direction: column;
+    align-items: center;
+
 }
 
-.DIPheader {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    height: 16%;
+.DIPimageContainer {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
 }
 
-.DIPtitleImage {
-    display: flex;
-    flex: 1;
+.DIPimage {
+    max-width: 30%;
+    max-height: 100px; /* Adjusted height */
     border-radius: 15px;
-    border: 1px solid black;
+    object-fit: cover;
+    margin: 0 auto;
 }
 
 .DIPtitle {
-    display: flex;
-    flex: 2;
-    padding: 5%;
     text-align: center;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 20px; /* Adjusted font size */
+    margin-bottom: 5px; /* Reduced margin */
 }
 
-.DIPmenu {
-    margin-top: 5%;
-    white-space: pre-line;
+.DIPdescription {
+    text-align: center;
+    font-size: 14px; /* Adjusted font size */
+    color: #666;
+    margin-bottom: 10px; /* Reduced margin */
+    padding: 0 10px;
+}
+
+.DIPmenu, .DIPnutrient {
+    width: 100%;
+    margin-bottom: 10px; /* Reduced margin */
+    padding: 10px;
 }
 
 .DIPnutrient {
-    margin-top: 5%;
-    white-space: pre-line;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 
-.DIPprice {
-    margin-top: 3%;
-    margin-left: auto;
+.nutrientListContainer {
+    width: 100%;
+    max-width: 600px;
+    background-color: white;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nutrientList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.nutrientItem {
+    padding: 5px;
+    border-radius: 10px;
+    font-size: 14px;
+    text-align: center;
+    margin: 5px;
+    flex: 1;
+    min-width: 80px;
+}
+
+/* 각 영양소의 선 색상 적용 */
+.nutrientItem.carbohydrates {
+    border: 1px solid #ff7f50; /* 코랄 색상 */
+}
+
+.nutrientItem.protein {
+    border: 1px solid #4682b4; /* 스틸 블루 색상 */
+}
+
+.nutrientItem.fat {
+    border: 1px solid #32cd32; /* 라임 그린 색상 */
+}
+
+.nutrientItem.sugar {
+    border: 1px solid #da70d6; /* 오키드 색상 */
+}
+
+.nutrientItem.sodium {
+    border: 1px solid #ff4500; /* 오렌지 레드 색상 */
+}
+
+.DIPfooter {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.DIPcalories, .DIPprice {
+    font-weight: 600;
+    font-size: 14px; /* Adjusted font size */
+}
+
+.DIPsectionTitle {
+    font-weight: bold;
+    font-size: 16px; /* Adjusted font size */
+    margin-bottom: 5px; /* Reduced margin */
+    display: block;
+}
+
+/* 칼로리 강조를 위한 애니메이션 효과 */
+.calories-icon-left, .calories-icon-right{
+    font-size: 24px; /* 아이콘 크기 */
+    animation: bounce 2s infinite; /* 애니메이션 효과 */
+    position: relative;
+}
+
+.calories-icon-left {
+    margin-right: -50px;
+}
+
+.calories-icon-right {
+    margin-left: -50px;
+}
+
+
+/* 애니메이션 효과 정의 */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+.DIPcalories {
+    animation: bounce 2s infinite; /* 깜빡이는 애니메이션 적용 */
+}
+
+/* 깜빡이는 애니메이션 정의 */
+@keyframes blink-red {
+    0%, 100% {
+        color: black;
+    }
+    50% {
+        color: red;
+    }
 }
