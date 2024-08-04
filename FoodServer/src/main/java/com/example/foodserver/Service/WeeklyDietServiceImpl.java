@@ -2,6 +2,7 @@ package com.example.foodserver.Service;
 
 import com.example.foodserver.DAO.WeeklyDietDAO;
 import com.example.foodserver.DTO.WeeklyDietDTO;
+import com.example.foodserver.DTO.WeeklyDietRequestDTO;
 import com.example.foodserver.Entity.WeeklyDietEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class WeeklyDietServiceImpl implements WeeklyDietService {
     }
 
     @Override
-    public WeeklyDietDTO createWeeklyDiet(WeeklyDietDTO weeklyDietDTO) {
+    public WeeklyDietDTO createWeeklyDiet(WeeklyDietRequestDTO weeklyDietDTO) {
         WeeklyDietEntity entity = convertToWeeklyDietEntity(weeklyDietDTO);
         weeklyDietDAO.create(entity);
         return convertToWeeklyDietDTO(entity);
@@ -31,7 +32,7 @@ public class WeeklyDietServiceImpl implements WeeklyDietService {
         return convertToWeeklyDietDTO(weeklyDietDAO.getByUserEmail(userEmail));
     }
 
-    public WeeklyDietEntity convertToWeeklyDietEntity(WeeklyDietDTO weeklyDietDTO) {
+    public WeeklyDietEntity convertToWeeklyDietEntity(WeeklyDietRequestDTO weeklyDietDTO) {
         return WeeklyDietEntity.builder()
                 .userEmail(weeklyDietDTO.getUserEmail())
                 .startDate(weeklyDietDTO.getStartDate())

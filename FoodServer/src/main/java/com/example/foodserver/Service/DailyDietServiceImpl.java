@@ -2,6 +2,7 @@ package com.example.foodserver.Service;
 
 import com.example.foodserver.DAO.DailyDietDAO;
 import com.example.foodserver.DTO.DailyDietDTO;
+import com.example.foodserver.DTO.DailyDietRequestDTO;
 import com.example.foodserver.Entity.DailyDietEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class DailyDietServiceImpl implements DailyDietService {
         return dailyDietDAO.getByUserEmailAndDate(userEmail, date).stream().map(this::convertToDailyDietDTO).collect(Collectors.toList());
     }
 
-    private DailyDietEntity convertToDailyDietEntity(DailyDietDTO dailyDietDTO) {
+    private DailyDietEntity convertToDailyDietEntity(DailyDietRequestDTO dailyDietDTO) {
         return DailyDietEntity.builder()
                 .userEmail(dailyDietDTO.getUserEmail())
                 .mealSelections(mealSelectionService.convertToMealSelectionEntities(dailyDietDTO.getMealSelections()))
@@ -46,7 +47,7 @@ public class DailyDietServiceImpl implements DailyDietService {
     }
 
     @Override
-    public List<DailyDietEntity> convertToDailyDietEntities(List<DailyDietDTO> dailyDietDTOS) {
+    public List<DailyDietEntity> convertToDailyDietEntities(List<DailyDietRequestDTO> dailyDietDTOS) {
         return dailyDietDTOS.stream().map(this::convertToDailyDietEntity).collect(Collectors.toList());
     }
 

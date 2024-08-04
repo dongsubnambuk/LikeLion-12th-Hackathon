@@ -1,6 +1,7 @@
 package com.example.foodserver.Controller;
 
 import com.example.foodserver.DTO.WeeklyDietDTO;
+import com.example.foodserver.DTO.WeeklyDietRequestDTO;
 import com.example.foodserver.Service.WeeklyDietService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class WeeklyDietController {
     }
 
     @PostMapping("/create") // 일주일 식단 생성
-    public WeeklyDietDTO createWeeklyDiet(@RequestBody WeeklyDietDTO weeklyDietDTO) {
+    public WeeklyDietDTO createWeeklyDiet(@RequestBody WeeklyDietRequestDTO weeklyDietDTO) {
         return weeklyDietService.createWeeklyDiet(weeklyDietDTO);
     }
 

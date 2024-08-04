@@ -2,6 +2,7 @@ package com.example.foodserver.Service;
 
 import com.example.foodserver.DAO.MealSelectionDAO;
 import com.example.foodserver.DTO.MealSelectionDTO;
+import com.example.foodserver.DTO.MealSelectionRequestDTO;
 import com.example.foodserver.Entity.MealSelectionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,13 @@ import java.util.stream.Collectors;
 public class MealSelectionServiceImpl implements MealSelectionService {
 
     private final MealSelectionDAO mealSelectionDAO;
+    private final CommunicationService communicationService;
 
     @Autowired
-    public MealSelectionServiceImpl(MealSelectionDAO mealSelectionDAO) {
+    public MealSelectionServiceImpl(MealSelectionDAO mealSelectionDAO,
+                                    CommunicationService communicationService) {
         this.mealSelectionDAO = mealSelectionDAO;
+        this.communicationService = communicationService;
     }
 
     @Override
@@ -24,7 +28,7 @@ public class MealSelectionServiceImpl implements MealSelectionService {
         return convertToMealSelectionDTO(mealSelectionDAO.getById(mealSelectionId));
     }
 
-    public MealSelectionEntity convertToMealSelectionEntity(MealSelectionDTO mealSelectionDTO) {
+    public MealSelectionEntity convertToMealSelectionEntity(MealSelectionRequestDTO mealSelectionDTO) {
         return MealSelectionEntity.builder()
                 .userEmail(mealSelectionDTO.getUserEmail())
                 .foodMenuId(mealSelectionDTO.getFoodMenuId())
@@ -37,14 +41,14 @@ public class MealSelectionServiceImpl implements MealSelectionService {
         return MealSelectionDTO.builder()
                 .mealSelectionId(mealSelectionEntity.getMealSelectionId())
                 .userEmail(mealSelectionEntity.getUserEmail())
-                .foodMenuId(mealSelectionEntity.getFoodMenuId())
+                .foodMenu(communicationService.getFoodMenu(mealSelectionEntity.getFoodMenuId()))
                 .mealTime(mealSelectionEntity.getMealTime())
                 .count(mealSelectionEntity.getCount())
                 .build();
     }
 
     @Override
-    public List<MealSelectionEntity> convertToMealSelectionEntities(List<MealSelectionDTO> mealSelectionDTOS){
+    public List<MealSelectionEntity> convertToMealSelectionEntities(List<MealSelectionRequestDTO> mealSelectionDTOS){
         return mealSelectionDTOS.stream().map(this::convertToMealSelectionEntity).collect(Collectors.toList());
     }
 

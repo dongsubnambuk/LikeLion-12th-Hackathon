@@ -1,5 +1,6 @@
 package com.example.foodserver.Service;
 
+import com.example.foodserver.DTO.FoodMenuDTO;
 import com.example.foodserver.DTO.UserDailyMealPlanDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
@@ -38,6 +39,27 @@ public class CommunicationServiceImpl implements CommunicationService{
             HttpEntity<Map<String, Object>> http = new HttpEntity<>(bodyMap, headers);
             URI uri = new URI(mealService.getUri() + "/api/meal/review");
             ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.POST, http, String.class);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            } else {
+                throw new RuntimeException("Failed to fetch meal");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to fetch meal", e);
+        }
+    }
+
+    @Override
+    public FoodMenuDTO getFoodMenu(Long foodMenuId){
+        try {
+            ServiceInstance mealService = discoveryClient.getInstances("MEAL-SERVER").get(0);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<Void> http = new HttpEntity<>(headers);
+            URI uri = new URI(mealService.getUri() + "/api/meal/food-menu/" + foodMenuId);
+            ResponseEntity<FoodMenuDTO> response = restTemplate.exchange(uri, HttpMethod.GET, http, FoodMenuDTO.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
