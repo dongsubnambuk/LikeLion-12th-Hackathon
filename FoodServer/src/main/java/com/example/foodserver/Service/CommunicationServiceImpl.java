@@ -58,7 +58,7 @@ public class CommunicationServiceImpl implements CommunicationService{
             headers.setContentType(MediaType.APPLICATION_JSON);
 
             HttpEntity<Void> http = new HttpEntity<>(headers);
-            URI uri = new URI(mealService.getUri() + "/api/meal/food-menu/" + foodMenuId);
+            URI uri = new URI(mealService.getUri() + "/api/meal/food/" + foodMenuId);
             ResponseEntity<FoodMenuDTO> response = restTemplate.exchange(uri, HttpMethod.GET, http, FoodMenuDTO.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
