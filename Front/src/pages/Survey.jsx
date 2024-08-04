@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 function Survey() {
     const navigate = useNavigate();
-    const [email, setEmail] = useState(localStorage.getItem("email"));
+    const [email] = useState(localStorage.getItem("email"));
     const [surveys, setSurveys] = useState(() => {
         const savedSurveys = localStorage.getItem(`surveys_${email}`);
         return savedSurveys ? JSON.parse(savedSurveys) : [];
