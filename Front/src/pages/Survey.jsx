@@ -92,6 +92,41 @@ function Survey() {
         };
     }, [email, handleNotification]);
 
+    // 예시 데이터 추가
+    useEffect(() => {
+        const exampleSurvey = {
+            id: uuidv4(),
+            dailyReviewId: 4,
+            userEmail: email,
+            reviewDate: '2024-08-04',
+            reviews: [
+                {
+                    reviewId: 7,
+                    foodImage: 'http://3.37.64.39:8000/image/download/3',
+                    foodName: '불고기 정식',
+                    likes: 7223,
+                    disLikes: 7,
+                    comment: []
+                },
+                {
+                    reviewId: 10,
+                    foodImage: 'http://3.37.64.39:8000/image/download/3',
+                    foodName: '김치찌개 정식',
+                    likes: 101,
+                    disLikes: 1230,
+                    comment: []
+                }
+            ],
+            notificationContent: "Example survey"
+        };
+
+        setSurveys(prevSurveys => {
+            const newSurveys = [...prevSurveys, exampleSurvey];
+            localStorage.setItem(`surveys_${email}`, JSON.stringify(newSurveys));
+            return newSurveys;
+        });
+    }, []);
+
     return (
         <>
             <Header />

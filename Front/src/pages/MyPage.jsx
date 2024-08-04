@@ -1,6 +1,5 @@
-import React, { useState,useRef,useEffect } from "react";
+import React, { useState,useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import Header from "../components/Header";
 import BottomNav from "../components/BottomNav";
 import { Avatar } from 'antd';
@@ -10,7 +9,7 @@ import { faPenToSquare, faReceipt } from "@fortawesome/free-solid-svg-icons";
 
 function MyPage(){
 
-const [Image, setImage] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
+const [Image] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
 
 const [userName, setUserName] = useState(''); // 하드코딩된 유저 이름
 const [address, setAddress] = useState({ roadAddress: '', detailAddress: '' });
@@ -18,9 +17,6 @@ const [phoneNumber, setphoneNumber] = useState(''); // 하드코딩된 유저 �
 const [showPopup, setShowPopup] = useState(false);
 const navigate = useNavigate();
 
-    const handleImageSave = (newImage) => {
-        setImage(newImage);
-    };
 
     // 로그아웃 함수
     const handleLogout = () => {

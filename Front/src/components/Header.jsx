@@ -55,14 +55,6 @@ const Header = () => {
         navigate('/login');
     };
 
-    const handleLogoutClick = () => {
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        localStorage.removeItem('email');
-        setIsLoggedIn(false);
-        setUserName('');
-    };
-
     const handleBackClick = () => {
         navigate(-1);
     };
