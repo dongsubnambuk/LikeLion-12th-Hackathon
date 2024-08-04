@@ -2,12 +2,12 @@ import React from 'react';
 import { useNavigate } from "react-router-dom";
 import '../CSS/MealCard.css';
 import '../CSS/SelectionMenuCard.css';
-import logo from '../images/logo.png';
 
-const SelectionMenuCard = ({ meals, index, onChangeMenu }) => {
+const SelectionMenuCard = ({ meals, index, optionIndex, dateIndex }) => {
 
-    const handleChoiceMenu = () => {
-        onChangeMenu(meals);
+    const handleChoiceMenu = (date, option, num) => {
+        console.log("date:", date, "option:", option, "num:", num)
+        //onChangeMenu(meals);
     }
 
     return (
@@ -37,7 +37,7 @@ const SelectionMenuCard = ({ meals, index, onChangeMenu }) => {
                         </div>
                     </div>
                     <div className="selection-menu-choice-area">
-                        <div className="selection-menu-choice-btn" onClick={handleChoiceMenu}>
+                        <div className="selection-menu-choice-btn" onClick={() => handleChoiceMenu(dateIndex, optionIndex, index)}>
                             선택<br />하기
                         </div>
                         <p className="selection-meal-price">{meals.price}</p>

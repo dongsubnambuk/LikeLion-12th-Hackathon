@@ -29,6 +29,8 @@ const SelectionMenus = ({ mealCardData, optionIndex, dateIndex }) => {
                     meals={mealData}
                     key={index}
                     index={index + 1}
+                    dateIndex={dateIndex}
+                    optionIndex={optionIndex}
                 // onChangeMenu={(delta) => handleChangeMenu(index, delta)}
                 />
             ))}

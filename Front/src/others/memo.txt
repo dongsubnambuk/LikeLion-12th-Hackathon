@@ -99,3 +99,7 @@ npm install sockjs-client
 npm install @stomp/stompjs
 npm install react-toastify
 npm install react-toastify/dist/ReactToastify.css
+
+
+- meals.jsx 로그인 유무 수정
+- 
