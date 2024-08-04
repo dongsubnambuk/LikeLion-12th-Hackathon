@@ -20,7 +20,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -107,12 +109,16 @@ public class MealServiceImpl implements MealService {
 //    @Scheduled(cron = "0 0 0 ? * MON")
     @Override
     public WeeklyMealPlanDTO createWeeklyMealPlan() {
-        if(weeklyMealPlanDAO.existsByCurrentWeeklyMealPlan(LocalDate.now())){
-            WeeklyMealPlan weeklyMealPlan = weeklyMealPlanDAO.findCurrentWeeklyMealPlan(LocalDate.now());
+        LocalDate today = LocalDate.now();
+        LocalDate nextMonday = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));
+
+        if(weeklyMealPlanDAO.existsByCurrentWeeklyMealPlan(nextMonday)){
+            WeeklyMealPlan weeklyMealPlan = weeklyMealPlanDAO.findCurrentWeeklyMealPlan(nextMonday);
             return toWeeklyMealPlanDTO(weeklyMealPlan);
         }
+
         initWeights();
-        WeeklyMealPlan weeklyMealPlan = generateWeeklyMealPlan(LocalDate.now());
+        WeeklyMealPlan weeklyMealPlan = generateWeeklyMealPlan(nextMonday);
         weeklyMealPlanDAO.createWeeklyMealPlan(weeklyMealPlan);
         return toWeeklyMealPlanDTO(weeklyMealPlan);
     }
@@ -206,7 +212,7 @@ public class MealServiceImpl implements MealService {
 
         for (int day = 1; day <= 7; day++) {
             List<MealOption> mealOptions = new ArrayList<>();
-            for (String mealType : Arrays.asList("breakfast", "lunch", "dinner")) {
+            for (String mealType : Arrays.asList("아침", "점심", "저녁")) {
                 List<FoodMenu> foodMenus = getRandomMenus(3);
                 MealOption mealOption = MealOption.builder()
                         .mealType(mealType)
