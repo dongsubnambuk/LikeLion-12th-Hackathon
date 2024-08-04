@@ -7,6 +7,7 @@ import com.example.foodserver.DTO.Request.WeeklyDietRequestDTO;
 import com.example.foodserver.Entity.DailyDietEntity;
 import com.example.foodserver.Entity.MealSelectionEntity;
 import com.example.foodserver.Entity.WeeklyDietEntity;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,7 @@ public class WeeklyDietServiceImpl implements WeeklyDietService {
     }
 
     @Override
+    @Transactional
     public WeeklyDietDTO createWeeklyDiet(WeeklyDietRequestDTO weeklyDietDTO) {
         if(weeklyDietDAO.existsByCurrentWeeklyMealPlan(weeklyDietDTO.getStartDate(), weeklyDietDTO.getUserEmail())){
             return null;
