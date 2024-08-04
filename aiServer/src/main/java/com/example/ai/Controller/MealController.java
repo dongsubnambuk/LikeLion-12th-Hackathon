@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "MEAL SERVER API", description = "AI를 사용한 식단 및 이미지 자동 생성")
 @RestController
 @RequestMapping(value = "/api/meal")
@@ -21,19 +23,29 @@ public class MealController {
 
     @Operation(summary = "식단 생성(CreateMeal)", description = "가격을 입력하면 가격에 맞는 영양 있는 식단 생성")
     @PostMapping(value = "/food-menu")
-    private FoodMenuDTO createMeal(@RequestParam(name = "price") String price) {
+    public FoodMenuDTO createMeal(@RequestParam(name = "price") String price) {
         return mealService.createMeal(price);
     }
 
     @Operation(summary = "한 주 식단 생성(CreateWeeklyMealPlan)", description = "한 주 식단 생성")
     @PostMapping(value = "/meal-plans/weekly")
-    private WeeklyMealPlanDTO createWeeklyMealPlan() {
+    public WeeklyMealPlanDTO createWeeklyMealPlan() {
         return mealService.createWeeklyMealPlan();
     }
 
     @Operation(summary = "한 주 식단 조회(ReadWeeklyMealPlan)", description = "한 주 식단 조회")
     @GetMapping(value = "/meal-plans/weekly")
-    private WeeklyMealPlanDTO readWeeklyMealPlan() {
+    public WeeklyMealPlanDTO readWeeklyMealPlan() {
         return mealService.readWeeklyMealPlan();
+    }
+
+    @GetMapping(value = "/food-menu")
+    public List<FoodMenuDTO> readAllFoodMenu() {
+        return mealService.readAll();
+    }
+
+    @GetMapping(value = "/food-menu/{foodMenuId}")
+    public FoodMenuDTO readByFoodMenuId(@PathVariable("foodMenuId") Long foodMenuId) {
+        return mealService.readFoodMenuDTOByFoodMenuId(foodMenuId);
     }
 }

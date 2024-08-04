@@ -139,6 +139,18 @@ public class MealServiceImpl implements MealService {
         return mealDAO.findById(foodMenuId);
     }
 
+    @Override
+    public FoodMenuDTO readFoodMenuDTOByFoodMenuId(Long foodMenuId){
+        FoodMenu foodMenu = mealDAO.findById(foodMenuId);
+        return toFoodMenuDTO(foodMenu);
+    }
+
+    @Override
+    public List<FoodMenuDTO> readAll(){
+        List<FoodMenu> foodMenus = mealDAO.findAll();
+        return toFoodMenuDTOS(foodMenus);
+    }
+
     private void initWeights() {
         menuFrequency = new HashMap<>();
         weights = new HashMap<>();
