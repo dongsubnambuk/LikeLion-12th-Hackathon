@@ -39,12 +39,12 @@ public class MealController {
         return mealService.readWeeklyMealPlan();
     }
 
-    @GetMapping(value = "/food-menu")
+    @GetMapping(value = "/food")
     public List<FoodMenuDTO> readAllFoodMenu() {
         return mealService.readAll();
     }
 
-    @GetMapping(value = "/food-menu/{foodMenuId}")
+    @GetMapping(value = "/food/{foodMenuId}")
     public FoodMenuDTO readByFoodMenuId(@PathVariable("foodMenuId") Long foodMenuId) {
         return mealService.readFoodMenuDTOByFoodMenuId(foodMenuId);
     }
