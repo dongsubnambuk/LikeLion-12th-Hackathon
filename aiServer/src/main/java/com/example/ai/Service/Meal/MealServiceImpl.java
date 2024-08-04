@@ -125,7 +125,10 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public WeeklyMealPlanDTO readWeeklyMealPlan() {
-        WeeklyMealPlan weeklyMealPlan = weeklyMealPlanDAO.findCurrentWeeklyMealPlan(LocalDate.now());
+        LocalDate today = LocalDate.now();
+        LocalDate nextMonday = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));
+
+        WeeklyMealPlan weeklyMealPlan = weeklyMealPlanDAO.findCurrentWeeklyMealPlan(nextMonday);
 
         if(weeklyMealPlan == null) {
             return createWeeklyMealPlan();
