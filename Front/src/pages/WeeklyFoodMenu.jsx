@@ -35,7 +35,7 @@ const WeeklyFoodMenu = () => {
           const result = await response.json();
 
           if (response.status === 200) {
-            console.log("로그인 성공 및 데이터 저장")
+            //console.log("로그인 성공 및 데이터 저장")
             setUserName(result.name);
             setIsLoggedIn(true);
             setUserEmail(email);
@@ -61,7 +61,7 @@ const WeeklyFoodMenu = () => {
     const handleGetUserDiet = async () => {
 
       if (isLoggedIn) {
-        console.log("로그인 됨")
+        //console.log("로그인 됨")
         const response = await fetch(`http://3.37.64.39:8000/api/userMeal/weekly/read/${userEmail}`, {
           method: "GET",
           headers: {
@@ -73,8 +73,8 @@ const WeeklyFoodMenu = () => {
         const result = await response.json();
 
         if (response.status === 200) {
-          console.log(result.dailyDiets);
-          console.log("식단 불러오기 성공")
+          //console.log(result.dailyDiets);
+          //console.log("식단 불러오기 성공")
           setMealData(result.dailyDiets);
         } else {
           console.log("식단 불러오기 실패");
@@ -85,7 +85,6 @@ const WeeklyFoodMenu = () => {
         console.log("로그인 안 됨")
       }
     }
-    console.log("유저 이메일 =", userEmail)
 
     if (isLoggedIn) {
       handleGetUserDiet();

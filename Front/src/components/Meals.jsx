@@ -3,9 +3,9 @@ import MealCard from './MealCard';
 import '../CSS/Meals.css';
 
 const Meals = ({ isLoggedIn, userName, mealCardData, dateIndex }) =>  {
-  useEffect(() => {
-  console.log("밀 카드 데이터 : ", mealCardData);
-  })
+  // useEffect(() => {
+  // console.log("밀 카드 데이터 : ", mealCardData);
+  // })
 
   return (
     <div className="meals-container">

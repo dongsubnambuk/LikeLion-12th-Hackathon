@@ -22,6 +22,64 @@ function Login() {
         setPassword(e.target.value);
     };
 
+
+
+    const checkPayList = (payUserList) => {
+        // 로컬 스토리지에 저장된 나의 이메일 불러오기
+        const email = localStorage.getItem("email");
+
+        // 배열 payList 안에 나의 이메일이 포함되는 지 확인
+        let isPaidUser = false;
+
+        //console.log("결제 유저 확인, 해당 이메일 : ", email)
+        //console.log("결제 유저 확인 ", payUserList)
+
+        for (let i = 0; i < payUserList.length; i++) {
+            if (payUserList[i] === email) {
+                isPaidUser = true;
+                break;
+            }
+        }
+
+        // 결제 여부에 따라 로컬 스토리지 값 설정
+        localStorage.setItem("isPay", isPaidUser ? "false" : "true");
+        //console.log("결제 한 사람", isPaidUser);
+    };
+
+
+    // 식단 미결제 유저 리스트 불러오기
+    const handleGetPay = async () => {
+
+        const token = localStorage.getItem("token");
+
+        //console.log("로그인 토큰 : ", token)
+
+        try {
+            const response = await fetch(`http://3.37.64.39:8000/api/payment/unpaid-users`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": token,
+                }
+            });
+
+            const result = await response.json();
+
+            if (response.status === 200) {
+                //console.log("결제 유저 리스트 :", result.email);
+                //setPayList(result.email);
+                checkPayList(result.email);
+            } else {
+                console.log("로그인 실패: ", result.message);
+                alert("로그인 실패: " + result.message);
+            }
+        } catch (error) {
+            console.error("Fetch error: ", error);
+        }
+
+    }
+
+
     // login fetch 함수
     const handleLogin = async (event) => {
         event.preventDefault();
@@ -46,9 +104,10 @@ function Login() {
             localStorage.setItem("role", result.role); // 역할 저장
             localStorage.setItem("isLoggedIn", "true"); // 로그인 상태 저장
             // console.log(result)
+            handleGetPay();
 
             if (result.role === 'ROLE_ADMIN') {
-                navigate('/admin'); 
+                navigate('/admin');
             } else {
                 navigate('/');
             }

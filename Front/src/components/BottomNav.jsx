@@ -11,7 +11,8 @@ const BottomNav = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
+    const storedIsLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    if (storedIsLoggedIn) {
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
@@ -23,11 +24,12 @@ const BottomNav = () => {
   };
 
   const handleNavigationAllDietPage = () => {
-    if (isLoggedIn) {
-      navigate('/alldiet');
-    } else {
-      navigate('/login');
-    }
+    // if (isLoggedIn) {
+    //   navigate('/alldiet');
+    // } else {
+    //   navigate('/login');
+    // }
+    navigate('/alldiet');
   };
 
 

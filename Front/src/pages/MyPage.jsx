@@ -21,8 +21,10 @@ const navigate = useNavigate();
     // 로그아웃 함수
     const handleLogout = () => {
 
-    	localStorage.removeItem("token");
+    	//localStorage.removeItem("token");
     	localStorage.removeItem("email");
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("isPay");
     	navigate("/");
         
   	};
@@ -67,8 +69,6 @@ const navigate = useNavigate();
                     roadAddress: result.roadAddress,
                     detailAddress: result.detailAddress,
                   });
-
-            
       
             } else {
                 console.log("로그인 실패");

@@ -101,5 +101,4 @@ npm install react-toastify
 npm install react-toastify/dist/ReactToastify.css
 
 
-- 메인화면 비회원 식단 로딩
-- 메인화면 식단 아직 신청 안 한 사람
+- 메인화면에서 식단 신청 유무 판단 기능 추가해야됨(식단이 이미 있는 경우는 작동하지만 없는 경우에는 값이 없어서 에러남)

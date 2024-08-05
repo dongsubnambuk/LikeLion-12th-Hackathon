@@ -23,13 +23,15 @@ const MainPage = () => {
 
   useEffect(() => {
     const storedIsLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    const storedIsPay = localStorage.getItem("isPay") === "true";
     const token = localStorage.getItem("token");
     const email = localStorage.getItem("email");
 
-    if (storedIsLoggedIn && token && email) {
+    if (storedIsLoggedIn && token && email && storedIsPay) {
       handleGetUser(token, email);
       setIsLogin(true);
     } else {
+      handleOfflineLogin();
       handleGetOfflineDiet();
     }
 
@@ -64,7 +66,7 @@ const MainPage = () => {
       const result = await response.json();
 
       if (response.status === 200) {
-        console.log("로그인 성공 및 데이터 저장")
+        //console.log("로그인 성공 및 데이터 저장")
         setUser({ name: result.name, email, token });
       } else {
         console.log("로그인 실패: ", result.message);
@@ -76,11 +78,69 @@ const MainPage = () => {
   };
 
 
+  // 개인 식단 조회
+  const handleGetUserDiet = async (userName, userEmail, userToken) => {
+
+    try {
+      //console.log("로그인 됨")
+      const response = await fetch(`http://3.37.64.39:8000/api/userMeal/weekly/read/${userEmail}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": userToken,
+        }
+      });
+
+      const result = await response.json();
+
+      if (response.status === 200) {
+        //console.log(result.dailyDiets);
+        //console.log("식단 불러오기 성공")
+        setMealData(result.dailyDiets);
+      } else {
+        console.log("식단 불러오기 실패");
+        alert("식단 실패: " + result.message);
+      }
+    } catch (error) {
+      console.error("Fetch error: ", error);
+    }
+  }
+
+  const handleOfflineLogin = async () => {
+
+    //console.log("오프라인 로그인 시도")
+
+    const response = await fetch('http://3.37.64.39:8000/users/login', { // 서버 URL을 실제 API 엔드포인트로 변경하세요
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: "user@naver.com",
+        password: "123456",
+    }),
+    });
+
+    const result = await response.json(); // 응답이 JSON 형식일 경우 이를 JavaScript 객체로 변환
+
+    if (response.status === 200) { // 응답 status가 200 OK 일 경우
+      // Store token in local storage
+      localStorage.setItem("token", result.token);  // 로그인 성공 시 보내주는 토큰 localStorage에 저장
+      //console.log("오프라인 로그인 성공")
+
+    } else {
+      console.log("로그인 실패");
+      alert("로그인 실패: " + result.message);
+    }
+
+  }
+
   const handleGetOfflineDiet = async () => {
 
-    console.log("오프라인 식단을 불러옵니다.")
+    //console.log("오프라인 식단을 불러옵니다.")
 
     const token = localStorage.getItem("token");
+
     try {
       const response = await fetch(`http://3.37.64.39:8000/api/userMeal/weekly/read/user@naver.com`, {
         method: "GET",
@@ -93,8 +153,8 @@ const MainPage = () => {
       const result = await response.json();
 
       if (response.status === 200) {
-        console.log("오프라인 식단 1 : ", result.dailyDiets);
-        console.log("오프라인 식단 불러오기 성공")
+        //console.log("오프라인 식단 1 : ", result.dailyDiets);
+        //console.log("오프라인 식단 불러오기 성공")
         setMealData(result.dailyDiets);
       } else {
         console.log("오프라인 식단 불러오기 실패");
@@ -106,33 +166,7 @@ const MainPage = () => {
   }
 
 
-  // 개인 식단 조회
-  const handleGetUserDiet = async (userName, userEmail, userToken) => {
 
-    try {
-      console.log("로그인 됨")
-      const response = await fetch(`http://3.37.64.39:8000/api/userMeal/weekly/read/${userEmail}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": userToken,
-        }
-      });
-
-      const result = await response.json();
-
-      if (response.status === 200) {
-        console.log(result.dailyDiets);
-        console.log("식단 불러오기 성공")
-        setMealData(result.dailyDiets);
-      } else {
-        console.log("식단 불러오기 실패");
-        alert("식단 실패: " + result.message);
-      }
-    } catch (error) {
-      console.error("Fetch error: ", error);
-    }
-  }
 
   // 로그인 안 하면 주석처리, 하면 주석 해제해야 오류 안 남
   if (!mealData) {
@@ -176,7 +210,7 @@ const MainPage = () => {
       {isLogin == false ?
         <div className="user-food-detail">
           <h4 style={{ textAlign: 'center', marginTop: 15 }}>가장 많이 선택한 식단</h4>
-          {/* <Swiper
+          <Swiper
             spaceBetween={50}
             slidesPerView={1}
             navigation
@@ -188,11 +222,11 @@ const MainPage = () => {
               <SwiperSlide key={index} className="slide-content1">
                 <Meals
                   mealCardData={data}
-                  isLoggedIn={isLoggedIn}
+                  isLoggedIn={isLogin}
                 />
               </SwiperSlide>
             ))}
-          </Swiper> */}
+          </Swiper>
         </div>
         :
         <div className="user-food-detail">

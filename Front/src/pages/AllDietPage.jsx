@@ -40,7 +40,7 @@ function AllDietPage() {
 
                 if (response.ok) {
                     setMealData(result);
-                    console.log(result);
+                    //console.log(result);
                 } else {
                     console.log("실패");
                     alert("실패: " + result.message);
