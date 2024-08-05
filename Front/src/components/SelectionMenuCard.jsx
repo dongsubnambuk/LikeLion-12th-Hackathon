@@ -1,13 +1,22 @@
+// SelectionMenuCard.jsx
 import React from 'react';
 import '../CSS/MealCard.css';
 import '../CSS/SelectionMenuCard.css';
+import { useNavigate } from 'react-router-dom';
 
+const SelectionMenuCard = ({ meals, index, optionIndex, dateIndex, onMenuChoice }) => {
+    const navigate = useNavigate();
 
-const SelectionMenuCard = ({ meals, index, optionIndex, dateIndex }) => {
-
-    const handleChoiceMenu = (date, option, num) => {
-        console.log("date:", date, "option:", option, "num:", num)
-        //onChangeMenu(meals);
+    const handleChoiceMenu = () => {
+        // 전달할 데이터를 state로 설정
+        console.log('전달 할 값 : ', dateIndex, optionIndex, index - 1)
+        navigate('/dietselection', {
+            state: {
+                dateIndex,
+                optionIndex,
+                menuIndex: index - 1
+            }
+        });
     }
 
     return (
@@ -37,7 +46,7 @@ const SelectionMenuCard = ({ meals, index, optionIndex, dateIndex }) => {
                         </div>
                     </div>
                     <div className="selection-menu-choice-area">
-                        <div className="selection-menu-choice-btn" onClick={() => handleChoiceMenu(dateIndex, optionIndex, index)}>
+                        <div className="selection-menu-choice-btn" onClick={handleChoiceMenu}>
                             선택<br />하기
                         </div>
                         <p className="selection-meal-price">{meals.price}</p>

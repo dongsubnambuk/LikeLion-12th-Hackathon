@@ -35,7 +35,7 @@ function DietSelectionPage() {
             const result = await response.json();
 
             if (response.status === 200) {
-                //console.log(result);
+                console.log(result);
                 setMealData(result.dailyMealPlans);
             } else {
                 console.log("실패");
@@ -43,6 +43,8 @@ function DietSelectionPage() {
             }
         };
         handleGet();
+
+        console.log("ss", mealData);
     }, []);
 
     // useEffect(() => {

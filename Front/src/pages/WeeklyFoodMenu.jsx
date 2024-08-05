@@ -24,8 +24,8 @@ const WeeklyFoodMenu = () => {
     const token = localStorage.getItem("token");
     const email = localStorage.getItem("email");
 
-    console.log("내 식단 결제 유무 ", storedIsPay);
-    console.log("내 식단 로그인 유무 ", storedIsLoggedIn);
+    //console.log("내 식단 결제 유무 ", storedIsPay);
+    //console.log("내 식단 로그인 유무 ", storedIsLoggedIn);
 
     setIsPay(storedIsPay);
 

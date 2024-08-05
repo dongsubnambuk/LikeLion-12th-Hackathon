@@ -27,7 +27,7 @@ const MainPage = () => {
     const token = localStorage.getItem("token");
     const email = localStorage.getItem("email");
 
-    console.log("메인 결제 유무 ",storedIsPay);
+    //console.log("메인 결제 유무 ",storedIsPay);
 
     if (storedIsLoggedIn && token && email && storedIsPay) {
       handleGetUser(token, email);

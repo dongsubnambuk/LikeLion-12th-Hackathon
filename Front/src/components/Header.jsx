@@ -59,6 +59,10 @@ const Header = () => {
         navigate(-1);
     };
 
+    const handleMainClick = () => {
+        navigate('/');
+    };
+
     const handleIconClick = (path) => {
         if (isLoggedIn) {
             navigate(path);
@@ -112,14 +116,23 @@ const Header = () => {
 
     const isMainPage = location.pathname === '/';
     const isVerificationPage = location.pathname === '/dietpaymentverification';
+    const isDietSelectionPage = location.pathname === '/dietselection';
 
     return (
         <header>
             <div className="contents">
-                {!isMainPage && (
+                {!isMainPage && !isDietSelectionPage && (
                     <div className="otherPageHeader">
                         {!isVerificationPage && (
                             <FontAwesomeIcon icon={faArrowLeft} onClick={handleBackClick} className="faArrowLeft" style={{ cursor: 'pointer' }} />
+                        )}
+                        <span className="pageTitle" style={{ fontSize: 20, fontWeight: 600 }}>{getPageTitle()}</span>
+                    </div>
+                )}
+                {!isMainPage && isDietSelectionPage && (
+                    <div className="otherPageHeader">
+                        {!isVerificationPage && (
+                            <FontAwesomeIcon icon={faArrowLeft} onClick={handleMainClick} className="faArrowLeft" style={{ cursor: 'pointer' }} />
                         )}
                         <span className="pageTitle" style={{ fontSize: 20, fontWeight: 600 }}>{getPageTitle()}</span>
                     </div>
