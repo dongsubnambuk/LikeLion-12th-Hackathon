@@ -19,6 +19,7 @@ public class CorsConfiguration {
         corsConfig.setAllowCredentials(true);
         corsConfig.addAllowedOrigin("http://192.168.45.30:3001");
         corsConfig.addAllowedOrigin("http://127.0.0.1:3000");
+        corsConfig.addAllowedOrigin("https//nimn.store");
         corsConfig.addAllowedHeader("*");
         corsConfig.addAllowedMethod("*");
 
