@@ -30,7 +30,7 @@ function Survey() {
             const result = await response.json(); 
 
             if (response.status === 200) {
-                // Handle successful response
+                // 성공적인 응답 처리
             } else {
                 console.log("로그인 실패");
                 alert("로그인 실패: " + result.message);
@@ -41,6 +41,12 @@ function Survey() {
 
     const handleNotification = useCallback((message) => {
         const notification = JSON.parse(message.body);
+        console.log("수신한 DTO:", notification); // 수신한 DTO 확인
+
+        // DTO 필드 검사
+        if (!notification.reviews) {
+            console.error("reviews 필드가 null입니다.");
+        }
 
         if (!notification.id) {
             notification.id = uuidv4();
@@ -67,7 +73,7 @@ function Survey() {
         const client = Stomp.over(socket);
 
         client.connect({}, () => {
-            console.log("Connected to WebSocket");
+            console.log("WebSocket에 연결되었습니다.");
 
             const surveySubscription = client.subscribe(`/topic/notification/survey/${email}`, message => {
                 handleNotification(message);
@@ -76,56 +82,21 @@ function Survey() {
             return () => {
                 surveySubscription.unsubscribe();
                 client.disconnect(() => {
-                    console.log('Disconnected');
+                    console.log('연결이 끊어졌습니다.');
                 });
             };
         }, error => {
-            console.error('Connection error: ', error);
+            console.error('연결 오류: ', error);
         });
 
         return () => {
             if (client && client.connected) {
                 client.disconnect(() => {
-                    console.log('Disconnected');
+                    console.log('연결이 끊어졌습니다.');
                 });
             }
         };
     }, [email, handleNotification]);
-
-    // 예시 데이터 추가
-    // useEffect(() => {
-    //     const exampleSurvey = {
-    //         id: uuidv4(),
-    //         dailyReviewId: 4,
-    //         userEmail: email,
-    //         reviewDate: '2024-08-04',
-    //         reviews: [
-    //             {
-    //                 reviewId: 7,
-    //                 foodImage: 'http://3.37.64.39:8000/image/download/3',
-    //                 foodName: '불고기 정식',
-    //                 likes: 7223,
-    //                 disLikes: 7,
-    //                 comment: []
-    //             },
-    //             {
-    //                 reviewId: 10,
-    //                 foodImage: 'http://3.37.64.39:8000/image/download/3',
-    //                 foodName: '김치찌개 정식',
-    //                 likes: 101,
-    //                 disLikes: 1230,
-    //                 comment: []
-    //             }
-    //         ],
-    //         notificationContent: "Example survey"
-    //     };
-
-    //     setSurveys(prevSurveys => {
-    //         const newSurveys = [...prevSurveys, exampleSurvey];
-    //         localStorage.setItem(`surveys_${email}`, JSON.stringify(newSurveys));
-    //         return newSurveys;
-    //     });
-    // }, []);
 
     return (
         <>

@@ -4,7 +4,6 @@ import Header from "../components/Header";
 import BottomNav from "../components/BottomNav";
 import '../CSS/SurveyDetail.css';
 
-
 function SurveyDetail() {
     const location = useLocation();
     const { survey } = location.state;
@@ -12,7 +11,7 @@ function SurveyDetail() {
     const [feedback, setFeedback] = useState({});
 
     useEffect(() => {
-        if (survey) {
+        if (survey && survey.reviews) {
             const initialResponses = {};
             const initialFeedback = {};
             survey.reviews.forEach(review => {
@@ -56,7 +55,6 @@ function SurveyDetail() {
                     headers: {
                         'Content-Type': 'application/json',
                         "Authorization": token
-
                     },
                     body: JSON.stringify(payload)
                 });
@@ -81,59 +79,63 @@ function SurveyDetail() {
         <>
             <Header />
             <div className="survey-container">
-                <form onSubmit={handleSubmit}>
-                    {survey.reviews.map((review) => (
-                        <div key={review.reviewId} className="survey-section">
-                            <div className="survey-left">
-                                <h3>{`2024년 8월 4일 - ${review.reviewId}`}</h3>
-                                <div className="food-image">
-                                    <img src={review.foodImage} className="logoImage-survey" alt="food" />
+                {survey && survey.reviews ? (
+                    <form onSubmit={handleSubmit}>
+                        {survey.reviews.map((review) => (
+                            <div key={review.reviewId} className="survey-section">
+                                <div className="survey-left">
+                                    <h3>{`${survey.reviewDate} - ${review.reviewId}`}</h3>
+                                    <div className="food-image">
+                                        <img src={review.foodImage} className="logoImage-survey" alt="food" />
+                                    </div>
+                                    <p>[{review.foodName}]</p>
                                 </div>
-                                <p>[{review.foodName}]</p>
+                                <div className="survey-right">
+                                    <label className="survey-label">
+                                        <input
+                                            type="radio"
+                                            value="좋아요"
+                                            checked={responses[review.reviewId] === '좋아요'}
+                                            onChange={(e) => handleResponseChange(review.reviewId, e.target.value)}
+                                        />
+                                        좋아요
+                                    </label>
+                                    <label className="survey-label">
+                                        <input
+                                            type="radio"
+                                            value="별로예요"
+                                            checked={responses[review.reviewId] === '별로예요'}
+                                            onChange={(e) => handleResponseChange(review.reviewId, e.target.value)}
+                                        />
+                                        별로예요
+                                    </label>
+                                    <label className="survey-label">
+                                        <input
+                                            type="radio"
+                                            value="기타"
+                                            checked={responses[review.reviewId] === '기타'}
+                                            onChange={(e) => handleResponseChange(review.reviewId, e.target.value)}
+                                        />
+                                        기타 (의견을 입력해주세요.)
+                                    </label>
+                                    {responses[review.reviewId] === '기타' && (
+                                        <input
+                                            type="text"
+                                            value={feedback[review.reviewId]}
+                                            onChange={(e) => handleFeedbackChange(review.reviewId, e.target.value)}
+                                            placeholder="텍스트 박스"
+                                        />
+                                    )}
+                                </div>
                             </div>
-                            <div className="survey-right">
-                                <label className="survey-label">
-                                    <input
-                                        type="radio"
-                                        value="좋아요"
-                                        checked={responses[review.reviewId] === '좋아요'}
-                                        onChange={(e) => handleResponseChange(review.reviewId, e.target.value)}
-                                    />
-                                    좋아요
-                                </label>
-                                <label className="survey-label">
-                                    <input
-                                        type="radio"
-                                        value="별로예요"
-                                        checked={responses[review.reviewId] === '별로예요'}
-                                        onChange={(e) => handleResponseChange(review.reviewId, e.target.value)}
-                                    />
-                                    별로예요
-                                </label>
-                                <label className="survey-label">
-                                    <input
-                                        type="radio"
-                                        value="기타"
-                                        checked={responses[review.reviewId] === '기타'}
-                                        onChange={(e) => handleResponseChange(review.reviewId, e.target.value)}
-                                    />
-                                    기타 (의견을 입력해주세요.)
-                                </label>
-                                {responses[review.reviewId] === '기타' && (
-                                    <input
-                                        type="text"
-                                        value={feedback[review.reviewId]}
-                                        onChange={(e) => handleFeedbackChange(review.reviewId, e.target.value)}
-                                        placeholder="텍스트 박스"
-                                    />
-                                )}
-                            </div>
+                        ))}
+                        <div className="survey-submit">
+                            <button type="submit">설문 제출하기</button>
                         </div>
-                    ))}
-                    <div className="survey-submit">
-                        <button type="submit">설문 제출하기</button>
-                    </div>
-                </form>
+                    </form>
+                ) : (
+                    <p>설문 데이터를 로드하는 중입니다...</p>
+                )}
             </div>
             <BottomNav />
         </>
