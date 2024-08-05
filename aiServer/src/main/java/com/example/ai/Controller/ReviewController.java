@@ -2,7 +2,6 @@ package com.example.ai.Controller;
 
 import com.example.ai.DTO.Review.DailyReviewDTO;
 import com.example.ai.DTO.Review.ReviewDTO;
-import com.example.ai.DTO.Review.ReviewRequestDTO;
 import com.example.ai.DTO.Review.UserWeeklyMealPlanDTO;
 import com.example.ai.Service.Review.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +26,9 @@ public class ReviewController {
         return "success";
     }
 
-    @GetMapping
-    public List<DailyReviewDTO> readDailyReviewDTOByDate(@RequestBody ReviewRequestDTO reviewRequestDTO){
-        return reviewService.readDailyReviewDTOByDate(reviewRequestDTO.getDate());
+    @GetMapping("/{date}")
+    public List<DailyReviewDTO> readDailyReviewDTOByDate(@PathVariable("date") LocalDate date){
+        return reviewService.readDailyReviewDTOByDate(date);
     }
 
     @PutMapping("/likes/{reviewId}")
