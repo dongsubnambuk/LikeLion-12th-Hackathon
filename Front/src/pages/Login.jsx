@@ -29,31 +29,37 @@ function Login() {
         const email = localStorage.getItem("email");
 
         // 배열 payList 안에 나의 이메일이 포함되는 지 확인
-        let isPaidUser = false;
+        let isNotPaidUser = false;
 
         //console.log("결제 유저 확인, 해당 이메일 : ", email)
         //console.log("결제 유저 확인 ", payUserList)
 
         for (let i = 0; i < payUserList.length; i++) {
             if (payUserList[i] === email) {
-                isPaidUser = true;
+                isNotPaidUser = true;
                 break;
             }
         }
 
         // 결제 여부에 따라 로컬 스토리지 값 설정
-        localStorage.setItem("isPay", isPaidUser ? "false" : "true");
-        //console.log("결제 한 사람", isPaidUser);
+        if (!isNotPaidUser) {
+            // 결제 했으면
+            //console.log("결제 함");
+            localStorage.setItem("isPay", true);
+        }
+        else {
+            // 결제 안 했으면
+            //console.log("결제 안 함");
+            localStorage.setItem("isPay", false);
+        }
+
     };
 
 
     // 식단 미결제 유저 리스트 불러오기
     const handleGetPay = async () => {
-
         const token = localStorage.getItem("token");
-
-        //console.log("로그인 토큰 : ", token)
-
+    
         try {
             const response = await fetch(`http://3.37.64.39:8000/api/payment/unpaid-users`, {
                 method: "GET",
@@ -62,59 +68,58 @@ function Login() {
                     "Authorization": token,
                 }
             });
-
+    
             const result = await response.json();
-
+    
             if (response.status === 200) {
-                //console.log("결제 유저 리스트 :", result.email);
-                //setPayList(result.email);
                 checkPayList(result.email);
             } else {
-                console.log("로그인 실패: ", result.message);
-                alert("로그인 실패: " + result.message);
+                console.log("결제 정보 확인 실패: ", result.message);
+                alert("결제 정보 확인 실패: " + result.message);
             }
         } catch (error) {
             console.error("Fetch error: ", error);
         }
-
-    }
+    };
 
 
     // login fetch 함수
     const handleLogin = async (event) => {
         event.preventDefault();
-
-        const response = await fetch('http://3.37.64.39:8000/users/login', { // 서버 URL을 실제 API 엔드포인트로 변경하세요
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password,
-            }),
-        });
-
-        const result = await response.json(); // 응답이 JSON 형식일 경우 이를 JavaScript 객체로 변환
-
-        if (response.status === 200) { // 응답 status가 200 OK 일 경우
-            // Store token in local storage
-            localStorage.setItem("token", result.token);  // 로그인 성공 시 보내주는 토큰 localStorage에 저장
-            localStorage.setItem("email", result.email);
-            localStorage.setItem("role", result.role); // 역할 저장
-            localStorage.setItem("isLoggedIn", "true"); // 로그인 상태 저장
-            // console.log(result)
-            handleGetPay();
-
-            if (result.role === 'ROLE_ADMIN') {
-                navigate('/admin');
+    
+        try {
+            const response = await fetch('http://3.37.64.39:8000/users/login', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                }),
+            });
+    
+            const result = await response.json();
+    
+            if (response.status === 200) {
+                localStorage.setItem("token", result.token);
+                localStorage.setItem("email", result.email);
+                localStorage.setItem("role", result.role);
+                localStorage.setItem("isLoggedIn", "true");
+    
+                await handleGetPay(); // 결제 정보 확인 후 로컬 스토리지에 저장
+    
+                if (result.role === 'ROLE_ADMIN') {
+                    navigate('/admin');
+                } else {
+                    navigate('/');
+                }
             } else {
-                navigate('/');
+                console.log("로그인 실패");
+                alert("로그인 실패: " + result.message);
             }
-
-        } else {
-            console.log("로그인 실패");
-            alert("로그인 실패: " + result.message);
+        } catch (error) {
+            console.error("Fetch error: ", error);
         }
     };
 
