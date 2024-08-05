@@ -50,7 +50,7 @@ const navigate = useNavigate();
 
       
           
-            const response = await fetch(`http://3.37.64.39:8000/users?email=${email}`, { // 서버 URL을 실제 API 엔드포인트로 변경하세요
+            const response = await fetch(`http://3.37.64.39:8000/api/users?email=${email}`, { // 서버 URL을 실제 API 엔드포인트로 변경하세요
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json", 
