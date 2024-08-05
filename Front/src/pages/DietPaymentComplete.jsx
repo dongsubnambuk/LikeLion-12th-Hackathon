@@ -38,22 +38,22 @@ function DietPaymentComplete() {
                                         "mealTime": "아침",
                                         "foodMenuId": 1,
                                         "count": 2,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     },
                                     {
                                         "mealTime": "점심",
                                         "foodMenuId": 2,
                                         "count": 1,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     },
                                     {
                                         "mealTime": "저녁",
                                         "foodMenuId": 3,
                                         "count": 1,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     }
                                 ],
-                                "userEmail": "user@naver.com"
+                                "userEmail": "dong@naver.com"
                             },
                             {
                                 "date": "2024-08-06",
@@ -62,22 +62,22 @@ function DietPaymentComplete() {
                                         "mealTime": "아침",
                                         "foodMenuId": 4,
                                         "count": 2,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     },
                                     {
                                         "mealTime": "점심",
                                         "foodMenuId": 5,
                                         "count": 1,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     },
                                     {
                                         "mealTime": "저녁",
                                         "foodMenuId": 6,
                                         "count": 1,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     }
                                 ],
-                                "userEmail": "user@naver.com"
+                                "userEmail": "dong@naver.com"
                             },
                             {
                                 "date": "2024-08-07",
@@ -86,22 +86,22 @@ function DietPaymentComplete() {
                                         "mealTime": "아침",
                                         "foodMenuId": 7,
                                         "count": 2,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     },
                                     {
                                         "mealTime": "점심",
                                         "foodMenuId": 8,
                                         "count": 1,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     },
                                     {
                                         "mealTime": "저녁",
                                         "foodMenuId": 9,
                                         "count": 1,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     }
                                 ],
-                                "userEmail": "user@naver.com"
+                                "userEmail": "dong@naver.com"
                             },
                             {
                                 "date": "2024-08-08",
@@ -110,22 +110,22 @@ function DietPaymentComplete() {
                                         "mealTime": "아침",
                                         "foodMenuId": 10,
                                         "count": 2,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     },
                                     {
                                         "mealTime": "점심",
                                         "foodMenuId": 11,
                                         "count": 1,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     },
                                     {
                                         "mealTime": "저녁",
                                         "foodMenuId": 12,
                                         "count": 1,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     }
                                 ],
-                                "userEmail": "user@naver.com"
+                                "userEmail": "dong@naver.com"
                             },
                             {
                                 "date": "2024-08-09",
@@ -134,22 +134,22 @@ function DietPaymentComplete() {
                                         "mealTime": "아침",
                                         "foodMenuId": 13,
                                         "count": 2,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     },
                                     {
                                         "mealTime": "점심",
                                         "foodMenuId": 14,
                                         "count": 1,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     },
                                     {
                                         "mealTime": "저녁",
                                         "foodMenuId": 15,
                                         "count": 1,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     }
                                 ],
-                                "userEmail": "user@naver.com"
+                                "userEmail": "dong@naver.com"
                             },
                             {
                                 "date": "2024-08-10",
@@ -158,22 +158,22 @@ function DietPaymentComplete() {
                                         "mealTime": "아침",
                                         "foodMenuId": 16,
                                         "count": 2,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     },
                                     {
                                         "mealTime": "점심",
                                         "foodMenuId": 17,
                                         "count": 1,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     },
                                     {
                                         "mealTime": "저녁",
                                         "foodMenuId": 18,
                                         "count": 1,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     }
                                 ],
-                                "userEmail": "user@naver.com"
+                                "userEmail": "dong@naver.com"
                             },
                             {
                                 "date": "2024-08-11",
@@ -182,25 +182,25 @@ function DietPaymentComplete() {
                                         "mealTime": "아침",
                                         "foodMenuId": 19,
                                         "count": 2,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     },
                                     {
                                         "mealTime": "점심",
                                         "foodMenuId": 20,
                                         "count": 1,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     },
                                     {
                                         "mealTime": "저녁",
                                         "foodMenuId": 21,
                                         "count": 1,
-                                        "userEmail": "user@naver.com"
+                                        "userEmail": "dong@naver.com"
                                     }
                                 ],
-                                "userEmail": "user@naver.com"
+                                "userEmail": "dong@naver.com"
                             }
                         ],
-                        "userEmail": "user@naver.com"
+                        "userEmail": "dong@naver.com"
                     }),
                 });
 
@@ -210,7 +210,9 @@ function DietPaymentComplete() {
                     console.log(result);
                     console.log("식단 생성 성공");
                     localStorage.setItem("isPay", "true");
-                    console.log("식단 생성 유무 : ", localStorage.getItem("isPay"))
+                    console.log("식단 생성 유무 : ", localStorage.getItem("isPay"));
+                    localStorage.setItem("isPay", true);
+
                 } else {
                     console.log("식단 생성 실패");
                     alert("식단 생성 실패: " + result.message);
