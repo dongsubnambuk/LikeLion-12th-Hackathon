@@ -35,7 +35,7 @@ public class CommunicationServiceImpl implements CommunicationService{
 
             HttpEntity<Void> http = new HttpEntity<>(headers);
             logger.info("AuthService URL : " + userService.getUri().toString());
-            URI uri = new URI(userService.getUri() + "/users/all");
+            URI uri = new URI(userService.getUri() + "/api/users/all");
             ResponseEntity<UserDTO> response = restTemplate.exchange(uri, HttpMethod.GET, http, UserDTO.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
