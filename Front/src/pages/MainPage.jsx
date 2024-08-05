@@ -14,6 +14,8 @@ import BottomNav from '../components/BottomNav';
 import logo from '../images/logo.png';
 import cat from '../images/cat.png';
 import food from '../images/food.png';
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
 
 const MainPage = () => {
   const [user, setUser] = useState(null);
@@ -53,6 +55,44 @@ const MainPage = () => {
       handleGetUserDiet(user.name, user.email, user.token);
     }
   }, [user]);
+  useEffect(() => {
+    const email = localStorage.getItem("email");
+    if (!email) return;
+
+    const socket = new SockJS('http://nutrihub.kro.kr:14000/ws');
+    const client = Stomp.over(socket);
+
+    client.connect({}, () => {
+      console.log("Connected to WebSocket");
+
+      const dietSubscription = client.subscribe(`/topic/notification/diet/${email}`, message => {
+        console.log("Diet Notification: ", message.body);
+      });
+
+      const paymentSubscription = client.subscribe(`/topic/notification/payment/${email}`, message => {
+        console.log("Payment Notification: ", message.body);
+      });
+
+      return () => {
+        dietSubscription.unsubscribe();
+        paymentSubscription.unsubscribe();
+        client.disconnect(() => {
+          console.log('Disconnected');
+        });
+      };
+    }, error => {
+      console.error('Connection error: ', error);
+    });
+
+    return () => {
+      if (client && client.connected) {
+        client.disconnect(() => {
+          console.log('Disconnected');
+        });
+      }
+    };
+  }, []);
+
 
   const handleGetUser = async (token, email) => {
 

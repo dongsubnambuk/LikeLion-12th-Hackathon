@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 import Header from "../components/Header";
-import BottomNav from "../components/BottomNav";
+import BottomNav from '../components/BottomNav';
 import '../CSS/Survey.css';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -39,13 +39,41 @@ function Survey() {
         handleGet();
     }, [email]);
 
-    const handleNotification = useCallback((message) => {
-        const notification = JSON.parse(message.body);
-        console.log("수신한 DTO:", notification); // 수신한 DTO 확인
+    const fetchReviews = async (reviewDate) => {
+        const token = localStorage.getItem("token");
 
-        // DTO 필드 검사
+        try {
+            const response = await fetch(`http://3.37.64.39:8000/api/meal/review/${reviewDate}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": token,
+                }
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                return result.reviews;
+            } else {
+                console.error("리뷰 데이터를 가져오는데 실패했습니다.");
+                return null;
+            }
+        } catch (error) {
+            console.error("리뷰 데이터를 가져오는 중 오류가 발생했습니다.", error);
+            return null;
+        }
+    };
+
+    const handleNotification = useCallback(async (message) => {
+        const notification = JSON.parse(message.body);
+        console.log("수신한 DTO:", notification);
+
         if (!notification.reviews) {
-            console.error("reviews 필드가 null입니다.");
+            console.error("reviews 필드가 null입니다. 추가 데이터를 가져오는 요청을 보냅니다.");
+            const reviews = await fetchReviews(notification.reviewDate);
+            if (reviews) {
+                notification.reviews = reviews;
+            }
         }
 
         if (!notification.id) {
