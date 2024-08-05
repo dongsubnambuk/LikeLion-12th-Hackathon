@@ -56,7 +56,7 @@ const MainPage = () => {
 
             if (token && email) {
                 try {
-                    const response = await fetch(`http://3.37.64.39:8000/users?email=${email}`, {
+                    const response = await fetch(`http://3.37.64.39:8000/api/users?email=${email}`, {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",

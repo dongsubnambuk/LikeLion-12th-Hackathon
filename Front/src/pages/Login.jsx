@@ -88,7 +88,7 @@ function Login() {
         event.preventDefault();
     
         try {
-            const response = await fetch('http://3.37.64.39:8000/users/login', {
+            const response = await fetch('http://3.37.64.39:8000/api/users/login', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

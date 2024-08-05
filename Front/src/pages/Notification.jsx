@@ -17,7 +17,7 @@ function Notification() {
         const handleGet = async () => {
             const token = localStorage.getItem("token");
 
-            const response = await fetch(`http://3.37.64.39:8000/users?email=${email}`, { 
+            const response = await fetch(`http://3.37.64.39:8000/api/users?email=${email}`, { 
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

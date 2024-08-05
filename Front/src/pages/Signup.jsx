@@ -71,7 +71,7 @@ function Signup(){
     const handleSignup = async (event) => {
         event.preventDefault();
 
-        const response = await fetch('http://3.37.64.39:8000/users/signup', { // 서버 URL을 실제 API 엔드포인트로 변경하세요
+        const response = await fetch('http://3.37.64.39:8000/api/users/signup', { // 서버 URL을 실제 API 엔드포인트로 변경하세요
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

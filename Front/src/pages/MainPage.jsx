@@ -57,7 +57,7 @@ const MainPage = () => {
   const handleGetUser = async (token, email) => {
 
     try {
-      const response = await fetch(`http://3.37.64.39:8000/users?email=${email}`, {
+      const response = await fetch(`http://3.37.64.39:8000/api/users?email=${email}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +112,7 @@ const MainPage = () => {
 
     //console.log("오프라인 로그인 시도")
 
-    const response = await fetch('http://3.37.64.39:8000/users/login', { // 서버 URL을 실제 API 엔드포인트로 변경하세요
+    const response = await fetch('http://3.37.64.39:8000/api/users/login', { // 서버 URL을 실제 API 엔드포인트로 변경하세요
       method: "POST",
       headers: {
         "Content-Type": "application/json",
