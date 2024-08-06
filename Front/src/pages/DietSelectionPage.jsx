@@ -36,9 +36,19 @@ function DietSelectionPage() {
 
             if (response.status === 200) {
                 console.log(result);
-                localStorage.setItem("Meal", JSON.stringify(result.dailyMealPlans));
-                localStorage.setItem("checkMealLoad", true);
-                setMealData(result.dailyMealPlans);
+                // localStorage.setItem("Meal", JSON.stringify(result.dailyMealPlans));
+                // localStorage.setItem("checkMealLoad", true);
+                // setMealData(result.dailyMealPlans);
+                const updatedMealPlans = result.dailyMealPlans.map(dayPlan => ({
+                    ...dayPlan,
+                    mealOptions: dayPlan.mealOptions.map(option => ({
+                        ...option,
+                        count: 1 // count 요소를 추가. 기본값 1로 세팅
+                    }))
+                    }));
+                    setMealData(updatedMealPlans);
+                    localStorage.setItem("Meal", JSON.stringify(updatedMealPlans));
+                    localStorage.setItem("checkMealLoad", true);
             } else {
                 console.log("실패");
                 alert("실패: " + result.message);
@@ -49,7 +59,7 @@ function DietSelectionPage() {
             handleGet();
         } else {
             const storedMeal = localStorage.getItem("Meal");
-            
+
             if (storedMeal) {
                 setMealData(JSON.parse(storedMeal));
             }

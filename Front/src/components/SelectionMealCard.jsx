@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import '../CSS/MealCard.css';
 import '../CSS/SelectionMealCard.css';
@@ -7,6 +7,42 @@ const SelectionMealCard = ({ meals, mealType, optionIndex, dateIndex }) => {
     const navigate = useNavigate();
 
     const [mealCount, setMealCount] = useState(1);
+
+
+    // const [mealData, setMealData] = useState([]);
+
+    const mealData = useRef([]);
+    
+    useEffect(() => {
+        const storedMeal = localStorage.getItem('Meal');
+        if (storedMeal) {
+            const parsedMealData = JSON.parse(storedMeal);
+            if (parsedMealData[dateIndex] && parsedMealData[dateIndex].mealOptions[optionIndex]) {
+                setMealCount(parsedMealData[dateIndex].mealOptions[optionIndex].count);
+            }
+        }
+    }, [dateIndex, optionIndex]);
+
+
+    useEffect(() => {
+        const storedMeal = localStorage.getItem('Meal');
+        let parsedMealData = storedMeal ? JSON.parse(storedMeal) : [];
+
+        if (!parsedMealData[dateIndex]) {
+            parsedMealData[dateIndex] = { mealOptions: [] };
+        }
+
+        if (!parsedMealData[dateIndex].mealOptions[optionIndex]) {
+            parsedMealData[dateIndex].mealOptions[optionIndex] = {};
+        }
+
+        parsedMealData[dateIndex].mealOptions[optionIndex].count = mealCount;
+        localStorage.setItem('Meal', JSON.stringify(parsedMealData));
+
+        console.log(dateIndex + '번째 일 ' + optionIndex + '번째 옵션');
+    }, [mealCount, dateIndex, optionIndex]);
+
+
 
     const handleIncrement = () => {
         if (mealCount <= 10) {
