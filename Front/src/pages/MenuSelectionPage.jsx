@@ -19,7 +19,7 @@ const MenuSelectionPage = () => {
         const storedMeal = localStorage.getItem("Meal");
         if (storedMeal) {
             setMealData(JSON.parse(storedMeal));
-            //console.log('옵션에서 밀 : ', mealData)
+            console.log('옵션에서 밀 : ', mealData)
         }
     }, []);
 

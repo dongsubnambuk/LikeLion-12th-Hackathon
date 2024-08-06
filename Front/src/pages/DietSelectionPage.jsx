@@ -35,20 +35,27 @@ function DietSelectionPage() {
             const result = await response.json();
 
             if (response.status === 200) {
-                //console.log(result);
+                console.log(result);
                 // localStorage.setItem("Meal", JSON.stringify(result.dailyMealPlans));
                 // localStorage.setItem("checkMealLoad", true);
                 // setMealData(result.dailyMealPlans);
+                // 각 mealOption에 count 속성을 추가합니다.
+
+                localStorage.setItem("startDate", JSON.stringify(result.startDate));
+                localStorage.setItem("endDate", JSON.stringify(result.endDate));
+                
                 const updatedMealPlans = result.dailyMealPlans.map(dayPlan => ({
-                    ...dayPlan,
-                    mealOptions: dayPlan.mealOptions.map(option => ({
-                        ...option,
-                        count: 1 // count 요소를 추가. 기본값 1로 세팅
-                    }))
+                ...dayPlan,
+                mealOptions: dayPlan.mealOptions.map(option => ({
+                    ...option,
+                    count: 1 // count 요소를 추가. 기본값 1로 세팅
+                }))
                 }));
                 setMealData(updatedMealPlans);
                 localStorage.setItem("Meal", JSON.stringify(updatedMealPlans));
                 localStorage.setItem("checkMealLoad", true);
+
+                
             } else {
                 console.log("실패");
                 alert("실패: " + result.message);

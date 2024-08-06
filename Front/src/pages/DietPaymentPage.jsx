@@ -17,6 +17,8 @@ function DietPaymentPage() {
         ? `${firstMealName} 외 ${additionalMealsCount}개` 
         : firstMealName;
 
+    const weeklyId = 1;
+
     const onVerification = async (response, orderId) => {
         const token = localStorage.getItem("token");
     
@@ -66,6 +68,58 @@ function DietPaymentPage() {
     };
     
     const requestPay = async () => {
+
+        const handleCreatUserDiet = async () => {
+            const storedIsLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+            const userToken = localStorage.getItem("token");
+            const userEmail = localStorage.getItem("email");
+
+            const startDate = localStorage.getItem("startDate");
+            const endDate = localStorage.getItem("endDate");
+
+            const dailyDiets = localStorage.getItem("Meal");
+
+            if (storedIsLoggedIn) {
+                console.log("로그인 됨, 식단 생성");
+                console.log("유저 이메일 =", userEmail);
+                const response = await fetch(`http://3.37.64.39:8000/api/userMeal/weekly/create`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": userToken,
+                    },
+                    body: JSON.stringify({
+                        "startDate": startDate,
+                        "endDate": endDate,
+                        "userEmail": userEmail,
+                        "dailyMealPlans": JSON.parse(dailyDiets) // 문자열을 객체로 변환
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.status === 200) {
+                    console.log(result);
+                    console.log("식단 생성 성공");
+                    localStorage.setItem("isPay", "true");
+                    console.log("식단 생성 유무 : ", localStorage.getItem("isPay"));
+                    localStorage.setItem("isPay", true);
+
+                    weeklyId = result.weeklyId;
+
+                } else {
+                    console.log("식단 생성 실패");
+                    alert("식단 생성 실패: " + result.message);
+                }
+            } else {
+                console.log("식단 : 로그인 안 됨");
+            }
+        };
+
+        handleCreatUserDiet();
+
+
+
         const token = localStorage.getItem("token");
         const email = localStorage.getItem("email");
         try {
@@ -78,8 +132,8 @@ function DietPaymentPage() {
                 },
                 body: JSON.stringify({
                     purchaser: email,
-                    totalPrice: price,
-                    weeklyId: 23, 
+                    totalPrice: 100,
+                    weeklyId: weeklyId, 
                 }),
             });
     
