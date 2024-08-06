@@ -1,5 +1,6 @@
 package com.example.authServer.Entity;
 
+import com.example.authServer.DTO.UserDetails;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -37,5 +38,12 @@ public class Users {
 //    private String phoneNum;
 //
 //    private String imgUrl;
+
+    public void updateUser(UserDetails user, String userPassword){
+        this.password = userPassword;
+        this.phoneNumber = user.getPhoneNumber();
+        this.roadAddress = user.getRoadAddress();
+        this.detailAddress = user.getDetailAddress();
+    }
 
 }

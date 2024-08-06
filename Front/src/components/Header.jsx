@@ -5,12 +5,17 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faFileLines } from '@fortawesome/free-regular-svg-icons';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
 
 const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userName, setUserName] = useState('');
+    const [notificationCount, setNotificationCount] = useState(0);
+    const [surveyCount, setSurveyCount] = useState(0); // 설문조사 카운트 추가
     const navigate = useNavigate();
     const location = useLocation();
+    const email = localStorage.getItem("email");
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -49,7 +54,71 @@ const Header = () => {
         };
 
         handleGetUser();
+
+        // Load notifications from local storage
+        const savedNotifications = JSON.parse(localStorage.getItem(`messages_${email}`)) || [];
+        setNotificationCount(savedNotifications.length);
+
+        // Load surveys from local storage
+        const savedSurveys = JSON.parse(localStorage.getItem(`surveys_${email}`)) || [];
+        setSurveyCount(savedSurveys.length);
     }, []);
+
+    useEffect(() => {
+        if (!email) return;
+
+        const socket = new SockJS('http://nutrihub.kro.kr:14000/ws');
+        const client = Stomp.over(socket);
+
+        client.connect({}, () => {
+            console.log("Connected to WebSocket");
+
+            const dietSubscription = client.subscribe(`/topic/notification/diet/${email}`, message => {
+                addNotification(message.body);
+            });
+
+            const paymentSubscription = client.subscribe(`/topic/notification/payment/${email}`, message => {
+                addNotification(message.body);
+            });
+
+            const surveySubscription = client.subscribe(`/topic/survey/${email}`, message => {
+                addSurvey(message.body);
+            });
+
+            return () => {
+                dietSubscription.unsubscribe();
+                paymentSubscription.unsubscribe();
+                surveySubscription.unsubscribe();
+                client.disconnect(() => {
+                    console.log('Disconnected');
+                });
+            };
+        }, error => {
+            console.error('Connection error: ', error);
+        });
+
+        return () => {
+            if (client && client.connected) {
+                client.disconnect(() => {
+                    console.log('Disconnected');
+                });
+            }
+        };
+    }, [email]);
+
+    const addNotification = (message) => {
+        const savedMessages = JSON.parse(localStorage.getItem(`messages_${email}`)) || [];
+        const newMessages = [...savedMessages, JSON.parse(message)];
+        localStorage.setItem(`messages_${email}`, JSON.stringify(newMessages));
+        setNotificationCount(newMessages.length);
+    };
+
+    const addSurvey = (message) => {
+        const savedSurveys = JSON.parse(localStorage.getItem(`surveys_${email}`)) || [];
+        const newSurveys = [...savedSurveys, JSON.parse(message)];
+        localStorage.setItem(`surveys_${email}`, JSON.stringify(newSurveys));
+        setSurveyCount(newSurveys.length);
+    };
 
     const handleLoginClick = () => {
         navigate('/login');
@@ -57,10 +126,6 @@ const Header = () => {
 
     const handleBackClick = () => {
         navigate(-1);
-    };
-
-    const handleMainClick = () => {
-        navigate('/');
     };
 
     const handleIconClick = (path) => {
@@ -116,12 +181,11 @@ const Header = () => {
 
     const isMainPage = location.pathname === '/';
     const isVerificationPage = location.pathname === '/dietpaymentverification';
-    const isDietSelectionPage = location.pathname === '/dietselection';
 
     return (
         <header>
             <div className="contents">
-                {!isMainPage && !isDietSelectionPage && (
+                {!isMainPage && (
                     <div className="otherPageHeader">
                         {!isVerificationPage && (
                             <FontAwesomeIcon icon={faArrowLeft} onClick={handleBackClick} className="faArrowLeft" style={{ cursor: 'pointer' }} />
@@ -129,34 +193,31 @@ const Header = () => {
                         <span className="pageTitle" style={{ fontSize: 20, fontWeight: 600 }}>{getPageTitle()}</span>
                     </div>
                 )}
-                {!isMainPage && isDietSelectionPage && (
-                    <div className="otherPageHeader">
-                        {!isVerificationPage && (
-                            <FontAwesomeIcon icon={faArrowLeft} onClick={handleMainClick} className="faArrowLeft" style={{ cursor: 'pointer' }} />
-                        )}
-                        <span className="pageTitle" style={{ fontSize: 20, fontWeight: 600 }}>{getPageTitle()}</span>
-                    </div>
-                )}
                 {isMainPage && (
                     <>
                         <div className="header_contents">
-                        {isLoggedIn ? (
+                            {isLoggedIn ? (
                                 <span>{userName}님</span>
                             ) : (
                                 <span onClick={handleLoginClick} className="Login-btn">로그인</span>
                             )}
-
                         </div>
                         <div className="header_contents">
                             <img src={logo} className="logoImage" alt="logo" />
                         </div>
                         <div className="header_contents">
                             <ul>
-                                <li>
-                                    <FontAwesomeIcon icon={faBell} size="2x" onClick={() => handleIconClick('/notification')} />
+                                <li style={{ position: 'relative' }}>
+                                    <FontAwesomeIcon icon={faBell} size="2x" onClick={() => navigate('/notification')} />
+                                    {notificationCount > 0 && (
+                                        <span className="notification-badge">{notificationCount}</span>
+                                    )}
                                 </li>
-                                <li>
-                                    <FontAwesomeIcon icon={faFileLines} size="2x" onClick={() => handleIconClick('/survey')} />
+                                <li style={{ position: 'relative' }}>
+                                    <FontAwesomeIcon icon={faFileLines} size="2x" onClick={() => navigate('/survey')} />
+                                    {surveyCount > 0 && (
+                                        <span className="notification-badge">{surveyCount}</span>
+                                    )}
                                 </li>
                             </ul>
                         </div>

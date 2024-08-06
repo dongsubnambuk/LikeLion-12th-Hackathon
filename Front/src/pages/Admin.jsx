@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from '../components/Header';
 import '../CSS/Admin.css';
+import '../CSS/DietInfoPage.css';
 import { useNavigate } from 'react-router-dom';
 import { Card, Typography, Divider } from 'antd';
 const { Title, Paragraph } = Typography;
@@ -119,56 +120,9 @@ const style = {
   overflowY: 'auto', // 내용이 많을 경우 스크롤 가능하게 설정
 };
 
-const imageContainerStyle = {
-    width: '100%', // 컨테이너 너비를 100%로 설정
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden', // 이미지를 잘라내기 위해 오버플로 숨김
-    marginBottom: '10px' // 이미지와 이름 사이의 여백
-  };
-  
 
-  // 적용하기 post fetch
-  const handleApply = async (event) => {
-    event.preventDefault();
 
-    try {
-      const response = await fetch('http://3.37.64.39:8000/diet', { // 서버 URL을 실제 API 엔드포인트로 변경하세요
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: item.name,
-          main1: item.main1,
-          main2: item.main2,
-          price: item.price,
-          side1: item.side1,
-          side2: item.side2,
-          side3: item.side3,
-          calories: item.calories,
-          carbohydrate: item.carbohydrate,
-          protein: item.protein,
-          fat: item.fat,
-          sugar: item.sugar,
-          sodium: item.sodium,
-          image: item.image
-        }),
-      });
 
-      const result = await response.json();
-
-      if (response.status === 201) {
-        console.log("적용 성공");
-      } else {
-        console.log("적용 실패");
-        alert("적용하기 실패: " + result.message);
-      }
-    } catch (error) {
-      console.error('Fetch error:', error);
-    }
-  };
 
   return (
     <>
@@ -200,16 +154,11 @@ const imageContainerStyle = {
            <div className="DIPcontainer" style={style}>
                 <Card className="DIPlistContainer">
                     <div className="DIPimageContainer">
-			  {item.image && (
-                    <div style={imageContainerStyle}>
-                    <img src={item.image} className="admin-DIPtitleImage" alt="menu" />
-                    </div>
-                )} 
-
+                    <img src={item.image} className="DIPtitleImage" alt="foodimage" />
                     </div>
                     <Title level={4} className="DIPtitle">{item.name}</Title>
                    
-                    <Divider />
+                    <Divider/>
                     <Title level={4} className="DIPsectionTitle">메뉴 소개</Title>
                     <Paragraph>메인 메뉴1: {item.main1}</Paragraph>
                     <Paragraph>메인 메뉴2: {item.main2}</Paragraph>
@@ -239,11 +188,8 @@ const imageContainerStyle = {
                 </Card>
             </div>
             <div className="post-all">
-            <button className="post-all-btn" onClick={handleApply}>적용하기</button>
+            <button className="post-all-btn" >적용하기</button>
           </div>
-
-
-         
         </>
       )} 
       <div className="admin-logout">

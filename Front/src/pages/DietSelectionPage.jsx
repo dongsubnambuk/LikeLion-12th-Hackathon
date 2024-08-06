@@ -66,7 +66,7 @@ function DietSelectionPage() {
             handleGet();
         } else {
             const storedMeal = localStorage.getItem("Meal");
-            
+
             if (storedMeal) {
                 setMealData(JSON.parse(storedMeal));
             }

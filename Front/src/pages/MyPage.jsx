@@ -25,6 +25,9 @@ const navigate = useNavigate();
     	localStorage.removeItem("email");
         localStorage.removeItem("isLoggedIn");
         localStorage.removeItem("isPay");
+        localStorage.removeItem("checkMealLoad");
+        localStorage.removeItem("Meal");
+        localStorage.removeItem("token");
     	navigate("/");
         
   	};

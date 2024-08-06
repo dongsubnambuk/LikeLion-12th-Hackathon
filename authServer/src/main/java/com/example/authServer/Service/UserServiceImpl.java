@@ -3,10 +3,14 @@ package com.example.authServer.Service;
 import com.example.authServer.DAO.UserDAO;
 import com.example.authServer.DTO.UserDTO;
 import com.example.authServer.DTO.UserDetails;
+import com.example.authServer.DTO.UsersEmailDTO;
 import com.example.authServer.Entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -43,7 +47,7 @@ public class UserServiceImpl implements UserService {
                 .phoneNumber(userDetails.getPhoneNumber())
                 .roadAddress(userDetails.getRoadAddress())
                 .detailAddress(userDetails.getDetailAddress())
-                .role("ROLE_ADMIN")
+                .role("ROLE_USER")
                 .build();
 
         userDAO.save(user);
@@ -71,6 +75,37 @@ public class UserServiceImpl implements UserService {
                 .phoneNumber(user.getPhoneNumber())
                 .roadAddress(user.getRoadAddress())
                 .detailAddress(user.getDetailAddress())
+                .build();
+    }
+
+    @Override
+    public UserDetails updateUser(UserDetails user) {
+        String userPassword;
+        Users userEntity = userDAO.findByEmail(user.getEmail());
+
+        if(user.getPassword() == null || user.getPassword().isEmpty()){
+            userPassword = userEntity.getPassword();
+        }
+        else {
+            userPassword = bCryptPasswordEncoder.encode(user.getPassword());
+            System.out.println(userPassword);
+        }
+        userEntity.updateUser(user, userPassword);
+        userDAO.save(userEntity);
+        return user;
+    }
+
+    @Override
+    public UsersEmailDTO getUsersEmail() {
+        List<Users> usersList = userDAO.findAll();
+
+        // Stream을 사용하여 변환
+        List<String> emails = usersList.stream()
+                .map(Users::getEmail)
+                .toList();
+
+        return UsersEmailDTO.builder()
+                .email(emails)
                 .build();
     }
 

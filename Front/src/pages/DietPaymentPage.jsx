@@ -7,7 +7,15 @@ import BottomNav from '../components/BottomNav';
 function DietPaymentPage() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { price} = location.state; 
+    const { price, orderDetails } = location.state; 
+
+    // Generate a string with the name of the first ordered meal and indicate the number of additional meals
+    const mealCount = orderDetails.reduce((total, day) => total + day.meals.length, 0);
+    const firstMealName = orderDetails[0].meals[0].title;
+    const additionalMealsCount = mealCount - 1;
+    const orderedMealNames = additionalMealsCount > 0 
+        ? `${firstMealName} 외 ${additionalMealsCount}개` 
+        : firstMealName;
 
     const weeklyId = 1;
 
@@ -129,6 +137,8 @@ function DietPaymentPage() {
                 }),
             });
     
+           
+
             if (!orderResponse.ok) {
                 throw new Error('주문내역 생성에 실패했습니다.');
             }
@@ -137,10 +147,12 @@ function DietPaymentPage() {
             if (orderData.result !== 'success') {
                 throw new Error('주문내역 생성에 실패했습니다.');
             }
-    
-            const { orderId } = orderData.data; // 서버로부터 받은 주문번호 사용
+            const { orderId, weeklyId } = orderData.data; // 서버로부터 받은 주문번호와 weeklyId 사용
             console.log(orderId);
     
+                // weeklyId를 로컬 스토리지에 저장
+            localStorage.setItem("weeklyId", weeklyId);
+
             // Step 2: 결제 요청 진행
             const { IMP } = window; // 생략 가능
             IMP.init('imp77151582'); // 아임포트 관리자 콘솔에서 확인한 가맹점 식별코드
@@ -149,8 +161,8 @@ function DietPaymentPage() {
                 pg: `html5_inicis.INIpayTest`, // PG사
                 pay_method: 'card', // 결제수단
                 merchant_uid: `${orderId}`, // 주문번호를 사용하여 고유한 merchant_uid 생성
-                name: '당근 10kg',
-                amount: 100, 
+                name: orderedMealNames, // Use the generated meal names string
+                amount: price, 
                 buyer_email: email,
                 buyer_name: '홍길동',
                 buyer_tel: '010-1234-5678',
