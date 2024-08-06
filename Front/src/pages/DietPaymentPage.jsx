@@ -7,7 +7,15 @@ import BottomNav from '../components/BottomNav';
 function DietPaymentPage() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { price} = location.state; 
+    const { price, orderDetails } = location.state; 
+
+    // Generate a string with the name of the first ordered meal and indicate the number of additional meals
+    const mealCount = orderDetails.reduce((total, day) => total + day.meals.length, 0);
+    const firstMealName = orderDetails[0].meals[0].title;
+    const additionalMealsCount = mealCount - 1;
+    const orderedMealNames = additionalMealsCount > 0 
+        ? `${firstMealName} 외 ${additionalMealsCount}개` 
+        : firstMealName;
 
     const onVerification = async (response, orderId) => {
         const token = localStorage.getItem("token");
@@ -70,8 +78,8 @@ function DietPaymentPage() {
                 },
                 body: JSON.stringify({
                     purchaser: email,
-                    totalPrice: 100,
-                    weeklyId: 24, 
+                    totalPrice: price,
+                    weeklyId: 23, 
                 }),
             });
     
@@ -95,8 +103,8 @@ function DietPaymentPage() {
                 pg: `html5_inicis.INIpayTest`, // PG사
                 pay_method: 'card', // 결제수단
                 merchant_uid: `${orderId}`, // 주문번호를 사용하여 고유한 merchant_uid 생성
-                name: '당근 10kg',
-                amount: 100, 
+                name: orderedMealNames, // Use the generated meal names string
+                amount: price, 
                 buyer_email: email,
                 buyer_name: '홍길동',
                 buyer_tel: '010-1234-5678',
