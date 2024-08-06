@@ -8,6 +8,7 @@ function OrderList() {
     const [address, setAddress] = useState({ roadAddress: '', detailAddress: '' });
     const [payments, setPayments] = useState([]);
     const navigate = useNavigate();
+    const [mealData, setMealData] = useState(null); // 식단 데이터
 
     // 유저 정보 fetch
     useEffect(() => {
@@ -75,6 +76,37 @@ function OrderList() {
         return `${year}년 ${month}월 ${day}일`;
     };
 
+    useEffect(() => {
+  const handleGetUserDiet = async () => {
+    const token = localStorage.getItem("token");
+    const email = localStorage.getItem("email");
+    try {
+      //console.log("로그인 됨")
+      const response = await fetch(`http://3.37.64.39:8000/api/userMeal/weekly/read/${email}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": token,
+        }
+      });
+
+      const result = await response.json();
+
+      if (response.status === 200) {
+
+        setMealData(result.dailyDiets);
+      } else {
+        console.log("식단 불러오기 실패");
+        alert("식단 실패: " + result.message);
+      }
+    } catch (error) {
+      console.error("Fetch error: ", error);
+    }
+  }
+  handleGetUserDiet();
+}, []); 
+
+
     return (
         <>
             <Header />
@@ -82,13 +114,14 @@ function OrderList() {
                 {payments.map((payment, index) => (
                     <div key={index} className="order-wrapper">
                         <div className="order-date">
-                        <p>식단 주차: {formatDate(payment.dateTime)}</p>
+                    
                         </div>
                         <div className="order-detail-inner" onClick={() => navigate('/weeklyfoodmenu')}>
                             <p>결제 승인 번호: {payment.paymentId}</p>
                             <p>결제 일시: {formatDate(payment.dateTime)}</p>
-                            <p>금액: {payment.totalPrice}</p>
+                            <p>금액: {payment.totalPrice.toLocaleString()}원</p>
                             <p>배송지: {address.roadAddress} {address.detailAddress}</p>
+                            {/* <p>메뉴: {payment.weeklyId}</p> */}
                             <p>메뉴: {payment.weeklyId}</p>
                             <div className="order-list-detail">
                                 <span>자세히 보기</span>
