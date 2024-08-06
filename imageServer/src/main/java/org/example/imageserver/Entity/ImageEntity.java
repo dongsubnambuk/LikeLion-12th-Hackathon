@@ -17,6 +17,6 @@ public class ImageEntity {
     private Long id;
 
     @Column(name = "image_data")
-    @Lob
+    @Lob()
     private byte[] image;
 }
