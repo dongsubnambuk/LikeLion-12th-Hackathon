@@ -175,7 +175,7 @@ const MainPage = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch(`http://3.37.64.39:8000/api/userMeal/weekly/read/qwer@naver.com`, {
+      const response = await fetch(`http://3.37.64.39:8000/api/userMeal/weekly/read/user@naver.com`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
