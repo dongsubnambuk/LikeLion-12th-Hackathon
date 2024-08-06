@@ -9,7 +9,7 @@ function DietPaymentMainPage() {
     const navigate = useNavigate();
 
     const handlePaymentConfirmClick = () => {
-        navigate(`/dietpayment`, { state: { price: allMealsPrice } });
+        navigate(`/dietpayment`, { state: { price: allMealsPrice, orderDetails: mealData } });
     };
 
     const [isLoggedIn] = useState(true);

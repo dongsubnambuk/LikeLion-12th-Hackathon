@@ -129,46 +129,7 @@ const imageContainerStyle = {
   };
   
 
-  // 적용하기 post fetch
-  const handleApply = async (event) => {
-    event.preventDefault();
 
-    try {
-      const response = await fetch('http://3.37.64.39:8000/diet', { // 서버 URL을 실제 API 엔드포인트로 변경하세요
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: item.name,
-          main1: item.main1,
-          main2: item.main2,
-          price: item.price,
-          side1: item.side1,
-          side2: item.side2,
-          side3: item.side3,
-          calories: item.calories,
-          carbohydrate: item.carbohydrate,
-          protein: item.protein,
-          fat: item.fat,
-          sugar: item.sugar,
-          sodium: item.sodium,
-          image: item.image
-        }),
-      });
-
-      const result = await response.json();
-
-      if (response.status === 201) {
-        console.log("적용 성공");
-      } else {
-        console.log("적용 실패");
-        alert("적용하기 실패: " + result.message);
-      }
-    } catch (error) {
-      console.error('Fetch error:', error);
-    }
-  };
 
   return (
     <>
@@ -239,11 +200,8 @@ const imageContainerStyle = {
                 </Card>
             </div>
             <div className="post-all">
-            <button className="post-all-btn" onClick={handleApply}>적용하기</button>
+            <button className="post-all-btn" >적용하기</button>
           </div>
-
-
-         
         </>
       )} 
       <div className="admin-logout">
