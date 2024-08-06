@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from '../components/Header';
 import '../CSS/Admin.css';
+import '../CSS/DietInfoPage.css';
 import { useNavigate } from 'react-router-dom';
 import { Card, Typography, Divider } from 'antd';
 const { Title, Paragraph } = Typography;
@@ -119,15 +120,7 @@ const style = {
   overflowY: 'auto', // 내용이 많을 경우 스크롤 가능하게 설정
 };
 
-const imageContainerStyle = {
-    width: '100%', // 컨테이너 너비를 100%로 설정
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden', // 이미지를 잘라내기 위해 오버플로 숨김
-    marginBottom: '10px' // 이미지와 이름 사이의 여백
-  };
-  
+
 
 
 
@@ -161,16 +154,11 @@ const imageContainerStyle = {
            <div className="DIPcontainer" style={style}>
                 <Card className="DIPlistContainer">
                     <div className="DIPimageContainer">
-			  {item.image && (
-                    <div style={imageContainerStyle}>
-                    <img src={item.image} className="admin-DIPtitleImage" alt="menu" />
-                    </div>
-                )} 
-
+                    <img src={item.image} className="DIPtitleImage" alt="foodimage" />
                     </div>
                     <Title level={4} className="DIPtitle">{item.name}</Title>
                    
-                    <Divider />
+                    <Divider/>
                     <Title level={4} className="DIPsectionTitle">메뉴 소개</Title>
                     <Paragraph>메인 메뉴1: {item.main1}</Paragraph>
                     <Paragraph>메인 메뉴2: {item.main2}</Paragraph>

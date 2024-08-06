@@ -27,6 +27,7 @@ function OrderList() {
             const result = await response.json(); // 응답이 JSON 형식일 경우 이를 JavaScript 객체로 변환
 
             if (response.status === 200) { // 응답 status가 200 OK 일 경우
+    
                 setAddress({
                     roadAddress: result.roadAddress,
                     detailAddress: result.detailAddress,
@@ -40,12 +41,11 @@ function OrderList() {
         handleGetUser();
     }, []); // 빈 배열을 두 번째 인자로 전달하여 컴포넌트가 마운트될 때 한 번만 실행
 
-    // 결제내역 fetch
     useEffect(() => {
         const handlePaymentGet = async () => {
             const token = localStorage.getItem("token");
             const purchaser = localStorage.getItem("email");
-
+    
             const response = await fetch(`http://3.37.64.39:8000/api/payment/purchaser/${purchaser}`, {
                 method: "GET",
                 headers: {
@@ -53,20 +53,51 @@ function OrderList() {
                     "Authorization": token,
                 }
             });
-
-            const result = await response.json(); // 응답이 JSON 형식일 경우 이를 JavaScript 객체로 변환
+    
+            const result = await response.json();
             console.log(result);
-
-            if (response.status === 200) { // 응답 status가 200 OK 일 경우
+    
+            if (response.status === 200) {
+          
                 setPayments(result.data);
             } else {
                 console.log("결제내역 불러오기 실패");
                 alert("결제내역 불러오기 실패: " + result.message);
             }
         };
-
+    
         handlePaymentGet();
-    }, []); // 빈 배열을 두 번째 인자로 전달하여 컴포넌트가 마운트될 때 한 번만 실행
+    }, []);
+    
+    useEffect(() => {
+        const handleWeeklyId = async () => {
+            const token = localStorage.getItem("token");
+            const weeklyId = localStorage.getItem("weeklyId");
+    
+            if (!weeklyId) return;
+    
+            const response = await fetch(`http://3.37.64.39:8000/api/userMeal/weekly/read/id/${weeklyId}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": token,
+                }
+            });
+    
+            const result = await response.json();
+            console.log(result);
+    
+            if (response.status === 200) {
+                setPayments(result.data);
+            } else {
+                console.log("주간 식사 계획 불러오기 실패");
+                alert("주간 식사 계획 불러오기 실패: " + result.message);
+            }
+        };
+    
+        handleWeeklyId();
+    }, [localStorage.getItem("weeklyId")]);
+    
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -121,7 +152,6 @@ function OrderList() {
                             <p>결제 일시: {formatDate(payment.dateTime)}</p>
                             <p>금액: {payment.totalPrice.toLocaleString()}원</p>
                             <p>배송지: {address.roadAddress} {address.detailAddress}</p>
-                            {/* <p>메뉴: {payment.weeklyId}</p> */}
                             <p>메뉴: {payment.weeklyId}</p>
                             <div className="order-list-detail">
                                 <span>자세히 보기</span>

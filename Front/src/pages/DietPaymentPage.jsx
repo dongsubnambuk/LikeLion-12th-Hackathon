@@ -83,6 +83,8 @@ function DietPaymentPage() {
                 }),
             });
     
+           
+
             if (!orderResponse.ok) {
                 throw new Error('주문내역 생성에 실패했습니다.');
             }
@@ -91,10 +93,12 @@ function DietPaymentPage() {
             if (orderData.result !== 'success') {
                 throw new Error('주문내역 생성에 실패했습니다.');
             }
-    
-            const { orderId } = orderData.data; // 서버로부터 받은 주문번호 사용
+            const { orderId, weeklyId } = orderData.data; // 서버로부터 받은 주문번호와 weeklyId 사용
             console.log(orderId);
     
+                // weeklyId를 로컬 스토리지에 저장
+            localStorage.setItem("weeklyId", weeklyId);
+
             // Step 2: 결제 요청 진행
             const { IMP } = window; // 생략 가능
             IMP.init('imp77151582'); // 아임포트 관리자 콘솔에서 확인한 가맹점 식별코드
