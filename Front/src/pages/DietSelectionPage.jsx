@@ -48,7 +48,7 @@ function DietSelectionPage() {
                 ...dayPlan,
                 mealOptions: dayPlan.mealOptions.map(option => ({
                     ...option,
-                    count: null // count 요소를 추가. 기본값 1로 세팅
+                    count: 1 // count 요소를 추가. 기본값 1로 세팅
                 }))
                 }));
                 setMealData(updatedMealPlans);
