@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const SelectionMenuCard = ({ meals, index, optionIndex, dateIndex, onMenuChoice }) => {
     const navigate = useNavigate();
 
+
     const handleChoiceMenu = () => {
         // 전달할 데이터를 state로 설정
         console.log('전달 할 값 : ', dateIndex, optionIndex, index - 1)
