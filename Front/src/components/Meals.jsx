@@ -10,8 +10,8 @@ const Meals = ({ isLoggedIn, userName, mealCardData, dateIndex }) =>  {
   return (
     <div className="meals-container">
       {/* <h4>{isLoggedIn ? `${userName}님의 식단` : '가장 많이 선택한 식단'}</h4> */}
-      <p style={{ marginBottom: 10 }}>{mealCardData.date}</p> {/* 식단 날짜 */}
-      {mealCardData.mealSelections.map((meal, index) => (
+      <p style={{ marginBottom: 10 }}>{mealCardData.day}</p> {/* 식단 날짜 */}
+      {mealCardData.mealOptions.map((meal, index) => (
         <MealCard
           key={index}
           meals={meal}

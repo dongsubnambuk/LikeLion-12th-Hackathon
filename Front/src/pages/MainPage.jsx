@@ -58,6 +58,13 @@ const MainPage = () => {
   }, []);
 
   useEffect(() => {
+    if (user) {
+      handleGetUserDiet(user.name, user.email, user.token);
+      console.log("유저 식단 :", mealData)
+    }
+  }, [user]);
+
+  useEffect(() => {
     const email = localStorage.getItem("email");
     if (!email) return;
 
@@ -135,7 +142,8 @@ const MainPage = () => {
       const result = await response.json();
 
       if (response.status === 200) {
-        setMealData(result.dailyDiets);
+        console.log("유저 식단 불러오기")
+        setMealData(result.dailyMealPlans);
       } else {
         console.log("식단 불러오기 실패");
         alert("식단 실패: " + result.message);
@@ -175,7 +183,7 @@ const MainPage = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch(`http://3.37.64.39:8000/api/userMeal/weekly/read/qwer@naver.com`, {
+      const response = await fetch(`http://3.37.64.39:8000/api/userMeal/weekly/read/user@naver.com`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -186,7 +194,8 @@ const MainPage = () => {
       const result = await response.json();
 
       if (response.status === 200) {
-        setMealData(result.dailyDiets);
+        setMealData(result.dailyMealPlans);
+        console.log("dsd", result);
       } else {
         console.log("오프라인 식단 불러오기 실패");
         alert("오프라인 식단 실패: " + result.message);
@@ -196,7 +205,7 @@ const MainPage = () => {
     }
   };
 
-  if (loading) {
+  if (!mealData) {
     return (
       <div style={{ width: "100%", height: "100%", display: 'flex', alignItems: "center", justifyContent: 'center' }}>
         <Spin size="large" />
@@ -258,7 +267,7 @@ const MainPage = () => {
         <div className="user-food-detail">
           <h4 style={{ textAlign: 'center', marginTop: 15 }}>오늘 {user.name}님의 식단</h4>
           {mealData && mealData.map((data, index) => (
-            data.date === nowDate ? (
+            data.day === nowDate ? (
               <SwiperSlide key={index} className="slide-content1">
                 <Meals
                   mealCardData={data}

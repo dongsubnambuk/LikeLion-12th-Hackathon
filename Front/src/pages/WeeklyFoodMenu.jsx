@@ -35,7 +35,6 @@ const WeeklyFoodMenu = () => {
     } else {
       handleOfflineLogin();
       handleGetOfflineDiet();
-
     }
 
     const getNowDate = () => {
@@ -99,7 +98,7 @@ const WeeklyFoodMenu = () => {
       if (response.status === 200) {
         //console.log(result.dailyDiets);
         //console.log("식단 불러오기 성공")
-        setMealData(result.dailyDiets);
+        setMealData(result.dailyMealPlans);
       } else {
         console.log("식단 불러오기 실패");
         alert("식단 실패: " + result.message);
@@ -168,7 +167,7 @@ const WeeklyFoodMenu = () => {
     }
   }
 
-  if (!mealData) {
+  if (!mealData && isPay) {
     return <div style={{ width: "100%", height: "100%", display: 'flex', alignItems: "center", justifyContent: 'center' }}><Spin size="large" /></div>;
   }
 

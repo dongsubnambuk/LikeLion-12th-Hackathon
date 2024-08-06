@@ -5,7 +5,7 @@ const MealCard = ({ meals, isLoggedIn }) => {
   return (
     <div className="meal-card">
 
-      <h2 className='mealtype'>&lt;{meals.mealTime}&gt;</h2>
+      <h2 className='mealtype'>&lt;{meals.mealType}&gt;</h2>
 
       <div className="meal-card-body">
         <div className="meal-card-image-container">
