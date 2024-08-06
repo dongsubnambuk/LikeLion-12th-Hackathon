@@ -1,14 +1,11 @@
 package com.example.foodserver.DAO;
 
-import com.example.foodserver.DTO.DailyDietDTO;
+import com.example.foodserver.Entity.DailyDietEntity;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-
 
 public interface DailyDietDAO {
-    DailyDietDTO create(DailyDietDTO dailyDietDTO);
-    Optional<DailyDietDTO> getById(Long id);
-    List<DailyDietDTO> getAll();
-    void delete(Long id);
+    List<DailyDietEntity> getByUserEmailAndDate(String userEmail, LocalDate date);
+    List<DailyDietEntity> getByDate(LocalDate date);
 }

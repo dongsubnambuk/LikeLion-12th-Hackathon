@@ -1,14 +1,17 @@
 package com.example.foodserver.Controller;
 
-import com.example.foodserver.DTO.DailyDietDTO;
+import com.example.foodserver.DTO.Response.DailyDietDTO;
+import com.example.foodserver.DTO.Request.DailyRequestDTO;
 import com.example.foodserver.Service.DailyDietService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/daily")
+@RequestMapping("/api/userMeal/daily")
 public class DailyDietController {
 
     private final DailyDietService dailyDietService;
@@ -18,26 +21,15 @@ public class DailyDietController {
         this.dailyDietService = dailyDietService;
     }
 
-    @PostMapping("/create") // 요일 식단 셍상
-    public DailyDietDTO createDailyDiet(@RequestBody DailyDietDTO dailyDietDTO) {
-       DailyDietDTO createdDietDTO;
-        createdDietDTO = dailyDietService.createDailyDiet(dailyDietDTO);
-        return createdDietDTO;
+    @GetMapping("/read")
+    public ResponseEntity<List<DailyDietDTO>> getDailyDietsByUserEmailAndDate(@RequestBody DailyRequestDTO dailyRequestDTO) {
+        List<DailyDietDTO> dailyDiets = dailyDietService.getByUserEmailAndDate(dailyRequestDTO.getUserEmail(), dailyRequestDTO.getDate());
+        return ResponseEntity.ok(dailyDiets);
     }
 
-    @GetMapping// 모든 요일 식단 조회
-    public List<DailyDietDTO> getAllDailyDiets() {
-        return dailyDietService.getAllDailyDiets();
-    }
-
-    @GetMapping("/{id}") // 특정 요일 식단 조회
-    public DailyDietDTO getDailyDietById(@PathVariable Long id) {
-        return dailyDietService.getDailyDietById(id)
-                .orElseThrow(() -> new RuntimeException("DailyDiet not found with id " + id));
-    }
-
-    @DeleteMapping("/{id}") // 특정 요일 식단 삭제
-    public void deleteDailyDiet(@PathVariable Long id) {
-        dailyDietService.deleteDailyDiet(id);
+    @GetMapping("/read/{date}")
+    public ResponseEntity<List<DailyDietDTO>> getDailyDietsByDate(@PathVariable("date") LocalDate date) {
+        List<DailyDietDTO> dailyDiets = dailyDietService.getByDate(date);
+        return ResponseEntity.ok(dailyDiets);
     }
 }

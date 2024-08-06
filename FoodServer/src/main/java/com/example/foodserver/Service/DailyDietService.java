@@ -1,13 +1,15 @@
 package com.example.foodserver.Service;
 
-import com.example.foodserver.DTO.DailyDietDTO;
+import com.example.foodserver.DTO.Response.DailyDietDTO;
+import com.example.foodserver.DTO.Request.DailyDietRequestDTO;
+import com.example.foodserver.Entity.DailyDietEntity;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 public interface DailyDietService {
-    DailyDietDTO createDailyDiet(DailyDietDTO dailyDietDTO);
-    Optional<DailyDietDTO> getDailyDietById(Long id);
-    List<DailyDietDTO> getAllDailyDiets();
-    void deleteDailyDiet(Long id);
+    List<DailyDietDTO> getByUserEmailAndDate(String userEmail, LocalDate date);
+    List<DailyDietDTO> getByDate(LocalDate date);
+    List<DailyDietEntity> convertToDailyDietEntities(List<DailyDietRequestDTO> dailyDietDTOS);
+    List<DailyDietDTO> convertToDailyDietDTOS(List<DailyDietEntity> dailyDietEntities);
 }

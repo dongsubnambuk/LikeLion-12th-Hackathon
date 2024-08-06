@@ -1,14 +1,13 @@
 package com.example.foodserver.Controller;
 
-import com.example.foodserver.DTO.WeeklyDietDTO;
+import com.example.foodserver.DTO.Response.WeeklyDietDTO;
+import com.example.foodserver.DTO.Request.WeeklyDietRequestDTO;
 import com.example.foodserver.Service.WeeklyDietService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/weekly")
+@RequestMapping("/api/userMeal/weekly")
 public class WeeklyDietController {
 
     private final WeeklyDietService weeklyDietService;
@@ -18,24 +17,13 @@ public class WeeklyDietController {
         this.weeklyDietService = weeklyDietService;
     }
 
-    @PostMapping("/create")
-    public WeeklyDietDTO createWeeklyDiet(@RequestBody WeeklyDietDTO weeklyDietDTO) {
+    @PostMapping("/create") // 일주일 식단 생성
+    public WeeklyDietDTO createWeeklyDiet(@RequestBody WeeklyDietRequestDTO weeklyDietDTO) {
         return weeklyDietService.createWeeklyDiet(weeklyDietDTO);
     }
 
-    @GetMapping
-    public List<WeeklyDietDTO> getAllWeeklyDiets() {
-        return weeklyDietService.getAllWeeklyDiets();
-    }
-
-    @GetMapping("/{id}")
-    public WeeklyDietDTO getWeeklyDietById(@PathVariable Long id) {
-        return weeklyDietService.getWeeklyDietById(id)
-                .orElseThrow(() -> new RuntimeException("WeeklyDiet not found with id " + id));
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteWeeklyDiet(@PathVariable Long id) {
-        weeklyDietService.deleteWeeklyDiet(id);
+    @GetMapping("/read/{userEmail}") // 특정 일주일 식단 조회
+    public WeeklyDietDTO getWeeklyByUserEmail(@PathVariable("userEmail") String userEmail) {
+        return weeklyDietService.getWeeklyDietByUserEmail(userEmail);
     }
 }

@@ -1,15 +1,20 @@
 package com.example.foodserver;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.ComponentScan;
+
+import java.util.TimeZone;
+
 
 @SpringBootApplication
-@ComponentScan(basePackages = "com.example.foodserver")
-
 @EntityScan(basePackages = "com.example.foodserver.Entity")
 public class FoodServerApplication {
+    @PostConstruct
+    void started(){
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+    }
     public static void main(String[] args) {
         SpringApplication.run(FoodServerApplication.class, args);
     }

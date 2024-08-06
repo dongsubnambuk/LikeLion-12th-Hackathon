@@ -3,29 +3,25 @@ package com.example.foodserver.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Entity
 @Table(name = "daily_diet")
-@NoArgsConstructor
 @Getter
 @Setter
-@ToString
-@Builder
+@NoArgsConstructor
 @AllArgsConstructor
-
+@Builder
 public class DailyDietEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
-    private String dayOfWeek; // Example: "Monday", "Tuesday", etc.
-
-    @Column(nullable = false)
-    private String mealTime; // Example: "아침", "점심", "저녁"
-
-    @Column(nullable = false)
-    private int count;
-
-    @Column(nullable = false)
-    private Long foodMenuId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long dailyDietId;
+    @Column
+    private LocalDate date;
+    @Column
+    private String userEmail;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn
+    private List<MealSelectionEntity> mealSelections;
 }
