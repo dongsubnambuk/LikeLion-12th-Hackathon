@@ -41,7 +41,7 @@ public class ImageServiceImpl implements ImageService{
         List<String> imagesURI = new ArrayList<>();
         for(MultipartFile image : images){
             ImageEntity imageEntity = this.imageDAO.uploadImage(ImageEntity.builder().image(image.getBytes()).build());
-            imagesURI.add( imageURI + "/image/download/"+imageEntity.getId());
+            imagesURI.add( imageURI + "/api/image/download/"+imageEntity.getId());
         }
 
         return ResponseEntity.status(201)
@@ -64,7 +64,7 @@ public class ImageServiceImpl implements ImageService{
         ImageEntity imageEntity = this.imageDAO.uploadImage(ImageEntity.builder().image(image).build());
         // 3. 도메인 + 이미지 다운로드 받은 uri를 만들어서 반환한다.
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ImageDTO.builder().images(Arrays.asList( imageURI + "/image/download/" + imageEntity.getId())).build());
+                .body(ImageDTO.builder().images(Arrays.asList( imageURI + "/api/image/download/" + imageEntity.getId())).build());
 
     }
 
@@ -74,7 +74,7 @@ public class ImageServiceImpl implements ImageService{
         ImageEntity imageEntity = this.imageDAO.uploadImage(ImageEntity.builder().image(byteImage).build());
         // 3. 도메인 + 이미지 다운로드 받은 uri를 만들어서 반환한다.
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ImageDTO.builder().images(Arrays.asList( imageURI + "/image/download/" + imageEntity.getId())).build());
+                .body(ImageDTO.builder().images(Arrays.asList( imageURI + "/api/image/download/" + imageEntity.getId())).build());
 
     }
 
@@ -102,7 +102,7 @@ public class ImageServiceImpl implements ImageService{
                 .build();
         imageEntity = this.imageDAO.uploadImage(imageEntity);
 
-        return ResponseEntity.status(200).body(imageURI + "/image/download/"+imageEntity.getId());
+        return ResponseEntity.status(200).body(imageURI + "/api/image/download/"+imageEntity.getId());
     }
 
     @Override

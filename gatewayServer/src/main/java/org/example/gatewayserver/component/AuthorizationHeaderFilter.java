@@ -52,7 +52,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
 
             // 필터를 적용하지 않을 경로
-            List<String> excludedPaths = List.of("/users/login", "/users/signup");
+            List<String> excludedPaths = List.of("/api/users/login", "/api/users/signup");
 
             // 현재 요청 경로가 제외된 경로에 해당하는지 확인
             String path = request.getURI().getPath();
