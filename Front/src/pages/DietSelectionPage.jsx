@@ -79,9 +79,9 @@ function DietSelectionPage() {
         console.log("로컬 밀 체크 : ", localStorage.getItem("checkMealLoad"));
     }, [mealData]);
 
-    if (!mealData || mealData.length === 0) {
-        return <div style={{ width: "100%", height: "100%", display: 'flex', alignItems: "center", justifyContent: 'center' }}><Spin size="large" /></div>;
-    }
+    // if (!mealData || mealData.length === 0) {
+    //     return <div style={{ width: "100%", height: "100%", display: 'flex', alignItems: "center", justifyContent: 'center' }}><Spin size="large" /></div>;
+    // }
 
     return (
         <>
