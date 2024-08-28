@@ -19,7 +19,7 @@ const MenuSelectionPage = () => {
         const storedMeal = localStorage.getItem("Meal");
         if (storedMeal) {
             setMealData(JSON.parse(storedMeal));
-            console.log('옵션에서 밀 : ', mealData)
+            // console.log('옵션에서 밀 : ', mealData)
         }
     }, []);
 
@@ -37,7 +37,7 @@ const MenuSelectionPage = () => {
             <Header />
 
             <div className='user-weekly-food-detail'>
-                {dateIndex}, {optionIndex}
+                {/* {dateIndex}, {optionIndex} */}
                 <Swiper
                     spaceBetween={50} /* 슬라이드 간의 간격 조정 */
                     slidesPerView={1} /* 화면에 보일 슬라이드 수 설정 */

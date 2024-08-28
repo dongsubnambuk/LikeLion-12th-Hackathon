@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from "react";
+// DietSelectionPage.jsx
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import Header from "../components/Header";
 import BottomNav from "../components/BottomNav";
 import '../CSS/DietSelectionPage.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Spin } from 'antd';
-import 'swiper/css'; // Swiper 기본 CSS
-import 'swiper/css/navigation'; // Navigation 모듈의 CSS
-import 'swiper/css/pagination'; // Pagination 모듈의 CSS
-import { Navigation, Pagination } from 'swiper/modules'; // 모듈을 swiper/modules에서 가져오기
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import { Navigation, Pagination } from 'swiper/modules';
 import SelectionMeals from "../components/SelectionMeals";
 
 function DietSelectionPage() {
     const navigate = useNavigate();
+    const swiperRef = useRef(null);
 
     const handleConfirmClick = () => {
         navigate(`/dietpaymentmain`);
@@ -36,26 +38,21 @@ function DietSelectionPage() {
 
             if (response.status === 200) {
                 console.log(result);
-                // localStorage.setItem("Meal", JSON.stringify(result.dailyMealPlans));
-                // localStorage.setItem("checkMealLoad", true);
-                // setMealData(result.dailyMealPlans);
-                // 각 mealOption에 count 속성을 추가합니다.
 
-                localStorage.setItem("startDate", JSON.stringify(result.startDate));
-                localStorage.setItem("endDate", JSON.stringify(result.endDate));
-                
                 const updatedMealPlans = result.dailyMealPlans.map(dayPlan => ({
-                ...dayPlan,
-                mealOptions: dayPlan.mealOptions.map(option => ({
-                    ...option,
-                    count: 1 // count 요소를 추가. 기본값 1로 세팅
-                }))
+                    ...dayPlan,
+                    mealOptions: dayPlan.mealOptions.map(option => ({
+                        ...option,
+                        count: 1
+                    }))
                 }));
                 setMealData(updatedMealPlans);
                 localStorage.setItem("Meal", JSON.stringify(updatedMealPlans));
                 localStorage.setItem("checkMealLoad", true);
 
-                
+                localStorage.setItem("startDate", JSON.stringify(result.startDate));
+                localStorage.setItem("endDate", JSON.stringify(result.endDate));
+
             } else {
                 console.log("실패");
                 alert("실패: " + result.message);
@@ -73,15 +70,17 @@ function DietSelectionPage() {
         }
     }, []);
 
+    // 스크롤 위치를 복원하는 useEffect
     useEffect(() => {
-        console.log("ㅇㅇㅇ", mealData);
-        console.log("로컬 밀 : ", localStorage.getItem("Meal"));
-        console.log("로컬 밀 체크 : ", localStorage.getItem("checkMealLoad"));
-    }, [mealData]);
+        const savedScrollIndex = localStorage.getItem("scrollIndex");
+        if (swiperRef.current && savedScrollIndex !== null) {
+            swiperRef.current.swiper.slideTo(Number(savedScrollIndex), 0);
+        }
+    }, []);
 
-    // if (!mealData || mealData.length === 0) {
-    //     return <div style={{ width: "100%", height: "100%", display: 'flex', alignItems: "center", justifyContent: 'center' }}><Spin size="large" /></div>;
-    // }
+    const handleSlideChange = (swiper) => {
+        localStorage.setItem("scrollIndex", swiper.activeIndex);
+    };
 
     return (
         <>
@@ -89,12 +88,14 @@ function DietSelectionPage() {
             <div className="diet-selection-main-container">
                 <div className='diet-selection-user-weekly-food-detail'>
                     <Swiper
+                        ref={swiperRef}
                         spaceBetween={50}
                         slidesPerView={1}
                         navigation
                         pagination={{ clickable: true }}
                         modules={[Navigation, Pagination]}
                         className='weekly-food-slide'
+                        onSlideChange={handleSlideChange}
                     >
                         {mealData.map((data, index) => (
                             <SwiperSlide key={index} className='slide-content1'>
