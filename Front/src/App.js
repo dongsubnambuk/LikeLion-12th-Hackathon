@@ -23,34 +23,51 @@ import DietPaymentComplete from './pages/DietPaymentComplete';
 const App = () => {
 
     useEffect(() => {
-        let unloadEventFired = false;
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        let unloadHandled = false;
     
         const handleBeforeUnload = (event) => {
-          // 브라우저가 페이지를 새로고침하거나 이동할 때 이 이벤트가 발생합니다.
-          if (unloadEventFired) {
-            localStorage.clear(); // 페이지가 완전히 닫히는 경우만 처리하기 위해
+          // Chrome 브라우저에서 새로고침 시 로컬 스토리지 유지
+          if (unloadHandled) {
+            localStorage.clear();
           } else {
-            // 새로고침 시에는 로컬 스토리지를 유지
+            // 기본 새로고침 경고 메시지 처리
             event.preventDefault();
-            event.returnValue = ''; // 일부 브라우저에서 경고 메시지를 표시
+            event.returnValue = ''; // 일부 브라우저에서 기본 경고 메시지를 표시합니다.
+          }
+        };
+    
+        const handleVisibilityChange = () => {
+          // Safari 브라우저에서 페이지가 보이지 않을 때 로컬 스토리지 비우기
+          if (document.visibilityState === 'hidden') {
+            localStorage.clear();
           }
         };
     
         const handleUnload = () => {
-          // 페이지가 완전히 닫힐 때 이 이벤트가 발생합니다.
-          unloadEventFired = true;
+          // 페이지가 완전히 닫힐 때 로컬 스토리지 비우기
+          unloadHandled = true;
           localStorage.clear();
         };
     
-        window.addEventListener('beforeunload', handleBeforeUnload);
-        window.addEventListener('unload', handleUnload);
+        if (isSafari) {
+          // Safari 브라우저일 경우 visibilitychange 이벤트를 사용합니다.
+          document.addEventListener('visibilitychange', handleVisibilityChange);
+        } else {
+          // Safari가 아닐 경우 beforeunload와 unload 이벤트를 사용합니다.
+          window.addEventListener('beforeunload', handleBeforeUnload);
+          window.addEventListener('unload', handleUnload);
+        }
     
         return () => {
-          window.removeEventListener('beforeunload', handleBeforeUnload);
-          window.removeEventListener('unload', handleUnload);
+          if (isSafari) {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+          } else {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+            window.removeEventListener('unload', handleUnload);
+          }
         };
       }, []);
-    
 
   return (
     <div className="mobile-container">
