@@ -39,7 +39,7 @@ const SelectionMealCard = ({ meals, mealType, optionIndex, dateIndex }) => {
         parsedMealData[dateIndex].mealOptions[optionIndex].count = mealCount;
         localStorage.setItem('Meal', JSON.stringify(parsedMealData));
 
-        console.log(dateIndex + '번째 일 ' + optionIndex + '번째 옵션');
+        // console.log(dateIndex + '번째 일 ' + optionIndex + '번째 옵션');
     }, [mealCount, dateIndex, optionIndex]);
 
 
