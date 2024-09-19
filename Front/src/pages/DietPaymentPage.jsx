@@ -133,7 +133,7 @@ function DietPaymentPage() {
                 body: JSON.stringify({
                     purchaser: email,
                     totalPrice: 100,
-                    weeklyId: weeklyId, 
+                    weeklyId: 5000, 
                 }),
             });
     
@@ -162,7 +162,8 @@ function DietPaymentPage() {
                 pay_method: 'card', // 결제수단
                 merchant_uid: `${orderId}`, // 주문번호를 사용하여 고유한 merchant_uid 생성
                 name: orderedMealNames, // Use the generated meal names string
-                amount: price, 
+                amount: 100,
+                // amount: price, 
                 buyer_email: email,
                 buyer_name: '홍길동',
                 buyer_tel: '010-1234-5678',

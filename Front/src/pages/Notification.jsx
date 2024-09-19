@@ -13,6 +13,7 @@ function Notification() {
         return savedMessages ? JSON.parse(savedMessages) : [];
     });
 
+
     useEffect(() => {
         const handleGet = async () => {
             const token = localStorage.getItem("token");
@@ -60,8 +61,8 @@ function Notification() {
 
     useEffect(() => {
         if (!email) return;
-
-        const socket = new SockJS('http://nutrihub.kro.kr:14000/ws');
+    
+        const socket = new SockJS(`http://chatex.p-e.kr:14000/ws?userId=${email}`);
         const client = Stomp.over(socket);
 
         client.connect({}, () => {

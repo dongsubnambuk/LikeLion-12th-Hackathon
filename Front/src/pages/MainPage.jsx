@@ -230,13 +230,13 @@ const MainPage = () => {
             <img src={logo} className="logoImage" alt="logo" />
           </SwiperSlide>
           <SwiperSlide className="slide-content">
-            <img src={cat} className="cat" alt="cat" />
+          <img src={logo} className="logoImage" alt="logo" />
           </SwiperSlide>
           <SwiperSlide className="slide-content">
-            <img src={cat} className="cat" alt="cat" />
+          <img src={logo} className="logoImage" alt="logo" />
           </SwiperSlide>
           <SwiperSlide className="slide-content">
-            <img src={food} className="cat" alt="food" />
+          <img src={logo} className="logoImage" alt="logo" />
           </SwiperSlide>
         </Swiper>
       </div>
