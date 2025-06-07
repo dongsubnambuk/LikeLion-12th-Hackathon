@@ -1,16 +1,14 @@
-package com.demo.nimn.auth.Service;
+package com.demo.nimn.service.auth;
 
-import com.demo.nimn.auth.DAO.UserDAO;
-import com.demo.nimn.auth.DTO.UserDetails;
-import com.demo.nimn.auth.DTO.UsersEmailDTO;
-import com.demo.nimn.auth.Entity.Users;
-import com.demo.nimn.auth.Service.UserService;
+import com.demo.nimn.dao.auth.UserDAO;
+import com.demo.nimn.dto.auth.UserDetails;
+import com.demo.nimn.dto.auth.UsersEmailDTO;
+import com.demo.nimn.entity.auth.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {

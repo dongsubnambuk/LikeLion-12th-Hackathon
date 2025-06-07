@@ -1,7 +1,7 @@
-package com.demo.nimn.auth.Service;
+package com.demo.nimn.service.auth;
 
-import com.demo.nimn.auth.DTO.UserDetails;
-import com.demo.nimn.auth.DTO.UsersEmailDTO;
+import com.demo.nimn.dto.auth.UserDetails;
+import com.demo.nimn.dto.auth.UsersEmailDTO;
 
 public interface UserService {
 

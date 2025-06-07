@@ -1,7 +1,7 @@
-package com.demo.nimn.auth.jwt;
+package com.demo.nimn.filter;
 
-import com.demo.nimn.auth.DTO.CustomUserDetails;
-import com.demo.nimn.auth.Entity.Users;
+import com.demo.nimn.dto.auth.CustomUserDetails;
+import com.demo.nimn.entity.auth.Users;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

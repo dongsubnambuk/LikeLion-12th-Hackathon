@@ -1,6 +1,6 @@
-package com.demo.nimn.auth.DAO;
+package com.demo.nimn.dao.auth;
 
-import com.demo.nimn.auth.Entity.Users;
+import com.demo.nimn.entity.auth.Users;
 
 import java.util.List;
 
