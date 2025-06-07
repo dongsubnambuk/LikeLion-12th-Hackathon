@@ -1,8 +1,8 @@
-package com.demo.nimn.auth.Service;
+package com.demo.nimn.service.auth;
 
-import com.demo.nimn.auth.DAO.UserDAO;
-import com.demo.nimn.auth.DTO.CustomUserDetails;
-import com.demo.nimn.auth.Entity.Users;
+import com.demo.nimn.dao.auth.UserDAO;
+import com.demo.nimn.dto.auth.CustomUserDetails;
+import com.demo.nimn.entity.auth.Users;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;

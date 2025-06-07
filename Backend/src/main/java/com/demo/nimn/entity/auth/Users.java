@@ -1,6 +1,6 @@
-package com.demo.nimn.auth.Entity;
+package com.demo.nimn.entity.auth;
 
-import com.demo.nimn.auth.DTO.UserDetails;
+import com.demo.nimn.dto.auth.UserDetails;
 import jakarta.persistence.*;
 import lombok.*;
 

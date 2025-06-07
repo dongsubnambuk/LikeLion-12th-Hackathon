@@ -1,7 +1,7 @@
-package com.demo.nimn.auth.jwt;
+package com.demo.nimn.filter;
 
-import com.demo.nimn.auth.DTO.CustomUserDetails;
-import com.demo.nimn.auth.DTO.UserDTO;
+import com.demo.nimn.dto.auth.CustomUserDetails;
+import com.demo.nimn.dto.auth.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;

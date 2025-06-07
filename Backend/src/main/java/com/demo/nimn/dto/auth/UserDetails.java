@@ -1,4 +1,4 @@
-package com.demo.nimn.auth.DTO;
+package com.demo.nimn.dto.auth;
 
 
 import lombok.AllArgsConstructor;

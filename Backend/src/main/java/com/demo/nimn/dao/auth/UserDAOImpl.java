@@ -1,7 +1,7 @@
-package com.demo.nimn.auth.DAO;
+package com.demo.nimn.dao.auth;
 
-import com.demo.nimn.auth.Entity.Users;
-import com.demo.nimn.auth.Repository.UserRepository;
+import com.demo.nimn.entity.auth.Users;
+import com.demo.nimn.repository.auth.UserRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

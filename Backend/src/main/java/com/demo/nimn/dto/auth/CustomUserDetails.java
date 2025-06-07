@@ -1,6 +1,6 @@
-package com.demo.nimn.auth.DTO;
+package com.demo.nimn.dto.auth;
 
-import com.demo.nimn.auth.Entity.Users;
+import com.demo.nimn.entity.auth.Users;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

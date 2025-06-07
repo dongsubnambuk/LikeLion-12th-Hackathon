@@ -1,6 +1,6 @@
-package com.demo.nimn.auth.Repository;
+package com.demo.nimn.repository.auth;
 
-import com.demo.nimn.auth.Entity.Users;
+import com.demo.nimn.entity.auth.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

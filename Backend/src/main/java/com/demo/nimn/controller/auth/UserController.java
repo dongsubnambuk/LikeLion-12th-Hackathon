@@ -1,8 +1,8 @@
-package com.demo.nimn.auth.Controller;
+package com.demo.nimn.controller.auth;
 
-import com.demo.nimn.auth.DTO.UserDetails;
-import com.demo.nimn.auth.DTO.UsersEmailDTO;
-import com.demo.nimn.auth.Service.UserService;
+import com.demo.nimn.dto.auth.UserDetails;
+import com.demo.nimn.dto.auth.UsersEmailDTO;
+import com.demo.nimn.service.auth.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,8 +1,8 @@
-package com.demo.nimn.auth.config;
+package com.demo.nimn.config.auth;
 
-import com.demo.nimn.auth.jwt.JWTFilter;
-import com.demo.nimn.auth.jwt.JWTUtil;
-import com.demo.nimn.auth.jwt.LoginFilter;
+import com.demo.nimn.filter.JWTFilter;
+import com.demo.nimn.filter.JWTUtil;
+import com.demo.nimn.filter.LoginFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,10 +13,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-
-import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
