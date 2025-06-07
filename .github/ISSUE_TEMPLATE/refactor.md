@@ -1,6 +1,6 @@
 ---
 name: Refactor
-about: 설명 추가
+about: 리팩토링 이슈
 title: "[Refactor] 제목"
 labels: refactor
 assignees: ''
