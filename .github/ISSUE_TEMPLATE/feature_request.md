@@ -1,8 +1,8 @@
 ---
 name: Feature Request
 about: 설명 추가
-title: "[Feature] 제목"
-labels: enhancement
+title: "제목"
+labels: feature
 assignees: ''
 
 ---
