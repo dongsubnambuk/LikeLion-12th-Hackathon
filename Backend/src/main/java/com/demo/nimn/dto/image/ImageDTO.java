@@ -1,4 +1,4 @@
-package com.demo.nimn.image.dto;
+package com.demo.nimn.dto.image;
 
 import lombok.*;
 

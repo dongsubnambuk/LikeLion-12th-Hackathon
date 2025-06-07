@@ -1,4 +1,4 @@
-package com.demo.nimn.image.Entity;
+package com.demo.nimn.entity.image;
 
 import jakarta.persistence.*;
 import lombok.*;

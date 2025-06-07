@@ -1,6 +1,6 @@
-package com.demo.nimn.image.dao;
+package com.demo.nimn.dao.image;
 
-import com.demo.nimn.image.Entity.ImageEntity;
+import com.demo.nimn.entity.image.ImageEntity;
 
 import java.util.Optional;
 

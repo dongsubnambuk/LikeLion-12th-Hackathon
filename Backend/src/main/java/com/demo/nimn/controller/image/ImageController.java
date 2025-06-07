@@ -1,23 +1,17 @@
-package com.demo.nimn.image.controller;
+package com.demo.nimn.controller.image;
 
 
-import com.demo.nimn.image.dto.ImageDTO;
-import com.demo.nimn.image.service.ImageService;
+import com.demo.nimn.dto.image.ImageDTO;
+import com.demo.nimn.service.image.ImageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 

@@ -1,7 +1,7 @@
-package com.demo.nimn.image.dao;
+package com.demo.nimn.dao.image;
 
-import com.demo.nimn.image.Entity.ImageEntity;
-import com.demo.nimn.image.repository.ImageRepository;
+import com.demo.nimn.entity.image.ImageEntity;
+import com.demo.nimn.repository.image.ImageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

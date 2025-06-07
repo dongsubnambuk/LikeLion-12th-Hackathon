@@ -1,6 +1,6 @@
-package com.demo.nimn.image.service;
+package com.demo.nimn.service.image;
 
-import com.demo.nimn.image.dto.ImageDTO;
+import com.demo.nimn.dto.image.ImageDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

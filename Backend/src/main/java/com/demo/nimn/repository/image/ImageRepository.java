@@ -1,7 +1,7 @@
-package com.demo.nimn.image.repository;
+package com.demo.nimn.repository.image;
 
 
-import com.demo.nimn.image.Entity.ImageEntity;
+import com.demo.nimn.entity.image.ImageEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
