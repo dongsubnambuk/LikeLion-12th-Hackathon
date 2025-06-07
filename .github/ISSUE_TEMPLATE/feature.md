@@ -1,6 +1,6 @@
 ---
-name: Feature Request
-about: 설명 추가
+name: Feature
+about: 새로운 기능 추가
 title: "[Feature] 제목"
 labels: feature
 assignees: ''
