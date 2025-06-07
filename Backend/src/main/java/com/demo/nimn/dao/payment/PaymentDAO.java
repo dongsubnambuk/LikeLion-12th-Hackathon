@@ -1,6 +1,6 @@
 package com.demo.nimn.dao.payment;
 
-import com.example.paymentserver.Entity.PaymentEntity;
+import com.demo.nimn.entity.payment.PaymentEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;

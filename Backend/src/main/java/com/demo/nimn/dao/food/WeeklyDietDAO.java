@@ -1,11 +1,11 @@
 package com.demo.nimn.dao.food;
 
-import com.example.foodserver.Entity.WeeklyDietEntity;
+import com.demo.nimn.entity.food.WeeklyDiet;
 
 import java.time.LocalDate;
 
 public interface WeeklyDietDAO {
-    void create(WeeklyDietEntity weeklyDietEntity);
-    WeeklyDietEntity getByUserEmail(String userEmail);
+    void create(WeeklyDiet weeklyDiet);
+    WeeklyDiet getByUserEmail(String userEmail);
     public Boolean existsByCurrentWeeklyMealPlan(LocalDate date, String userEmail);
 }

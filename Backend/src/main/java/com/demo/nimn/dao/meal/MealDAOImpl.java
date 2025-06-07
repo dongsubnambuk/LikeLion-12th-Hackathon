@@ -1,7 +1,7 @@
 package com.demo.nimn.dao.meal;
 
-import com.example.ai.Entity.Meal.FoodMenu;
-import com.example.ai.Repository.Meal.MealRepository;
+import com.demo.nimn.entity.meal.FoodMenu;
+import com.demo.nimn.repository.meal.MealRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,6 @@
 package com.demo.nimn.entity.review;
 
-import com.example.ai.Entity.Meal.FoodMenu;
+import com.demo.nimn.entity.meal.FoodMenu;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,9 +1,9 @@
 package com.demo.nimn.controller.review;
 
-import com.example.ai.DTO.Review.DailyReviewDTO;
-import com.example.ai.DTO.Review.ReviewDTO;
-import com.example.ai.DTO.Review.UserWeeklyMealPlanDTO;
-import com.example.ai.Service.Review.ReviewService;
+import com.demo.nimn.dto.review.DailyReviewDTO;
+import com.demo.nimn.dto.review.ReviewDTO;
+import com.demo.nimn.dto.review.UserWeeklyMealPlanDTO;
+import com.demo.nimn.service.review.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

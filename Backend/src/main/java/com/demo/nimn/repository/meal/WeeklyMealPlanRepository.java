@@ -1,6 +1,6 @@
 package com.demo.nimn.repository.meal;
 
-import com.example.ai.Entity.Meal.WeeklyMealPlan;
+import com.demo.nimn.entity.meal.WeeklyMealPlan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

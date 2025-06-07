@@ -1,9 +1,9 @@
 package com.demo.nimn.service.payment;
 
-import com.example.paymentserver.DAO.PaymentDAO;
-import com.example.paymentserver.DTO.*;
-import com.example.paymentserver.Entity.OrderEntity;
-import com.example.paymentserver.Entity.PaymentEntity;
+import com.demo.nimn.dao.payment.PaymentDAO;
+import com.demo.nimn.dto.payment.*;
+import com.demo.nimn.entity.payment.*;
+import com.demo.nimn.service.communication.CommunicationService;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;

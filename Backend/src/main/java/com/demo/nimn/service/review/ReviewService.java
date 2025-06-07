@@ -1,10 +1,10 @@
 package com.demo.nimn.service.review;
 
-import com.example.ai.DTO.Review.DailyReviewDTO;
-import com.example.ai.DTO.Review.ReviewDTO;
-import com.example.ai.DTO.Review.UserDailyMealPlanDTO;
-import com.example.ai.DTO.Review.UserWeeklyMealPlanDTO;
-import com.example.ai.Entity.Meal.FoodMenu;
+import com.demo.nimn.dto.review.DailyReviewDTO;
+import com.demo.nimn.dto.review.ReviewDTO;
+import com.demo.nimn.dto.review.UserDailyMealPlanDTO;
+import com.demo.nimn.dto.review.UserWeeklyMealPlanDTO;
+import com.demo.nimn.entity.meal.FoodMenu;
 
 import java.time.LocalDate;
 import java.util.List;

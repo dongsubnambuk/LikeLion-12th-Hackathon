@@ -1,9 +1,9 @@
 package com.demo.nimn.service.payment;
 
-import com.example.paymentserver.DAO.OrderDAO;
-import com.example.paymentserver.DTO.OrderDTO;
-import com.example.paymentserver.DTO.OrderResponseDTO;
-import com.example.paymentserver.Entity.OrderEntity;
+import com.demo.nimn.dao.payment.OrderDAO;
+import com.demo.nimn.dto.payment.OrderDTO;
+import com.demo.nimn.dto.payment.OrderResponseDTO;
+import com.demo.nimn.entity.payment.OrderEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,8 +1,8 @@
 package com.demo.nimn.service.meal;
 
-import com.example.ai.DTO.Meal.FoodMenuDTO;
-import com.example.ai.DTO.Meal.WeeklyMealPlanDTO;
-import com.example.ai.Entity.Meal.FoodMenu;
+import com.demo.nimn.dto.meal.FoodMenuDTO;
+import com.demo.nimn.dto.meal.WeeklyMealPlanDTO;
+import com.demo.nimn.entity.meal.FoodMenu;
 
 import java.util.List;
 

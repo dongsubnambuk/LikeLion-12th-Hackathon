@@ -18,9 +18,15 @@ public class DailyMealPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long dailyMealPlanId;
+
     @Column
     private LocalDate day;
+
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "daily_meal_plan_id")
+    @JoinTable(
+            name = "daily_meal_plan_meal_option",
+            joinColumns = @JoinColumn(name = "daily_meal_plan_id"),
+            inverseJoinColumns = @JoinColumn(name = "meal_option_id")
+    )
     private List<MealOption> mealOptions;
 }

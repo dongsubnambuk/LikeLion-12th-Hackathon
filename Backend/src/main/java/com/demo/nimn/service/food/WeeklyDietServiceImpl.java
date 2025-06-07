@@ -1,12 +1,13 @@
 package com.demo.nimn.service.food;
 
-import com.example.foodserver.DAO.WeeklyDietDAO;
-import com.example.foodserver.DTO.Request.UserDailyMealPlanDTO;
-import com.example.foodserver.DTO.Response.WeeklyDietDTO;
-import com.example.foodserver.DTO.Request.WeeklyDietRequestDTO;
-import com.example.foodserver.Entity.DailyDietEntity;
-import com.example.foodserver.Entity.MealSelectionEntity;
-import com.example.foodserver.Entity.WeeklyDietEntity;
+import com.demo.nimn.dao.food.WeeklyDietDAO;
+import com.demo.nimn.dto.food.Request.UserDailyMealPlanDTO;
+import com.demo.nimn.dto.food.Request.WeeklyDietRequestDTO;
+import com.demo.nimn.dto.food.Response.WeeklyDietDTO;
+import com.demo.nimn.entity.food.DailyDiet;
+import com.demo.nimn.entity.food.MealSelection;
+import com.demo.nimn.entity.food.WeeklyDiet;
+import com.demo.nimn.service.communication.CommunicationService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class WeeklyDietServiceImpl implements WeeklyDietService {
         if(weeklyDietDAO.existsByCurrentWeeklyMealPlan(weeklyDietDTO.getStartDate(), weeklyDietDTO.getUserEmail())){
             return null;
         }
-        WeeklyDietEntity entity = convertToWeeklyDietEntity(weeklyDietDTO);
+        WeeklyDiet entity = convertToWeeklyDietEntity(weeklyDietDTO);
         weeklyDietDAO.create(entity);
         communicationService.createReview(entity.getUserEmail(), convertToDailyMealPlanDTOS(entity));
         return convertToWeeklyDietDTO(entity);
@@ -47,8 +48,8 @@ public class WeeklyDietServiceImpl implements WeeklyDietService {
         return convertToWeeklyDietDTO(weeklyDietDAO.getByUserEmail(userEmail));
     }
 
-    public WeeklyDietEntity convertToWeeklyDietEntity(WeeklyDietRequestDTO weeklyDietDTO) {
-        return WeeklyDietEntity.builder()
+    public WeeklyDiet convertToWeeklyDietEntity(WeeklyDietRequestDTO weeklyDietDTO) {
+        return WeeklyDiet.builder()
                 .userEmail(weeklyDietDTO.getUserEmail())
                 .startDate(weeklyDietDTO.getStartDate())
                 .endDate(weeklyDietDTO.getEndDate())
@@ -56,35 +57,35 @@ public class WeeklyDietServiceImpl implements WeeklyDietService {
                 .build();
     }
 
-    public WeeklyDietDTO convertToWeeklyDietDTO(WeeklyDietEntity weeklyDietEntity) {
+    public WeeklyDietDTO convertToWeeklyDietDTO(WeeklyDiet weeklyDiet) {
         return WeeklyDietDTO.builder()
-                .weeklyId(weeklyDietEntity.getWeeklyId())
-                .userEmail(weeklyDietEntity.getUserEmail())
-                .startDate(weeklyDietEntity.getStartDate())
-                .endDate(weeklyDietEntity.getEndDate())
-                .dailyDiets(dailyDietService.convertToDailyDietDTOS(weeklyDietEntity.getDailyDiets()))
+                .weeklyId(weeklyDiet.getWeeklyId())
+                .userEmail(weeklyDiet.getUserEmail())
+                .startDate(weeklyDiet.getStartDate())
+                .endDate(weeklyDiet.getEndDate())
+                .dailyDiets(dailyDietService.convertToDailyDietDTOS(weeklyDiet.getDailyDiets()))
                 .build();
     }
 
-    public List<Long> convertToFoodMenuIds(DailyDietEntity dailyDietEntity){
+    public List<Long> convertToFoodMenuIds(DailyDiet dailyDiet){
         List<Long> foodMenuIds = new ArrayList<>();
-        for(MealSelectionEntity mealSelectionEntity : dailyDietEntity.getMealSelections()) {
-            foodMenuIds.add(mealSelectionEntity.getFoodMenuId());
+        for(MealSelection mealSelection : dailyDiet.getMealSelections()) {
+            foodMenuIds.add(mealSelection.getFoodMenuId());
         }
         return foodMenuIds;
     }
 
-    public UserDailyMealPlanDTO convertToDailyMealPlanDTO(DailyDietEntity dailyDietEntity) {
+    public UserDailyMealPlanDTO convertToDailyMealPlanDTO(DailyDiet dailyDiet) {
         return UserDailyMealPlanDTO.builder()
-                .date(dailyDietEntity.getDate())
-                .foodMenuIds(convertToFoodMenuIds(dailyDietEntity))
+                .date(dailyDiet.getDate())
+                .foodMenuIds(convertToFoodMenuIds(dailyDiet))
                 .build();
     }
 
-    public List<UserDailyMealPlanDTO> convertToDailyMealPlanDTOS(WeeklyDietEntity weeklyDietEntity) {
+    public List<UserDailyMealPlanDTO> convertToDailyMealPlanDTOS(WeeklyDiet weeklyDiet) {
         List<UserDailyMealPlanDTO> userDailyMealPlanDTOS = new ArrayList<>();
-        for(DailyDietEntity dailyDietEntity : weeklyDietEntity.getDailyDiets()) {
-            userDailyMealPlanDTOS.add(convertToDailyMealPlanDTO(dailyDietEntity));
+        for(DailyDiet dailyDiet : weeklyDiet.getDailyDiets()) {
+            userDailyMealPlanDTOS.add(convertToDailyMealPlanDTO(dailyDiet));
         }
         return userDailyMealPlanDTOS;
     }

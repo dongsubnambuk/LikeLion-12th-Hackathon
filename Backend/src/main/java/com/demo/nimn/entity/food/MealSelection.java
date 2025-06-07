@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MealSelectionEntity {
+public class MealSelection {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long mealSelectionId;

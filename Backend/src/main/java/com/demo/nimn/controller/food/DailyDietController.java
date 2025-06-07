@@ -1,8 +1,8 @@
 package com.demo.nimn.controller.food;
 
-import com.example.foodserver.DTO.Response.DailyDietDTO;
-import com.example.foodserver.DTO.Request.DailyRequestDTO;
-import com.example.foodserver.Service.DailyDietService;
+import com.demo.nimn.dto.food.Response.DailyDietDTO;
+import com.demo.nimn.dto.food.Request.DailyRequestDTO;
+import com.demo.nimn.service.food.DailyDietService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

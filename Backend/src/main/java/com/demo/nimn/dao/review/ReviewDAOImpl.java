@@ -1,10 +1,10 @@
 package com.demo.nimn.dao.review;
 
-import com.example.ai.Entity.Meal.FoodMenu;
-import com.example.ai.Entity.Review.DailyReview;
-import com.example.ai.Entity.Review.Review;
-import com.example.ai.Repository.Review.DailyReviewRepository;
-import com.example.ai.Repository.Review.ReviewRepository;
+import com.demo.nimn.entity.meal.FoodMenu;
+import com.demo.nimn.entity.review.DailyReview;
+import com.demo.nimn.entity.review.Review;
+import com.demo.nimn.repository.review.DailyReviewRepository;
+import com.demo.nimn.repository.review.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

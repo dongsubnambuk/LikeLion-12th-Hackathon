@@ -1,6 +1,6 @@
 package com.demo.nimn.repository.payment;
 
-import com.example.paymentserver.Entity.PaymentEntity;
+import com.demo.nimn.entity.payment.PaymentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

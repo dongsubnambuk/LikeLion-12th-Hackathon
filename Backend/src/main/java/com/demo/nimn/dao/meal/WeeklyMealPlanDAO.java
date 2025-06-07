@@ -1,6 +1,6 @@
 package com.demo.nimn.dao.meal;
 
-import com.example.ai.Entity.Meal.WeeklyMealPlan;
+import com.demo.nimn.entity.meal.WeeklyMealPlan;
 
 import java.time.LocalDate;
 

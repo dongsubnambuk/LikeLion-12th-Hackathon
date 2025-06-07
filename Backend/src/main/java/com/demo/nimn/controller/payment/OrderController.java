@@ -1,8 +1,8 @@
 package com.demo.nimn.controller.payment;
 
-import com.example.paymentserver.DTO.OrderDTO;
-import com.example.paymentserver.DTO.OrderResponseDTO;
-import com.example.paymentserver.Service.OrderService;
+import com.demo.nimn.dto.payment.OrderDTO;
+import com.demo.nimn.dto.payment.OrderResponseDTO;
+import com.demo.nimn.service.payment.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.demo.nimn.dao.payment;
 
-import com.example.paymentserver.Entity.OrderEntity;
+import com.demo.nimn.entity.payment.OrderEntity;
 
 public interface OrderDAO {
     public void createOrder(OrderEntity orderEntity);

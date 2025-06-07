@@ -17,8 +17,13 @@ public class MealOption {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long mealOptionId;
+
     @Column
     private String mealType; // 아침, 점심, 저녁
+
+    @ManyToMany(mappedBy = "mealOptions")
+    private List<DailyMealPlan> dailyMealPlans;
+
     @ManyToMany
     @JoinTable(
             name = "meal_option_food_menu",

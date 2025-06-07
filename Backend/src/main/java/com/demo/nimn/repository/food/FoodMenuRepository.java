@@ -1,7 +1,9 @@
 package com.demo.nimn.repository.food;
 
-import com.example.foodserver.Entity.FoodMenuEntity;
+import com.demo.nimn.entity.food.UserFoodMenu;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface FoodMenuRepository extends JpaRepository<FoodMenuEntity, Long> {
+@Repository
+public interface FoodMenuRepository extends JpaRepository<UserFoodMenu, Long> {
 }

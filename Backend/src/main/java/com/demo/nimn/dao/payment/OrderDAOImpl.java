@@ -1,7 +1,7 @@
 package com.demo.nimn.dao.payment;
 
-import com.example.paymentserver.Entity.OrderEntity;
-import com.example.paymentserver.Repository.OrderRepository;
+import com.demo.nimn.entity.payment.OrderEntity;
+import com.demo.nimn.repository.payment.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

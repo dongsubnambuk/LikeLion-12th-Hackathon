@@ -1,6 +1,6 @@
 package com.demo.nimn.service.food;
 
-import com.example.foodserver.DTO.FoodMenuDTO;
+import com.demo.nimn.dto.food.FoodMenuDTO;
 
 import java.util.List;
 import java.util.Optional;

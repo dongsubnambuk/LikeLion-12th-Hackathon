@@ -1,4 +1,4 @@
-package com.demo.nimn.config.auth;
+package com.demo.nimn.config;
 
 import com.demo.nimn.filter.JWTFilter;
 import com.demo.nimn.filter.JWTUtil;

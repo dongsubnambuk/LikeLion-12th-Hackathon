@@ -1,8 +1,8 @@
 package com.demo.nimn.dao.food;
 
-import com.example.foodserver.DTO.FoodMenuDTO;
-import com.example.foodserver.Entity.FoodMenuEntity;
-import com.example.foodserver.Repository.FoodMenuRepository;
+import com.demo.nimn.dto.food.FoodMenuDTO;
+import com.demo.nimn.entity.food.UserFoodMenu;
+import com.demo.nimn.repository.food.FoodMenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -22,8 +22,8 @@ public class FoodMenuDAOImpl implements FoodMenuDAO {
 
     @Override
     public FoodMenuDTO create(FoodMenuDTO foodMenuDTO) {
-        FoodMenuEntity entity = foodMenuEntity(foodMenuDTO);
-        FoodMenuEntity savedEntity = foodMenuRepository.save(entity);
+        UserFoodMenu entity = foodMenuEntity(foodMenuDTO);
+        UserFoodMenu savedEntity = foodMenuRepository.save(entity);
         return foodMenuDTO(savedEntity);
     }
 
@@ -42,9 +42,9 @@ public class FoodMenuDAOImpl implements FoodMenuDAO {
     @Override
     public FoodMenuDTO update(Long id, FoodMenuDTO foodMenuDTO) {
         if (foodMenuRepository.existsById(id)) {
-            FoodMenuEntity entity = foodMenuEntity(foodMenuDTO);
+            UserFoodMenu entity = foodMenuEntity(foodMenuDTO);
             entity.setId(id); // Set the ID for the entity
-            FoodMenuEntity updatedEntity = foodMenuRepository.save(entity);
+            UserFoodMenu updatedEntity = foodMenuRepository.save(entity);
             return foodMenuDTO(updatedEntity);
         }
         throw new RuntimeException("FoodMenu not found " + id);
@@ -59,8 +59,8 @@ public class FoodMenuDAOImpl implements FoodMenuDAO {
         }
     }
 
-    private FoodMenuEntity foodMenuEntity(FoodMenuDTO dto) {
-        return FoodMenuEntity.builder()
+    private UserFoodMenu foodMenuEntity(FoodMenuDTO dto) {
+        return UserFoodMenu.builder()
                 .name(dto.getName())
                 .price(dto.getPrice())
                 .calories(dto.getCalories())
@@ -73,7 +73,7 @@ public class FoodMenuDAOImpl implements FoodMenuDAO {
                 .build();
     }
 
-    private FoodMenuDTO foodMenuDTO(FoodMenuEntity entity) {
+    private FoodMenuDTO foodMenuDTO(UserFoodMenu entity) {
         return FoodMenuDTO.builder()
                 .id(entity.getId())
                 .name(entity.getName())

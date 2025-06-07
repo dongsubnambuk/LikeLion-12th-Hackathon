@@ -1,7 +1,7 @@
 package com.demo.nimn.dao.food;
 
-import com.example.foodserver.Entity.DailyDietEntity;
-import com.example.foodserver.Repository.DailyDietRepository;
+import com.demo.nimn.entity.food.DailyDiet;
+import com.demo.nimn.repository.food.DailyDietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -19,12 +19,12 @@ public class DailyDietDAOImpl implements DailyDietDAO {
     }
 
     @Override
-    public List<DailyDietEntity> getByUserEmailAndDate(String userEmail, LocalDate date) {
+    public List<DailyDiet> getByUserEmailAndDate(String userEmail, LocalDate date) {
         return dailyDietRepository.findByUserEmailAndDate(userEmail, date);
     }
 
     @Override
-    public List<DailyDietEntity> getByDate(LocalDate date){
+    public List<DailyDiet> getByDate(LocalDate date){
         return dailyDietRepository.findByDate(date);
     }
 }

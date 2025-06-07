@@ -1,10 +1,7 @@
 package com.demo.nimn.service.payment;
 
-import com.example.paymentserver.DTO.PaymentRequestDTO;
-import com.example.paymentserver.DTO.PaymentResponseDTO;
-import com.example.paymentserver.DTO.PaymentResponseDTOS;
-import com.example.paymentserver.DTO.UserDTO;
-import com.example.paymentserver.Entity.OrderEntity;
+import com.demo.nimn.dto.payment.*;
+import com.demo.nimn.entity.payment.OrderEntity;
 
 import java.util.List;
 

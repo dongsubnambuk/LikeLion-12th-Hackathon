@@ -1,8 +1,8 @@
 package com.demo.nimn.service.food;
 
-import com.example.foodserver.DTO.Response.DailyDietDTO;
-import com.example.foodserver.DTO.Request.DailyDietRequestDTO;
-import com.example.foodserver.Entity.DailyDietEntity;
+import com.demo.nimn.dto.food.Response.DailyDietDTO;
+import com.demo.nimn.dto.food.Request.DailyDietRequestDTO;
+import com.demo.nimn.entity.food.DailyDiet;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -10,6 +10,6 @@ import java.util.List;
 public interface DailyDietService {
     List<DailyDietDTO> getByUserEmailAndDate(String userEmail, LocalDate date);
     List<DailyDietDTO> getByDate(LocalDate date);
-    List<DailyDietEntity> convertToDailyDietEntities(List<DailyDietRequestDTO> dailyDietDTOS);
-    List<DailyDietDTO> convertToDailyDietDTOS(List<DailyDietEntity> dailyDietEntities);
+    List<DailyDiet> convertToDailyDietEntities(List<DailyDietRequestDTO> dailyDietDTOS);
+    List<DailyDietDTO> convertToDailyDietDTOS(List<DailyDiet> dailyDietEntities);
 }

@@ -1,11 +1,9 @@
 package com.demo.nimn.dao.food;
 
-import com.example.foodserver.Entity.MealSelectionEntity;
-import com.example.foodserver.Repository.MealSelectionRepository;
+import com.demo.nimn.entity.food.MealSelection;
+import com.demo.nimn.repository.food.MealSelectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public class MealSelectionDAOImpl implements MealSelectionDAO {
@@ -18,7 +16,7 @@ public class MealSelectionDAOImpl implements MealSelectionDAO {
     }
 
     @Override
-    public MealSelectionEntity getById(Long mealSelectionId) {
+    public MealSelection getById(Long mealSelectionId) {
         return mealSelectionRepository.getReferenceById(mealSelectionId);
     }
 }

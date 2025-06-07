@@ -1,9 +1,7 @@
 package com.demo.nimn.dao.food;
 
-import com.example.foodserver.Entity.MealSelectionEntity;
-
-import java.util.List;
+import com.demo.nimn.entity.food.MealSelection;
 
 public interface MealSelectionDAO {
-    MealSelectionEntity getById(Long mealSelectionId);
+    MealSelection getById(Long mealSelectionId);
 }

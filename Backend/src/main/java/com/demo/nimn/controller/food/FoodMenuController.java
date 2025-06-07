@@ -1,7 +1,7 @@
 package com.demo.nimn.controller.food;
 
-import com.example.foodserver.DTO.FoodMenuDTO;
-import com.example.foodserver.Service.FoodMenuService;
+import com.demo.nimn.dto.food.FoodMenuDTO;
+import com.demo.nimn.service.food.FoodMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

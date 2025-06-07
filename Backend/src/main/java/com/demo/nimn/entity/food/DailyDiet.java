@@ -7,25 +7,21 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "weekly_diet")
-@NoArgsConstructor
+@Table(name = "daily_diet")
 @Getter
 @Setter
-@ToString
-@Builder
+@NoArgsConstructor
 @AllArgsConstructor
-
-public class WeeklyDietEntity {
+@Builder
+public class DailyDiet {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long weeklyId;
+    private Long dailyDietId;
+    @Column
+    private LocalDate date;
     @Column
     private String userEmail;
-    @Column
-    private LocalDate startDate;
-    @Column
-    private LocalDate endDate;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn
-    private List<DailyDietEntity> dailyDiets;
+    private List<MealSelection> mealSelections;
 }

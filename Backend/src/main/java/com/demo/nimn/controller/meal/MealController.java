@@ -1,8 +1,8 @@
 package com.demo.nimn.controller.meal;
 
-import com.example.ai.DTO.Meal.FoodMenuDTO;
-import com.example.ai.DTO.Meal.WeeklyMealPlanDTO;
-import com.example.ai.Service.Meal.MealService;
+import com.demo.nimn.dto.meal.FoodMenuDTO;
+import com.demo.nimn.dto.meal.WeeklyMealPlanDTO;
+import com.demo.nimn.service.meal.MealService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

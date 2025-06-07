@@ -1,6 +1,6 @@
 package com.demo.nimn.dao.meal;
 
-import com.example.ai.Entity.Meal.FoodMenu;
+import com.demo.nimn.entity.meal.FoodMenu;
 
 import java.util.List;
 

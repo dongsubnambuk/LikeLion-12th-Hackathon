@@ -1,7 +1,7 @@
 package com.demo.nimn.service.food;
 
-import com.example.foodserver.DAO.FoodMenuDAO;
-import com.example.foodserver.DTO.FoodMenuDTO;
+import com.demo.nimn.dao.food.FoodMenuDAO;
+import com.demo.nimn.dto.food.FoodMenuDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

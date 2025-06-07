@@ -1,6 +1,6 @@
 package com.demo.nimn.repository.review;
 
-import com.example.ai.Entity.Review.DailyReview;
+import com.demo.nimn.entity.review.DailyReview;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

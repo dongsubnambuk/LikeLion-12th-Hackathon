@@ -4,13 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "food_menu")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class FoodMenuEntity {
+public class UserFoodMenu {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

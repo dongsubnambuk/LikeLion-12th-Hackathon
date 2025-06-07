@@ -1,7 +1,7 @@
 package com.demo.nimn.dao.food;
 
-import com.example.foodserver.Entity.WeeklyDietEntity;
-import com.example.foodserver.Repository.WeeklyDietRepository;
+import com.demo.nimn.entity.food.WeeklyDiet;
+import com.demo.nimn.repository.food.WeeklyDietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,12 +18,12 @@ public class WeeklyDietDAOImpl implements WeeklyDietDAO {
     }
 
     @Override
-    public void create(WeeklyDietEntity weeklyDietEntity) {
-        weeklyDietRepository.save(weeklyDietEntity);
+    public void create(WeeklyDiet weeklyDiet) {
+        weeklyDietRepository.save(weeklyDiet);
     }
 
     @Override
-    public WeeklyDietEntity getByUserEmail(String userEmail) {
+    public WeeklyDiet getByUserEmail(String userEmail) {
         return weeklyDietRepository.findByUserEmail(userEmail);
     }
 
