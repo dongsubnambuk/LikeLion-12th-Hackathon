@@ -1,90 +1,271 @@
-
-
-
-.signup-inner {
+.signup_inner {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding-top: 30px;
-    /* height: 100vh; */
+    justify-content: flex-start;
+    padding: 20px;
     align-items: center;
+    max-width: 500px;
+    margin: 0 auto;
+    min-height: auto;
+    padding-bottom: 100px; /* 하단 네비게이션을 위한 여백 */
 }
 
-
-.form-group {
+.signup_form_group {
     display: flex;
     flex-direction: column;
-    width: 80%; 
-    margin-bottom: 11px; /* 각 그룹 사이에 여백 추가 */
-
+    width: 100%; 
+    margin-bottom: 16px;
+    position: relative;
 }
 
-.form-group label {
-    margin-bottom: 5px; /* 라벨과 input 사이의 간격 */
-    font-size: 12px;
+.signup_form_group label {
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    letter-spacing: 0.3px;
 }
 
-.signup-inner input {
+.signup_inner input {
     box-sizing: border-box;
-    /* width: 90%;  */
-    height: 6vh;
+    height: 48px;
     background: #FFFFFF;
-    border: 1px solid #000000;
-    border-radius: 7px;
-    padding-left: 10px; /* 입력 텍스트와 플레이스홀더에 왼쪽 여백 추가 */
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 0 16px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    outline: none;
 }
 
+.signup_inner input:focus {
+    border-color: rgb(157, 146, 116);
+    box-shadow: 0 0 0 3px rgba(157, 146, 116, 0.15);
+    background: #fefffe;
+}
 
-.address{
+.signup_inner input::placeholder {
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+.signup_inner input:hover {
+    border-color: #d1d5db;
+}
+
+.signup_address {
     display: flex;
     justify-content: center;
     flex-direction: column;
     width: 100%;
 }
 
-.address-serch{
+.signup_address_serch {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 11px; /* 각 그룹 사이에 여백 추가 */
+    gap: 12px;
+    margin-bottom: 12px;
 }
-.address-serch button{
-    background-color: #FFFFFF;
-    border-radius: 7px;
-    width: 30%;
+
+.signup_address_serch button {
+    background: rgb(157, 146, 116);
+    color: white!important;
+    border: none;
+    border-radius: 12px;
+    width: 38%;
+    height: 48px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 12px rgba(157, 146, 116, 0.25);
+    letter-spacing: 0.3px;
 }
 
-.address-serch :first-child{
-    width: 30%;
+.signup_address_serch button:hover {
+    background: rgb(127, 116, 86);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(157, 146, 116, 0.35);
 }
 
-.signup-btn{
+.signup_address_serch button:active {
+    transform: translateY(0);
+}
+
+.signup_address_serch :first-child {
+    width: 58%;
+}
+
+.signup_btn {
     cursor: pointer;
-    width: 80%;
-    height: 5vh;
-    background: none; /* 내부 색상을 없앱니다 */
-    border: 1px solid #04C600; /* 테두리 색상과 두께를 설정합니다 */
-    border-radius: 7px;
-    font-size: 18px;
-    margin-bottom: 10px;
-    font-weight: bold;
-    outline: none; /* 아웃라인을 없앱니다 */
-    color: #000000 !important; /* 텍스트 색상을 검정색으로 설정합니다 */
-    -webkit-appearance: none; /* 사파리 기본 스타일을 없앱니다 */
-    -moz-appearance: none; /* 파이어폭스 기본 스타일을 없앱니다 */
-    appearance: none; /* 기본 스타일을 없앱니다 */
-}
-
-.address-detail input {
     width: 100%;
-    margin-bottom: 11px;
+    height: 50px;
+    background: rgb(157, 146, 116);
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    color: white !important;
+    margin-top: 24px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(157, 146, 116, 0.3);
+    letter-spacing: 0.5px;
 }
 
-
-.error-message {
-    color: red;
-    margin-top: 10px;
+.signup_btn:hover {
+    background: rgb(127, 116, 86);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(157, 146, 116, 0.4);
 }
 
+.signup_btn:active {
+    transform: translateY(0);
+}
 
+.signup_btn:disabled {
+    background: #d1d5db;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.signup_address_detail input {
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.signup_error_message {
+    color: #dc2626;
+    font-size: 12px;
+    margin-top: 6px;
+    font-weight: 500;
+    padding: 8px 12px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    animation: fadeIn 0.3s ease;
+}
+
+.signup_success_message {
+    color: rgb(157, 146, 116);
+    font-size: 12px;
+    margin-top: 6px;
+    font-weight: 500;
+    padding: 8px 12px;
+    background: #f8f7f5;
+    border: 1px solid rgba(157, 146, 116, 0.3);
+    border-radius: 8px;
+    animation: fadeIn 0.3s ease;
+}
+
+.signup_email_check_group {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+}
+
+.signup_email_input_wrapper {
+    flex: 2;
+    display: flex;
+}
+
+.signup_email_input_wrapper input {
+    width: 100%;
+    height: 48px;
+}
+
+.signup_email_check_btn {
+    height: 48px;
+    padding: 0 20px;
+    background: rgb(157, 146, 116);
+    color: white!important;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    flex: 0.8;
+    min-width: 100px;
+    box-shadow: 0 3px 12px rgba(157, 146, 116, 0.25);
+    letter-spacing: 0.3px;
+}
+
+.signup_email_check_btn:hover {
+    background: rgb(127, 116, 86);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(157, 146, 116, 0.35);
+}
+
+.signup_email_check_btn:disabled {
+    background: #d1d5db;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(157, 146, 116, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(157, 146, 116, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(157, 146, 116, 0);
+    }
+}
+
+/* 입력 필드 유효성 검사 스타일 */
+.signup_inner input.signup_valid {
+    border-color: rgb(157, 146, 116);
+    background: #f8f7f5;
+    animation: pulse 1.5s infinite;
+}
+
+.signup_inner input.signup_invalid {
+    border-color: #dc2626;
+    background: #fef2f2;
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
