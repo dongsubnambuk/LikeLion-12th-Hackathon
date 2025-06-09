@@ -1,4 +1,4 @@
-.signup-inner {
+.signup_inner {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -10,7 +10,7 @@
     padding-bottom: 100px; /* 하단 네비게이션을 위한 여백 */
 }
 
-.form-group {
+.signup_form_group {
     display: flex;
     flex-direction: column;
     width: 100%; 
@@ -18,7 +18,7 @@
     position: relative;
 }
 
-.form-group label {
+.signup_form_group label {
     margin-bottom: 8px;
     font-size: 14px;
     font-weight: 600;
@@ -26,7 +26,7 @@
     letter-spacing: 0.3px;
 }
 
-.signup-inner input {
+.signup_inner input {
     box-sizing: border-box;
     height: 48px;
     background: #FFFFFF;
@@ -38,36 +38,36 @@
     outline: none;
 }
 
-.signup-inner input:focus {
+.signup_inner input:focus {
     border-color: rgb(157, 146, 116);
     box-shadow: 0 0 0 3px rgba(157, 146, 116, 0.15);
     background: #fefffe;
 }
 
-.signup-inner input::placeholder {
+.signup_inner input::placeholder {
     color: #9ca3af;
     font-size: 14px;
 }
 
-.signup-inner input:hover {
+.signup_inner input:hover {
     border-color: #d1d5db;
 }
 
-.address {
+.signup_address {
     display: flex;
     justify-content: center;
     flex-direction: column;
     width: 100%;
 }
 
-.address-serch {
+.signup_address_serch {
     display: flex;
     justify-content: space-between;
     gap: 12px;
     margin-bottom: 12px;
 }
 
-.address-serch button {
+.signup_address_serch button {
     background: rgb(157, 146, 116);
     color: white!important;
     border: none;
@@ -82,21 +82,21 @@
     letter-spacing: 0.3px;
 }
 
-.address-serch button:hover {
+.signup_address_serch button:hover {
     background: rgb(127, 116, 86);
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(157, 146, 116, 0.35);
 }
 
-.address-serch button:active {
+.signup_address_serch button:active {
     transform: translateY(0);
 }
 
-.address-serch :first-child {
+.signup_address_serch :first-child {
     width: 58%;
 }
 
-.signup-btn {
+.signup_btn {
     cursor: pointer;
     width: 100%;
     height: 50px;
@@ -113,29 +113,29 @@
     letter-spacing: 0.5px;
 }
 
-.signup-btn:hover {
+.signup_btn:hover {
     background: rgb(127, 116, 86);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(157, 146, 116, 0.4);
 }
 
-.signup-btn:active {
+.signup_btn:active {
     transform: translateY(0);
 }
 
-.signup-btn:disabled {
+.signup_btn:disabled {
     background: #d1d5db;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
 }
 
-.address-detail input {
+.signup_address_detail input {
     width: 100%;
     margin-bottom: 12px;
 }
 
-.error-message {
+.signup_error_message {
     color: #dc2626;
     font-size: 12px;
     margin-top: 6px;
@@ -147,7 +147,7 @@
     animation: fadeIn 0.3s ease;
 }
 
-.success-message {
+.signup_success_message {
     color: rgb(157, 146, 116);
     font-size: 12px;
     margin-top: 6px;
@@ -159,23 +159,23 @@
     animation: fadeIn 0.3s ease;
 }
 
-.email-check-group {
+.signup_email_check_group {
     display: flex;
     gap: 10px;
     align-items: stretch;
 }
 
-.email-input-wrapper {
+.signup_email_input_wrapper {
     flex: 2;
     display: flex;
 }
 
-.email-input-wrapper input {
+.signup_email_input_wrapper input {
     width: 100%;
     height: 48px;
 }
 
-.email-check-btn {
+.signup_email_check_btn {
     height: 48px;
     padding: 0 20px;
     background: rgb(157, 146, 116);
@@ -193,13 +193,13 @@
     letter-spacing: 0.3px;
 }
 
-.email-check-btn:hover {
+.signup_email_check_btn:hover {
     background: rgb(127, 116, 86);
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(157, 146, 116, 0.35);
 }
 
-.email-check-btn:disabled {
+.signup_email_check_btn:disabled {
     background: #d1d5db;
     cursor: not-allowed;
     transform: none;
@@ -252,13 +252,13 @@
 }
 
 /* 입력 필드 유효성 검사 스타일 */
-.signup-inner input.valid {
+.signup_inner input.signup_valid {
     border-color: rgb(157, 146, 116);
     background: #f8f7f5;
     animation: pulse 1.5s infinite;
 }
 
-.signup-inner input.invalid {
+.signup_inner input.signup_invalid {
     border-color: #dc2626;
     background: #fef2f2;
     animation: shake 0.5s ease-in-out;
@@ -269,4 +269,3 @@
     25% { transform: translateX(-5px); }
     75% { transform: translateX(5px); }
 }
-

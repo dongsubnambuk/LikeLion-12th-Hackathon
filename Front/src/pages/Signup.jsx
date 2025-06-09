@@ -30,7 +30,7 @@ function Signup(){
     };
 
     // Modal 스타일
-    const customStyles = {
+    const SignupCustomStyles = {
         overlay: {
             backgroundColor: "rgba(0,0,0,0.5)",
             display: "flex",
@@ -227,40 +227,40 @@ function Signup(){
     return(
         <>
             <Header/>
-            <div className="signup-inner">
-                <div className="form-group">
+            <div className="signup_inner">
+                <div className="signup_form_group">
                     <label htmlFor="email">이메일</label>
-                    <div className="email-check-group">
-                        <div className="email-input-wrapper">
+                    <div className="signup_email_check_group">
+                        <div className="signup_email_input_wrapper">
                             <input
                                 type="email"
                                 id="email"
                                 value={email}
-                                className={`signup-email ${isEmailChecked ? 'valid' : emailError ? 'invalid' : ''}`}
+                                className={`signup_email ${isEmailChecked ? 'signup_valid' : emailError ? 'signup_invalid' : ''}`}
                                 placeholder="이메일을 입력해주세요"
                                 onChange={handleEmailChange}
                             />
                         </div>
                         <button 
                             type="button"
-                            className="email-check-btn"
+                            className="signup_email_check_btn"
                             onClick={handleEmailCheck}
                             disabled={isEmailChecking || !email}
                         >
                             {isEmailChecking ? "확인중..." : "중복확인"}
                         </button>
                     </div>
-                    {emailError && <div className="error-message">{emailError}</div>}
-                    {emailSuccess && <div className="success-message">{emailSuccess}</div>}
+                    {emailError && <div className="signup_error_message">{emailError}</div>}
+                    {emailSuccess && <div className="signup_success_message">{emailSuccess}</div>}
                 </div>
 
-                <div className="form-group">
+                <div className="signup_form_group">
                     <label htmlFor="password">비밀번호</label>
                     <input
                         type="password"
                         id="password"
                         value={password}
-                        className={`signup-password ${password.length >= 8 ? 'valid' : password ? 'invalid' : ''}`}
+                        className={`signup_password ${password.length >= 8 ? 'signup_valid' : password ? 'signup_invalid' : ''}`}
                         placeholder="비밀번호를 입력해주세요 (8자 이상)"
                         onChange={(e) => {
                             setPassword(e.target.value);
@@ -269,67 +269,67 @@ function Signup(){
                     />
                 </div>
 
-                <div className="form-group">
+                <div className="signup_form_group">
                     <label htmlFor="confirm-password">비밀번호 확인</label>
                     <input
                         type="password"
                         id="confirm-password"
                         value={confirmPassword}
-                        className={`${confirmPassword && password === confirmPassword ? 'valid' : confirmPassword ? 'invalid' : ''}`}
+                        className={`${confirmPassword && password === confirmPassword ? 'signup_valid' : confirmPassword ? 'signup_invalid' : ''}`}
                         placeholder="비밀번호를 다시 입력해 주세요"
                         onChange={(e) => {
                             setConfirmPassword(e.target.value);
                             validatePasswords(password, e.target.value);
                         }}
                     />
-                    {error && <div className="error-message">{error}</div>}
+                    {error && <div className="signup_error_message">{error}</div>}
                 </div>
 
-                <div className="form-group">
+                <div className="signup_form_group">
                     <label htmlFor="username">이름</label>
                     <input
                         type="text"
                         id="username"
                         value={userName}
-                        className={userName ? 'valid' : ''}
+                        className={userName ? 'signup_valid' : ''}
                         placeholder="이름을 입력해주세요"
                         onChange={(e) => setUserName(e.target.value)}
                     />
                 </div>
 
-                <div className="form-group">
+                <div className="signup_form_group">
                     <label htmlFor="phonenumber">연락처</label>
                     <input
                         type="text"
                         id="phonenumber"
                         value={phoneNumber}
-                        className={phoneNumber.length >= 13 ? 'valid' : phoneNumber ? 'invalid' : ''}
+                        className={phoneNumber.length >= 13 ? 'signup_valid' : phoneNumber ? 'signup_invalid' : ''}
                         placeholder="010-1234-5678"
                         maxLength="13"
                         onChange={handlePhoneNumberChange}
                     />
                 </div>
 
-                <div className="form-group">
-                    <div className="address">
+                <div className="signup_form_group">
+                    <div className="signup_address">
                         <label htmlFor="address">주소</label>
-                        <div className="address-serch">
+                        <div className="signup_address_serch">
                             <input 
                                 value={zipCode} 
                                 readOnly 
                                 placeholder="우편번호"
-                                className={zipCode ? 'valid' : ''}
+                                className={zipCode ? 'signup_valid' : ''}
                             />
                             <button type="button" onClick={toggle}>주소 찾기</button>
                         </div>
-                        <div className="address-detail">
+                        <div className="signup_address_detail">
                             <input 
                                 value={roadAddress} 
                                 readOnly 
                                 placeholder="도로명 주소"
-                                className={roadAddress ? 'valid' : ''}
+                                className={roadAddress ? 'signup_valid' : ''}
                             />
-                            <Modal isOpen={isOpen} ariaHideApp={false} style={customStyles}>
+                            <Modal isOpen={isOpen} ariaHideApp={false} style={SignupCustomStyles}>
                                 <div style={{ 
                                     display: 'flex', 
                                     justifyContent: 'center', 
@@ -358,14 +358,14 @@ function Signup(){
                                 onChange={changeHandler}
                                 value={detailAddress}
                                 placeholder="상세주소"
-                                className={detailAddress ? 'valid' : ''}
+                                className={detailAddress ? 'signup_valid' : ''}
                             />
                         </div>
                     </div>
                 </div>
 
                 <button 
-                    className="signup-btn" 
+                    className="signup_btn" 
                     onClick={handleSignup}
                     disabled={!isFormValid()}
                 >
