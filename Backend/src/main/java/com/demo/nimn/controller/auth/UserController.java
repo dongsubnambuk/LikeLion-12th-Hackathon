@@ -57,8 +57,16 @@ public class UserController {
 
 
     @GetMapping
-    public UserDetails getUserDetail(@RequestParam String email){
-        return userService.getUserDetail(email);
+    public ResponseEntity<?> getUserDetail(@RequestParam String email){
+        UserDetails userDetails = userService.getUserDetail(email);
+
+        if (userDetails.getName().equals("정보 없음")) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(userDetails);
+        }
+
+        return ResponseEntity.ok(userDetails);
     }
 
     private String validateUserDetails(UserDetails userDetails) {

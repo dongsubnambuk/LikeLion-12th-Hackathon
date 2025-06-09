@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -66,6 +67,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails getUserDetail(String email) {
         Users user = userDAO.findByEmail(email);
+
+        if (user == null) {
+            // null이면 빈 UserDetails 리턴하거나 메시지를 포함한 기본 객체 반환
+            return UserDetails.builder()
+                    .name(null)
+                    .email(email)
+                    .phoneNumber(null)
+                    .roadAddress(null)
+                    .detailAddress(null)
+                    .build();
+        }
 
         return UserDetails.builder()
                 .name(user.getName())
