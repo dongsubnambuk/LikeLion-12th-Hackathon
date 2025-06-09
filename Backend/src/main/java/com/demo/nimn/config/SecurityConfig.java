@@ -62,10 +62,6 @@ public class SecurityConfig {
                         .requestMatchers("/users/hello").hasRole("ADMIN") // ROLE_ADMIN 권한을 가진 사용자만 접근할 수 있도록 설정
                         .anyRequest().authenticated()); // 그 외의 모든 경로는 인증된 사용자라면 접근 가능
 
-//        // 모든 요청을 허용하도록 설정
-//        http.authorizeHttpRequests(auth -> auth
-//                .anyRequest().permitAll());
-
 
         //JWTFilter 등록
         http
