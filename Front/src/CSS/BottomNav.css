@@ -1,31 +1,109 @@
-  nav>div {
-    text-align: center;
-    float: left;
-    width: 20%;
-    height: 45px;
-    line-height: 45px;
-  }
+.bottom-nav-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1px solid #e9ecef;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding-bottom: env(safe-area-inset-bottom);
+}
 
-  .button-naming {
-    display: flex;
-    flex-direction: column;
-  }
+.bottom-nav-bottom-nav-container {
+  display: flex;
+  max-width: 390px;
+  margin: 0 auto;
+  height: 70px;
+  align-items: center;
+  justify-content: space-around;
+}
 
-  .wrapper {
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    /* background-color: rgba(4, 198, 0, 0.8); */
-    background-color: #04C600;
-    color: #fff;
-    max-width: 390px;
-    height: 8vh;
-    margin-left: auto;
-    margin-right: auto;
-    z-index: 9999;
+.bottom-nav-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  min-width: 60px;
+  position: relative;
+}
+
+.bottom-nav-nav-item:hover {
+  background: rgba(157, 146, 116, 0.1); /* #9d9274 기반 */
+  transform: translateY(-2px);
+}
+
+.bottom-nav-nav-item.bottom-nav-active::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 3px;
+  background: #9d9274; /* #9d9274 */
+  border-radius: 0 0 3px 3px;
+}
+
+.bottom-nav-nav-icon {
+  font-size: 20px;
+  color: #666;
+  margin-bottom: 4px;
+  transition: all 0.3s ease;
+}
+
+.bottom-nav-nav-item:hover .bottom-nav-nav-icon,
+.bottom-nav-nav-item.bottom-nav-active .bottom-nav-nav-icon {
+  color: #9d9274; /* #9d9274 */
+  transform: scale(1.1);
+}
+
+.bottom-nav-nav-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: #666;
+  text-align: center;
+  line-height: 1.2;
+  transition: all 0.3s ease;
+}
+
+.bottom-nav-nav-item:hover .bottom-nav-nav-label,
+.bottom-nav-nav-item.bottom-nav-active .bottom-nav-nav-label {
+  color: #9d9274; /* #9d9274 */
+  font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .bottom-nav-bottom-nav-container {
+    height: 65px;
+    padding: 6px 0;
   }
+  
+  .bottom-nav-nav-item {
+    padding: 6px 8px;
+    min-width: 50px;
+  }
+  
+  .bottom-nav-nav-icon {
+    font-size: 18px;
+    margin-bottom: 3px;
+  }
+  
+  .bottom-nav-nav-label {
+    font-size: 9px;
+  }
+}
+
+/* iPhone X 이상 기기의 홈 인디케이터 대응 */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .bottom-nav-bottom-nav {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 8px);
+  }
+}

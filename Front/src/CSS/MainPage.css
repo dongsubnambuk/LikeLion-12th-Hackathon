@@ -1,51 +1,447 @@
-.swiper-container {
-  position: relative;
-
+.main-page-main-container {
+  min-height: 100vh;
+  background: #ffffff;
+  overflow-x: hidden;
+  overflow-y: auto; /* 수직 스크롤 허용하되 스크롤바 숨김 */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  padding-top: 60px; /* Header 높이만큼 상단 여백 추가 */
 }
 
-.swiper-button-next, .swiper-button-prev{
+/* 스크롤바 숨기기 - WebKit 기반 브라우저 */
+.main-page-main-container::-webkit-scrollbar {
   display: none;
 }
 
-.slide-content {
-  display: flex;
-  justify-content: center; /* 수평 중앙 정렬 */
-  align-items: center; /* 수직 중앙 정렬 */
-
+body {
+  overflow-x: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
 }
 
-.swiper-container h4 {
-  text-align: center;
-  font-size: 18px;
-  margin-bottom: 4px;
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
-.user-food-detail {
-
-  margin: 0 auto; /* 중앙 정렬 */
-
-
-}
-
-.food-slide {
-  height: calc(92vh - 50%); 
-  overflow-y: visible; /* 세로 스크롤 활성화 */
-}
-
-.slide-content1 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* padding-bottom: 60px; */
-}
-
-.swiper-slide {
-  margin-right: 8px; /* 슬라이드 간의 간격 조정 */
-  padding-bottom: 10px;
-
-}
-
-.cat {
+.main-page-loading-container {
   width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  gap: 20px;
+}
 
+.main-page-loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(157, 146, 116, 0.2); /* #9d9274 기반 */
+  border-top: 3px solid #9d9274;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.main-page-loading-container p {
+  font-size: 15px;
+  color: #666;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+}
+
+/* Hero Slider Section */
+.main-page-hero-slider {
+  position: relative;
+  height: 56vh;
+  min-height: 420px;
+}
+
+.main-page-hero-swiper {
+  height: 100%;
+}
+
+.main-page-hero-slide {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-page-hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.main-page-hero-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.main-page-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(157, 146, 116, 0.75) 0%, rgba(157, 146, 116, 0.55) 100%); /* #9d9274 기반 */
+}
+
+.main-page-hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: white;
+  max-width: 600px;
+  padding: 0 24px;
+}
+
+.main-page-hero-content h1 {
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 700;
+  margin-bottom: 16px;
+  line-height: 1.25;
+  letter-spacing: -0.8px;
+  white-space: pre-line;
+}
+
+.main-page-hero-content p {
+  font-size: clamp(1rem, 3vw, 1.3rem);
+  margin-bottom: 32px;
+  opacity: 0.95;
+  line-height: 1.5;
+  letter-spacing: -0.3px;
+  font-weight: 400;
+}
+
+.main-page-hero-cta-button {
+  background: white;
+  color: #9d9274; /* #9d9274 기반 */
+  border: none;
+  padding: 16px 32px;
+  border-radius: 32px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  letter-spacing: -0.3px;
+}
+
+.main-page-hero-cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* Section Headers */
+.main-page-section-header {
+  text-align: center;
+  margin-bottom: 48px;
+  padding: 0 24px;
+}
+
+.main-page-section-header h2 {
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-weight: 700;
+  color: #9d9274; /* #9d9274 기반 */
+  margin-bottom: 12px;
+  letter-spacing: -0.6px;
+}
+
+.main-page-section-header p {
+  font-size: 1.1rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+  letter-spacing: -0.2px;
+}
+
+/* Today's Meals Section */
+.main-page-today-meals-section {
+  padding: 72px 24px;
+  background: #f8f9fa;
+}
+
+.main-page-meals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 28px;
+  max-width: 1000px;
+  margin: 0 auto;
+  place-items: center; /* 그리드 아이템들을 중앙 정렬 */
+}
+
+.main-page-meal-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  width: 100%; /* 카드가 그리드 셀을 완전히 채우도록 */
+  max-width: 350px; /* 최대 너비 설정 */
+}
+
+.main-page-meal-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+}
+
+.main-page-meal-time {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 8px 16px;
+  border-radius: 20px;
+  z-index: 2;
+}
+
+.main-page-time-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #9d9274; /* #9d9274 기반 */
+  letter-spacing: -0.2px;
+}
+
+.main-page-meal-image {
+  height: 200px;
+  overflow: hidden;
+}
+
+.main-page-meal-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.main-page-meal-card:hover .main-page-meal-image img {
+  transform: scale(1.05);
+}
+
+.main-page-meal-info {
+  padding: 24px;
+}
+
+.main-page-meal-info h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 8px;
+  letter-spacing: -0.4px;
+}
+
+.main-page-meal-info p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 16px;
+  line-height: 1.5;
+  letter-spacing: -0.1px;
+}
+
+.main-page-nutrition-info {
+  display: flex;
+  gap: 12px;
+}
+
+.main-page-nutrition-info span {
+  background: rgba(157, 146, 116, 0.1); /* #9d9274 기반 */
+  color: #9d9274;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+}
+
+/* Features Section */
+.main-page-features-section {
+  padding: 72px 24px;
+  background: white;
+}
+
+.main-page-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 32px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.main-page-feature-card {
+  text-align: center;
+  padding: 32px 24px;
+  border-radius: 20px;
+  background: #fdf8ec;
+  transition: all 0.3s ease;
+}
+
+.main-page-feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+}
+
+.main-page-feature-card h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #9d9274; /* #9d9274 기반 */
+  margin-bottom: 12px;
+  letter-spacing: -0.4px;
+}
+
+.main-page-feature-card p {
+  font-size: 0.95rem;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  letter-spacing: -0.1px;
+}
+
+.main-page-feature-highlight {
+  display: inline-block;
+  background: #9d9274; /* #9d9274 기반 */
+  color: white;
+  padding: 6px 16px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+}
+
+/* CTA Section */
+.main-page-cta-section {
+  padding: 80px 24px;
+  background: #9d9274; /* #9d9274 기반 */
+  text-align: center;
+  padding-bottom: 150px; /* 하단바 높이(70px) + 여유공간(80px) = 150px */
+}
+
+.main-page-cta-content h2 {
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-weight: 700;
+  color: white;
+  margin-bottom: 16px;
+  letter-spacing: -0.6px;
+}
+
+.main-page-cta-content p {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 32px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+  letter-spacing: -0.2px;
+}
+
+.main-page-cta-button {
+  background: white;
+  color: #9d9274; /* #9d9274 기반 */
+  border: none;
+  padding: 16px 32px;
+  border-radius: 32px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  letter-spacing: -0.3px;
+}
+
+.main-page-cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* Swiper Pagination */
+.main-page-hero-swiper .swiper-pagination-bullet {
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 1;
+  width: 12px;
+  height: 12px;
+}
+
+.main-page-hero-swiper .swiper-pagination-bullet-active {
+  background: white;
+  transform: scale(1.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-page-hero-slider {
+    height: 50vh;
+    min-height: 360px;
+  }
+  
+  .main-page-today-meals-section,
+  .main-page-features-section {
+    padding: 56px 20px;
+  }
+  
+  .main-page-section-header {
+    margin-bottom: 40px;
+    padding: 0 20px;
+  }
+  
+  .main-page-meals-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .main-page-features-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+  }
+  
+  .main-page-cta-section {
+    padding: 64px 20px;
+    padding-bottom: 140px; /* 하단바 높이(65px) + 여유공간(75px) = 140px */
+  }
+}
+
+@media (max-width: 480px) {
+  .main-page-main-container {
+    padding-top: 60px;
+  }
+
+  .main-page-hero-content {
+    padding: 0 20px;
+  }
+  
+  .main-page-section-header {
+    padding: 0 16px;
+  }
+  
+  .main-page-today-meals-section,
+  .main-page-features-section {
+    padding: 48px 16px;
+  }
+  
+  .main-page-meal-info {
+    padding: 20px;
+  }
+  
+  .main-page-feature-card {
+    padding: 24px 20px;
+  }
+  
+  .main-page-cta-section {
+    padding: 56px 16px;
+    padding-bottom: 135px; /* 하단바 높이(65px) + 여유공간(70px) = 135px */
+  }
 }
