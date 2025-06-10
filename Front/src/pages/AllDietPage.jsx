@@ -1,52 +1,76 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Spin } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import '../CSS/AllDietPage.css';
 import Header from '../components/Header';
 import BottomNav from '../components/BottomNav';
-
-const { Meta } = Card;
+import cat from '../images/cat2.png';
 
 function AllDietPage() {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(0);
+    const [isAnimating, setIsAnimating] = useState(false);
+    const [animationClass, setAnimationClass] = useState('');
 
     const handleItemClick = (item) => {
         navigate(`/dietinfo`, { state: { item } });
     };
 
+
     const [mealData, setMealData] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const animatePageTransition = (direction, callback) => {
+        if (isAnimating) return;
+        
+        setIsAnimating(true);
+        
+        const outClass = direction === 'next' ? 'slide-out-left' : 'slide-out-right';
+        setAnimationClass(outClass);
+        
+        setTimeout(() => {
+            callback();
+            const inClass = direction === 'next' ? 'slide-in-right' : 'slide-in-left';
+            setAnimationClass(inClass);
+            
+            setTimeout(() => {
+                setAnimationClass('slide-in-center');
+                setTimeout(() => {
+                    setAnimationClass('');
+                    setIsAnimating(false);
+                }, 500);
+            }, 50);
+        }, 250);
+    };
 
     // 예시 데이터
     const mockData = [
         {
             id: 1,
-            name: "불고기 정식",
+            name: "건강한 아침 정식",
             price: "12,000원",
-            image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&h=300&fit=crop",
-            category: "한식",
-            description: "구운 소고기, 쌀밥, 김치, 된장국",
-            calories: "580kcal",
-            protein: "단백질 42g"
+            image: cat,
+            category: "아침",
+            description: "현미밥, 된장찌개, 김치, 시금치나물",
+            calories: "520kcal",
+            protein: "단백질 18g"
         },
         {
             id: 2,
-            name: "김치찌개",
+            name: "프로틴 파워볼",
             price: "8,500원",
-            image: "https://images.unsplash.com/photo-1582049165295-cb3e3d86c1c6?w=400&h=300&fit=crop",
-            category: "한식",
-            description: "김치, 돼지고기, 두부, 쌀밥",
-            calories: "420kcal",
-            protein: "단백질 28g"
+            image: cat,
+            category: "점심",
+            description: "그릴드 치킨, 퀴노아, 아보카도, 견과류",
+            calories: "480kcal",
+            protein: "단백질 35g"
         },
         {
             id: 3,
             name: "스파게티 카르보나라",
             price: "15,000원",
-            image: "https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?w=400&h=300&fit=crop",
-            category: "양식",
+            image: cat,
+            category: "저녁",
             description: "파스타, 베이컨, 달걀, 파마산 치즈",
             calories: "650kcal",
             protein: "단백질 35g"
@@ -55,28 +79,28 @@ function AllDietPage() {
             id: 4,
             name: "초밥 세트",
             price: "18,000원",
-            image: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop",
-            category: "일식",
+            image: cat,
+            category: "저녁",
             description: "연어, 참치, 새우, 간장, 와사비",
             calories: "520kcal",
             protein: "단백질 45g"
         },
         {
             id: 5,
-            name: "치킨 샐러드",
+            name: "치킨 샐러드 볼",
             price: "11,000원",
-            image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop",
-            category: "샐러드",
-            description: "그릴드 치킨, 퀴노아, 아보카도, 견과류",
-            calories: "480kcal",
-            protein: "단백질 35g"
+            image: cat,            
+            category: "점심",
+            description: "그릴드 치킨, 아보카도, 견과류, 방울토마토",
+            calories: "420kcal",
+            protein: "단백질 32g"
         },
         {
             id: 6,
             name: "마르게리타 피자",
             price: "16,000원",
-            image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop",
-            category: "양식",
+            image: cat,            
+            category: "저녁",
             description: "토마토 소스, 모짜렐라, 바질",
             calories: "720kcal",
             protein: "단백질 32g"
@@ -85,8 +109,8 @@ function AllDietPage() {
             id: 7,
             name: "비빔밥",
             price: "9,000원",
-            image: "https://images.unsplash.com/photo-1553978297-833d09932d77?w=400&h=300&fit=crop",
-            category: "한식",
+            image: cat,            
+            category: "점심",
             description: "나물, 쌀밥, 고추장, 계란",
             calories: "450kcal",
             protein: "단백질 18g"
@@ -95,8 +119,8 @@ function AllDietPage() {
             id: 8,
             name: "새우볶음밥",
             price: "10,500원",
-            image: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&h=300&fit=crop",
-            category: "중식",
+            image: cat,            
+            category: "점심",
             description: "새우, 쌀밥, 달걀, 채소",
             calories: "520kcal",
             protein: "단백질 26g"
@@ -105,8 +129,8 @@ function AllDietPage() {
             id: 9,
             name: "연어 스테이크",
             price: "22,000원",
-            image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&h=300&fit=crop",
-            category: "양식",
+            image: cat,            
+            category: "저녁",
             description: "그릴드 연어, 아스파라거스, 레몬",
             calories: "380kcal",
             protein: "단백질 48g"
@@ -115,38 +139,18 @@ function AllDietPage() {
             id: 10,
             name: "된장찌개",
             price: "7,500원",
-            image: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop",
-            category: "한식",
+            image: cat,            
+            category: "점심",
             description: "된장, 두부, 파, 쌀밥",
             calories: "380kcal",
             protein: "단백질 22g"
-        },
-        {
-            id: 11,
-            name: "팟타이",
-            price: "13,000원",
-            image: "https://images.unsplash.com/photo-1559847844-d0c8655b8ea6?w=400&h=300&fit=crop",
-            category: "아시아",
-            description: "쌀국수, 새우, 땅콩, 숙주",
-            calories: "540kcal",
-            protein: "단백질 30g"
-        },
-        {
-            id: 12,
-            name: "치킨 버거",
-            price: "8,000원",
-            image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop",
-            category: "패스트푸드",
-            description: "치킨 패티, 양상추, 토마토, 감자튀김",
-            calories: "680kcal",
-            protein: "단백질 38g"
         }
     ];
 
     // 슬라이드 기능을 위한 설정
-    const itemsPerPage = 10;
+    const itemsPerPage = 4; 
     const totalPages = Math.ceil(mealData.length / itemsPerPage);
-    const showSlideControls = mealData.length > 10;
+    const showSlideControls = mealData.length > 4;
 
     const getCurrentPageItems = () => {
         if (!showSlideControls) return mealData;
@@ -222,57 +226,53 @@ function AllDietPage() {
     if (loading) {
         return (
             <div className="allDietPage_loading_container">
-                <Spin size="large" />
+                <div className="allDietPage_loading_spinner"></div>
+                <p className="allDietPage_loading_spinner_text">영양 데이터를 불러오는 중...</p>
             </div>
         );
     }
+
+    const currentItem = mealData[currentPage];
 
     return (
         <>
             <Header />
 
             <div className="allDietPage_container">
-                <div className="allDietPage_list_container">
-                    {getCurrentPageItems().map((item, index) => (
-                        <Card
-                            key={item.id}
-                            hoverable
-                            className="allDietPage_item_card"
-                            onClick={() => handleItemClick(item)}
-                            cover={
-                                <div className="allDietPage_item_image_container">
-                                    <img 
-                                        src={item.image} 
-                                        alt={item.name} 
-                                        className="allDietPage_item_image" 
-                                    />
-                                    <div className="allDietPage_category_tag">{item.category}</div>
+                <div className="allDietPage_meals_grid">
+                    {getCurrentPageItems().map((item) => (
+                        <div key={item.id} className="allDietPage_meal_card" onClick={() => handleItemClick(item)}>
+                            <div className="allDietPage_meal_time">
+                                <span className="allDietPage_time_label">{item.category}</span>
+                            </div>
+                            <div className="allDietPage_meal_image">
+                                <img src={item.image} alt={item.name} className="allDietPage_meal_image_content"/>
+                            </div>
+                            <div className="allDietPage_meal_info">
+                                <h3 className="allDietPage_meal_info_name">{item.name}</h3>
+                                <p className="allDietPage_meal_info_description">{item.description}</p>
+                                <div className="allDietPage_nutrition_info">
+                                    <span className="allDietPage_nutrition_info1">{item.calories}</span>
+                                    <span className="allDietPage_nutrition_info2">{item.protein}</span>
                                 </div>
-                            }
-                        >
-                            <div className="allDietPage_item_meta">
-                                <div className="allDietPage_item_title">{item.name}</div>
-                                <div className="allDietPage_item_description">{item.description}</div>
-                                <div className="allDietPage_item_nutrition">
-                                    <span className="allDietPage_calories">{item.calories}</span>
-                                    <span className="allDietPage_protein">{item.protein}</span>
+                                <div className="allDietPage_price_info">
+                                    <span className="allDietPage_price">{item.price}</span>
                                 </div>
                             </div>
-                        </Card>
+                        </div>
                     ))}
                     
-                    {/* 빈 공간 채우기 (10개 미만일 때) */}
-                    {getCurrentPageItems().length < 10 && 
-                        Array.from({ length: 10 - getCurrentPageItems().length }, (_, index) => (
+                    {/* 빈 공간 채우기 (8개 미만일 때) */}
+                    {getCurrentPageItems().length < 8 && 
+                        Array.from({ length: 8 - getCurrentPageItems().length }, (_, index) => (
                             <div key={`empty-${index}`} className="allDietPage_empty_card"></div>
                         ))
                     }
                 </div>
 
-                {/* 슬라이드 컨트롤 (10개 이상일 때만 표시) */}
+                
                 {showSlideControls && (
                     <div className="allDietPage_slide_controls">
-                        {/* 왼쪽: 이전 버튼 */}
                         <button 
                             className="allDietPage_nav_button allDietPage_prev_button"
                             onClick={prevPage}
@@ -281,7 +281,6 @@ function AllDietPage() {
                             <LeftOutlined />
                         </button>
 
-                        {/* 가운데: 페이지 인디케이터 */}
                         <div className="allDietPage_indicators">
                             {Array.from({ length: totalPages }, (_, index) => (
                                 <div
@@ -292,7 +291,6 @@ function AllDietPage() {
                             ))}
                         </div>
 
-                        {/* 오른쪽: 다음 버튼 */}
                         <button 
                             className="allDietPage_nav_button allDietPage_next_button"
                             onClick={nextPage}
