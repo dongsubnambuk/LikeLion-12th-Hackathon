@@ -55,104 +55,62 @@ jobs:
       working-directory: ./Backend
       run: ./gradlew build -x test
     
-    # AWS 서버에 JAR 파일 전송 (plain JAR 제외)
-    - name: Copy JAR to server
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: ${{ secrets.AWS_HOST }}
-        username: ${{ secrets.AWS_USERNAME }}
-        key: ${{ secrets.AWS_SSH_KEY }}
-        port: 22
-        source: "Backend/build/libs/*[!plain].jar"
-        target: "~/nimn/"
-        strip_components: 3
-    
-    # AWS 서버에 .env 파일 전송
-    - name: Copy env file to server
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: ${{ secrets.AWS_HOST }}
-        username: ${{ secrets.AWS_USERNAME }}
-        key: ${{ secrets.AWS_SSH_KEY }}
-        port: 22
-        source: "Backend/nimn.env"
-        target: "~/nimn/"
-        strip_components: 1
-    
-    # 기존 애플리케이션 중지
-    - name: Stop existing application
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.AWS_HOST }}
-        username: ${{ secrets.AWS_USERNAME }}
-        key: ${{ secrets.AWS_SSH_KEY }}
-        port: 22
-        timeout: 60s
-        command_timeout: 120s
-        script: |
-          echo "Stopping existing application..."
-          pkill -f 'nimn.*\.jar' || echo "No existing process found"
-          sleep 3
-          echo "Stop process completed"
-    
-    # 새 애플리케이션 시작
-    - name: Start new application
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.AWS_HOST }}
-        username: ${{ secrets.AWS_USERNAME }}
-        key: ${{ secrets.AWS_SSH_KEY }}
-        port: 22
-        timeout: 60s
-        command_timeout: 120s
-        script: |
-          echo "Starting new application..."
-          cd ~/nimn
-          
-          # JAR 파일 확인
-          ls -la *.jar
-          
-          # 실행 가능한 JAR 파일 찾기
-          JAR_FILE=$(ls *.jar | grep -v plain | head -1)
-          echo "Using JAR file: $JAR_FILE"
-          
-          # 환경변수와 함께 백그라운드로 새 애플리케이션 시작
-          nohup env $(cat nimn.env | xargs) java -jar "$JAR_FILE" > app.log 2>&1 &
-          
-          # 프로세스 시작 확인
-          sleep 5
-          
-          # 실행 중인 프로세스 확인
-          if pgrep -f 'nimn.*\.jar' > /dev/null; then
-            echo "Application started successfully"
-            echo "PID: $(pgrep -f 'nimn.*\.jar')"
-          else
-            echo "Failed to start application"
-            echo "Last 20 lines of log:"
-            tail -20 app.log
-            exit 1
-          fi
-    
-    # 애플리케이션 상태 확인
-    - name: Check application health
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.AWS_HOST }}
-        username: ${{ secrets.AWS_USERNAME }}
-        key: ${{ secrets.AWS_SSH_KEY }}
-        port: 22
-        timeout: 30s
-        command_timeout: 30s
-        script: |
-          echo "Checking application health..."
-          cd ~/nimn
-          
-          sleep 10
-          
-          echo "Application log (last 30 lines):"
-          tail -30 app.log
-          
-          echo "Running processes:"
-          ps aux | grep java | grep -v grep
-          
-          echo "Deployment completed successfully!"
+    # SSH 키 설정 및 서버 배포
+    - name: Deploy to server
+      run: |
+        # SSH 호스트 키 검증 비활성화
+        mkdir -p ~/.ssh
+        echo "StrictHostKeyChecking no" >> ~/.ssh/config
+        
+        # AWS SSH 키 설정
+        echo "${{ secrets.AWS_SSH_KEY }}" > deploy_key.pem
+        chmod 600 deploy_key.pem
+        
+        # 애플리케이션 배포 스크립트 생성
+        cat > deploy.sh << 'EOF'
+        #!/bin/bash
+        echo "=== Starting Deployment ==="
+
+        cd ~/nimn
+
+        pkill -f "java -jar" || true
+
+        sleep 3
+
+        if [ -f nimn.env ]; then
+          echo "Environment file found"
+        else
+          echo "Warning: nimn.env not found"
+        fi
+        
+        echo "Available JAR files:"
+        ls -la *.jar
+        
+        echo "Starting new application..."
+        nohup env $(cat nimn.env | xargs) java -jar *.jar > app.log 2>&1 &
+        sleep 5
+        
+        if pgrep -f "java -jar" > /dev/null; then
+          echo "Application started successfully"
+          echo "PID: $(pgrep -f "java -jar")"
+          echo "=== Deployment Completed Successfully ==="
+        else
+          echo "Failed to start application"
+          echo "Application log (last 20 lines):"
+          tail -20 app.log
+          exit 1
+        fi
+        EOF
+        
+        chmod +x deploy.sh
+        
+        # JAR 파일과 환경 변수 파일 전송
+        scp -i deploy_key.pem Backend/build/libs/*.jar ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_HOST }}:~/nimn/
+        scp -i deploy_key.pem Backend/nimn.env ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_HOST }}:~/nimn/
+        scp -i deploy_key.pem deploy.sh ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_HOST }}:~/nimn/
+        
+        # 배포 스크립트 실행
+        ssh -i deploy_key.pem ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_HOST }} 'cd ~/nimn && ./deploy.sh'
+        
+        # 키 정리
+        rm -f deploy_key.pem deploy.sh
