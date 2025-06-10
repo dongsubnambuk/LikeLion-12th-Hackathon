@@ -1,177 +1,183 @@
-.DIPcontainer {
+.dietInfoPage_container {
     display: flex;
     justify-content: center;
-    align-items: center;
     width: 100%;
-
-    box-sizing: border-box;
-
-}
-
-.DIPlistContainer {
-    margin-top: 5px;
-    height: 84vh;
-    width: 90%; /* Adjusted width */
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
-    border-radius: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
+    padding: 20px;
     box-sizing: border-box;
 }
 
-.DIPimageContainer {
-    width: 100%; /* Adjust the width as needed */
-    display: flex;
-    justify-content: center;
-    margin-top: -10px; /* Move image upwards */
-
-}
-
-.DIPtitleImage {
-    width: 50%; /* Adjust the width to make the image smaller */
-    max-width: 300px; /* Add a max-width to prevent it from being too large */
-    border-radius: 15px;
-
-}
-
-.DIPtitle {
-    text-align: center;
-    font-size: 20px; /* Adjusted font size */
-    margin-top: 5px; /* Reduced top margin */
-    margin-bottom: 5px; /* Reduced bottom margin */
-}
-
-.DIPsectionTitle{
-    margin-top: -20px;
-}
-
-.DIPdescription {
-    text-align: center;
-    font-size: 14px; /* Adjusted font size */
-    color: #666;
-
-}
-
-.DIPmenu, .DIPnutrient {
+.dietInfoPage_card {
     width: 100%;
-
+    max-width: 400px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.DIPnutrient {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-
-.nutrientListContainer {
+/* 이미지 섹션 */
+.dietInfoPage_imageSection {
     width: 100%;
-    max-width: 600px;
-    background-color: white;
-    border-radius: 15px;
+    height: 240px;
+    overflow: hidden;
+}
+
+.dietInfoPage_image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 헤더 */
+.dietInfoPage_header {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.dietInfoPage_title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* 섹션 */
+.dietInfoPage_section {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.dietInfoPage_sectionTitle {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    font-weight: 600;
+
+}
+
+/* 메뉴 리스트 */
+.dietInfoPage_menuList {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 12px;
 }
 
-.nutrientList {
+.dietInfoPage_menuGroup {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
+    align-items: flex-start;
+    gap: 12px;
 }
 
-.nutrientItem {
-    padding: 5px;
-    border-radius: 10px;
+.dietInfoPage_menuType {
+    min-width: 60px;
+    padding: 4px 8px;
+    background-color: #9d9274;
+    color: white;
+    border-radius: 4px;
     font-size: 14px;
+    font-weight: 500;
     text-align: center;
-    margin: 5px;
+}
+
+.dietInfoPage_items {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
     flex: 1;
-    min-width: 80px;
 }
 
-/* 각 영양소의 선 색상 적용 */
-.nutrientItem.carbohydrates {
-    border: 1px solid #ff7f50; /* 코랄 색상 */
+.dietInfoPage_items span {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.4;
 }
 
-.nutrientItem.protein {
-    border: 1px solid #4682b4; /* 스틸 블루 색상 */
+/* 영양성분 그리드 */
+.dietInfoPage_nutritionGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
 }
 
-.nutrientItem.fat {
-    border: 1px solid #32cd32; /* 라임 그린 색상 */
-}
-
-.nutrientItem.sugar {
-    border: 1px solid #da70d6; /* 오키드 색상 */
-}
-
-.nutrientItem.sodium {
-    border: 1px solid #ff4500; /* 오렌지 레드 색상 */
-}
-
-.DIPfooter {
-    width: 100%;
+.dietInfoPage_nutritionItem {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
+    padding: 12px;
+    background-color: #f8f8f8;
+    border-radius: 4px;
+    border-left: 3px solid #9d9274;
 }
 
-.DIPcalories, .DIPprice {
+.dietInfoPage_nutritionItem:nth-child(1) {
+    border-left-color: #ff7f50; /* 탄수화물 - 코랄 */
+}
+
+.dietInfoPage_nutritionItem:nth-child(2) {
+    border-left-color: #4682b4; /* 단백질 - 스틸블루 */
+}
+
+.dietInfoPage_nutritionItem:nth-child(3) {
+    border-left-color: #32cd32; /* 지방 - 라임그린 */
+}
+
+.dietInfoPage_nutritionItem:nth-child(4) {
+    border-left-color: #da70d6; /* 당류 - 오키드 */
+}
+
+.dietInfoPage_nutritionItem:nth-child(5) {
+    border-left-color: #ff4500; /* 나트륨 - 오렌지레드 */
+}
+
+.dietInfoPage_nutritionLabel {
+    font-size: 14px;
+    color: #666;
+}
+
+.dietInfoPage_nutritionValue {
+    font-size: 14px;
     font-weight: 600;
-    font-size: 14px; /* Adjusted font size */
+    color: #333;
 }
 
-.DIPsectionTitle {
-    font-weight: bold;
-    font-size: 16px; /* Adjusted font size */
-    margin-bottom: 5px; /* Reduced margin */
-    display: block;
+/* 푸터 */
+.dietInfoPage_footer {
+    display: flex;
+    padding: 20px;
+    background-color: #9d9274;
 }
 
-/* 칼로리 강조를 위한 애니메이션 효과 */
-.calories-icon-left, .calories-icon-right {
-    font-size: 24px; /* 아이콘 크기 */
-    animation: bounce 2s infinite; /* 애니메이션 효과 */
-    position: relative;
+.dietInfoPage_info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
 }
 
-.calories-icon-left {
-    margin-right: -50px;
+.dietInfoPage_info:first-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.calories-icon-right {
-    margin-left: -50px;
+.dietInfoPage_label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
 }
 
-/* 애니메이션 효과 정의 */
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
+.dietInfoPage_value {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+}
+
+/* 반응형 */
+@media (max-width: 480px) {
+    .dietInfoPage_container {
+        padding: 12px;
     }
-    40% {
-        transform: translateY(-10px);
-    }
-    60% {
-        transform: translateY(-5px);
-    }
-}
-
-.DIPcalories {
-    animation: bounce 2s infinite; /* 깜빡이는 애니메이션 적용 */
-}
-
-/* 깜빡이는 애니메이션 정의 */
-@keyframes blink-red {
-    0%, 100% {
-        color: black;
-    }
-    50% {
-        color: red;
+    
+    .dietInfoPage_nutritionGrid {
+        grid-template-columns: 1fr;
     }
 }
-
