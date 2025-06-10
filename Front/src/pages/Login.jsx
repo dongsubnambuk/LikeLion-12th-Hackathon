@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import '../CSS/Login.css';
 import logo from '../images/logo.png';
-import Header from '../components/Header';
-import BottomNav from '../components/BottomNav';
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -125,8 +123,6 @@ function Login() {
 
     return (
         <>
-            <Header />
-
             <div className="login-inner">
                 <img src={logo} className="logoImage-login" alt="logo" />
 
@@ -144,8 +140,6 @@ function Login() {
                     아직 회원이 아니신가요? <span onClick={handleSignupClick}>회원가입</span>
                 </p>
             </div>
-
-            <BottomNav />
         </>
     );
 }

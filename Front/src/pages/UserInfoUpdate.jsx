@@ -1,7 +1,5 @@
 import React, { useState,useRef ,useEffect} from "react";
 import { useNavigate } from 'react-router-dom';
-import Header from "../components/Header";
-import BottomNav from "../components/BottomNav"
 import {Avatar} from 'antd';
 import Modal from "react-modal"; // 추가
 import DaumPostcode from "react-daum-postcode";
@@ -154,7 +152,6 @@ function UserInfoUpdate(){
 
     return(
         <>
-        <Header/>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <div className="user-image" style={{ textAlign: 'center' }}>
                 <Avatar 
@@ -241,8 +238,6 @@ function UserInfoUpdate(){
                 </div> 
                 <button className="update-btn" onClick={handlePUT}>저장하기</button>
         </div>
-      
-        <BottomNav/>
         </>
     );
 }

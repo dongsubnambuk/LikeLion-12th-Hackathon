@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import './App.css';
+import Layout from './components/Layout';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import AllDiet from './pages/AllDietPage';
@@ -72,26 +73,28 @@ const App = () => {
   return (
     <div className="mobile-container">
       <Router>
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/alldiet" element={<AllDiet />} />
-          <Route path="/dietinfo" element={<DietInfo />} />
-          <Route path="/mypage" element={<MyPage />} />
-          <Route path="/userinfoupdate" element={<UserInfoUpdate />} />
-          <Route path="/orderlist" element={<OrderList />} />
-          <Route path="/weeklyfoodmenu" element={<WeeklyFoodMenu />} />
-          <Route path="/survey" element={<Survey />} />
-          <Route path="/survey-detail" element={<SurveyDetail />} />
-          <Route path="/notification" element={<Notification />} />
-          <Route path="/dietselection" element={<DietSelection />} />
-          <Route path="/menuselection" element={<MenuSelection />} />
-          <Route path="/dietpaymentmain" element={<DietPaymentMain />} />
-          <Route path="/dietpayment" element={<DietPayment />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/dietpaymentcomplete" element={<DietPaymentComplete />} />
-        </Routes>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<MainPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/alldiet" element={<AllDiet />} />
+            <Route path="/dietinfo" element={<DietInfo />} />
+            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/userinfoupdate" element={<UserInfoUpdate />} />
+            <Route path="/orderlist" element={<OrderList />} />
+            <Route path="/weeklyfoodmenu" element={<WeeklyFoodMenu />} />
+            <Route path="/survey" element={<Survey />} />
+            <Route path="/survey-detail" element={<SurveyDetail />} />
+            <Route path="/notification" element={<Notification />} />
+            <Route path="/dietselection" element={<DietSelection />} />
+            <Route path="/menuselection" element={<MenuSelection />} />
+            <Route path="/dietpaymentmain" element={<DietPaymentMain />} />
+            <Route path="/dietpayment" element={<DietPayment />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/dietpaymentcomplete" element={<DietPaymentComplete />} />
+          </Routes>
+        </Layout>
       </Router>
     </div>
   );

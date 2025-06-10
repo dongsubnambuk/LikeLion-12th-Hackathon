@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
-import Header from "../components/Header";
-import BottomNav from "../components/BottomNav";
 import '../CSS/SurveyDetail.css';
 
 function SurveyDetail() {
@@ -82,7 +80,6 @@ function SurveyDetail() {
 
     return (
         <>
-            <Header />
             <div className="survey-container">
                 <form onSubmit={handleSubmit}>
                     {reviews.map((review) => (
@@ -138,7 +135,6 @@ function SurveyDetail() {
                     </div>
                 </form>
             </div>
-            <BottomNav />
         </>
     );
 }

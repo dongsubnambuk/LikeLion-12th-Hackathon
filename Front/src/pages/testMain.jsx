@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../CSS/DietPaymentMainPage.css';
-import Header from '../components/Header';
-import BottomNav from '../components/BottomNav';
 import logo from '../images/logo.png';
 
 function DietPaymentMainPage() {
@@ -56,8 +54,6 @@ function DietPaymentMainPage() {
 
     return (
         <>
-            <Header />
-
             <div className="DPMPcontainer">
                 <div className="DPMPdateRange">- {dateRange} -</div>
                 <div className="DPMPlistContainer">
@@ -89,8 +85,6 @@ function DietPaymentMainPage() {
                     <p className="DPMPpaymentConfirmText">결제하기</p>
                 </div>
             </div>
-
-            <BottomNav />
         </>
     );
 }

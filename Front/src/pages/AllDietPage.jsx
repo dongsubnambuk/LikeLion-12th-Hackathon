@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import '../CSS/AllDietPage.css';
-import Header from '../components/Header';
-import BottomNav from '../components/BottomNav';
 import cat from '../images/cat2.png';
 
 function AllDietPage() {
@@ -236,8 +234,6 @@ function AllDietPage() {
 
     return (
         <>
-            <Header />
-
             <div className="allDietPage_container">
                 <div className="allDietPage_meals_grid">
                     {getCurrentPageItems().map((item) => (
@@ -301,8 +297,6 @@ function AllDietPage() {
                     </div>
                 )}
             </div>
-
-            <BottomNav />
         </>
     );
 }

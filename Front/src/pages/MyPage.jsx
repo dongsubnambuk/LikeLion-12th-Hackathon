@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import Header from "../components/Header";
-import BottomNav from "../components/BottomNav";
 import { Avatar } from 'antd';
 import '../CSS/Mypage.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -74,7 +72,6 @@ const navigate = useNavigate();
 
     return(
         <>
-        <Header/>
         <div className="mypage_container">
      
 
@@ -187,8 +184,6 @@ const navigate = useNavigate();
                 </div>
             </div>
         )}
-        
-        <BottomNav />
         </>
     );
 }

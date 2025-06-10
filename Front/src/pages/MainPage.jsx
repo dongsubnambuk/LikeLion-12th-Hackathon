@@ -5,8 +5,6 @@ import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 import { Pagination, Autoplay } from 'swiper/modules';
 import '../CSS/MainPage.css';
-import Header from '../components/Header';
-import BottomNav from '../components/BottomNav';
 import { useNavigate } from 'react-router-dom';
 
 import slideImg1 from '../images/mainSlideImg1.jpeg';
@@ -54,19 +52,19 @@ const MainPage = () => {
   const heroSlides = [
     {
       title: "바쁜 당신을 위한\n영양사의 한 끼",
-      subtitle: "AI 영양사가 추천하는 맞춤 식단을 새벽에 받아보세요",
+      subtitle: "AI 영양사가 추천하는 맞춤 식단을\n새벽에 받아보세요",
       image: slideImg1,
       cta: "구독 시작하기"
     },
     {
-      title: "매일 새벽 6시, 문 앞까지",
-      subtitle: "하루 세 끼를 한 번에 받아 직장에서도 건강하게",
+      title: "매일 새벽 6시,\n문 앞까지",
+      subtitle: "하루 세 끼를 한 번에 받아\n직장에서도 건강하게",
       image: slideImg2,
       cta: "배송 지역 확인"
     },
     {
-      title: "21가지 메뉴 중 자유롭게",
-      subtitle: "일주일간 다양한 메뉴를 취향에 맞게 선택하세요",
+      title: "21가지 메뉴 중\n자유롭게",
+      subtitle: "일주일간 다양한 메뉴를\n취향에 맞게 선택하세요",
       image: slideImg3,
       cta: "메뉴 보기"
     }
@@ -139,8 +137,6 @@ const MainPage = () => {
 
   return (
     <div className="main-page-main-container">
-      <Header />
-      
       {/* Hero Slider Section */}
       <section className="main-page-hero-slider">
         <Swiper
@@ -240,7 +236,7 @@ const MainPage = () => {
       {/* Features Section */}
       <section className="main-page-features-section">
         <div className="main-page-section-header">
-          <h2>우리동네 영양사만의 <br/> 특별함</h2>
+          <h2>우리 동네 영양사만의 <br/> 특별함</h2>
           <p>건강하고 편리한 식사 솔루션을 제공합니다</p>
         </div>
         
@@ -268,8 +264,6 @@ const MainPage = () => {
           </button>
         </div>
       </section>
-
-      <BottomNav />
     </div>
   );
 };

@@ -1,8 +1,6 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../CSS/DietPaymentPage.css';
-import Header from '../components/Header';
-import BottomNav from '../components/BottomNav';
 
 function DietPaymentPage() {
     const location = useLocation();
@@ -180,7 +178,6 @@ function DietPaymentPage() {
     
     return (
         <>
-            <Header />
             <div className="DPPcontainer">
                 <div className="DPPpayText">
                     결제금액 : {price.toLocaleString()}원<br /><br />
@@ -191,8 +188,6 @@ function DietPaymentPage() {
                     <button onClick={requestPay}>결제하기</button>
                 </div>
             </div >
-
-            <BottomNav />
         </>
     );
 }
