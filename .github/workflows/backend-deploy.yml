@@ -58,7 +58,7 @@ jobs:
     
     # AWS 서버에 JAR 파일 전송 (plain JAR 제외)
     - name: Copy JAR to server
-      uses: appleboy/scp-action@v0.1.4
+      uses: appleboy/scp-action@v0.1.7
       with:
         host: ${{ secrets.AWS_HOST }}
         username: ${{ secrets.AWS_USERNAME }}
@@ -70,7 +70,7 @@ jobs:
     
     # AWS 서버에 .env 파일 전송
     - name: Copy env file to server
-      uses: appleboy/scp-action@v0.1.4
+      uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.AWS_HOST }}
         username: ${{ secrets.AWS_USERNAME }}
@@ -98,7 +98,7 @@ jobs:
     
     # 새 애플리케이션 시작
     - name: Start new application
-      uses: appleboy/ssh-action@v0.1.7
+      uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.AWS_HOST }}
         username: ${{ secrets.AWS_USERNAME }}
@@ -136,7 +136,7 @@ jobs:
     
     # 애플리케이션 상태 확인
     - name: Check application health
-      uses: appleboy/ssh-action@v0.1.7
+      uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.AWS_HOST }}
         username: ${{ secrets.AWS_USERNAME }}
