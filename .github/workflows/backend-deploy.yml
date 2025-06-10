@@ -1,7 +1,6 @@
-
 name: Backend Deploy
 
-# Backend 폴더가 변경될 때만 실행
+# Backend 폴더가 변경될 때 또는 수동 실행
 on:
   push:
     branches: [ develop ]
@@ -70,7 +69,7 @@ jobs:
     
     # AWS 서버에 .env 파일 전송
     - name: Copy env file to server
-      uses: appleboy/ssh-action@v1.0.3
+      uses: appleboy/scp-action@v0.1.7
       with:
         host: ${{ secrets.AWS_HOST }}
         username: ${{ secrets.AWS_USERNAME }}
@@ -82,14 +81,14 @@ jobs:
     
     # 기존 애플리케이션 중지
     - name: Stop existing application
-      uses: appleboy/ssh-action@v0.1.7
+      uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.AWS_HOST }}
         username: ${{ secrets.AWS_USERNAME }}
         key: ${{ secrets.AWS_SSH_KEY }}
         port: 22
-        timeout: 30s
-        command_timeout: 60s
+        timeout: 60s
+        command_timeout: 120s
         script: |
           echo "Stopping existing application..."
           pkill -f 'nimn.*\.jar' || echo "No existing process found"
@@ -104,8 +103,8 @@ jobs:
         username: ${{ secrets.AWS_USERNAME }}
         key: ${{ secrets.AWS_SSH_KEY }}
         port: 22
-        timeout: 30s
-        command_timeout: 60s
+        timeout: 60s
+        command_timeout: 120s
         script: |
           echo "Starting new application..."
           cd ~/nimn
