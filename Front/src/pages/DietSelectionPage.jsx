@@ -1,8 +1,6 @@
 // DietSelectionPage.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
-import Header from "../components/Header";
-import BottomNav from "../components/BottomNav";
 import '../CSS/DietSelectionPage.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Spin } from 'antd';
@@ -88,7 +86,6 @@ function DietSelectionPage() {
 
     return (
         <>
-            <Header />
             <div className="diet-selection-main-container">
                 <div className='diet-selection-user-weekly-food-detail'>
                     <Swiper
@@ -112,7 +109,6 @@ function DietSelectionPage() {
                     <p className="selection-meal-confirm-text">결제 화면으로 이동</p>
                 </div>
             </div>
-            <BottomNav />
         </>
     );
 }

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Header from '../components/Header';
 import '../CSS/Admin.css';
 import '../CSS/DietInfoPage.css';
 import { useNavigate } from 'react-router-dom';
@@ -126,7 +125,6 @@ const style = {
 
   return (
     <>
-      <Header />
       <div className="price-input">
         <select
           id="price"

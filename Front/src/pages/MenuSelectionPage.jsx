@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
-import Header from "../components/Header";
-import BottomNav from "../components/BottomNav"
 import '../CSS/MenuSelectionPage.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css'; // Swiper 기본 CSS
@@ -34,8 +32,6 @@ const MenuSelectionPage = () => {
 
     return (
         <>
-            <Header />
-
             <div className='user-weekly-food-detail'>
                 {/* {dateIndex}, {optionIndex} */}
                 <Swiper
@@ -51,8 +47,6 @@ const MenuSelectionPage = () => {
                     </SwiperSlide>
                 </Swiper>
             </div>
-
-            <BottomNav />
         </>
     );
 };

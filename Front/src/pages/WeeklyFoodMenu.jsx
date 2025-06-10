@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Header from "../components/Header";
-import BottomNav from "../components/BottomNav"
 import '../CSS/WeeklyFoodMenu.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Spin } from 'antd';
@@ -173,8 +171,6 @@ const WeeklyFoodMenu = () => {
 
   return (
     <>
-      <Header />
-
       {isPay ? (
         <div className='user-weekly-food-detail'>
           <Swiper
@@ -200,7 +196,6 @@ const WeeklyFoodMenu = () => {
           </div>
         </div>
       )}
-      <BottomNav />
     </>
   );
 }

@@ -2,8 +2,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
-import Header from "../components/Header";
-import BottomNav from '../components/BottomNav';
 import '../CSS/Survey.css';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -128,7 +126,6 @@ function Survey() {
 
     return (
         <>
-            <Header />
             <div className="survey-link-container">
                 {surveys.map((survey) => (
                     <div 
@@ -140,7 +137,6 @@ function Survey() {
                     </div>
                 ))}
             </div>
-            <BottomNav />
         </>
     );
 }

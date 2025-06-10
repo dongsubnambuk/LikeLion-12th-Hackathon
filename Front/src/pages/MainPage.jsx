@@ -5,8 +5,6 @@ import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 import { Pagination, Autoplay } from 'swiper/modules';
 import '../CSS/MainPage.css';
-import Header from '../components/Header';
-import BottomNav from '../components/BottomNav';
 import { useNavigate } from 'react-router-dom';
 
 import slideImg1 from '../images/mainSlideImg1.jpeg';
@@ -139,8 +137,6 @@ const MainPage = () => {
 
   return (
     <div className="main-page-main-container">
-      <Header />
-      
       {/* Hero Slider Section */}
       <section className="main-page-hero-slider">
         <Swiper
@@ -268,8 +264,6 @@ const MainPage = () => {
           </button>
         </div>
       </section>
-
-      <BottomNav />
     </div>
   );
 };

@@ -1,9 +1,11 @@
 .header-header {
   position: fixed; /* sticky에서 fixed로 변경 */
   top: 0;
-  left: 0; /* 추가 */
-  right: 0; /* 추가 */
-  width: 100%; /* 추가 */
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: 390px; /* 최대 너비 설정 */
+  margin: 0 auto; /* 중앙 정렬 */
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);

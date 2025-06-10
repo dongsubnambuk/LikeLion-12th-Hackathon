@@ -2,8 +2,6 @@ import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import '../CSS/DietPaymentVerificationPage.css';
-import Header from '../components/Header';
-import BottomNav from '../components/BottomNav';
 
 function DietPaymentComplete() {
     const navigate = useNavigate();
@@ -65,7 +63,6 @@ function DietPaymentComplete() {
 
     return (
         <>
-            <Header />
             <div className="payment-complete-container">
                 <div className="payment-complete-content">
                     <div className="payment-complete-icon">
@@ -82,7 +79,6 @@ function DietPaymentComplete() {
                     </button>
                 </div>
             </div>
-            <BottomNav />
         </>
     );
 }

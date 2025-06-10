@@ -2,8 +2,6 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { Card, Typography, Divider } from 'antd';
 import '../CSS/DietInfoPage.css';
-import Header from '../components/Header';
-import BottomNav from '../components/BottomNav';
 
 
 const { Title, Paragraph } = Typography;
@@ -14,7 +12,6 @@ function DietInfoPage({ style }) {
 
     return (
         <>
-            <Header />
             <div className="DIPcontainer" style={style}>
                 <Card className="DIPlistContainer">
                     <div className="DIPimageContainer">
@@ -51,7 +48,6 @@ function DietInfoPage({ style }) {
                     </div>
                 </Card>
             </div>
-            <BottomNav />
         </>
     );
 }

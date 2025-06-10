@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import Header from "../components/Header";
-import BottomNav from "../components/BottomNav";
 import '../CSS/OrderList.css';
 
 function OrderList() {
@@ -140,7 +138,6 @@ function OrderList() {
 
     return (
         <>
-            <Header />
             <div className="order-detail-container">
                 {payments.map((payment, index) => (
                     <div key={index} className="order-wrapper">
@@ -161,7 +158,6 @@ function OrderList() {
                     </div>
                 ))}
             </div>
-            <BottomNav />
         </>
     );
 }

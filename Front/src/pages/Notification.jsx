@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
-import Header from "../components/Header";
-import BottomNav from "../components/BottomNav";
 import '../CSS/Notification.css';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -98,7 +96,6 @@ function Notification() {
 
     return (
         <>
-            <Header />
             <div className="notification-container">
                 {messages.map((msg) => (
                     <div className="notification-link" key={msg.id}>
@@ -106,7 +103,6 @@ function Notification() {
                     </div>
                 ))}
             </div>
-            <BottomNav />
         </>
     );
 }

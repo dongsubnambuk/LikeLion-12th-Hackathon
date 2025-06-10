@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import '../CSS/Signup.css';
-import Header from '../components/Header';
-import BottomNav from '../components/BottomNav';
 import Modal from "react-modal";
 import DaumPostcode from "react-daum-postcode";
 
@@ -226,7 +224,6 @@ function Signup(){
 
     return(
         <>
-            <Header/>
             <div className="signup_inner">
                 <div className="signup_form_group">
                     <label htmlFor="email">이메일</label>
@@ -372,7 +369,6 @@ function Signup(){
                     회원가입
                 </button>
             </div>
-            <BottomNav/>
         </>
     );
 }
