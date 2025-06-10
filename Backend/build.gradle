@@ -18,6 +18,12 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
+// plain JAR 생성 비활성화
+jar {
+    enabled = false
+    archiveClassifier = ''
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
