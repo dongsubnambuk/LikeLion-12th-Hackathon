@@ -35,7 +35,8 @@
 }
 
 .header-header-center {
-  justify-content: center;
+  justify-content: center;  
+  height: 100%;
 }
 
 .header-header-right {
@@ -69,7 +70,7 @@
 }
 
 .header-logo-image {
-  height: 36px;
+  height: 70%;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
@@ -172,7 +173,7 @@
   }
   
   .header-logo-image {
-    height: 32px;
+    height: 70%;
   }
   
   .header-action-button {

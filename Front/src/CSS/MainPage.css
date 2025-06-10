@@ -123,6 +123,7 @@ body::-webkit-scrollbar {
   line-height: 1.5;
   letter-spacing: -0.3px;
   font-weight: 400;
+  white-space: pre-line;
 }
 
 .main-page-hero-cta-button {
