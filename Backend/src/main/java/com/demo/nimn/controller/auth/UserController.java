@@ -60,7 +60,7 @@ public class UserController {
     public ResponseEntity<?> getUserDetail(@RequestParam String email){
         UserDetails userDetails = userService.getUserDetail(email);
 
-        if (userDetails.getName().equals("정보 없음")) {
+        if (userDetails.getName() == null) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(userDetails);
