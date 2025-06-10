@@ -1,10 +1,11 @@
-package com.demo.nimn.config;
+package com.demo.nimn.config.security;
 
 import com.demo.nimn.filter.JWTFilter;
 import com.demo.nimn.filter.JWTUtil;
 import com.demo.nimn.filter.LoginFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,32 +17,23 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+@Profile("prod")
+public class SecurityConfigProd {
 
-    //AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
-    private final AuthenticationConfiguration authenticationConfiguration;
     //JWTUtil 주입
     private final JWTUtil jwtUtil;
+    //AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
+    private final AuthenticationConfiguration authenticationConfiguration;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil) {
+    public SecurityConfigProd(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
-    }
-
-    //AuthenticationManager Bean 등록
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
-    }
-
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+        AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
 
         //csrf disable
         http
@@ -58,13 +50,9 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/users/login","/", "/users/signup").permitAll() // 해당 경로에 대해 모든 사용자가 접근할 수 있도록 허용. 인증되지 않은 사용자도 접근가능
+                        .requestMatchers("/users/login","/users/isExist", "/users/signup", "/email/**").permitAll() // 해당 경로에 대해 모든 사용자가 접근할 수 있도록 허용. 인증되지 않은 사용자도 접근가능
                         .requestMatchers("/users/hello").hasRole("ADMIN") // ROLE_ADMIN 권한을 가진 사용자만 접근할 수 있도록 설정
                         .anyRequest().authenticated()); // 그 외의 모든 경로는 인증된 사용자라면 접근 가능
-
-//        // 모든 요청을 허용하도록 설정
-//        http.authorizeHttpRequests(auth -> auth
-//                .anyRequest().permitAll());
 
 
         //JWTFilter 등록
@@ -74,7 +62,7 @@ public class SecurityConfig {
         //필터 추가 LoginFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
         //AuthenticationManager()와 JWTUtil 인수 전달
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, "/users/login"), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager, jwtUtil, "/users/login"), UsernamePasswordAuthenticationFilter.class);
 
         //세션 설정
         http
@@ -88,3 +76,4 @@ public class SecurityConfig {
 
 
 }
+
