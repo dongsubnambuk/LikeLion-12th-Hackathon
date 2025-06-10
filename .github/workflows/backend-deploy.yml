@@ -1,6 +1,5 @@
 name: Backend Deploy
 
-# Backend 폴더가 변경될 때 또는 수동 실행
 on:
   push:
     branches: [ develop ]
@@ -55,62 +54,74 @@ jobs:
       working-directory: ./Backend
       run: ./gradlew build -x test
     
-    # SSH 키 설정 및 서버 배포
-    - name: Deploy to server
+    # 배포 스크립트 생성
+    - name: Create deploy script
       run: |
-        # SSH 호스트 키 검증 비활성화
-        mkdir -p ~/.ssh
-        echo "StrictHostKeyChecking no" >> ~/.ssh/config
-        
-        # AWS SSH 키 설정
-        echo "${{ secrets.AWS_SSH_KEY }}" > deploy_key.pem
-        chmod 600 deploy_key.pem
-        
-        # 애플리케이션 배포 스크립트 생성
         cat > deploy.sh << 'EOF'
         #!/bin/bash
+        set -e
         echo "=== Starting Deployment ==="
-
         cd ~/nimn
-
+        
+        # 기존 프로세스 종료
         pkill -f "java -jar" || true
+        
+        # 환경 파일 & JAR 파일 확인
+        [ ! -f nimn.env ] && echo "Error: nimn.env not found" && exit 1
+        JAR_FILE=$(ls *.jar 2>/dev/null | head -1)
+        [ -z "$JAR_FILE" ] && echo "Error: No JAR file found" && exit 1
+        
+        # 애플리케이션 시작
+        echo "Starting $JAR_FILE..."
+        nohup env $(cat nimn.env | xargs) java -jar $JAR_FILE > app.log 2>&1 &
+        
+        # 시작 확인
+        for i in {1..30}; do
+          if pgrep -f "java -jar" > /dev/null; then
+            echo "Application started successfully! PID: $(pgrep -f "java -jar")"
+            echo "=== Deployment Completed ==="
+            exit 0
+          fi
+          sleep 1
+        done
 
-        sleep 3
-
-        if [ -f nimn.env ]; then
-          echo "Environment file found"
-        else
-          echo "Warning: nimn.env not found"
-        fi
-        
-        echo "Available JAR files:"
-        ls -la *.jar
-        
-        echo "Starting new application..."
-        nohup env $(cat nimn.env | xargs) java -jar *.jar > app.log 2>&1 &
-        sleep 5
-        
-        if pgrep -f "java -jar" > /dev/null; then
-          echo "Application started successfully"
-          echo "PID: $(pgrep -f "java -jar")"
-          echo "=== Deployment Completed Successfully ==="
-        else
-          echo "Failed to start application"
-          echo "Application log (last 20 lines):"
-          tail -20 app.log
-          exit 1
-        fi
+        echo "Failed to start application"
+        tail -10 app.log
+        exit 1
         EOF
         
         chmod +x deploy.sh
-        
-        # JAR 파일과 환경 변수 파일 전송
-        scp -i deploy_key.pem Backend/build/libs/*.jar ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_HOST }}:~/nimn/
-        scp -i deploy_key.pem Backend/nimn.env ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_HOST }}:~/nimn/
-        scp -i deploy_key.pem deploy.sh ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_HOST }}:~/nimn/
-        
-        # 배포 스크립트 실행
-        ssh -i deploy_key.pem ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_HOST }} 'cd ~/nimn && ./deploy.sh'
-        
-        # 키 정리
-        rm -f deploy_key.pem deploy.sh
+    
+    # 배포 파일들을 한 곳에 모으기
+    - name: Prepare deployment files
+      run: |
+        mkdir -p deployment
+        cp Backend/build/libs/*.jar deployment/
+        cp Backend/nimn.env deployment/
+        cp deploy.sh deployment/
+    
+    # 파일 전송
+    - name: Copy files to server
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.AWS_HOST }}
+        username: ${{ secrets.AWS_USERNAME }}
+        key: ${{ secrets.AWS_SSH_KEY }}
+        source: "deployment/*"
+        target: ~/nimn/
+        strip_components: 1
+        overwrite: true
+        timeout: 300s
+    
+    # SSH로 배포 스크립트 실행
+    - name: Execute deployment script
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.AWS_HOST }}
+        username: ${{ secrets.AWS_USERNAME }}
+        key: ${{ secrets.AWS_SSH_KEY }}
+        script: |
+          cd ~/nimn
+          chmod +x deploy.sh
+          ./deploy.sh
+        timeout: 300s
