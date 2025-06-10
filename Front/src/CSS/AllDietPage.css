@@ -1,12 +1,27 @@
-.ADPcontainer {
+/* 로딩 컨테이너 */
+.allDietPage_loading_container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+}
+
+/* 전체 컨테이너 */
+.allDietPage_container {
     display: flex;
     justify-content: center;
     width: 100%;
     height: 85vh;
     margin-top: 20px;
+    max-width: 414px;
+    margin: 20px auto 0 auto;
+    position: relative;
 }
 
-.ADPlistContainer {
+/* 리스트 컨테이너 */
+.allDietPage_list_container {
     width: 85%;
     height: 90%;
     max-height: 90%;
@@ -18,37 +33,210 @@
     flex-wrap: wrap;
     gap: 15px;
     overflow-y: auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.ADPlistContainer::-webkit-scrollbar {
+/* 스크롤바 숨김 */
+.allDietPage_list_container::-webkit-scrollbar {
     display: none;
 }
 
-.ADPitemCard {
-    width: calc(50% - 15px); /* 한 줄에 두 개씩 배치 */
-    height: auto; /* 카드 높이를 자동으로 설정 */
+.allDietPage_list_container {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
-.ADPitemImageContainer {
-    width: 100%;
-    height: auto;
-    overflow: hidden; /* 이미지를 카드 안에 맞게 조정 */
+/* 아이템 카드 */
+.allDietPage_item_card {
+    width: calc(50% - 7.5px);
+    height: 280px;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: none;
+    position: relative;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.ADPitemImage {
+.allDietPage_item_card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* 이미지 컨테이너 */
+.allDietPage_item_image_container {
     width: 100%;
-    height: auto;
+    height: 200px;
+    overflow: hidden;
+    background-color: #f8f9fa;
+    position: relative;
+}
+
+.allDietPage_item_image {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease;
 }
 
-.ADPitemMeta {
-    text-align: center;
+.allDietPage_item_card:hover .allDietPage_item_image {
+    transform: scale(1.05);
 }
 
-.ADPitemTitle {
-    font-size: 16px; /* 폰트 크기를 조금 키움 */
-    white-space: normal; /* 텍스트가 줄바꿈 되도록 설정 */
-    overflow: hidden; /* 넘치는 텍스트 숨김 */
-    word-wrap: break-word; /* 긴 단어를 다음 줄로 이동 */
-    word-break: keep-all; /* 공백 단위로 줄바꿈 설정 */
+/* 카테고리 태그 */
+.allDietPage_category_tag {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: white;
+    color: #333;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 아이템 메타 정보 */
+.allDietPage_item_meta {
+    height: 80px;
+    padding: 24px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.allDietPage_item_title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 8px;
+    letter-spacing: -0.4px;
+    line-height: 1.2;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.allDietPage_item_description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 16px;
+    line-height: 1.5;
+    letter-spacing: -0.1px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.allDietPage_item_nutrition {
+    display: flex;
+    gap: 12px;
+}
+
+.allDietPage_calories,
+.allDietPage_protein {
+    background: rgba(157, 146, 116, 0.1);
+    color: #9d9274;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: -0.1px;
+}
+
+/* 빈 카드 (레이아웃 유지용) */
+.allDietPage_empty_card {
+    width: calc(50% - 7.5px);
+    height: 280px;
+    visibility: hidden;
+}
+
+/* 슬라이드 컨트롤 컨테이너 */
+.allDietPage_slide_controls {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 8px 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 슬라이드 네비게이션 버튼 */
+.allDietPage_nav_button {
+    background: transparent;
+    color: #666;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+.allDietPage_nav_button:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #333;
+}
+
+.allDietPage_nav_button:disabled {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+/* 페이지 인디케이터 */
+.allDietPage_indicators {
+    display: flex;
+    gap: 6px;
+}
+
+.allDietPage_indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ddd;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.allDietPage_indicator:hover {
+    background: #999;
+}
+
+.allDietPage_indicator.active {
+    background: #333;
+    width: 18px;
+    border-radius: 3px;
+}
+
+/* Ant Design Card 스타일 오버라이드 */
+.allDietPage_item_card .ant-card-body {
+    padding: 0;
+    height: 80px;
+}
+
+.allDietPage_item_card .ant-card-meta-title {
+    margin-bottom: 2px;
+    font-size: 14px;
+}
+
+.allDietPage_item_card .ant-card-meta-description {
+    font-size: 12px;
+    margin-bottom: 0;
 }
