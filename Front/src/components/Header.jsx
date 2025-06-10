@@ -2,123 +2,88 @@ import React, { useState, useEffect } from "react";
 import '../CSS/Header.css';
 import logo from '../images/logo.png';
 import { useNavigate, useLocation } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell, faFileLines } from '@fortawesome/free-regular-svg-icons';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import SockJS from 'sockjs-client';
-import { Stomp } from '@stomp/stompjs';
 
 const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userName, setUserName] = useState('');
     const [notificationCount, setNotificationCount] = useState(0);
-    const [surveyCount, setSurveyCount] = useState(0); // 설문조사 카운트 추가
+    const [surveyCount, setSurveyCount] = useState(0);
     const navigate = useNavigate();
     const location = useLocation();
-    const email = localStorage.getItem("email");
 
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (user) {
+        // 기존 로컬스토리지 기반 로그인 상태 확인
+        const storedIsLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+        if (storedIsLoggedIn) {
             setIsLoggedIn(true);
-            setUserName(user.name);
+            setUserName("김영희"); // 샘플 데이터
+            
+            // 샘플 알림 데이터 (로그인된 사용자만)
+            setNotificationCount(3);
+            setSurveyCount(1);
         }
 
-        const handleGetUser = async () => {
-            const token = localStorage.getItem("token");
-            const email = localStorage.getItem("email");
-
-            if (token && email) {
-                try {
-                    const response = await fetch(`http://3.37.64.39:8000/api/users?email=${email}`, {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": token,
-                        }
-                    });
-
-                    const result = await response.json();
-
-                    if (response.status === 200) {
-                        setUserName(result.name);
-                        setIsLoggedIn(true);
-                    } else {
-                        console.log("로그인 실패: ", result.message);
-                        alert("로그인 실패: " + result.message);
-                    }
-                } catch (error) {
-                    console.error("Fetch error: ", error);
+        // TODO: 백엔드 구축 후 활성화할 API 호출 코드
+        /*
+        const checkLoginStatus = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    setIsLoggedIn(false);
+                    return;
                 }
+
+                const response = await fetch('/api/auth/verify', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    setIsLoggedIn(true);
+                    setUserName(userData.name);
+                    
+                    // 알림 및 설문 수 가져오기
+                    await fetchNotificationCounts();
+                } else {
+                    // 토큰이 유효하지 않은 경우
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("isLoggedIn");
+                    setIsLoggedIn(false);
+                }
+            } catch (error) {
+                console.error('로그인 상태 확인 실패:', error);
+                setIsLoggedIn(false);
             }
         };
 
-        handleGetUser();
+        const fetchNotificationCounts = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                const response = await fetch('/api/notifications/count', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
 
-        // Load notifications from local storage
-        const savedNotifications = JSON.parse(localStorage.getItem(`messages_${email}`)) || [];
-        setNotificationCount(savedNotifications.length);
+                if (response.ok) {
+                    const data = await response.json();
+                    setNotificationCount(data.notificationCount || 0);
+                    setSurveyCount(data.surveyCount || 0);
+                }
+            } catch (error) {
+                console.error('알림 수 가져오기 실패:', error);
+            }
+        };
 
-        // Load surveys from local storage
-        const savedSurveys = JSON.parse(localStorage.getItem(`surveys_${email}`)) || [];
-        setSurveyCount(savedSurveys.length);
+        checkLoginStatus();
+        */
     }, []);
-
-    useEffect(() => {
-        if (!email) return;
-
-        const socket = new SockJS('http://nutrihub.kro.kr:14000/ws');
-        const client = Stomp.over(socket);
-
-        client.connect({}, () => {
-            console.log("Connected to WebSocket");
-
-            const dietSubscription = client.subscribe(`/topic/notification/diet/${email}`, message => {
-                addNotification(message.body);
-            });
-
-            const paymentSubscription = client.subscribe(`/topic/notification/payment/${email}`, message => {
-                addNotification(message.body);
-            });
-
-            const surveySubscription = client.subscribe(`/topic/survey/${email}`, message => {
-                addSurvey(message.body);
-            });
-
-            return () => {
-                dietSubscription.unsubscribe();
-                paymentSubscription.unsubscribe();
-                surveySubscription.unsubscribe();
-                client.disconnect(() => {
-                    console.log('Disconnected');
-                });
-            };
-        }, error => {
-            console.error('Connection error: ', error);
-        });
-
-        return () => {
-            if (client && client.connected) {
-                client.disconnect(() => {
-                    console.log('Disconnected');
-                });
-            }
-        };
-    }, [email]);
-
-    const addNotification = (message) => {
-        const savedMessages = JSON.parse(localStorage.getItem(`messages_${email}`)) || [];
-        const newMessages = [...savedMessages, JSON.parse(message)];
-        localStorage.setItem(`messages_${email}`, JSON.stringify(newMessages));
-        setNotificationCount(newMessages.length);
-    };
-
-    const addSurvey = (message) => {
-        const savedSurveys = JSON.parse(localStorage.getItem(`surveys_${email}`)) || [];
-        const newSurveys = [...savedSurveys, JSON.parse(message)];
-        localStorage.setItem(`surveys_${email}`, JSON.stringify(newSurveys));
-        setSurveyCount(newSurveys.length);
-    };
 
     const handleLoginClick = () => {
         navigate('/login');
@@ -156,70 +121,85 @@ const Header = () => {
                 return '1주 전체 식단';
             case '/survey':
                 return '설문조사';
-            case '/survey-detail':
-                return '설문조사';
             case '/notification':
                 return '알림';
             case '/dietselection':
                 return '식단 선택';
             case '/menuselection':
                 return '메뉴 선택';
-            case '/dietpaymentmain':
-                return '식단 결제';
             case '/dietpayment':
                 return '식단 결제';
             case '/admin':
                 return '관리자 페이지';
-            case '/dietpaymentverification':
-                return '식단 결제';
-            case '/dietpaymentcomplete':
-                return '결제 완료'
             default:
-                return 'Main Page';
+                return 'NutriHub';
         }
     };
 
     const isMainPage = location.pathname === '/';
-    const isVerificationPage = location.pathname === '/dietpaymentverification';
 
     return (
-        <header>
-            <div className="contents">
+        <header className="header-header">
+            <div className="header-header-container">
                 {!isMainPage && (
-                    <div className="otherPageHeader">
-                        {!isVerificationPage && (
-                            <FontAwesomeIcon icon={faArrowLeft} onClick={handleBackClick} className="faArrowLeft" style={{ cursor: 'pointer' }} />
-                        )}
-                        <span className="pageTitle" style={{ fontSize: 20, fontWeight: 600 }}>{getPageTitle()}</span>
+                    <div className="header-other-page-header">
+                        <button 
+                            className="header-back-button"
+                            onClick={handleBackClick}
+                            aria-label="뒤로가기"
+                        >
+                            ← 뒤로
+                        </button>
+                        <h1 className="header-page-title">{getPageTitle()}</h1>
                     </div>
                 )}
                 {isMainPage && (
                     <>
-                        <div className="header_contents">
+                        <div className="header-header-left">
                             {isLoggedIn ? (
-                                <span>{userName}님</span>
+                                <span className="header-user-greeting">{userName}님</span>
                             ) : (
-                                <span onClick={handleLoginClick} className="Login-btn">로그인</span>
+                                <button 
+                                    className="header-login-button"
+                                    onClick={handleLoginClick}
+                                >
+                                    로그인
+                                </button>
                             )}
                         </div>
-                        <div className="header_contents">
-                            <img src={logo} className="logoImage" alt="logo" />
+                        <div className="header-header-center">
+                            <img 
+                                src={logo} 
+                                className="header-logo-image" 
+                                alt="NutriHub" 
+                                onClick={() => navigate('/')}
+                            />
                         </div>
-                        <div className="header_contents">
-                            <ul>
-                                <li style={{ position: 'relative' }}>
-                                    <FontAwesomeIcon icon={faBell} size="2x" onClick={() => navigate('/notification')} />
-                                    {notificationCount > 0 && (
-                                        <span className="notification-badge">{notificationCount}</span>
-                                    )}
-                                </li>
-                                <li style={{ position: 'relative' }}>
-                                    <FontAwesomeIcon icon={faFileLines} size="2x" onClick={() => navigate('/survey')} />
-                                    {surveyCount > 0 && (
-                                        <span className="notification-badge">{surveyCount}</span>
-                                    )}
-                                </li>
-                            </ul>
+                        <div className="header-header-right">
+                            {isLoggedIn && (
+                                <div className="header-header-actions">
+                                    <button 
+                                        className="header-action-button"
+                                        onClick={() => handleIconClick('/notification')}
+                                        aria-label="알림"
+                                    >
+                                        알림
+                                        {notificationCount > 0 && (
+                                            <span className="header-notification-badge">{notificationCount}</span>
+                                        )}
+                                    </button>
+                                    <button 
+                                        className="header-action-button"
+                                        onClick={() => handleIconClick('/survey')}
+                                        aria-label="설문조사"
+                                    >
+                                        설문
+                                        {surveyCount > 0 && (
+                                            <span className="header-notification-badge">{surveyCount}</span>
+                                        )}
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </>
                 )}

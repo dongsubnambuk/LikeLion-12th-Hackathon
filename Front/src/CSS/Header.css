@@ -1,65 +1,186 @@
-.contents {
-    display: flex;
-    max-width: 390px;
+.header-header {
+  position: fixed; /* sticky에서 fixed로 변경 */
+  top: 0;
+  left: 0; /* 추가 */
+  right: 0; /* 추가 */
+  width: 100%; /* 추가 */
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.header-header-container {
+  display: flex;
+  max-width: 390px;
+  height: 64px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+/* Main Page Header */
+.header-header-left,
+.header-header-center,
+.header-header-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.header-header-left {
+  justify-content: flex-start;
+}
+
+.header-header-center {
+  justify-content: center;
+}
+
+.header-header-right {
+  justify-content: flex-end;
+}
+
+.header-user-greeting {
+  font-size: 15px;
+  font-weight: 600;
+  color: #9d9274; /* #9d9274 */
+  letter-spacing: -0.3px;
+}
+
+.header-login-button {
+  background: none;
+  border: 1.5px solid #9d9274; /* #9d9274 */
+  color: #9d9274; /* #9d9274 */
+  padding: 8px 18px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: -0.2px;
+}
+
+.header-login-button:hover {
+  background: #9d9274; /* #9d9274 */
+  color: white;
+  transform: translateY(-1px);
+}
+
+.header-logo-image {
+  height: 36px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.header-logo-image:hover {
+  transform: scale(1.05);
+}
+
+.header-header-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.header-action-button {
+  position: relative;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  letter-spacing: -0.2px;
+}
+
+.header-action-button:hover {
+  background: rgba(157, 146, 116, 0.08); /* #9d9274 기반 */
+  color: #9d9274; /* #9d9274 */
+}
+
+.header-notification-badge {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  background: #ff4757;
+  color: white;
+  border-radius: 50%;
+  min-width: 16px;
+  height: 16px;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(255, 71, 87, 0.4);
+}
+
+/* Other Page Header */
+.header-other-page-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.header-back-button {
+  position: absolute;
+  left: 0;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 0;
+  transition: all 0.3s ease;
+  letter-spacing: -0.2px;
+}
+
+.header-back-button:hover {
+  color: #9d9274; /* #9d9274 */
+}
+
+.header-page-title {
+  flex: 1;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  letter-spacing: -0.4px;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .header-header-container {
+    padding: 0 16px;
     height: 60px;
-    margin: 0 auto;
-    align-items: center;
-    justify-content: space-around;
-    box-shadow: 0 3px 3px rgba(0,0,0,0.1);
-}
-
-.header_contents {
-    width: 33%;
-    display: flex;
-    justify-content: center;
-    cursor: pointer;
-}
-
-.header_contents ul {
-    display: flex;
-    list-style: none;
-}
-
-.header_contents li + li {
-    margin-left: 30px;
-}
-
-.logoImage {
-    width: 45%;
-    cursor: pointer;
-}
-
-.Login-btn {
-    cursor: pointer;
-}
-
-.otherPageHeader {
-    width: 100%;
-    height: 60px;
-    padding: 0 5%;
-    display: flex;
-    align-items: center;
-    position: relative;
-}
-
-.otherPageHeader .faArrowLeft {
-    position: absolute;
-    left: 5%;
-}
-
-.pageTitle {
-    margin: 0 auto;
-    text-align: center;
-    flex-grow: 1;
-}
-.notification-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: red;
-    color: white;
-    border-radius: 50%;
-    padding: 5px;
-    font-size: 12px;
   }
   
+  .header-user-greeting {
+    font-size: 14px;
+  }
+  
+  .header-login-button {
+    padding: 6px 14px;
+    font-size: 13px;
+  }
+  
+  .header-logo-image {
+    height: 32px;
+  }
+  
+  .header-action-button {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+  
+  .header-page-title {
+    font-size: 16px;
+  }
+}
