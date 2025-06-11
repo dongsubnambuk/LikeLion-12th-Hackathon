@@ -22,13 +22,13 @@ import java.time.LocalDateTime;
 public class Order {
     @Id
     private String orderId;
-    @Column
+
     private String purchaser;
-    @Column
+
     private Long totalPrice;
-    @Column
+
     private Long weeklyId;
-    @Column
+
     private LocalDateTime dateTime;
 
     public void updateDateTime(LocalDateTime dateTime){

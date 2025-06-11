@@ -17,12 +17,20 @@ public class ExternalDietInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String email;
+
     private String breakfast;
+
     private String lunch;
+
     private String dinner;
+
     private boolean processedBreakfast;
+
     private boolean processedLunch;
+
     private boolean processedDinner;
+
     private String date;
 }

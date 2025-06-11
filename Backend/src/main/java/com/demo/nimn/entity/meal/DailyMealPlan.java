@@ -17,17 +17,16 @@ import java.util.List;
 @AllArgsConstructor
 public class DailyMealPlan {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long dailyMealPlanId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column
     private LocalDate day;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "daily_meal_plan_meal_option",
+            name = "t_daily_meal_plan_meal_option",
             joinColumns = @JoinColumn(name = "daily_meal_plan_id"),
-            inverseJoinColumns = @JoinColumn(name = "meal_option_id")
+            inverseJoinColumns = @JoinColumn(name = "meal_option_id", referencedColumnName = "id")
     )
     private List<MealOption> mealOptions;
 }

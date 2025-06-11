@@ -19,10 +19,15 @@ import java.time.LocalDateTime;
 public class Payment {
     @Id
     private String paymentId;
+
     private String paymentUid;
+
     private String purchaser;
+
     private Long totalPrice;
+
     private Long weeklyId;
+
     private LocalDateTime dateTime;
 
     public void updateDateTime(LocalDateTime dateTime) {

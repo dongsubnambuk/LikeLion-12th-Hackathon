@@ -17,18 +17,19 @@ import java.util.List;
 @AllArgsConstructor
 public class Review {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long reviewId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @OneToOne
-    @JoinColumn(name = "food_menu_id", referencedColumnName = "foodMenuId")
+    @JoinColumn(name = "food_menu_id", referencedColumnName = "id")
     private FoodMenu foodMenu;
-    @Column
+
     private Long likes;
-    @Column
+
     private Long disLikes;
 
     @ElementCollection
-    @CollectionTable(name = "review_comments", joinColumns = @JoinColumn(name = "review_id"))
+    @CollectionTable(name = "t_review_comment", joinColumns = @JoinColumn)
     @Column(name = "comment")
     private List<String> comment;
 

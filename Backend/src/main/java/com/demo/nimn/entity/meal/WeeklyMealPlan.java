@@ -17,13 +17,14 @@ import java.util.List;
 @AllArgsConstructor
 public class WeeklyMealPlan {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    Long weeklyMealPlanId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "weekly_meal_plan_id")
+    @JoinColumn
     private List<DailyMealPlan> dailyMealPlans;
-    @Column
+
     private LocalDate startDate;
-    @Column
+
     private LocalDate endDate;
 }

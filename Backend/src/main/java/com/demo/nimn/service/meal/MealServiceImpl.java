@@ -154,8 +154,8 @@ public class MealServiceImpl implements MealService {
         random = new Random();
         List<FoodMenu> foodMenus = mealDAO.findAll();
         for (FoodMenu foodMenu : foodMenus) {
-            menuFrequency.put(foodMenu.getFoodMenuId(), 0);
-            weights.put(foodMenu.getFoodMenuId(), 1.0);
+            menuFrequency.put(foodMenu.getId(), 0);
+            weights.put(foodMenu.getId(), 1.0);
         }
     }
 
@@ -174,9 +174,9 @@ public class MealServiceImpl implements MealService {
         for (int i = 0; i < count; i++) {
             FoodMenu foodMenu = selectUniqueMenu(foodMenus, usedMenuIds);
             selectedFoodMenus.add(foodMenu);
-            menuFrequency.put(foodMenu.getFoodMenuId(), menuFrequency.get(foodMenu.getFoodMenuId()) + 1);
+            menuFrequency.put(foodMenu.getId(), menuFrequency.get(foodMenu.getId()) + 1);
             updateWeights();
-            usedMenuIds.add(foodMenu.getFoodMenuId());
+            usedMenuIds.add(foodMenu.getId());
         }
 
         return selectedFoodMenus;
@@ -185,7 +185,7 @@ public class MealServiceImpl implements MealService {
     public FoodMenu selectUniqueMenu(List<FoodMenu> foodMenus, Set<Long> usedMenuIds) {
         // 중복되지 않은 메뉴만 필터링합니다.
         List<FoodMenu> availableMenus = foodMenus.stream()
-                .filter(menu -> !usedMenuIds.contains(menu.getFoodMenuId()))
+                .filter(menu -> !usedMenuIds.contains(menu.getId()))
                 .collect(Collectors.toList());
 
         if (availableMenus.isEmpty()) {
@@ -194,7 +194,7 @@ public class MealServiceImpl implements MealService {
 
         // 가중치 총합 계산
         double totalWeight = availableMenus.stream()
-                .mapToDouble(menu -> weights.get(menu.getFoodMenuId()))
+                .mapToDouble(menu -> weights.get(menu.getId()))
                 .sum();
 
         if (totalWeight <= 0) {
@@ -206,7 +206,7 @@ public class MealServiceImpl implements MealService {
 
         // 가중치 기반 메뉴 선택
         for (FoodMenu foodMenu : availableMenus) {
-            randomValue -= weights.get(foodMenu.getFoodMenuId());
+            randomValue -= weights.get(foodMenu.getId());
             if (randomValue <= 0) {
                 return foodMenu;
             }
@@ -247,7 +247,7 @@ public class MealServiceImpl implements MealService {
 
     public FoodMenuDTO toFoodMenuDTO(FoodMenu foodMenu){
         return FoodMenuDTO.builder()
-                .id(foodMenu.getFoodMenuId())
+                .id(foodMenu.getId())
                 .name(foodMenu.getName())
                 .image(foodMenu.getImage())
                 .price(foodMenu.getPrice())

@@ -13,11 +13,11 @@ public class DietNotification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "email")
+
     private String email;
-    @Column
+
     private String notificationContent;
-    @Column
+
     private LocalDateTime notificationTime;
 
     @Builder
@@ -26,5 +26,4 @@ public class DietNotification {
         this.notificationContent = notificationContent;
         this.notificationTime = notificationTime;
     }
-
 }

@@ -17,21 +17,22 @@ import java.util.List;
 @AllArgsConstructor
 public class DailyReview {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long dailyReviewId;
-    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String userEmail;
-    @Column
+
     private LocalDate reviewDate;
+
 //    @OneToMany
 //    @JoinColumn
 //    private List<Review> reviews;
 
     @ManyToMany
     @JoinTable(
-            name = "daily_review_review",
+            name = "t_daily_review_review",
             joinColumns = @JoinColumn(name = "daily_review_id"),
-            inverseJoinColumns = @JoinColumn(name = "review_id")
+            inverseJoinColumns = @JoinColumn(name = "review_id", referencedColumnName = "id")
     )
     private List<Review> reviews;
 }

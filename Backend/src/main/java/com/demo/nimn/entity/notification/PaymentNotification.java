@@ -17,12 +17,9 @@ public class PaymentNotification {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column
     private String email;
 
-    @Column
     private String notificationContent;
 
-    @Column
     private LocalDateTime notificationTime;
 }

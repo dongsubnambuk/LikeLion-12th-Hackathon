@@ -15,12 +15,14 @@ import java.util.List;
 @Builder
 public class DailyDiet {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long dailyDietId;
-    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private LocalDate date;
-    @Column
+
+    @Column(length = 30)
     private String userEmail;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn
     private List<MealSelection> mealSelections;

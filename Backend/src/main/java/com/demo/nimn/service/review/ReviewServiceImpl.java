@@ -76,7 +76,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     public ReviewDTO toReviewDTO(Review review){
         return ReviewDTO.builder()
-                .reviewId(review.getReviewId())
+                .reviewId(review.getId())
                 .foodImage(review.getFoodMenu().getImage())
                 .foodName(review.getFoodMenu().getName())
                 .likes(review.getLikes())
@@ -95,7 +95,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     public DailyReviewDTO toDailyReviewDTO(DailyReview dailyReview){
         return DailyReviewDTO.builder()
-                .dailyReviewId(dailyReview.getDailyReviewId())
+                .dailyReviewId(dailyReview.getId())
                 .userEmail(dailyReview.getUserEmail())
                 .reviewDate(dailyReview.getReviewDate())
                 .reviews(reviewDTOS(dailyReview.getReviews()))

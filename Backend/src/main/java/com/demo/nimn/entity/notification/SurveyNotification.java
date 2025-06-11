@@ -22,9 +22,13 @@ public class SurveyNotification {
     private Long id;
 
     private String email;
+
     private String notificationContent;
+
     private LocalDateTime notificationTime;
+
     private Long dailyReviewId;
+
     private LocalDate reviewDate;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

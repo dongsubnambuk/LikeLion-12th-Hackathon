@@ -17,11 +17,11 @@ public class ExternalPaymentInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+
     private String email;
-    @Column
+
     private boolean processed = false;
-    @Column
+
     private LocalDate date;
 
     @Builder

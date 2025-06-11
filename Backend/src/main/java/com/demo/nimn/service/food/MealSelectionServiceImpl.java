@@ -40,7 +40,7 @@ public class MealSelectionServiceImpl implements MealSelectionService {
 
     public MealSelectionDTO convertToMealSelectionDTO(MealSelection mealSelection) {
         return MealSelectionDTO.builder()
-                .mealSelectionId(mealSelection.getMealSelectionId())
+                .mealSelectionId(mealSelection.getId())
                 .userEmail(mealSelection.getUserEmail())
                 .foodMenu(communicationService.getFoodMenu(mealSelection.getFoodMenuId()))
                 .mealTime(mealSelection.getMealTime())
