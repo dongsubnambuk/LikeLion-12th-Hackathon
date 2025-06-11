@@ -18,28 +18,7 @@ function AllDietPage() {
     const [mealData, setMealData] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const animatePageTransition = (direction, callback) => {
-        if (isAnimating) return;
-        
-        setIsAnimating(true);
-        
-        const outClass = direction === 'next' ? 'slide-out-left' : 'slide-out-right';
-        setAnimationClass(outClass);
-        
-        setTimeout(() => {
-            callback();
-            const inClass = direction === 'next' ? 'slide-in-right' : 'slide-in-left';
-            setAnimationClass(inClass);
-            
-            setTimeout(() => {
-                setAnimationClass('slide-in-center');
-                setTimeout(() => {
-                    setAnimationClass('');
-                    setIsAnimating(false);
-                }, 500);
-            }, 50);
-        }, 250);
-    };
+
 
     // 예시 데이터
     const mockData = [
@@ -258,12 +237,7 @@ function AllDietPage() {
                         </div>
                     ))}
                     
-                    {/* 빈 공간 채우기 (8개 미만일 때) */}
-                    {getCurrentPageItems().length < 8 && 
-                        Array.from({ length: 8 - getCurrentPageItems().length }, (_, index) => (
-                            <div key={`empty-${index}`} className="allDietPage_empty_card"></div>
-                        ))
-                    }
+                
                 </div>
 
                 
