@@ -1,5 +1,6 @@
 package com.demo.nimn.entity.meal;
 
+import com.demo.nimn.entity.review.Review;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,4 +37,7 @@ public class FoodMenu {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn
     private NutritionFact nutritionFact;
+
+    @OneToOne(mappedBy = "foodMenu", cascade = CascadeType.ALL)
+    private Review review;
 }

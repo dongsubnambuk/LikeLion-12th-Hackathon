@@ -31,8 +31,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void createReview(FoodMenu foodMenu){
-        Review review = toReviewEntity(foodMenu);
-        reviewDAO.createReview(review);
+        // TODO-jh: Food 생성할 때 Review도 같이 생성해서 저장 로직 추가, Cascade 속성 사용 중
     }
 
     @Override
@@ -81,7 +80,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .foodName(review.getFoodMenu().getName())
                 .likes(review.getLikes())
                 .disLikes(review.getDisLikes())
-                .comment(review.getComment())
+                .comment(review.getComments())
                 .build();
     }
 
@@ -113,8 +112,6 @@ public class ReviewServiceImpl implements ReviewService {
     public Review toReviewEntity(FoodMenu foodMenu){
         return Review.builder()
                 .foodMenu(foodMenu)
-                .likes(Long.valueOf(0))
-                .disLikes(Long.valueOf(0))
                 .build();
     }
 
