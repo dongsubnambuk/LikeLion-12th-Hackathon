@@ -1,6 +1,6 @@
 package com.demo.nimn.dao.payment;
 
-import com.demo.nimn.entity.payment.PaymentEntity;
+import com.demo.nimn.entity.payment.Payment;
 import com.demo.nimn.repository.payment.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -18,18 +18,18 @@ public class PaymentDAOImpl implements PaymentDAO{
     }
 
     @Override
-    public void createPayment(PaymentEntity paymentEntity) {
-        paymentEntity.updateDateTime(LocalDateTime.now());
-        paymentRepository.save(paymentEntity);
+    public void createPayment(Payment payment) {
+        payment.updateDateTime(LocalDateTime.now());
+        paymentRepository.save(payment);
     }
 
     @Override
-    public List<PaymentEntity> readPaymentByPurchaser(String purchaser) {
+    public List<Payment> readPaymentByPurchaser(String purchaser) {
         return paymentRepository.findByPurchaser(purchaser);
     }
 
     @Override
-    public PaymentEntity readPaymentById(String paymentId) {
+    public Payment readPaymentById(String paymentId) {
         return paymentRepository.getReferenceById(paymentId);
     }
 

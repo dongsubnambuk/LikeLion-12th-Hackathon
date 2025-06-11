@@ -3,6 +3,7 @@ package com.demo.nimn.entity.payment;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,11 +14,12 @@ import java.time.LocalDateTime;
 
 
 @Entity
+@Table(name="t_order")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class OrderEntity {
+public class Order {
     @Id
     private String orderId;
     @Column
@@ -43,10 +45,10 @@ public class OrderEntity {
         return sb.toString();
     }
 
-    public static OrderEntity.OrderEntityBuilder builder() {
-        return new OrderEntity.OrderEntityBuilder() {
+    public static Order.OrderBuilder builder() {
+        return new Order.OrderBuilder() {
             @Override
-            public OrderEntity build() {
+            public Order build() {
                 if (super.orderId == null) {
                     super.orderId = generateRandomOrderId();
                 }

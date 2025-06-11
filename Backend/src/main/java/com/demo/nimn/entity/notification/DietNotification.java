@@ -4,12 +4,12 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "diet_notification")
+@Table(name = "t_diet_notification")
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
-public class DietNotificationEntity {
+public class DietNotification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,7 +21,7 @@ public class DietNotificationEntity {
     private LocalDateTime notificationTime;
 
     @Builder
-    public DietNotificationEntity(String email, String notificationContent, LocalDateTime notificationTime){
+    public DietNotification(String email, String notificationContent, LocalDateTime notificationTime){
         this.email = email;
         this.notificationContent = notificationContent;
         this.notificationTime = notificationTime;

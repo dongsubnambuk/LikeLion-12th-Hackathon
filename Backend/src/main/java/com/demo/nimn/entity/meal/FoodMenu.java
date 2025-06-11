@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "t_food_menu")
 @Data
 @Builder
 @NoArgsConstructor
@@ -33,5 +34,5 @@ public class FoodMenu {
     private String side3;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn
-    private NutritionFacts nutritionFacts;
+    private NutritionFact nutritionFact;
 }

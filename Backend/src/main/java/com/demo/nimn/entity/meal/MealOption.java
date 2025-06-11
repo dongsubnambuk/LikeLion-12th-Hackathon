@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
+@Table(name = "t_meal_option")
 @Builder
 @Data
 @NoArgsConstructor

@@ -1,5 +1,6 @@
 package com.demo.nimn.entity.notification;
 
+import com.demo.nimn.entity.review.Review;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,14 +9,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "survey_notification")
+@Table(name = "t_survey_notification")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @ToString
-public class SurveyNotificationEntity {
+public class SurveyNotification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,5 +29,5 @@ public class SurveyNotificationEntity {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "survey_notification_id")
-    private List<ReviewEntity> reviews;
+    private List<Review> reviews;
 }

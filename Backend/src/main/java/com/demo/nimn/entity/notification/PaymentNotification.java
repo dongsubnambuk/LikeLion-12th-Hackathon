@@ -6,13 +6,13 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "payment_notification")
+@Table(name = "t_payment_notification")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PaymentNotificationEntity {
+public class PaymentNotification {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

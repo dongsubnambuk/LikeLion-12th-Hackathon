@@ -256,12 +256,12 @@ public class MealServiceImpl implements MealService {
                 .side1(foodMenu.getSide1())
                 .side2(foodMenu.getSide2())
                 .side3(foodMenu.getSide3())
-                .calories(foodMenu.getNutritionFacts().getCalories())
-                .carbohydrate(foodMenu.getNutritionFacts().getCarbohydrate())
-                .protein(foodMenu.getNutritionFacts().getProtein())
-                .fat(foodMenu.getNutritionFacts().getFat())
-                .sugar(foodMenu.getNutritionFacts().getSugar())
-                .sodium(foodMenu.getNutritionFacts().getSodium())
+                .calories(foodMenu.getNutritionFact().getCalories())
+                .carbohydrate(foodMenu.getNutritionFact().getCarbohydrate())
+                .protein(foodMenu.getNutritionFact().getProtein())
+                .fat(foodMenu.getNutritionFact().getFat())
+                .sugar(foodMenu.getNutritionFact().getSugar())
+                .sodium(foodMenu.getNutritionFact().getSodium())
                 .build();
     }
 
@@ -290,7 +290,7 @@ public class MealServiceImpl implements MealService {
         Pattern sodiumPattern = Pattern.compile("나트륨: (.+)mg");
 
 
-        NutritionFacts nutritionFacts = NutritionFacts.builder()
+        NutritionFact nutritionFact = NutritionFact.builder()
                 .calories(getMatchedValue(caloriesPattern, input) + "kcal")
                 .carbohydrate(getMatchedValue(carbohydratePattern, input) + "g")
                 .protein(getMatchedValue(proteinPattern, input) + "g")
@@ -308,7 +308,7 @@ public class MealServiceImpl implements MealService {
                 .side1(getMatchedValue(side1Pattern, input))
                 .side2(getMatchedValue(side2Pattern, input))
                 .side3(getMatchedValue(side3Pattern, input))
-                .nutritionFacts(nutritionFacts)
+                .nutritionFact(nutritionFact)
                 .build();
 
         return foodMenu;

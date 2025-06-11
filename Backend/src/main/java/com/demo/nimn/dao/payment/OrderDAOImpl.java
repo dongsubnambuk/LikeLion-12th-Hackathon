@@ -1,6 +1,6 @@
 package com.demo.nimn.dao.payment;
 
-import com.demo.nimn.entity.payment.OrderEntity;
+import com.demo.nimn.entity.payment.Order;
 import com.demo.nimn.repository.payment.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,21 +19,21 @@ public class OrderDAOImpl implements OrderDAO{
     }
 
     @Override
-    public void createOrder(OrderEntity orderEntity) {
+    public void createOrder(Order order) {
         Map<String, Object> result = new HashMap<>();
 
-        orderEntity.updateDateTime(LocalDateTime.now());
+        order.updateDateTime(LocalDateTime.now());
 
-        orderRepository.save(orderEntity);
+        orderRepository.save(order);
     }
 
     @Override
-    public OrderEntity readOrder(String orderId) {
+    public Order readOrder(String orderId) {
         return orderRepository.getReferenceById(orderId);
     }
 
     @Override
-    public void deleteOrder(OrderEntity orderEntity){
-        orderRepository.delete(orderEntity);
+    public void deleteOrder(Order order){
+        orderRepository.delete(order);
     }
 }

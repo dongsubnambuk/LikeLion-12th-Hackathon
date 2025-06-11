@@ -1,9 +1,9 @@
 package com.demo.nimn.dao.payment;
 
-import com.demo.nimn.entity.payment.OrderEntity;
+import com.demo.nimn.entity.payment.Order;
 
 public interface OrderDAO {
-    public void createOrder(OrderEntity orderEntity);
-    public OrderEntity readOrder(String orderId);
-    public void deleteOrder(OrderEntity orderEntity);
+    public void createOrder(Order order);
+    public Order readOrder(String orderId);
+    public void deleteOrder(Order order);
 }

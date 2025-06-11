@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "meal_selection")
+@Table(name = "t_meal_selection")
 @Getter
 @Setter
 @NoArgsConstructor

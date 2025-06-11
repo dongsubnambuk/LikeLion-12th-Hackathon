@@ -19,7 +19,6 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -50,32 +49,32 @@ public class PaymentServiceImpl implements PaymentService {
             // 결제 단건 조회(아임포트)
             IamportResponse<com.siot.IamportRestClient.response.Payment> iamportResponse = iamportClient.paymentByImpUid(request.getPaymentUid());
             // 주문내역 조회
-            OrderEntity orderEntity = orderService.findByOrderId(request.getOrderId());
+            Order order = orderService.findByOrderId(request.getOrderId());
 
             // 결제 완료가 아니면
             if (!iamportResponse.getResponse().getStatus().equals("paid")) {
                 // 주문, 결제 삭제
-                orderService.deleteOrder(orderEntity);
+                orderService.deleteOrder(order);
                 logger.info("결제 미완료: {}", request.getPaymentUid());
                 throw new RuntimeException("결제 미완료");
             }
 
             // DB에 저장된 결제 금액
-            Long price = orderEntity.getTotalPrice();
+            Long price = order.getTotalPrice();
             // 실 결제 금액
             int iamportPrice = iamportResponse.getResponse().getAmount().intValue();
 
             // 결제 금액 검증
             if (iamportPrice != price) {
                 // 주문 삭제
-                orderService.deleteOrder(orderEntity);
+                orderService.deleteOrder(order);
                 // 결제금액 위변조로 의심되는 결제금액을 취소(아임포트)
                 iamportClient.cancelPaymentByImpUid(new CancelData(iamportResponse.getResponse().getImpUid(), true, new BigDecimal(iamportPrice)));
                 logger.info("결제금액 위변조 의심: {}", request.getPaymentUid());
                 throw new RuntimeException("결제금액 위변조 의심");
             }
 
-            return createPayment(orderEntity, request.getPaymentUid());
+            return createPayment(order, request.getPaymentUid());
         } catch (IamportResponseException e) {
             logger.error("아임포트 응답 처리 중 오류 발생: {}", e.getMessage());
             throw new RuntimeException(e);
@@ -86,26 +85,26 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentResponseDTO createPayment(OrderEntity orderEntity, String paymentUid) {
+    public PaymentResponseDTO createPayment(Order order, String paymentUid) {
         if(paymentDAO.existsByPaymentUid(paymentUid)){
             return new PaymentResponseDTO("이미 결제가 완료되었습니다.", null);
         }
 
-        PaymentEntity paymentEntity = toPayment(orderEntity, paymentUid);
-        paymentDAO.createPayment(paymentEntity);
+        Payment payment = toPayment(order, paymentUid);
+        paymentDAO.createPayment(payment);
 
-        return toPaymentResponseDTO(paymentEntity);
+        return toPaymentResponseDTO(payment);
     }
 
     @Override
     public PaymentResponseDTO readPaymentByPaymentId(String paymentId) {
-        PaymentEntity paymentEntity = paymentDAO.readPaymentById(paymentId);
-        return toPaymentResponseDTO(paymentEntity);
+        Payment payment = paymentDAO.readPaymentById(paymentId);
+        return toPaymentResponseDTO(payment);
     }
 
     @Override
     public PaymentResponseDTOS readPaymentByPurchaser(String purchaser) {
-        List<PaymentEntity> paymentEntities = paymentDAO.readPaymentByPurchaser(purchaser);
+        List<Payment> paymentEntities = paymentDAO.readPaymentByPurchaser(purchaser);
         return toPaymentResponseDTOS(paymentEntities);
     }
 
@@ -142,44 +141,44 @@ public class PaymentServiceImpl implements PaymentService {
         return sb.toString();
     }
 
-    public PaymentEntity toPayment(OrderEntity orderEntity, String paymentUid) {
-        return PaymentEntity.builder()
+    public Payment toPayment(Order order, String paymentUid) {
+        return Payment.builder()
                 .paymentId(generateUniquePaymentId())
-                .purchaser(orderEntity.getPurchaser())
-                .weeklyId(orderEntity.getWeeklyId())
+                .purchaser(order.getPurchaser())
+                .weeklyId(order.getWeeklyId())
                 .paymentUid(paymentUid)
-                .totalPrice(orderEntity.getTotalPrice())
+                .totalPrice(order.getTotalPrice())
                 .dateTime(LocalDateTime.now())
                 .build();
     }
 
-    public PaymentDTO toPaymentDTO(PaymentEntity paymentEntity){
+    public PaymentDTO toPaymentDTO(Payment payment){
         return PaymentDTO.builder()
-                .paymentId(paymentEntity.getPaymentId())
-                .purchaser(paymentEntity.getPurchaser())
-                .weeklyId(paymentEntity.getWeeklyId())
-                .paymentUid(paymentEntity.getPaymentUid())
-                .totalPrice(paymentEntity.getTotalPrice())
-                .dateTime(paymentEntity.getDateTime())
+                .paymentId(payment.getPaymentId())
+                .purchaser(payment.getPurchaser())
+                .weeklyId(payment.getWeeklyId())
+                .paymentUid(payment.getPaymentUid())
+                .totalPrice(payment.getTotalPrice())
+                .dateTime(payment.getDateTime())
                 .build();
     }
 
-    public List<PaymentDTO> toPaymentDTOS(List<PaymentEntity> paymentEntities){
+    public List<PaymentDTO> toPaymentDTOS(List<Payment> paymentEntities){
         List<PaymentDTO> paymentDTOS = new ArrayList<>();
-        for (PaymentEntity paymentEntity : paymentEntities) {
-            paymentDTOS.add(toPaymentDTO(paymentEntity));
+        for (Payment payment : paymentEntities) {
+            paymentDTOS.add(toPaymentDTO(payment));
         }
         return paymentDTOS;
     }
 
-    public PaymentResponseDTO toPaymentResponseDTO(PaymentEntity paymentEntity){
+    public PaymentResponseDTO toPaymentResponseDTO(Payment payment){
         return PaymentResponseDTO.builder()
                 .result("success")
-                .data(toPaymentDTO(paymentEntity))
+                .data(toPaymentDTO(payment))
                 .build();
     }
 
-    public PaymentResponseDTOS toPaymentResponseDTOS(List<PaymentEntity> paymentEntities){
+    public PaymentResponseDTOS toPaymentResponseDTOS(List<Payment> paymentEntities){
         return PaymentResponseDTOS.builder()
                 .result("success")
                 .data(toPaymentDTOS(paymentEntities))

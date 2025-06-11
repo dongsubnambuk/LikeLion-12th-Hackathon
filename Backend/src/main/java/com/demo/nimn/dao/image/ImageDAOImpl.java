@@ -1,6 +1,6 @@
 package com.demo.nimn.dao.image;
 
-import com.demo.nimn.entity.image.ImageEntity;
+import com.demo.nimn.entity.image.Image;
 import com.demo.nimn.repository.image.ImageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,12 +20,12 @@ public class ImageDAOImpl implements ImageDAO{
 
 
     @Override
-    public ImageEntity uploadImage(ImageEntity imageEntity) {
-        return this.imageRepository.save(imageEntity);
+    public Image uploadImage(Image image) {
+        return this.imageRepository.save(image);
     }
 
     @Override
-    public Optional<ImageEntity> downloadImage(Long id) {
+    public Optional<Image> downloadImage(Long id) {
         return this.imageRepository.findById(id);
     }
 

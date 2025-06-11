@@ -7,11 +7,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "t_nutrition_fact")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class NutritionFacts {
+public class NutritionFact {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

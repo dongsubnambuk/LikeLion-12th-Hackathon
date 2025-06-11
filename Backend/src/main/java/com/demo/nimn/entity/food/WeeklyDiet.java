@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "weekly_diet")
+@Table(name = "t_weekly_diet")
 @NoArgsConstructor
 @Getter
 @Setter

@@ -3,7 +3,7 @@ package com.demo.nimn.service.payment;
 import com.demo.nimn.dao.payment.OrderDAO;
 import com.demo.nimn.dto.payment.OrderDTO;
 import com.demo.nimn.dto.payment.OrderResponseDTO;
-import com.demo.nimn.entity.payment.OrderEntity;
+import com.demo.nimn.entity.payment.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,24 +18,24 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public OrderResponseDTO createOrder(OrderDTO orderDTO) {
-        OrderEntity orderEntity = toOrderEntity(orderDTO);
-        orderDAO.createOrder(orderEntity);
-        return toOrderResponseDTO(orderEntity);
+        Order order = toOrderEntity(orderDTO);
+        orderDAO.createOrder(order);
+        return toOrderResponseDTO(order);
     }
 
     @Override
-    public OrderEntity findByOrderId(String orderId) {
+    public Order findByOrderId(String orderId) {
         return orderDAO.readOrder(orderId);
     }
 
     @Override
-    public OrderResponseDTO deleteOrder(OrderEntity orderEntity) {
-        orderDAO.deleteOrder(orderEntity);
+    public OrderResponseDTO deleteOrder(Order order) {
+        orderDAO.deleteOrder(order);
         return new OrderResponseDTO("success", null);
     }
 
-    public OrderEntity toOrderEntity(OrderDTO orderDTO){
-        return OrderEntity.builder()
+    public Order toOrderEntity(OrderDTO orderDTO){
+        return Order.builder()
                 .orderId(orderDTO.getOrderId())
                 .purchaser(orderDTO.getPurchaser())
                 .totalPrice(orderDTO.getTotalPrice())
@@ -43,20 +43,20 @@ public class OrderServiceImpl implements OrderService{
                 .build();
     }
 
-    public OrderDTO toOrderDTO(OrderEntity orderEntity){
+    public OrderDTO toOrderDTO(Order order){
         return OrderDTO.builder()
-                .orderId(orderEntity.getOrderId())
-                .purchaser(orderEntity.getPurchaser())
-                .totalPrice(orderEntity.getTotalPrice())
-                .weeklyId(orderEntity.getWeeklyId())
-                .dateTime(orderEntity.getDateTime())
+                .orderId(order.getOrderId())
+                .purchaser(order.getPurchaser())
+                .totalPrice(order.getTotalPrice())
+                .weeklyId(order.getWeeklyId())
+                .dateTime(order.getDateTime())
                 .build();
     }
 
-    public OrderResponseDTO toOrderResponseDTO(OrderEntity orderEntity){
+    public OrderResponseDTO toOrderResponseDTO(Order order){
         return OrderResponseDTO.builder()
                 .result("success")
-                .data(toOrderDTO(orderEntity))
+                .data(toOrderDTO(order))
                 .build();
     }
 }

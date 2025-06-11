@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "user_diet", indexes = {
+@Table(name = "t_user_diet", indexes = {
         @Index(name = "diet_processed_date_idx", columnList = "processedBreakfast, processedLunch, processedDinner, date")
 })
 @Getter
@@ -13,7 +13,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @Builder
-public class ExternalDietInfoEntity {
+public class ExternalDietInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
