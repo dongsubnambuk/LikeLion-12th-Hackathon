@@ -10,6 +10,7 @@ import com.demo.nimn.service.review.ReviewService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -50,7 +51,7 @@ public class MealServiceImpl implements MealService {
     @Autowired
     public MealServiceImpl(MealDAO mealDAO,
                            WeeklyMealPlanDAO weeklyMealPlanDAO,
-                           RestTemplate template,
+                           @Qualifier("openAiRestTemplate") RestTemplate template,
                            CommunicationService communicationService,
                            ReviewService reviewService) {
         this.mealDAO = mealDAO;
