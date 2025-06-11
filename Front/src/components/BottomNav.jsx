@@ -60,7 +60,7 @@ const BottomNav = () => {
       icon: faUser,
       label: "내 정보",
       path: "/mypage",
-      requiresLogin: true
+      requiresLogin: false
     }
   ];
 
