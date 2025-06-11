@@ -2,18 +2,15 @@ package com.demo.nimn.service.meal;
 
 import com.demo.nimn.dao.meal.MealDAO;
 import com.demo.nimn.dao.meal.WeeklyMealPlanDAO;
-import com.demo.nimn.dto.chatgpt.*;
 import com.demo.nimn.dto.meal.*;
 import com.demo.nimn.entity.meal.*;
+import com.demo.nimn.service.ai.AiService;
 import com.demo.nimn.service.communication.CommunicationService;
 import com.demo.nimn.service.review.ReviewService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -27,22 +24,9 @@ import java.util.stream.Collectors;
 public class MealServiceImpl implements MealService {
     private final MealDAO mealDAO;
     private final WeeklyMealPlanDAO weeklyMealPlanDAO;
-    private final CommunicationService communicationService;
+    private final AiService aiService;
     private final ReviewService reviewService;
-    private final RestTemplate template;
     private final Logger logger = LoggerFactory.getLogger(MealServiceImpl.class);
-
-    @Value("${openai.chatModel}")
-    private String chatModel;
-
-    @Value("${openai.api.chatUrl}")
-    private String chatApiURL;
-
-    @Value("${openai.api.imageUrl}")
-    private String imageApiURL;
-
-    @Value("${openai.imageModel}")
-    private String imageModel;
 
     private Map<Long, Integer> menuFrequency;
     private Map<Long, Double> weights;
@@ -51,34 +35,19 @@ public class MealServiceImpl implements MealService {
     @Autowired
     public MealServiceImpl(MealDAO mealDAO,
                            WeeklyMealPlanDAO weeklyMealPlanDAO,
-                           @Qualifier("openAiRestTemplate") RestTemplate template,
-                           CommunicationService communicationService,
+                           AiService aiService,
                            ReviewService reviewService) {
         this.mealDAO = mealDAO;
         this.weeklyMealPlanDAO = weeklyMealPlanDAO;
-        this.template = template;
-        this.communicationService = communicationService;
+        this.aiService = aiService;
         this.reviewService = reviewService;
     }
 
     @Override
     public FoodMenuDTO createMeal(String price) {
-        String prompt = "가격: " + price + "원\n이 가격에 맞는 영양 있는 식단을 구성해줘. 식단은 MainMenu 2개와 SideMenu 3개로 구성되어야 해. 식단의 이름도 정해줘.";
-        ChatRequest request = new ChatRequest(chatModel, prompt);
-        ChatResponse chatResponse =  template.postForObject(chatApiURL, request, ChatResponse.class);
+        String mealPlanText = aiService.generateFood(price);
 
-        // 응답 검토
-        if (chatResponse == null || chatResponse.getChoices().isEmpty()) {
-            throw new IllegalStateException("API 응답이 유효하지 않습니다.");
-        }
-
-        String answer = chatResponse.getChoices().get(0).getMessage().getContent();
-        if (answer == null || answer.isEmpty()) {
-            throw new IllegalStateException("API 응답 내용이 비어 있습니다.");
-        }
-
-
-        FoodMenu foodMenu = toFoodMenuEntity(answer);
+        FoodMenu foodMenu = toFoodMenuEntity(mealPlanText);
 
         if (foodMenu == null) {
             throw new IllegalStateException("응답을 FoodMenu 엔티티로 변환하는 데 실패했습니다.");
@@ -90,24 +59,13 @@ public class MealServiceImpl implements MealService {
         return toFoodMenuDTO(foodMenu);
     }
 
-    public String createMealImage(String foodMenu) {
-        String prompt = foodMenu + "\n다음 식단 메뉴 5가지로만 구성된 이미지를 생성해줘, 다른 부가적인 요소들은 빼고 테이블과 메뉴 5가지만 보여줘";
-        logger.info(prompt);
-        ImageRequest imageRequest = new ImageRequest(imageModel, prompt, "b64_json");
-        ImageResponse imageResponse = template.postForObject(imageApiURL, imageRequest, ImageResponse.class);
-        String b64_image = imageResponse.getData().get(0).getB64_json();
-        byte[] decodedBytes = Base64.getDecoder().decode(b64_image);
-
-        return communicationService.imageUpload(decodedBytes);
-    }
-
-//    @Scheduled(cron = "0 0 0 ? * MON")
+    //    @Scheduled(cron = "0 0 0 ? * MON")
     @Override
     public WeeklyMealPlanDTO createWeeklyMealPlan() {
         LocalDate today = LocalDate.now();
         LocalDate nextMonday = today.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
 
-        if(weeklyMealPlanDAO.existsByCurrentWeeklyMealPlan(nextMonday)){
+        if (weeklyMealPlanDAO.existsByCurrentWeeklyMealPlan(nextMonday)) {
             WeeklyMealPlan weeklyMealPlan = weeklyMealPlanDAO.findCurrentWeeklyMealPlan(nextMonday);
             return toWeeklyMealPlanDTO(weeklyMealPlan);
         }
@@ -125,7 +83,7 @@ public class MealServiceImpl implements MealService {
 
         WeeklyMealPlan weeklyMealPlan = weeklyMealPlanDAO.findCurrentWeeklyMealPlan(nextMonday);
 
-        if(weeklyMealPlan == null) {
+        if (weeklyMealPlan == null) {
             return createWeeklyMealPlan();
         }
 
@@ -133,18 +91,18 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public FoodMenu readFoodMenuByFoodMenuId(Long foodMenuId){
+    public FoodMenu readFoodMenuByFoodMenuId(Long foodMenuId) {
         return mealDAO.findById(foodMenuId);
     }
 
     @Override
-    public FoodMenuDTO readFoodMenuDTOByFoodMenuId(Long foodMenuId){
+    public FoodMenuDTO readFoodMenuDTOByFoodMenuId(Long foodMenuId) {
         FoodMenu foodMenu = mealDAO.findById(foodMenuId);
         return toFoodMenuDTO(foodMenu);
     }
 
     @Override
-    public List<FoodMenuDTO> readAll(){
+    public List<FoodMenuDTO> readAll() {
         List<FoodMenu> foodMenus = mealDAO.findAll();
         return toFoodMenuDTOS(foodMenus);
     }
@@ -232,7 +190,7 @@ public class MealServiceImpl implements MealService {
             }
             DailyMealPlan dailyMealPlan = DailyMealPlan.builder()
                     .mealOptions(mealOptions)
-                    .day(startDate.plusDays(day-1))
+                    .day(startDate.plusDays(day - 1))
                     .build();
             dailyMealPlans.add(dailyMealPlan);
         }
@@ -246,7 +204,7 @@ public class MealServiceImpl implements MealService {
         return weeklyMealPlan;
     }
 
-    public FoodMenuDTO toFoodMenuDTO(FoodMenu foodMenu){
+    public FoodMenuDTO toFoodMenuDTO(FoodMenu foodMenu) {
         return FoodMenuDTO.builder()
                 .id(foodMenu.getId())
                 .name(foodMenu.getName())
@@ -266,7 +224,7 @@ public class MealServiceImpl implements MealService {
                 .build();
     }
 
-    public List<FoodMenuDTO> toFoodMenuDTOS(List<FoodMenu> foodMenus){
+    public List<FoodMenuDTO> toFoodMenuDTOS(List<FoodMenu> foodMenus) {
         List<FoodMenuDTO> foodMenuDTOS = new ArrayList<>();
         for (FoodMenu foodMenu : foodMenus) {
             foodMenuDTOS.add(toFoodMenuDTO(foodMenu));
@@ -275,7 +233,6 @@ public class MealServiceImpl implements MealService {
     }
 
     public FoodMenu toFoodMenuEntity(String input) {
-
         Pattern namePattern = Pattern.compile("식단 이름: (.+)");
         Pattern pricePattern = Pattern.compile("가격: (.+)");
         Pattern main1Pattern = Pattern.compile("Main1: (.+)");
@@ -289,7 +246,6 @@ public class MealServiceImpl implements MealService {
         Pattern fatPattern = Pattern.compile("지방: (.+)g");
         Pattern sugarPattern = Pattern.compile("당류: (.+)g");
         Pattern sodiumPattern = Pattern.compile("나트륨: (.+)mg");
-
 
         NutritionFact nutritionFact = NutritionFact.builder()
                 .calories(getMatchedValue(caloriesPattern, input) + "kcal")
@@ -313,6 +269,13 @@ public class MealServiceImpl implements MealService {
                 .build();
 
         return foodMenu;
+    }
+
+    /**
+     * AI 서비스를 통해 식단 이미지 생성
+     */
+    private String createMealImage(String menuDescription) {
+        return aiService.generateFoodImage(menuDescription);
     }
 
     public WeeklyMealPlanDTO toWeeklyMealPlanDTO(WeeklyMealPlan weeklyMealPlan) {
