@@ -188,17 +188,18 @@ function UserInfoUpdate(){
 
         <div className="userinfoupdate_info-update">
             <div className="userinfoupdate_update-form-group">
-                    <label htmlFor="phonenumber" className="userinfoupdate_update-form-group_label">연락처 수정</label>
+                    <label htmlFor="phonenumber" className="userinfoupdate_update-form-group_label">연락처</label>
                     <input
                 type="text"
                 id="phonenumber"
+                placeholder="연락처를 입력해주세요"
                 value={phoneNumber}
                 onChange={(e) => setphoneNumber(e.target.value)}
                 className="userinfoupdate_update-form-group_input"
             />
                 </div>
             <div className="userinfoupdate_update-form-group">
-                    <label htmlFor="password" className="userinfoupdate_update-form-group_label">비밀번호 변경</label>
+                    <label htmlFor="password" className="userinfoupdate_update-form-group_label">비밀번호</label>
                     <input
                         type="password"
                         id="password"
@@ -214,7 +215,7 @@ function UserInfoUpdate(){
                 </div>
 
                 <div className="userinfoupdate_update-form-group">
-                    <label htmlFor="confirm-password" className="userinfoupdate_update-form-group_label">비밀번호 변경 - 재입력</label>
+                    <label htmlFor="confirm-password" className="userinfoupdate_update-form-group_label">비밀번호 확인</label>
                     <input
                         type="password"
                         id="confirm-password"
@@ -232,7 +233,7 @@ function UserInfoUpdate(){
                 <div className="userinfoupdate_update-form-group">
                     <div className="userinfoupdate_update-address">
                 
-                        <label htmlFor="address" className="userinfoupdate_update-form-group_label">주소 변경</label>
+                        <label htmlFor="address" className="userinfoupdate_update-form-group_label">주소</label>
                         <div className="userinfoupdate_update-address-serch">
                             <input value={zipCode} readOnly placeholder="우편번호" className="userinfoupdate_update-form-group_input"/>
                             <button onClick={toggle} className="userinfoupdate_update-address-serch_btn">주소 찾기</button>
@@ -284,11 +285,12 @@ function UserInfoUpdate(){
                                 onChange={(e) => setDetailAddress(e.target.value)}
                                 value={detailAddress}
                                 className="userinfoupdate_update-form-group_input"
+                                placeholder="상세 주소를 입력해주세요"
                             />
                         </div>
                     </div>
                 </div> 
-                <button className="userinfoupdate_update-btn" onClick={handlePUT}>저장하기</button>
+                <button className="userinfoupdate_update-btn" onClick={handlePUT}>수정하기</button>
         </div>
         </>
     );
