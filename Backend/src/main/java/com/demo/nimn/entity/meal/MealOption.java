@@ -9,26 +9,26 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
+@Table(name = "t_meal_option")
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class MealOption {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long mealOptionId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column
-    private String mealType; // 아침, 점심, 저녁
+    private String mealType;
 
     @ManyToMany(mappedBy = "mealOptions")
     private List<DailyMealPlan> dailyMealPlans;
 
     @ManyToMany
     @JoinTable(
-            name = "meal_option_food_menu",
+            name = "t_meal_option_food_menu",
             joinColumns = @JoinColumn(name = "meal_option_id"),
-            inverseJoinColumns = @JoinColumn(name = "food_menu_id")
+            inverseJoinColumns = @JoinColumn(name = "food_menu_id", referencedColumnName = "id")
     )
     private List<FoodMenu> foodMenus;
 }

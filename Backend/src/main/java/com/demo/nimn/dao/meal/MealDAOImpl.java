@@ -20,7 +20,7 @@ public class MealDAOImpl implements MealDAO {
     public Boolean createMeal(FoodMenu foodMenu) {
         mealRepository.save(foodMenu);
 
-        return mealRepository.existsById(foodMenu.getFoodMenuId());
+        return mealRepository.existsById(foodMenu.getId());
     }
 
     @Override

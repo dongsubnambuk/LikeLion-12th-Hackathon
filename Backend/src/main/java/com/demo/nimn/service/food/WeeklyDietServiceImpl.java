@@ -59,7 +59,7 @@ public class WeeklyDietServiceImpl implements WeeklyDietService {
 
     public WeeklyDietDTO convertToWeeklyDietDTO(WeeklyDiet weeklyDiet) {
         return WeeklyDietDTO.builder()
-                .weeklyId(weeklyDiet.getWeeklyId())
+                .weeklyId(weeklyDiet.getId())
                 .userEmail(weeklyDiet.getUserEmail())
                 .startDate(weeklyDiet.getStartDate())
                 .endDate(weeklyDiet.getEndDate())

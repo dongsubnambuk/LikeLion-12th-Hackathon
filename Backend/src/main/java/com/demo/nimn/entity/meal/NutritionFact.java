@@ -7,24 +7,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "t_nutrition_fact")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class NutritionFacts {
+public class NutritionFact {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+
     private String calories;
-    @Column
+
     private String carbohydrate;
-    @Column
+
     private String protein;
-    @Column
+
     private String fat;
-    @Column
+
     private String sugar;
-    @Column
+
     private String sodium;
 }

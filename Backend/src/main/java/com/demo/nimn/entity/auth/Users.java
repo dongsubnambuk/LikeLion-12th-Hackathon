@@ -5,15 +5,14 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(name = "t_user")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Users {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
     private Long id;
 
     @Column(nullable = false)
@@ -31,12 +30,8 @@ public class Users {
 
     private String detailAddress;
 
-
     private String role;
 
-//    @Column(nullable = false)
-//    private String phoneNum;
-//
 //    private String imgUrl;
 
     public void updateUser(UserDetails user, String userPassword){
@@ -45,5 +40,4 @@ public class Users {
         this.roadAddress = user.getRoadAddress();
         this.detailAddress = user.getDetailAddress();
     }
-
 }

@@ -44,7 +44,7 @@ public class DailyDietServiceImpl implements DailyDietService {
 
     private DailyDietDTO convertToDailyDietDTO(DailyDiet dailyDiet) {
         return DailyDietDTO.builder()
-                .dailyDietId(dailyDiet.getDailyDietId())
+                .dailyDietId(dailyDiet.getId())
                 .date(dailyDiet.getDate())
                 .userEmail(dailyDiet.getUserEmail())
                 .mealSelections(mealSelectionService.convertToMealSelectionDTOS(dailyDiet.getMealSelections()))
