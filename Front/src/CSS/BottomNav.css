@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   width: 100%;
-  max-width: 390px;
+  max-width: 420px;
   margin: 0 auto;
   background: white;
   border-top: 1px solid #e9ecef;
@@ -15,7 +15,7 @@
 
 .bottom-nav-bottom-nav-container {
   display: flex;
-  max-width: 390px;
+  max-width: 420px;
   margin: 0 auto;
   height: 70px;
   align-items: center;
@@ -37,10 +37,10 @@
   position: relative;
 }
 
-.bottom-nav-nav-item:hover {
-  background: rgba(157, 146, 116, 0.1); /* #9d9274 기반 */
+/* .bottom-nav-nav-item:hover {
+  background: rgba(157, 146, 116, 0.1);
   transform: translateY(-2px);
-}
+} */
 
 .bottom-nav-nav-item.bottom-nav-active::before {
   content: '';
