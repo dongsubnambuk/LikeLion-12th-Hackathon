@@ -1,0 +1,41 @@
+name: Deploy Front
+
+on:
+  push:
+    paths:
+      - 'Front/**'
+      - '.github/workflows/front-deploy.yml'
+    branches: ['develop']
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install & Build React
+        working-directory: Front
+        run: |
+          npm install
+          CI='' npm run build
+
+      - name: Copy Build Files to EC2 (~/Front/build)
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.FRONT_AWS_IP }}
+          username: ${{ secrets.FRONT_USERNAME }}
+          key: ${{ secrets.FRONT_AWS_KEY }}
+          source: "Front/build/*"
+          target: "/home/${{ secrets.FRONT_USERNAME }}/Front/build/"
+
+      - name: Restart PM2 on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.FRONT_AWS_IP }}
+          username: ${{ secrets.FRONT_USERNAME }}
+          key: ${{ secrets.FRONT_AWS_KEY }}
+          script: |
+            pm2 restart react-app || pm2 start serve --name react-app -- -s ~/Front/build -l 3000
