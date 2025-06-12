@@ -384,7 +384,6 @@ body::-webkit-scrollbar {
 @media (max-width: 768px) {
   .main-page-hero-slider {
     height: 50vh;
-    min-height: 360px;
   }
   
   .main-page-today-meals-section,
@@ -413,9 +412,6 @@ body::-webkit-scrollbar {
 }
 
 @media (max-width: 480px) {
-  .main-page-main-container {
-    padding-top: 60px;
-  }
 
   .main-page-hero-content {
     padding: 0 20px;
