@@ -1,0 +1,174 @@
+package com.demo.nimn.service.notification;
+
+import com.demo.nimn.dao.notification.NotificationDAO;
+import com.demo.nimn.dto.food.Response.DailyDietDTO;
+import com.demo.nimn.dto.food.Response.MealSelectionDTO;
+import com.demo.nimn.dto.notification.NotificationDTO;
+import com.demo.nimn.dto.notification.response.ResponseDTO;
+import com.demo.nimn.dto.payment.UserDTO;
+import com.demo.nimn.dto.review.DailyReviewDTO;
+import com.demo.nimn.enums.NotificationType;
+import com.demo.nimn.service.food.DailyDietService;
+import com.demo.nimn.service.payment.PaymentService;
+import com.demo.nimn.service.review.ReviewService;
+import com.demo.nimn.websocket.SessionManageService;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Slf4j
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class NotificationServiceImpl implements NotificationService {
+    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final NotificationDAO notificationDAO;
+    private final SessionManageService sessionManageService;
+    @Lazy
+    private final DailyDietService dailyDietService;
+    @Lazy
+    private final PaymentService paymentService;
+    @Lazy
+    private final ReviewService reviewService;
+
+    // 오늘의 유저별 식단 리스트
+    private List<DailyDietDTO>  dailyDietDTOList = new ArrayList<>();
+
+    // 알림 전송
+    private void sendNotification(NotificationType notificationType,
+                                 String userEmail,
+                                 String content,
+                                 Long dailyReviewId) {
+        NotificationDTO notificationDTO = notificationDAO.save(notificationType,
+                                                                userEmail,
+                                                                content,
+                                                                dailyReviewId);
+        // 연결 되어 있는지 확인 후 발송
+        if (sessionManageService.isUserConnected(userEmail)) {
+            simpMessagingTemplate.convertAndSendToUser(
+                    userEmail,
+                    "/queue/notification",
+                    notificationDTO
+            );
+            log.info("Notification sent to userId={}, type={}, content={}, dailyReviewId={}", userEmail, notificationType, content, dailyReviewId);
+        }
+    }
+
+    // 식단 알림 및 캐시 초기화 ( 매일 7시 )
+    @Scheduled(cron = "0 0 7 ? * *")
+    public void sendDailyDiet() {
+        dailyDietDTOList = dailyDietService.getByDate(LocalDate.now());
+
+        for (DailyDietDTO dailyDietDTO : dailyDietDTOList) {
+            StringBuilder content = new StringBuilder();
+            content.append("오늘의 식단은 ");
+            for (MealSelectionDTO mealSelectionDTO : dailyDietDTO.getMealSelections()) {
+                content.append(mealSelectionDTO.getMealTime())
+                        .append(" ")
+                        .append(mealSelectionDTO.getFoodMenu().getName())
+                        .append(" ")
+                        .append(mealSelectionDTO.getCount())
+                        .append("개, ");
+            }
+            content.delete(content.length() - 3, content.length());
+            content.append("입니다.");
+
+            sendNotification(NotificationType.DIET,
+                    dailyDietDTO.getUserEmail(),
+                    content.toString(),
+                    null);
+        }
+    }
+
+    // 아침, 점심, 저녁 식사 알림
+    @Scheduled(cron = "0 0 9,12,18 ? * *")
+    public void sendDiet() {
+        int hour = LocalDateTime.now().getHour();
+        final String mealTime = hour == 9 ? "아침" : hour == 12 ? "점심" : "저녁";
+
+        for (DailyDietDTO dailyDietDTO : dailyDietDTOList) {
+            StringBuilder content = new StringBuilder();
+
+            MealSelectionDTO mealSelection = dailyDietDTO.getMealSelections()
+                    .stream()
+                    .filter(mealSelectionDTO -> mealSelectionDTO.getMealTime().equals(mealTime))
+                    .findFirst()
+                    .orElse(null);
+
+            if (mealSelection != null) {
+                content.append("오늘의 ")
+                        .append(mealTime)
+                        .append(" 식사는 ")
+                        .append(mealSelection.getFoodMenu().getName())
+                        .append(" ")
+                        .append(mealSelection.getCount())
+                        .append("개입니다.");
+
+                sendNotification(NotificationType.DIET,
+                        dailyDietDTO.getUserEmail(),
+                        content.toString(),
+                        null);
+            }
+        }
+    }
+
+    // 결제 알림
+    @Scheduled(cron = "0 0 21 ? * MON")
+    public void sendPayment() {
+        UserDTO users = paymentService.readNonPurchasersThisWeek();
+        for (String userEmail : users.getEmail()) {
+            sendNotification(NotificationType.PAYMENT,
+                    userEmail,
+                    "아직 이번주 결제가 완료되지 않았습니다.",
+                    null);
+        }
+    }
+
+    // 리뷰 알림
+    @Scheduled(cron = "0 0 21 ? * *")
+    public void sendReview() {
+        List<DailyReviewDTO> reviewList = reviewService.readDailyReviewDTOByDate(LocalDate.now());
+        for (DailyReviewDTO dailyReviewDTO : reviewList) {
+            sendNotification(NotificationType.REVIEW,
+                    dailyReviewDTO.getUserEmail(),
+                    "오늘의 식단 리뷰에 참여해주세요~",
+                    dailyReviewDTO.getDailyReviewId());
+        }
+    }
+
+    // 안읽은 알림 갯수 조회
+    @Override
+    public ResponseDTO countUnreadNotifications(String userEmail) {
+        return ResponseDTO.builder()
+                .userEmail(userEmail)
+                .count(notificationDAO.countUnreadNotifications(userEmail))
+                .build();
+    }
+
+    // 확인으로 전환
+    @Override
+    public NotificationDTO markAsRead(Long notificationId) {
+        return notificationDAO.asRead(notificationId);
+    }
+
+    // 유저의 모든 안읽은 메일 확인 전환
+    @Override
+    public ResponseDTO markAllAsRead(String userEmail) {
+        return notificationDAO.allAsRead(userEmail);
+    }
+
+    // 유저의 모든 알림 조회
+    @Override
+    public List<NotificationDTO> getAllNotificationsByUserEmail(String userEmail) {
+        return notificationDAO.getAllNotificationsByUserEmail(userEmail);
+    }
+}
