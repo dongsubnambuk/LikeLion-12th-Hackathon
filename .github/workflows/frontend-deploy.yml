@@ -3,8 +3,8 @@ name: Frontend Deploy
 on:
   push:
     paths:
-      - 'Front/**'
-      - '.github/workflows/front-deploy.yml'
+      - 'Frontend/**'
+      - '.github/workflows/frontend-deploy.yml'
     branches: ['develop']
   workflow_dispatch:
 
@@ -15,6 +15,13 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: Frontend/package-lock.json
 
       - name: Install & Build React
         working-directory: Frontend
@@ -28,10 +35,10 @@ jobs:
           host: ${{ secrets.FRONT_AWS_IP }}
           username: ${{ secrets.FRONT_USERNAME }}
           key: ${{ secrets.FRONT_AWS_KEY }}
-          source: "front/*"
+          source: "Frontend/build"
           target: "/home/${{ secrets.FRONT_USERNAME }}/"
 
-      - name: Restart Nginx on EC2
+      - name: Restart Service
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.FRONT_AWS_IP }}
