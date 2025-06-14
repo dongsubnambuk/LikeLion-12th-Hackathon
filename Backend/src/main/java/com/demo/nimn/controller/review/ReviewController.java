@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/meal/review")
+@RequestMapping("/meal/review")
 public class ReviewController {
     private final ReviewService reviewService;
 

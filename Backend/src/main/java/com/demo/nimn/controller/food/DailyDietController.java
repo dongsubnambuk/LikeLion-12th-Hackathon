@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/userMeal/daily")
+@RequestMapping("/userMeal/daily")
 public class DailyDietController {
 
     private final DailyDietService dailyDietService;
