@@ -1,7 +1,7 @@
 package com.demo.nimn.controller.notification;
 
 import com.demo.nimn.dto.notification.NotificationDTO;
-import com.demo.nimn.dto.notification.response.ResponseDTO;
+import com.demo.nimn.dto.notification.response.NotificationCountDTO;
 import com.demo.nimn.service.notification.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,13 +32,13 @@ public class NotificationController {
 
     @Operation(summary = "모든 알림 읽음 처리(MarkAllAsRead)", description = "이메일을 보내면 해당 사용자의 모든 알림을 읽음 처리")
     @PatchMapping
-    public ResponseEntity<ResponseDTO> markAllAsRead(@RequestParam String userEmail) {
+    public ResponseEntity<NotificationCountDTO> markAllAsRead(@RequestParam String userEmail) {
         return  ResponseEntity.ok(notificationService.markAllAsRead(userEmail));
     }
 
     @Operation(summary = "안읽은 알림 갯수 조회(CountUnreadNotifications)", description = "이메일을 보내면 해당 사용자의 안읽은 알림 갯수를 조회")
     @GetMapping
-    public ResponseEntity<ResponseDTO> countUnreadNotifications(@RequestParam String userEmail) {
+    public ResponseEntity<NotificationCountDTO> countUnreadNotifications(@RequestParam String userEmail) {
         return ResponseEntity.ok(notificationService.countUnreadNotifications(userEmail));
     }
 }

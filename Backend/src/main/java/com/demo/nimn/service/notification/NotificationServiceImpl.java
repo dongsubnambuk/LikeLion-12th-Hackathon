@@ -3,7 +3,7 @@ package com.demo.nimn.service.notification;
 import com.demo.nimn.dto.food.Response.DailyDietDTO;
 import com.demo.nimn.dto.food.Response.MealSelectionDTO;
 import com.demo.nimn.dto.notification.NotificationDTO;
-import com.demo.nimn.dto.notification.response.ResponseDTO;
+import com.demo.nimn.dto.notification.response.NotificationCountDTO;
 import com.demo.nimn.dto.payment.UserDTO;
 import com.demo.nimn.dto.review.DailyReviewDTO;
 import com.demo.nimn.entity.notification.Notification;
@@ -151,8 +151,8 @@ public class NotificationServiceImpl implements NotificationService {
 
     // 안읽은 알림 갯수 조회
     @Override
-    public ResponseDTO countUnreadNotifications(String userEmail) {
-        return ResponseDTO.builder()
+    public NotificationCountDTO countUnreadNotifications(String userEmail) {
+        return NotificationCountDTO.builder()
                 .userEmail(userEmail)
                 .count(notificationRepository.countByUserEmailAndCheckIsFalse(userEmail))
                 .build();
@@ -169,7 +169,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     // 유저의 모든 안읽은 메일 확인 전환
     @Override
-    public ResponseDTO markAllAsRead(String userEmail) {
+    public NotificationCountDTO markAllAsRead(String userEmail) {
         List<Notification> notifications = notificationRepository.findAllByUserEmailAndCheckIsFalse(userEmail);
 
         for(Notification notification : notifications) {
@@ -177,7 +177,7 @@ public class NotificationServiceImpl implements NotificationService {
             notificationRepository.save(notification);
         }
 
-        return ResponseDTO.builder()
+        return NotificationCountDTO.builder()
                 .userEmail(userEmail)
                 .count(notifications.size())
                 .build();

@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseDTO {
+public class NotificationCountDTO {
     private String userEmail;
     private int count;
 }
