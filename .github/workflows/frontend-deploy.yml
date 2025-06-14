@@ -37,6 +37,7 @@ jobs:
           key: ${{ secrets.FRONT_AWS_KEY }}
           source: "Frontend/build"
           target: "/home/${{ secrets.FRONT_USERNAME }}/"
+          overwrite: true
 
       - name: Restart PM2 on EC2
         uses: appleboy/ssh-action@master
