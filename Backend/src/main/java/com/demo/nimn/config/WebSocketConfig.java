@@ -1,6 +1,6 @@
 package com.demo.nimn.config;
 
-import com.demo.nimn.websocket.ChannelInterceptor;
+import com.demo.nimn.websocket.CustomChannelInterceptor;
 import com.demo.nimn.websocket.CustomWebSocketHandlerDecoratorFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +16,7 @@ import org.springframework.web.socket.config.annotation.WebSocketTransportRegist
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private final ChannelInterceptor channelInterceptor;
+    private final CustomChannelInterceptor customChannelInterceptor;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -34,11 +34,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
-        registry.setDecoratorFactories(new CustomWebSocketHandlerDecoratorFactory(channelInterceptor));
+        registry.setDecoratorFactories(new CustomWebSocketHandlerDecoratorFactory(customChannelInterceptor));
     }
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(channelInterceptor);
+        registration.interceptors(customChannelInterceptor);
     }
 }

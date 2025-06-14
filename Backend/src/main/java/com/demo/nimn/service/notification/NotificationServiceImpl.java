@@ -1,13 +1,14 @@
 package com.demo.nimn.service.notification;
 
-import com.demo.nimn.dao.notification.NotificationDAO;
 import com.demo.nimn.dto.food.Response.DailyDietDTO;
 import com.demo.nimn.dto.food.Response.MealSelectionDTO;
 import com.demo.nimn.dto.notification.NotificationDTO;
 import com.demo.nimn.dto.notification.response.ResponseDTO;
 import com.demo.nimn.dto.payment.UserDTO;
 import com.demo.nimn.dto.review.DailyReviewDTO;
+import com.demo.nimn.entity.notification.Notification;
 import com.demo.nimn.enums.NotificationType;
+import com.demo.nimn.repository.notification.NotificationRepository;
 import com.demo.nimn.service.food.DailyDietService;
 import com.demo.nimn.service.payment.PaymentService;
 import com.demo.nimn.service.review.ReviewService;
@@ -31,7 +32,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
     private final SimpMessagingTemplate simpMessagingTemplate;
-    private final NotificationDAO notificationDAO;
+    private final NotificationRepository notificationRepository;
     private final SessionManageService sessionManageService;
     @Lazy
     private final DailyDietService dailyDietService;
@@ -48,10 +49,13 @@ public class NotificationServiceImpl implements NotificationService {
                                  String userEmail,
                                  String content,
                                  Long dailyReviewId) {
-        NotificationDTO notificationDTO = notificationDAO.save(notificationType,
-                                                                userEmail,
-                                                                content,
-                                                                dailyReviewId);
+        NotificationDTO notificationDTO = notificationRepository.save(Notification.builder()
+                                                .userEmail(userEmail)
+                                                .content(content)
+                                                .type(notificationType)
+                                                .dailyReviewId(dailyReviewId)
+                                                .build())
+                                        .toNotificationDTO(notificationRepository.countByUserEmailAndCheckIsFalse(userEmail));
         // 연결 되어 있는지 확인 후 발송
         if (sessionManageService.isUserConnected(userEmail)) {
             simpMessagingTemplate.convertAndSendToUser(
@@ -150,25 +154,38 @@ public class NotificationServiceImpl implements NotificationService {
     public ResponseDTO countUnreadNotifications(String userEmail) {
         return ResponseDTO.builder()
                 .userEmail(userEmail)
-                .count(notificationDAO.countUnreadNotifications(userEmail))
+                .count(notificationRepository.countByUserEmailAndCheckIsFalse(userEmail))
                 .build();
     }
 
     // 확인으로 전환
     @Override
     public NotificationDTO markAsRead(Long notificationId) {
-        return notificationDAO.asRead(notificationId);
+        Notification notification = notificationRepository.findById(notificationId).orElseThrow(() -> new RuntimeException("Notification Not Found"));
+        notification.setCheck(Boolean.TRUE);
+
+        return notificationRepository.save(notification).toNotificationDTO(0);
     }
 
     // 유저의 모든 안읽은 메일 확인 전환
     @Override
     public ResponseDTO markAllAsRead(String userEmail) {
-        return notificationDAO.allAsRead(userEmail);
+        List<Notification> notifications = notificationRepository.findAllByUserEmailAndCheckIsFalse(userEmail);
+
+        for(Notification notification : notifications) {
+            notification.setCheck(Boolean.TRUE);
+            notificationRepository.save(notification);
+        }
+
+        return ResponseDTO.builder()
+                .userEmail(userEmail)
+                .count(notifications.size())
+                .build();
     }
 
     // 유저의 모든 알림 조회
     @Override
     public List<NotificationDTO> getAllNotificationsByUserEmail(String userEmail) {
-        return notificationDAO.getAllNotificationsByUserEmail(userEmail);
+        return notificationRepository.findAllByUserEmail(userEmail);
     }
 }

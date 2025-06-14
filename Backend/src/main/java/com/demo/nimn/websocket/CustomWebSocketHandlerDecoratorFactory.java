@@ -13,7 +13,7 @@ import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
 @RequiredArgsConstructor
 public class CustomWebSocketHandlerDecoratorFactory implements WebSocketHandlerDecoratorFactory {
 
-    private final ChannelInterceptor channelInterceptor;
+    private final CustomChannelInterceptor customChannelInterceptor;
 
     @NotNull
     @Override
@@ -33,7 +33,7 @@ public class CustomWebSocketHandlerDecoratorFactory implements WebSocketHandlerD
                 String sessionId = session.getId();
 
                 // 세션 정보 제거
-                channelInterceptor.removeSession(sessionId);
+                customChannelInterceptor.removeSession(sessionId);
             }
         };
     }
