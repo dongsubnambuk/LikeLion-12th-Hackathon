@@ -59,7 +59,8 @@ jobs:
             # 원자적 교체
             mv /home/${{ secrets.FRONT_USERNAME }}/Frontend/build /home/${{ secrets.FRONT_USERNAME }}/Frontend/build_old 2>/dev/null || true
             mv /home/${{ secrets.FRONT_USERNAME }}/Frontend/build_temp /home/${{ secrets.FRONT_USERNAME }}/Frontend/build
-            rm -rf /home/${{ secrets.FRONT_USERNAME }}/Frontend/build_old
+            
+            sudo rm -rf /home/${{ secrets.FRONT_USERNAME }}/Frontend/build_old 2>/dev/null || true
 
       - name: Restart Services
         uses: appleboy/ssh-action@v0.1.5
