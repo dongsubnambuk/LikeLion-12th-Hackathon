@@ -3,8 +3,8 @@ name: Frontend Deploy
 on:
   push:
     paths:
-      - 'Frontend/**'
-      - '.github/workflows/frontend-deploy.yml'
+      - 'Front/**'
+      - '.github/workflows/front-deploy.yml'
     branches: ['develop']
   workflow_dispatch:
 
@@ -16,54 +16,23 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: Frontend/package-lock.json
-
       - name: Install & Build React
         working-directory: Frontend
         run: |
           npm install
           CI='' npm run build
 
-      - name: Deploy to temp and swap
-        uses: appleboy/ssh-action@v0.1.5
-        with:
-          host: ${{ secrets.FRONT_AWS_IP }}
-          username: ${{ secrets.FRONT_USERNAME }}
-          key: ${{ secrets.FRONT_AWS_KEY }}
-          script: |
-            # 임시 디렉토리에 배포
-            rm -rf /home/${{ secrets.FRONT_USERNAME }}/Frontend/build_temp
-            mkdir -p /home/${{ secrets.FRONT_USERNAME }}/Frontend/build_temp
-
-      - name: Deploy files
+      - name: Copy Build Files to EC2 
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.FRONT_AWS_IP }}
           username: ${{ secrets.FRONT_USERNAME }}
           key: ${{ secrets.FRONT_AWS_KEY }}
-          source: "Frontend/build/*"
-          target: "/home/${{ secrets.FRONT_USERNAME }}/Frontend/build_temp/"
+          source: "front/*"
+          target: "/home/${{ secrets.FRONT_USERNAME }}/"
 
-      - name: Atomic swap
-        uses: appleboy/ssh-action@v0.1.5
-        with:
-          host: ${{ secrets.FRONT_AWS_IP }}
-          username: ${{ secrets.FRONT_USERNAME }}
-          key: ${{ secrets.FRONT_AWS_KEY }}
-          script: |
-            # 원자적 교체
-            mv /home/${{ secrets.FRONT_USERNAME }}/Frontend/build /home/${{ secrets.FRONT_USERNAME }}/Frontend/build_old 2>/dev/null || true
-            mv /home/${{ secrets.FRONT_USERNAME }}/Frontend/build_temp /home/${{ secrets.FRONT_USERNAME }}/Frontend/build
-            
-            sudo rm -rf /home/${{ secrets.FRONT_USERNAME }}/Frontend/build_old 2>/dev/null || true
-
-      - name: Restart Services
-        uses: appleboy/ssh-action@v0.1.5
+      - name: Restart Nginx on EC2
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.FRONT_AWS_IP }}
           username: ${{ secrets.FRONT_USERNAME }}
