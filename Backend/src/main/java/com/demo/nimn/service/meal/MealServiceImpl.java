@@ -5,7 +5,6 @@ import com.demo.nimn.dao.meal.WeeklyMealPlanDAO;
 import com.demo.nimn.dto.meal.*;
 import com.demo.nimn.entity.meal.*;
 import com.demo.nimn.service.ai.AiService;
-import com.demo.nimn.service.communication.CommunicationService;
 import com.demo.nimn.service.review.ReviewService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
