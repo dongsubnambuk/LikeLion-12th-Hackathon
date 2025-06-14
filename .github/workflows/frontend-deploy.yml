@@ -29,18 +29,40 @@ jobs:
           npm install
           CI='' npm run build
 
-      - name: Copy Build Files to EC2 
+      - name: Deploy to temp and swap
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.FRONT_AWS_IP }}
+          username: ${{ secrets.FRONT_USERNAME }}
+          key: ${{ secrets.FRONT_AWS_KEY }}
+          script: |
+            # 임시 디렉토리에 배포
+            rm -rf /home/${{ secrets.FRONT_USERNAME }}/Frontend/build_temp
+            mkdir -p /home/${{ secrets.FRONT_USERNAME }}/Frontend/build_temp
+
+      - name: Deploy files
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.FRONT_AWS_IP }}
           username: ${{ secrets.FRONT_USERNAME }}
           key: ${{ secrets.FRONT_AWS_KEY }}
-          source: "Frontend/build"
-          target: "/home/${{ secrets.FRONT_USERNAME }}/"
-          overwrite: true
+          source: "Frontend/build/*"
+          target: "/home/${{ secrets.FRONT_USERNAME }}/Frontend/build_temp/"
 
-      - name: Restart PM2 on EC2
-        uses: appleboy/ssh-action@master
+      - name: Atomic swap
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.FRONT_AWS_IP }}
+          username: ${{ secrets.FRONT_USERNAME }}
+          key: ${{ secrets.FRONT_AWS_KEY }}
+          script: |
+            # 원자적 교체
+            mv /home/${{ secrets.FRONT_USERNAME }}/Frontend/build /home/${{ secrets.FRONT_USERNAME }}/Frontend/build_old 2>/dev/null || true
+            mv /home/${{ secrets.FRONT_USERNAME }}/Frontend/build_temp /home/${{ secrets.FRONT_USERNAME }}/Frontend/build
+            rm -rf /home/${{ secrets.FRONT_USERNAME }}/Frontend/build_old
+
+      - name: Restart Services
+        uses: appleboy/ssh-action@v0.1.5
         with:
           host: ${{ secrets.FRONT_AWS_IP }}
           username: ${{ secrets.FRONT_USERNAME }}
