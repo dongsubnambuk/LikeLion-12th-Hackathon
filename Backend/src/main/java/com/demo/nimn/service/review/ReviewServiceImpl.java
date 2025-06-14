@@ -10,7 +10,6 @@ import com.demo.nimn.entity.review.DailyReview;
 import com.demo.nimn.entity.review.Review;
 import com.demo.nimn.service.meal.MealService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,16 +23,17 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Autowired
     public ReviewServiceImpl(ReviewDAO reviewDAO,
-                             @Lazy MealService mealService) {
+                             MealService mealService) {
         this.reviewDAO = reviewDAO;
         this.mealService = mealService;
     }
 
+    // TODO-jh: Food 생성할 때 Review도 같이 생성해서 저장 로직 추가, Cascade 속성 사용 중
     @Override
     public void createReview(FoodMenu foodMenu){
-        // TODO-jh: Food 생성할 때 Review도 같이 생성해서 저장 로직 추가, Cascade 속성 사용 중
     }
 
+    // TODO-jh: 사용자 ID, 날짜로 리뷰 생성하는 메소드 구현해야 함.
     @Override
     public void createDailyReview(UserDailyMealPlanDTO userDailyMealPlanDTO, String userEmail){
         List<FoodMenu> foodMenus = new ArrayList<>();
@@ -72,8 +72,6 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewDAO.incrementDisLikes(reviewId);
         return toReviewDTO(review);
     }
-
-    // TODO-jh: 사용자 ID, 날짜로 리뷰 생성하는 메소드 구현해야 함.
 
     public ReviewDTO toReviewDTO(Review review){
         return ReviewDTO.builder()

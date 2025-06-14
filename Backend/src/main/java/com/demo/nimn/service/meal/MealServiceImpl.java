@@ -5,7 +5,6 @@ import com.demo.nimn.dao.meal.WeeklyMealPlanDAO;
 import com.demo.nimn.dto.meal.*;
 import com.demo.nimn.entity.meal.*;
 import com.demo.nimn.service.ai.AiService;
-import com.demo.nimn.service.review.ReviewService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ public class MealServiceImpl implements MealService {
     private final MealDAO mealDAO;
     private final WeeklyMealPlanDAO weeklyMealPlanDAO;
     private final AiService aiService;
-    private final ReviewService reviewService;
     private final Logger logger = LoggerFactory.getLogger(MealServiceImpl.class);
 
     private Map<Long, Integer> menuFrequency;
@@ -34,12 +32,10 @@ public class MealServiceImpl implements MealService {
     @Autowired
     public MealServiceImpl(MealDAO mealDAO,
                            WeeklyMealPlanDAO weeklyMealPlanDAO,
-                           AiService aiService,
-                           ReviewService reviewService) {
+                           AiService aiService) {
         this.mealDAO = mealDAO;
         this.weeklyMealPlanDAO = weeklyMealPlanDAO;
         this.aiService = aiService;
-        this.reviewService = reviewService;
     }
 
     @Override
@@ -53,7 +49,6 @@ public class MealServiceImpl implements MealService {
         }
 
         mealDAO.createMeal(foodMenu);
-        reviewService.createReview(foodMenu);
 
         return toFoodMenuDTO(foodMenu);
     }
