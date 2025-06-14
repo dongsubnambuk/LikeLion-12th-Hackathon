@@ -29,7 +29,7 @@ jobs:
           username: ${{ secrets.FRONT_USERNAME }}
           key: ${{ secrets.FRONT_AWS_KEY }}
           source: "front/*"
-          target: "/home/${{ secrets.FRONT_USERNAME }}"
+          target: "/home/${{ secrets.FRONT_USERNAME }}/"
 
       - name: Restart PM2 on EC2
         uses: appleboy/ssh-action@master
