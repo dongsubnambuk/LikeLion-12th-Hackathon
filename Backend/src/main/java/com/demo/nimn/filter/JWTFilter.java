@@ -4,6 +4,7 @@ import com.demo.nimn.dto.auth.CustomUserDetails;
 import com.demo.nimn.entity.auth.Users;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,6 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 public class JWTFilter extends OncePerRequestFilter {
 
@@ -25,10 +28,19 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         //request에서 Authorization 헤더를 찾음
-        String authorization= request.getHeader("Authorization");
+        String token = null;
+
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals("token")) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
 
         //Authorization 헤더 검증
-        if (authorization == null || !authorization.startsWith("Bearer ")) {
+        if (token == null ) {
 
 
             filterChain.doFilter(request, response);
@@ -37,9 +49,6 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        System.out.println("authorization now");
-        //Bearer 부분 제거 후 순수 토큰만 획득
-         String token = authorization.split(" ")[1];
 
         //토큰 소멸 시간 검증
         if (jwtUtil.isExpired(token)) {

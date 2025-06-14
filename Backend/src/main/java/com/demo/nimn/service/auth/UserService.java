@@ -13,6 +13,6 @@ public interface UserService {
 
     public UserDetails updateUser(UserDetails user);
 
-    public UsersEmailDTO getUsersEmail();
+    public UsersEmailDTO getAllUsersEmail();
 
 }
