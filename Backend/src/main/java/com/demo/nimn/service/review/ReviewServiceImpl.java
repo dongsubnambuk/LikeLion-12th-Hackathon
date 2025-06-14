@@ -73,6 +73,8 @@ public class ReviewServiceImpl implements ReviewService {
         return toReviewDTO(review);
     }
 
+    // TODO-jh: 사용자 ID, 날짜로 리뷰 생성하는 메소드 구현해야 함.
+
     public ReviewDTO toReviewDTO(Review review){
         return ReviewDTO.builder()
                 .reviewId(review.getId())
