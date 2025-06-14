@@ -12,7 +12,7 @@ import java.util.List;
 
 @Tag(name = "MEAL SERVER API", description = "AI를 사용한 식단 및 이미지 자동 생성")
 @RestController
-@RequestMapping(value = "/api/meal")
+@RequestMapping(value = "/meal")
 public class MealController {
     private final MealService mealService;
 

@@ -13,7 +13,7 @@ import java.util.List;
 
 @Tag(name = "NOTIFICATION SERVER API", description = "알림 전송, 체크, 조회")
 @RestController
-@RequestMapping("/api/notification")
+@RequestMapping("/notification")
 @RequiredArgsConstructor
 public class NotificationController {
     private final NotificationService notificationService;
