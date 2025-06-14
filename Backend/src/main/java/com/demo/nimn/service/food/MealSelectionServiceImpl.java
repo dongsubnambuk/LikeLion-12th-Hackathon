@@ -4,7 +4,6 @@ import com.demo.nimn.dao.food.MealSelectionDAO;
 import com.demo.nimn.dto.food.Response.MealSelectionDTO;
 import com.demo.nimn.dto.food.Request.MealSelectionRequestDTO;
 import com.demo.nimn.entity.food.MealSelection;
-import com.demo.nimn.service.communication.CommunicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +14,10 @@ import java.util.stream.Collectors;
 public class MealSelectionServiceImpl implements MealSelectionService {
 
     private final MealSelectionDAO mealSelectionDAO;
-    private final CommunicationService communicationService;
 
     @Autowired
-    public MealSelectionServiceImpl(MealSelectionDAO mealSelectionDAO,
-                                    CommunicationService communicationService) {
+    public MealSelectionServiceImpl(MealSelectionDAO mealSelectionDAO) {
         this.mealSelectionDAO = mealSelectionDAO;
-        this.communicationService = communicationService;
     }
 
     @Override
@@ -39,10 +35,11 @@ public class MealSelectionServiceImpl implements MealSelectionService {
     }
 
     public MealSelectionDTO convertToMealSelectionDTO(MealSelection mealSelection) {
+        // TODO: foodMenu 조회해서 가져오는 로직 들어가야 함
         return MealSelectionDTO.builder()
                 .mealSelectionId(mealSelection.getId())
                 .userEmail(mealSelection.getUserEmail())
-                .foodMenu(communicationService.getFoodMenu(mealSelection.getFoodMenuId()))
+                .foodMenu(null)
                 .mealTime(mealSelection.getMealTime())
                 .count(mealSelection.getCount())
                 .build();

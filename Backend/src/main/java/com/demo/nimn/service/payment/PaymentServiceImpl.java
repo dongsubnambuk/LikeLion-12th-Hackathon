@@ -3,7 +3,7 @@ package com.demo.nimn.service.payment;
 import com.demo.nimn.dao.payment.PaymentDAO;
 import com.demo.nimn.dto.payment.*;
 import com.demo.nimn.entity.payment.*;
-import com.demo.nimn.service.communication.CommunicationService;
+import com.demo.nimn.service.auth.UserService;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
@@ -23,7 +23,7 @@ import java.util.List;
 @Service
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentDAO paymentDAO;
-    private final CommunicationService communicationService;
+    private final UserService userService;
     private final OrderService orderService;
     private final IamportClient iamportClient;
     private final Logger logger = LoggerFactory.getLogger(PaymentServiceImpl.class);
@@ -34,11 +34,11 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
     public PaymentServiceImpl(PaymentDAO paymentDAO,
-                              CommunicationService communicationService,
+                              UserService userService,
                               OrderService orderService,
                               IamportClient iamportClient) {
         this.paymentDAO = paymentDAO;
-        this.communicationService = communicationService;
+        this.userService = userService;
         this.orderService = orderService;
         this.iamportClient = iamportClient;
     }
@@ -110,8 +110,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public UserDTO readNonPurchasersThisWeek(){
+        // TODO-jh: 로직 수정 필요, 현재는 전체 유저에서 이번 주 구매한 유저를 제외한 모든 유저를 반환하고 있으나 이번 주에 식단을 주문한 유저 중에 결제를 안 한 유저를 반환해야 함.
         List<String> purchasersThisWeek = paymentDAO.findPurchasersThisWeek();
-        List<String> allUsers = communicationService.readAllUser();
+        List<String> allUsers = userService.getUsersEmail().getEmail();
         List<String> nonPurchasers = allUsers.stream()
                 .filter(user -> !purchasersThisWeek.contains(user))
                 .toList();

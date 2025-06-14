@@ -7,7 +7,6 @@ import com.demo.nimn.dto.food.Response.WeeklyDietDTO;
 import com.demo.nimn.entity.food.DailyDiet;
 import com.demo.nimn.entity.food.MealSelection;
 import com.demo.nimn.entity.food.WeeklyDiet;
-import com.demo.nimn.service.communication.CommunicationService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,15 +19,12 @@ public class WeeklyDietServiceImpl implements WeeklyDietService {
 
     private final WeeklyDietDAO weeklyDietDAO;
     private final DailyDietService dailyDietService;
-    private final CommunicationService communicationService;
 
     @Autowired
     public WeeklyDietServiceImpl(WeeklyDietDAO weeklyDietDAO,
-                                 DailyDietService dailyDietService,
-                                 CommunicationService communicationService) {
+                                 DailyDietService dailyDietService) {
         this.weeklyDietDAO = weeklyDietDAO;
         this.dailyDietService = dailyDietService;
-        this.communicationService = communicationService;
     }
 
     @Override
@@ -39,7 +35,6 @@ public class WeeklyDietServiceImpl implements WeeklyDietService {
         }
         WeeklyDiet entity = convertToWeeklyDietEntity(weeklyDietDTO);
         weeklyDietDAO.create(entity);
-        communicationService.createReview(entity.getUserEmail(), convertToDailyMealPlanDTOS(entity));
         return convertToWeeklyDietDTO(entity);
     }
 
