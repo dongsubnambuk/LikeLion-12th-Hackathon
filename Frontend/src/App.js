@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import './App.css';
 import Layout from './components/Layout';
 import Login from './pages/Login';
@@ -21,58 +21,64 @@ import DietPayment from './pages/DietPaymentPage';
 import Admin from './pages/Admin';
 import DietPaymentComplete from './pages/DietPaymentComplete';
 
-const App = () => {
+const AppContent = () => {
+  const location = useLocation();
+  const isAdminPage = location.pathname === '/admin';
 
-    useEffect(() => {
-        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-        let unloadHandled = false;
-    
-        const handleBeforeUnload = (event) => {
-          // Chrome 브라우저에서 새로고침 시 로컬 스토리지 유지
-          if (unloadHandled) {
-            localStorage.clear();
-          } else {
-            // 기본 새로고침 경고 메시지 처리
-            event.preventDefault();
-            event.returnValue = ''; // 일부 브라우저에서 기본 경고 메시지를 표시합니다.
-          }
-        };
-    
-        const handleVisibilityChange = () => {
-          // Safari 브라우저에서 페이지가 보이지 않을 때 로컬 스토리지 비우기
-          if (document.visibilityState === 'hidden') {
-            localStorage.clear();
-          }
-        };
-    
-        const handleUnload = () => {
-          // 페이지가 완전히 닫힐 때 로컬 스토리지 비우기
-          unloadHandled = true;
-          localStorage.clear();
-        };
-    
-        if (isSafari) {
-          // Safari 브라우저일 경우 visibilitychange 이벤트를 사용합니다.
-          document.addEventListener('visibilitychange', handleVisibilityChange);
-        } else {
-          // Safari가 아닐 경우 beforeunload와 unload 이벤트를 사용합니다.
-          window.addEventListener('beforeunload', handleBeforeUnload);
-          window.addEventListener('unload', handleUnload);
-        }
-    
-        return () => {
-          if (isSafari) {
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
-          } else {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-            window.removeEventListener('unload', handleUnload);
-          }
-        };
-      }, []);
+  useEffect(() => {
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    let unloadHandled = false;
+
+    const handleBeforeUnload = (event) => {
+      // Chrome 브라우저에서 새로고침 시 로컬 스토리지 유지
+      if (unloadHandled) {
+        localStorage.clear();
+      } else {
+        // 기본 새로고침 경고 메시지 처리
+        event.preventDefault();
+        event.returnValue = ''; // 일부 브라우저에서 기본 경고 메시지를 표시합니다.
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      // Safari 브라우저에서 페이지가 보이지 않을 때 로컬 스토리지 비우기
+      if (document.visibilityState === 'hidden') {
+        localStorage.clear();
+      }
+    };
+
+    const handleUnload = () => {
+      // 페이지가 완전히 닫힐 때 로컬 스토리지 비우기
+      unloadHandled = true;
+      localStorage.clear();
+    };
+
+    if (isSafari) {
+      // Safari 브라우저일 경우 visibilitychange 이벤트를 사용합니다.
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+    } else {
+      // Safari가 아닐 경우 beforeunload와 unload 이벤트를 사용합니다.
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      window.addEventListener('unload', handleUnload);
+    }
+
+    return () => {
+      if (isSafari) {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      } else {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+        window.removeEventListener('unload', handleUnload);
+      }
+    };
+  }, []);
 
   return (
-    <div className="mobile-container">
-      <Router>
+    <div className={isAdminPage ? "admin-container" : "mobile-container"}>
+      {isAdminPage ? (
+        <Routes>
+          <Route path="/admin" element={<Admin />} />
+        </Routes>
+      ) : (
         <Layout>
           <Routes>
             <Route path="/" element={<MainPage />} />
@@ -91,12 +97,19 @@ const App = () => {
             <Route path="/menuselection" element={<MenuSelection />} />
             <Route path="/dietpaymentmain" element={<DietPaymentMain />} />
             <Route path="/dietpayment" element={<DietPayment />} />
-            <Route path="/admin" element={<Admin />} />
             <Route path="/dietpaymentcomplete" element={<DietPaymentComplete />} />
           </Routes>
         </Layout>
-      </Router>
+      )}
     </div>
+  );
+};
+
+const App = () => {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
   );
 };
 
