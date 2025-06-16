@@ -112,7 +112,7 @@ public class PaymentServiceImpl implements PaymentService {
     public UserDTO readNonPurchasersThisWeek(){
         // TODO-jh: 로직 수정 필요, 현재는 전체 유저에서 이번 주 구매한 유저를 제외한 모든 유저를 반환하고 있으나 이번 주에 식단을 주문한 유저 중에 결제를 안 한 유저를 반환해야 함.
         List<String> purchasersThisWeek = paymentDAO.findPurchasersThisWeek();
-        List<String> allUsers = userService.getUsersEmail().getEmail();
+        List<String> allUsers = userService.getAllUsersEmail().getEmail();
         List<String> nonPurchasers = allUsers.stream()
                 .filter(user -> !purchasersThisWeek.contains(user))
                 .toList();

@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UsersEmailDTO getUsersEmail() {
+    public UsersEmailDTO getAllUsersEmail() {
         List<Users> usersList = userDAO.findAll();
 
         // Stream을 사용하여 변환

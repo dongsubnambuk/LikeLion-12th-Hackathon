@@ -4,6 +4,7 @@ import com.demo.nimn.dto.auth.CustomUserDetails;
 import com.demo.nimn.dto.auth.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +15,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -45,8 +48,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        System.out.println("응답은 받음");
-
         try {
             loginRequest = objectMapper.readValue(request.getInputStream(), UserDTO.class);
         } catch (IOException e) {
@@ -58,9 +59,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String email = obtainUsername(request);
         String password = obtainPassword(request);
 
-        System.out.println("이메일 : "+email);
-        System.out.println("비밀번호 : "+ password);
-
         //스프링 시큐리티에서 email과 password를 검증하기 위해서는 token에 담아야 함
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password, null);
 
@@ -71,8 +69,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     //로그인 성공시 실행하는 메소드 (여기서 JWT를 발급하면 됨)
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
-
-        System.out.println("로그인 성공");
 
         try {
         //UserDetailsS
@@ -91,16 +87,22 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //헤더에 토큰 값을 넣을 때.
         //response.addHeader("Authorization", "Bearer " + token);
 
+        Cookie cookie = new Cookie("token", token);
+        cookie.setMaxAge(60 * 60 * 24); // 유효기간 설정(초), 상대시간
+        response.addCookie(cookie); // 응답에 쿠키 추가
+
         // JSON 형태로 응답 바디에 담기
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        // 응답 Body에 담아 보낼 Key : Value
+//        // 응답 Body에 담아 보낼 Key : Value
+//        String jsonResponse = String.format("{" +
+//                "\"token\": \"%s\", " +
+//                "\"email\": \"%s\", " +
+//                "\"role\": \"%s\"}",
+//                "Bearer " + token, email, role);
         String jsonResponse = String.format("{" +
-                "\"token\": \"%s\", " +
-                "\"email\": \"%s\", " +
-                "\"role\": \"%s\"}",
-                "Bearer " + token, email, role);
+                "\"isSuccess\": \"성공\"");
 
         response.getWriter().write(jsonResponse);
         response.getWriter().flush();
