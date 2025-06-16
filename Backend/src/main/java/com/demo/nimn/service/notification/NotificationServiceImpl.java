@@ -1,7 +1,7 @@
 package com.demo.nimn.service.notification;
 
-import com.demo.nimn.dto.food.Response.DailyDietDTO;
-import com.demo.nimn.dto.food.Response.MealSelectionDTO;
+import com.demo.nimn.dto.diet.Response.DailyDietDTO;
+import com.demo.nimn.dto.diet.Response.FoodSelectionDTO;
 import com.demo.nimn.dto.notification.NotificationDTO;
 import com.demo.nimn.dto.notification.response.NotificationCountDTO;
 import com.demo.nimn.dto.payment.UserDTO;
@@ -9,7 +9,7 @@ import com.demo.nimn.dto.review.DailyReviewDTO;
 import com.demo.nimn.entity.notification.Notification;
 import com.demo.nimn.enums.NotificationType;
 import com.demo.nimn.repository.notification.NotificationRepository;
-import com.demo.nimn.service.food.DailyDietService;
+import com.demo.nimn.service.diet.DietService;
 import com.demo.nimn.service.payment.PaymentService;
 import com.demo.nimn.service.review.ReviewService;
 import com.demo.nimn.websocket.SessionManageService;
@@ -35,7 +35,7 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository;
     private final SessionManageService sessionManageService;
     @Lazy
-    private final DailyDietService dailyDietService;
+    private final DietService dietService;
     @Lazy
     private final PaymentService paymentService;
     @Lazy
@@ -70,17 +70,17 @@ public class NotificationServiceImpl implements NotificationService {
     // 식단 알림 및 캐시 초기화 ( 매일 7시 )
     @Scheduled(cron = "0 0 7 ? * *")
     public void sendDailyDiet() {
-        dailyDietDTOList = dailyDietService.getByDate(LocalDate.now());
+        dailyDietDTOList = dietService.getByDate(LocalDate.now());
 
         for (DailyDietDTO dailyDietDTO : dailyDietDTOList) {
             StringBuilder content = new StringBuilder();
             content.append("오늘의 식단은 ");
-            for (MealSelectionDTO mealSelectionDTO : dailyDietDTO.getMealSelections()) {
-                content.append(mealSelectionDTO.getMealTime())
+            for (FoodSelectionDTO foodSelectionDTO : dailyDietDTO.getMealSelections()) {
+                content.append(foodSelectionDTO.getFoodTime())
                         .append(" ")
-                        .append(mealSelectionDTO.getFoodMenu().getName())
+                        .append(foodSelectionDTO.getFoodMenu().getName())
                         .append(" ")
-                        .append(mealSelectionDTO.getCount())
+                        .append(foodSelectionDTO.getCount())
                         .append("개, ");
             }
             content.delete(content.length() - 3, content.length());
@@ -102,9 +102,9 @@ public class NotificationServiceImpl implements NotificationService {
         for (DailyDietDTO dailyDietDTO : dailyDietDTOList) {
             StringBuilder content = new StringBuilder();
 
-            MealSelectionDTO mealSelection = dailyDietDTO.getMealSelections()
+            FoodSelectionDTO mealSelection = dailyDietDTO.getMealSelections()
                     .stream()
-                    .filter(mealSelectionDTO -> mealSelectionDTO.getMealTime().equals(mealTime))
+                    .filter(mealSelectionDTO -> mealSelectionDTO.getFoodTime().equals(mealTime))
                     .findFirst()
                     .orElse(null);
 
