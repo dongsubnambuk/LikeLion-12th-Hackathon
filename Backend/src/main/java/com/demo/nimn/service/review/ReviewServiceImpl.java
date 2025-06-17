@@ -3,7 +3,7 @@ package com.demo.nimn.service.review;
 import com.demo.nimn.dto.review.DailyDietReviewDTO;
 import com.demo.nimn.dto.review.ReviewDTO;
 import com.demo.nimn.dto.review.ReviewSummaryDTO;
-import com.demo.nimn.entity.food.DailyDiet;
+import com.demo.nimn.entity.diet.DailyDiet;
 import com.demo.nimn.entity.meal.FoodMenu;
 import com.demo.nimn.entity.review.DailyDietReview;
 import com.demo.nimn.entity.review.Review;
@@ -110,22 +110,20 @@ public class ReviewServiceImpl implements ReviewService {
 
     // DailyDietReview 관련
     @Override
-    public void createWeeklyDietReviews(String userEmail, LocalDate startDate, List<DailyDiet> dailyDiets) {
-        // TODO-jh: food -> diet 도메인 변경 후 올바르게 수정 해야 함. mealSelection 변경 예정
-        
+    public void createWeeklyDietReviews(LocalDate startDate, List<DailyDiet> dailyDiets) {
         for (DailyDiet dailyDiet : dailyDiets) {
             // 해당 날짜의 음식들로 빈 Review 생성
-            List<Review> emptyReviews = dailyDiet.getMealSelections().stream()
-                    .map(mealSelection -> Review.builder()
-                            .userEmail(userEmail)
-                            .foodMenu(FoodMenu.builder().id(mealSelection.getFoodMenuId()).build()) // 수정
+            List<Review> emptyReviews = dailyDiet.getFoodSelections().stream()
+                    .map(foodSelection -> Review.builder()
+                            .userEmail(foodSelection.getUserEmail())
+                            .foodMenu(foodSelection.getFoodMenu())
                             .rating(null)
                             .comment(null)
                             .build())
                     .collect(Collectors.toList());
 
             DailyDietReview dailyReview = DailyDietReview.builder()
-                    .userEmail(userEmail)
+                    .userEmail(dailyDiet.getUserEmail())
                     .reviewDate(dailyDiet.getDate())
                     .reviews(emptyReviews)
                     .build();
