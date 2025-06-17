@@ -5,7 +5,6 @@ import com.demo.nimn.dto.food.Response.MealSelectionDTO;
 import com.demo.nimn.dto.notification.NotificationDTO;
 import com.demo.nimn.dto.notification.response.NotificationCountDTO;
 import com.demo.nimn.dto.payment.UserDTO;
-import com.demo.nimn.dto.review.DailyReviewDTO;
 import com.demo.nimn.entity.notification.Notification;
 import com.demo.nimn.enums.NotificationType;
 import com.demo.nimn.repository.notification.NotificationRepository;
@@ -140,13 +139,14 @@ public class NotificationServiceImpl implements NotificationService {
     // 리뷰 알림
     @Scheduled(cron = "0 0 21 ? * *")
     public void sendReview() {
-        List<DailyReviewDTO> reviewList = reviewService.readDailyReviewDTOByDate(LocalDate.now());
-        for (DailyReviewDTO dailyReviewDTO : reviewList) {
-            sendNotification(NotificationType.REVIEW,
-                    dailyReviewDTO.getUserEmail(),
-                    "오늘의 식단 리뷰에 참여해주세요~",
-                    dailyReviewDTO.getDailyReviewId());
-        }
+        // TODO: Review 도메인 수정 후 재구현
+//        List<DailyReviewDTO> reviewList = reviewService.readDailyReviewDTOByDate(LocalDate.now());
+//        for (DailyReviewDTO dailyReviewDTO : reviewList) {
+//            sendNotification(NotificationType.REVIEW,
+//                    dailyReviewDTO.getUserEmail(),
+//                    "오늘의 식단 리뷰에 참여해주세요~",
+//                    dailyReviewDTO.getDailyReviewId());
+//        }
     }
 
     // 안읽은 알림 갯수 조회

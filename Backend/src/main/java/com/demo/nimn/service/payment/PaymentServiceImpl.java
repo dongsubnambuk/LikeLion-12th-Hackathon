@@ -74,6 +74,8 @@ public class PaymentServiceImpl implements PaymentService {
                 throw new RuntimeException("결제금액 위변조 의심");
             }
 
+            // TODO-jh: 결제 완료 후 일주일치 DailyDietReview 생성하는 로직 추가, ReviewService createWeeklyDietReviews 호출
+
             return createPayment(order, request.getPaymentUid());
         } catch (IamportResponseException e) {
             logger.error("아임포트 응답 처리 중 오류 발생: {}", e.getMessage());

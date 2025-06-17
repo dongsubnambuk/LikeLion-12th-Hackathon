@@ -5,17 +5,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
-@Builder
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewDTO {
-    private Long reviewId;
-    private String foodImage;
-    private String foodName;
-    private Long likes;
-    private Long disLikes;
-    private List<String> comment;
+    private Long id;
+    private String userEmail;
+    private Long foodMenuId;
+    private String foodMenuName;
+    private String foodMenuImage;
+    private Double rating;
+    private String comment;
+    private LocalDateTime createdAt;
 }
