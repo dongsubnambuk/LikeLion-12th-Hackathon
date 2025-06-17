@@ -1,6 +1,6 @@
 package com.demo.nimn.service.meal;
 
-import com.demo.nimn.dao.meal.MealDAO;
+import com.demo.nimn.dao.meal.FoodDAO;
 import com.demo.nimn.dao.meal.WeeklyMealPlanDAO;
 import com.demo.nimn.dto.meal.*;
 import com.demo.nimn.entity.meal.*;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class MealServiceImpl implements MealService {
-    private final MealDAO mealDAO;
+    private final FoodDAO foodDAO;
     private final WeeklyMealPlanDAO weeklyMealPlanDAO;
     private final AiService aiService;
     private final Logger logger = LoggerFactory.getLogger(MealServiceImpl.class);
@@ -30,10 +30,10 @@ public class MealServiceImpl implements MealService {
     private Random random;
 
     @Autowired
-    public MealServiceImpl(MealDAO mealDAO,
+    public MealServiceImpl(FoodDAO foodDAO,
                            WeeklyMealPlanDAO weeklyMealPlanDAO,
                            AiService aiService) {
-        this.mealDAO = mealDAO;
+        this.foodDAO = foodDAO;
         this.weeklyMealPlanDAO = weeklyMealPlanDAO;
         this.aiService = aiService;
     }
@@ -48,7 +48,7 @@ public class MealServiceImpl implements MealService {
             throw new IllegalStateException("응답을 FoodMenu 엔티티로 변환하는 데 실패했습니다.");
         }
 
-        mealDAO.createMeal(foodMenu);
+        foodDAO.createMeal(foodMenu);
 
         return toFoodMenuDTO(foodMenu);
     }
@@ -86,18 +86,18 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public FoodMenu readFoodMenuByFoodMenuId(Long foodMenuId) {
-        return mealDAO.findById(foodMenuId);
+        return foodDAO.findById(foodMenuId);
     }
 
     @Override
     public FoodMenuDTO readFoodMenuDTOByFoodMenuId(Long foodMenuId) {
-        FoodMenu foodMenu = mealDAO.findById(foodMenuId);
+        FoodMenu foodMenu = foodDAO.findById(foodMenuId);
         return toFoodMenuDTO(foodMenu);
     }
 
     @Override
     public List<FoodMenuDTO> readAll() {
-        List<FoodMenu> foodMenus = mealDAO.findAll();
+        List<FoodMenu> foodMenus = foodDAO.findAll();
         return toFoodMenuDTOS(foodMenus);
     }
 
@@ -105,7 +105,7 @@ public class MealServiceImpl implements MealService {
         menuFrequency = new HashMap<>();
         weights = new HashMap<>();
         random = new Random();
-        List<FoodMenu> foodMenus = mealDAO.findAll();
+        List<FoodMenu> foodMenus = foodDAO.findAll();
         for (FoodMenu foodMenu : foodMenus) {
             menuFrequency.put(foodMenu.getId(), 0);
             weights.put(foodMenu.getId(), 1.0);
@@ -121,7 +121,7 @@ public class MealServiceImpl implements MealService {
 
     public List<FoodMenu> getRandomMenus(int count) {
         List<FoodMenu> selectedFoodMenus = new ArrayList<>();
-        List<FoodMenu> foodMenus = mealDAO.findAll();
+        List<FoodMenu> foodMenus = foodDAO.findAll();
         Set<Long> usedMenuIds = new HashSet<>();
 
         for (int i = 0; i < count; i++) {
