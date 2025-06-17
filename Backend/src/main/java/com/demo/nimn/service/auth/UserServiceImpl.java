@@ -1,9 +1,9 @@
 package com.demo.nimn.service.auth;
 
-import com.demo.nimn.dao.auth.UserDAO;
 import com.demo.nimn.dto.auth.UserDetails;
 import com.demo.nimn.dto.auth.UsersEmailDTO;
 import com.demo.nimn.entity.auth.Users;
+import com.demo.nimn.repository.auth.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,18 +14,18 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserDAO userDAO;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    private UserServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder, @Autowired UserDAO userDAO){
-        this.userDAO = userDAO;
+    private UserServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder, @Autowired UserRepository userRepository) {
+        this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
     public UserDetails userSignup(UserDetails userDetails) {
 
-        if (userDAO.existsByEmail(userDetails.getEmail())) {
+        if (userRepository.existsByEmail(userDetails.getEmail())) {
             throw new IllegalStateException("동일한 이메일이 이미 존재합니다.");
         }
 
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
                 .role("ROLE_USER")
                 .build();
 
-        userDAO.save(user);
+        userRepository.save(user);
 
         return UserDetails.builder()
                 .name(userDetails.getName())
@@ -61,12 +61,12 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean existsByEmail(String email){
-        return userDAO.existsByEmail(email);
+        return userRepository.existsByEmail(email);
     }
 
     @Override
     public UserDetails getUserDetail(String email) {
-        Users user = userDAO.findByEmail(email);
+        Users user = userRepository.findByEmail(email);
 
         if (user == null) {
             // null이면 빈 UserDetails 리턴하거나 메시지를 포함한 기본 객체 반환
@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails updateUser(UserDetails user) {
         String userPassword;
-        Users userEntity = userDAO.findByEmail(user.getEmail());
+        Users userEntity = userRepository.findByEmail(user.getEmail());
 
         if(user.getPassword() == null || user.getPassword().isEmpty()){
             userPassword = userEntity.getPassword();
@@ -101,13 +101,13 @@ public class UserServiceImpl implements UserService {
             System.out.println(userPassword);
         }
         userEntity.updateUser(user, userPassword);
-        userDAO.save(userEntity);
+        userRepository.save(userEntity);
         return user;
     }
 
     @Override
     public UsersEmailDTO getAllUsersEmail() {
-        List<Users> usersList = userDAO.findAll();
+        List<Users> usersList = userRepository.findAll();
 
         // Stream을 사용하여 변환
         List<String> emails = usersList.stream()

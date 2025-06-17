@@ -1,7 +1,5 @@
 package com.demo.nimn.service.diet;
 
-import com.demo.nimn.dao.diet.DailyDietDAO;
-import com.demo.nimn.dao.diet.WeeklyDietDAO;
 import com.demo.nimn.dto.diet.Request.UserDailyMealPlanDTO;
 import com.demo.nimn.dto.diet.Request.WeeklyDietRequestDTO;
 import com.demo.nimn.dto.diet.Response.DailyDietDTO;
@@ -10,6 +8,8 @@ import com.demo.nimn.dto.diet.Response.WeeklyDietDTO;
 import com.demo.nimn.entity.diet.DailyDiet;
 import com.demo.nimn.entity.diet.FoodSelection;
 import com.demo.nimn.entity.diet.WeeklyDiet;
+import com.demo.nimn.repository.diet.DailyDietRepository;
+import com.demo.nimn.repository.diet.WeeklyDietRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,28 +22,31 @@ import java.util.stream.Collectors;
 @Service
 public class DietServiceImpl implements DietService {
 
-    private final DailyDietDAO dailyDietDAO;
-    private final WeeklyDietDAO weeklyDietDAO;
+
+
+    private final DailyDietRepository dailyDietRepository;
+    private final WeeklyDietRepository weeklyDietRepository;
+
     private final FoodSelectionService foodSelectionService;
 
     @Autowired
-    public DietServiceImpl(DailyDietDAO dailyDietDAO,
-                           FoodSelectionService foodSelectionService,
-                           WeeklyDietDAO weeklyDietDAO
-                                ) {
-        this.dailyDietDAO = dailyDietDAO;
-        this.weeklyDietDAO = weeklyDietDAO;
+    public DietServiceImpl(FoodSelectionService foodSelectionService,
+                           DailyDietRepository dailyDietRepository,
+                           WeeklyDietRepository weeklyDietRepository) {
+
+        this.dailyDietRepository = dailyDietRepository;
+        this.weeklyDietRepository = weeklyDietRepository;
         this.foodSelectionService = foodSelectionService;
     }
     //DailyDiet
     @Override
     public List<DailyDietDTO> getByUserEmailAndDate(String userEmail, LocalDate date) {
-        return dailyDietDAO.getByUserEmailAndDate(userEmail, date).stream().map(this::convertToDailyDietDTO).collect(Collectors.toList());
+        return dailyDietRepository.findByUserEmailAndDate(userEmail, date).stream().map(this::convertToDailyDietDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<DailyDietDTO> getByDate(LocalDate date){
-        return dailyDietDAO.getByDate(date).stream().map(this::convertToDailyDietDTO).collect(Collectors.toList());
+        return dailyDietRepository.findByDate(date).stream().map(this::convertToDailyDietDTO).collect(Collectors.toList());
     }
 
     private DailyDiet convertToDailyDietEntity(DailyDietRequestDTO dailyDietDTO) {
@@ -78,17 +81,17 @@ public class DietServiceImpl implements DietService {
     @Override
     @Transactional
     public WeeklyDietDTO createWeeklyDiet(WeeklyDietRequestDTO weeklyDietDTO) {
-        if(weeklyDietDAO.existsByCurrentWeeklyMealPlan(weeklyDietDTO.getStartDate(), weeklyDietDTO.getUserEmail())){
+        if(weeklyDietRepository.existsByCurrentWeeklyMealPlan(weeklyDietDTO.getStartDate(), weeklyDietDTO.getUserEmail())){
             return null;
         }
         WeeklyDiet entity = convertToWeeklyDietEntity(weeklyDietDTO);
-        weeklyDietDAO.create(entity);
+        weeklyDietRepository.save(entity);
         return convertToWeeklyDietDTO(entity);
     }
 
     @Override
     public WeeklyDietDTO getWeeklyDietByUserEmail(String userEmail) {
-        return convertToWeeklyDietDTO(weeklyDietDAO.getByUserEmail(userEmail));
+        return convertToWeeklyDietDTO(weeklyDietRepository.findByUserEmail(userEmail));
     }
 
     public WeeklyDiet convertToWeeklyDietEntity(WeeklyDietRequestDTO weeklyDietDTO) {

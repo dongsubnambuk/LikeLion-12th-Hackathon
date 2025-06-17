@@ -1,11 +1,11 @@
 package com.demo.nimn.service.diet;
 
-import com.demo.nimn.dao.diet.MealSelectionDAO;
-import com.demo.nimn.dao.meal.FoodDAO;
 import com.demo.nimn.dto.diet.Response.FoodSelectionDTO;
 import com.demo.nimn.dto.diet.Request.FoodSelectionRequestDTO;
 import com.demo.nimn.entity.diet.FoodSelection;
 import com.demo.nimn.entity.meal.FoodMenu;
+import com.demo.nimn.repository.diet.FoodSelectionRepository;
+import com.demo.nimn.repository.meal.MealRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,22 +15,22 @@ import java.util.stream.Collectors;
 @Service
 public class FoodSelectionServiceImpl implements FoodSelectionService {
 
-    private final MealSelectionDAO mealSelectionDAO;
-    private final FoodDAO foodDAO;
+    private final FoodSelectionRepository foodSelectionRepository;
+    private final MealRepository mealRepository;
 
     @Autowired
-    public FoodSelectionServiceImpl(MealSelectionDAO mealSelectionDAO, FoodDAO foodDAO) {
-        this.mealSelectionDAO = mealSelectionDAO;
-        this.foodDAO = foodDAO;
+    public FoodSelectionServiceImpl(FoodSelectionRepository foodSelectionRepository , MealRepository mealRepository) {
+        this.foodSelectionRepository = foodSelectionRepository;
+        this.mealRepository = mealRepository;
     }
 
     @Override
     public FoodSelectionDTO getById(Long mealSelectionId) {
-        return convertToMealSelectionDTO(mealSelectionDAO.getById(mealSelectionId));
+        return convertToMealSelectionDTO(foodSelectionRepository.getReferenceById(mealSelectionId));
     }
 
     public FoodSelection convertToMealSelectionEntity(FoodSelectionRequestDTO mealSelectionDTO) {
-        FoodMenu foodMenu = foodDAO.findById(mealSelectionDTO.getFoodMenuId());
+        FoodMenu foodMenu = mealRepository.getReferenceById(mealSelectionDTO.getFoodMenuId());
 
         return FoodSelection.builder()
                 .userEmail(mealSelectionDTO.getUserEmail())
