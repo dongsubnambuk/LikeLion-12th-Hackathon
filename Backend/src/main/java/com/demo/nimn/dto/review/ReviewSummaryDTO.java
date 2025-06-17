@@ -5,16 +5,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DailyReviewDTO {
-    private Long dailyReviewId;
-    private String userEmail;
-    private LocalDate reviewDate;
+public class ReviewSummaryDTO {
+    private Long id;
+    private Long foodMenuId;
+    private String foodMenuName;
+    private String foodMenuImage;
+    private Double averageRating;
+    private Long totalReviews;
     private List<ReviewDTO> reviews;
 }

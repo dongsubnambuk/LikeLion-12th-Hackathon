@@ -1,125 +1,230 @@
 package com.demo.nimn.service.review;
 
-import com.demo.nimn.dao.review.ReviewDAO;
-import com.demo.nimn.dto.review.DailyReviewDTO;
+import com.demo.nimn.dto.review.DailyDietReviewDTO;
 import com.demo.nimn.dto.review.ReviewDTO;
-import com.demo.nimn.dto.review.UserDailyMealPlanDTO;
-import com.demo.nimn.dto.review.UserWeeklyMealPlanDTO;
+import com.demo.nimn.dto.review.ReviewSummaryDTO;
+import com.demo.nimn.entity.food.DailyDiet;
 import com.demo.nimn.entity.meal.FoodMenu;
-import com.demo.nimn.entity.review.DailyReview;
+import com.demo.nimn.entity.review.DailyDietReview;
 import com.demo.nimn.entity.review.Review;
-import com.demo.nimn.service.meal.MealService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.demo.nimn.entity.review.ReviewSummary;
+import com.demo.nimn.repository.meal.MealRepository;
+import com.demo.nimn.repository.review.DailyDietReviewRepository;
+import com.demo.nimn.repository.review.ReviewRepository;
+import com.demo.nimn.repository.review.ReviewSummaryRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ReviewServiceImpl implements ReviewService {
-    private final ReviewDAO reviewDAO;
-    private final MealService mealService;
 
-    @Autowired
-    public ReviewServiceImpl(ReviewDAO reviewDAO,
-                             MealService mealService) {
-        this.reviewDAO = reviewDAO;
-        this.mealService = mealService;
+    private final ReviewRepository reviewRepository;
+    private final ReviewSummaryRepository reviewSummaryRepository;
+    private final DailyDietReviewRepository dailyDietReviewRepository;
+    private final MealRepository mealRepository;
+
+    public ReviewServiceImpl(ReviewRepository reviewRepository,
+                             ReviewSummaryRepository reviewSummaryRepository,
+                             DailyDietReviewRepository dailyDietReviewRepository,
+                             MealRepository mealRepository) {
+        this.reviewRepository = reviewRepository;
+        this.reviewSummaryRepository = reviewSummaryRepository;
+        this.dailyDietReviewRepository = dailyDietReviewRepository;
+        this.mealRepository = mealRepository;
     }
 
-    // TODO-jh: Food 생성할 때 Review도 같이 생성해서 저장 로직 추가, Cascade 속성 사용 중
-    @Override
-    public void createReview(FoodMenu foodMenu){
+    // Review 관련
+    public ReviewDTO createReview(ReviewDTO reviewDTO) {
+        FoodMenu foodMenu = mealRepository.findById(reviewDTO.getFoodMenuId())
+                .orElseThrow(() -> new RuntimeException("FoodMenu not found"));
+
+        Review review = Review.builder()
+                .userEmail(reviewDTO.getUserEmail())
+                .foodMenu(foodMenu)
+                .rating(reviewDTO.getRating())
+                .comment(reviewDTO.getComment())
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        Review savedReview = reviewRepository.save(review);
+        return convertToReviewDTO(savedReview);
     }
 
-    // TODO-jh: 사용자 ID, 날짜로 리뷰 생성하는 메소드 구현해야 함.
+    // ReviewSummary 관련
     @Override
-    public void createDailyReview(UserDailyMealPlanDTO userDailyMealPlanDTO, String userEmail){
-        List<FoodMenu> foodMenus = new ArrayList<>();
+    public ReviewSummaryDTO getReviewSummaryByFoodMenuId(Long foodMenuId) {
+        ReviewSummary reviewSummary = reviewSummaryRepository.findByFoodMenuId(foodMenuId)
+                .orElseThrow(() -> new RuntimeException("ReviewSummary not found"));
 
-        for(Long foodMenuId : userDailyMealPlanDTO.getFoodMenuIds()){
-            FoodMenu foodMenu = mealService.readFoodMenuByFoodMenuId(foodMenuId);
-            foodMenus.add(foodMenu);
+        List<Review> completedReviews = reviewSummary.getReviews().stream()
+                .filter(review -> review.getRating() != null)
+                .collect(Collectors.toList());
+
+        reviewSummary.setReviews(completedReviews);
+        return convertToReviewSummaryDTO(reviewSummary);
+    }
+
+    @Override
+    public List<ReviewSummaryDTO> getAllReviewSummaries() {
+        List<ReviewSummary> reviewSummaries = reviewSummaryRepository.findAll();
+        return reviewSummaries.stream()
+                .map(this::convertToReviewSummaryDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ReviewSummaryDTO> getReviewSummariesOrderByRating(String sortOrder) {
+        List<ReviewSummary> reviewSummaries;
+        if ("desc".equalsIgnoreCase(sortOrder)) {
+            reviewSummaries = reviewSummaryRepository.findAllOrderByAverageRatingDesc();
+        } else {
+            reviewSummaries = reviewSummaryRepository.findAllOrderByAverageRatingAsc();
+        }
+        return reviewSummaries.stream()
+                .map(this::convertToReviewSummaryDTO)
+                .collect(Collectors.toList());
+    }
+
+    private void updateReviewSummaryByFoodMenuId(Long foodMenuId) {
+        ReviewSummary summary = reviewSummaryRepository.findByFoodMenuId(foodMenuId)
+                .orElseThrow(() -> new RuntimeException("ReviewSummary not found"));
+        updateReviewSummaryData(summary);
+    }
+
+    private void updateReviewSummaryData(ReviewSummary summary) {
+        Long foodMenuId = summary.getFoodMenu().getId();
+        Double averageRating = reviewRepository.calculateAverageRatingByFoodMenuId(foodMenuId);
+        Long totalReviews = reviewRepository.countCompletedReviewsByFoodMenuId(foodMenuId);
+
+        summary.setAverageRating(averageRating != null ? averageRating : 0.0);
+        summary.setTotalReviews(totalReviews);
+
+        reviewSummaryRepository.save(summary);
+    }
+
+    // DailyDietReview 관련
+    @Override
+    public void createWeeklyDietReviews(String userEmail, LocalDate startDate, List<DailyDiet> dailyDiets) {
+        // TODO-jh: food -> diet 도메인 변경 후 올바르게 수정 해야 함. mealSelection 변경 예정
+        
+        for (DailyDiet dailyDiet : dailyDiets) {
+            // 해당 날짜의 음식들로 빈 Review 생성
+            List<Review> emptyReviews = dailyDiet.getMealSelections().stream()
+                    .map(mealSelection -> Review.builder()
+                            .userEmail(userEmail)
+                            .foodMenu(FoodMenu.builder().id(mealSelection.getFoodMenuId()).build()) // 수정
+                            .rating(null)
+                            .comment(null)
+                            .build())
+                    .collect(Collectors.toList());
+
+            DailyDietReview dailyReview = DailyDietReview.builder()
+                    .userEmail(userEmail)
+                    .reviewDate(dailyDiet.getDate())
+                    .reviews(emptyReviews)
+                    .build();
+
+            dailyDietReviewRepository.save(dailyReview);
+        }
+    }
+
+    @Override
+    public DailyDietReviewDTO getDailyDietReviewByUserAndDate(String userEmail, LocalDate reviewDate) {
+        DailyDietReview dailyReview = dailyDietReviewRepository.findByUserEmailAndReviewDate(userEmail, reviewDate)
+                .orElseThrow(() -> new RuntimeException("DailyDietReview not found"));
+        return convertToDailyDietReviewDTO(dailyReview);
+    }
+
+    @Override
+    public List<DailyDietReviewDTO> getDailyDietReviewsByDate(LocalDate reviewDate) {
+        // TODO: 알림 서비스에서 review 알림 보낼 때 사용
+        
+        List<DailyDietReview> dailyReviews = dailyDietReviewRepository.findByReviewDate(reviewDate);
+        return dailyReviews.stream()
+                .map(this::convertToDailyDietReviewDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public DailyDietReviewDTO updateDailyDietReview(Long id, List<ReviewDTO> reviewDTOs) {
+        DailyDietReview dailyReview = dailyDietReviewRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("DailyDietReview not found"));
+
+        List<Review> reviews = reviewDTOs.stream()
+                .map(this::convertToReviewEntity)
+                .collect(Collectors.toList());
+
+        dailyReview.setReviews(reviews);
+        DailyDietReview savedDailyReview = dailyDietReviewRepository.save(dailyReview);
+
+        for(ReviewDTO reviewDTO : reviewDTOs){
+            updateReviewSummaryByFoodMenuId(reviewDTO.getFoodMenuId());
         }
 
-        List<Review> reviews = reviewDAO.readReviewsByFoodMenus(foodMenus);
-        DailyReview dailyReview = toDailyReviewEntity(reviews, userEmail, userDailyMealPlanDTO.getDate());
-        reviewDAO.createDailyReview(dailyReview);
+        return convertToDailyDietReviewDTO(savedDailyReview);
     }
 
-    @Override
-    public void createWeeklyReview(UserWeeklyMealPlanDTO userWeeklyMealPlanDTO){
-        for(UserDailyMealPlanDTO userDailyMealPlanDTO : userWeeklyMealPlanDTO.getUserDailyMealPlans()){
-            createDailyReview(userDailyMealPlanDTO, userWeeklyMealPlanDTO.getUserEmail());
-        }
-    }
-
-    @Override
-    public List<DailyReviewDTO> readDailyReviewDTOByDate(LocalDate date){
-        List<DailyReview> dailyReviews = reviewDAO.findByReviewDate(date);
-        return toDailyReviewDTOS(dailyReviews);
-    }
-
-    @Override
-    public ReviewDTO incrementLikes(Long reviewId){
-        Review review = reviewDAO.incrementLikes(reviewId);
-        return toReviewDTO(review);
-    }
-
-    @Override
-    public ReviewDTO incrementDisLikes(Long reviewId){
-        Review review = reviewDAO.incrementDisLikes(reviewId);
-        return toReviewDTO(review);
-    }
-
-    public ReviewDTO toReviewDTO(Review review){
+    // DTO 변환 메서드들
+    private ReviewDTO convertToReviewDTO(Review review) {
         return ReviewDTO.builder()
-                .reviewId(review.getId())
-                .foodImage(review.getFoodMenu().getImage())
-                .foodName(review.getFoodMenu().getName())
-                .likes(review.getLikes())
-                .disLikes(review.getDisLikes())
-                .comment(review.getComments())
+                .id(review.getId())
+                .userEmail(review.getUserEmail())
+                .foodMenuId(review.getFoodMenu().getId())
+                .foodMenuName(review.getFoodMenu().getName())
+                .foodMenuImage(review.getFoodMenu().getImage())
+                .rating(review.getRating())
+                .comment(review.getComment())
+                .createdAt(review.getCreatedAt())
                 .build();
     }
 
-    public List<ReviewDTO> reviewDTOS(List<Review> reviews){
-        List<ReviewDTO> reviewDTOS = new ArrayList<>();
-        for(Review review : reviews){
-            reviewDTOS.add(toReviewDTO(review));
-        }
-        return reviewDTOS;
+    private Review convertToReviewEntity(ReviewDTO reviewDTO) {
+        FoodMenu foodMenu = mealRepository.findById(reviewDTO.getFoodMenuId())
+                .orElseThrow(() -> new RuntimeException("FoodMenu not found"));
+
+        return Review.builder()
+                .id(reviewDTO.getId())
+                .userEmail(reviewDTO.getUserEmail())
+                .foodMenu(foodMenu)
+                .rating(reviewDTO.getRating())
+                .comment(reviewDTO.getComment())
+                .createdAt(reviewDTO.getCreatedAt())
+                .build();
     }
 
-    public DailyReviewDTO toDailyReviewDTO(DailyReview dailyReview){
-        return DailyReviewDTO.builder()
-                .dailyReviewId(dailyReview.getId())
+    private ReviewSummaryDTO convertToReviewSummaryDTO(ReviewSummary reviewSummary) {
+        List<ReviewDTO> reviewDTOs = reviewSummary.getReviews().stream()
+                .filter(review -> review.getRating() != null)
+                .map(this::convertToReviewDTO)
+                .collect(Collectors.toList());
+
+        return ReviewSummaryDTO.builder()
+                .id(reviewSummary.getId())
+                .foodMenuId(reviewSummary.getFoodMenu().getId())
+                .foodMenuName(reviewSummary.getFoodMenu().getName())
+                .foodMenuImage(reviewSummary.getFoodMenu().getImage())
+                .averageRating(reviewSummary.getAverageRating())
+                .totalReviews(reviewSummary.getTotalReviews())
+                .reviews(reviewDTOs)
+                .build();
+    }
+
+    private DailyDietReviewDTO convertToDailyDietReviewDTO(DailyDietReview dailyReview) {
+        List<ReviewDTO> reviewDTOs = dailyReview.getReviews().stream()
+                .map(this::convertToReviewDTO)
+                .collect(Collectors.toList());
+
+        return DailyDietReviewDTO.builder()
+                .id(dailyReview.getId())
                 .userEmail(dailyReview.getUserEmail())
                 .reviewDate(dailyReview.getReviewDate())
-                .reviews(reviewDTOS(dailyReview.getReviews()))
-                .build();
-    }
-
-    public List<DailyReviewDTO> toDailyReviewDTOS(List<DailyReview> dailyReviews){
-        List<DailyReviewDTO> dailyReviewDTOS = new ArrayList<>();
-        for(DailyReview dailyReview : dailyReviews){
-            dailyReviewDTOS.add(toDailyReviewDTO(dailyReview));
-        }
-        return dailyReviewDTOS;
-    }
-
-    public Review toReviewEntity(FoodMenu foodMenu){
-        return Review.builder()
-                .foodMenu(foodMenu)
-                .build();
-    }
-
-    public DailyReview toDailyReviewEntity(List<Review> reviews, String userEmail, LocalDate date){
-        return DailyReview.builder()
-                .reviewDate(date)
-                .userEmail(userEmail)
-                .reviews(reviews)
+                .reviews(reviewDTOs)
                 .build();
     }
 }

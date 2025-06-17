@@ -2,13 +2,14 @@ package com.demo.nimn.entity.review;
 
 import com.demo.nimn.entity.meal.FoodMenu;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "t_review")
@@ -18,38 +19,23 @@ import java.util.List;
 @AllArgsConstructor
 public class Review {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "food_menu_id")
+    @Column(nullable = false)
+    private String userEmail;
+
+    @ManyToOne
+    @JoinColumn(name = "food_menu_id", nullable = false)
     private FoodMenu foodMenu;
 
-    @Builder.Default
-    private Long likes = 0L;
+    @DecimalMin("1.0")
+    @DecimalMax("5.0")
+    @Column(nullable = false)
+    private Double rating;
+
+    private String comment;
 
     @Builder.Default
-    private Long disLikes = 0L;
-
-    @ElementCollection
-    @CollectionTable(name = "t_review_comment", joinColumns = @JoinColumn(name = "review_id"))
-    @Column(name = "comment")
-    @Builder.Default
-    private List<String> comments = new ArrayList<>();
-
-    @ManyToMany(mappedBy = "reviews")
-    @Builder.Default
-    private List<DailyReview> dailyReviews = new ArrayList<>();
-
-    public void incrementLikes() {
-        this.likes++;
-    }
-
-    public void incrementDisLikes() {
-        this.disLikes++;
-    }
-
-    public void addComment(String comment) {
-        this.comments.add(comment);
-    }
+    private LocalDateTime createdAt = LocalDateTime.now();
 }
