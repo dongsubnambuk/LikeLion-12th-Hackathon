@@ -2,8 +2,10 @@ package com.demo.nimn.service.payment;
 
 import com.demo.nimn.dao.payment.PaymentDAO;
 import com.demo.nimn.dto.payment.*;
+import com.demo.nimn.entity.order.Order;
 import com.demo.nimn.entity.payment.*;
 import com.demo.nimn.service.auth.UserService;
+import com.demo.nimn.service.order.OrderService;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
@@ -49,12 +51,10 @@ public class PaymentServiceImpl implements PaymentService {
             // 결제 단건 조회(아임포트)
             IamportResponse<com.siot.IamportRestClient.response.Payment> iamportResponse = iamportClient.paymentByImpUid(request.getPaymentUid());
             // 주문내역 조회
-            Order order = orderService.findByOrderId(request.getOrderId());
+            Order order = orderService.getOrder(request.getOrderId());
 
             // 결제 완료가 아니면
             if (!iamportResponse.getResponse().getStatus().equals("paid")) {
-                // 주문, 결제 삭제
-                orderService.deleteOrder(order);
                 logger.info("결제 미완료: {}", request.getPaymentUid());
                 throw new RuntimeException("결제 미완료");
             }
@@ -66,13 +66,15 @@ public class PaymentServiceImpl implements PaymentService {
 
             // 결제 금액 검증
             if (iamportPrice != price) {
-                // 주문 삭제
-                orderService.deleteOrder(order);
+                // 주문 취소
+                orderService.cancelOrder(order.getOrderId());
                 // 결제금액 위변조로 의심되는 결제금액을 취소(아임포트)
                 iamportClient.cancelPaymentByImpUid(new CancelData(iamportResponse.getResponse().getImpUid(), true, new BigDecimal(iamportPrice)));
                 logger.info("결제금액 위변조 의심: {}", request.getPaymentUid());
                 throw new RuntimeException("결제금액 위변조 의심");
             }
+            // 결제 후 OrderStatus paid로 변경
+            orderService.payOrder(order.getOrderId());
 
             return createPayment(order, request.getPaymentUid());
         } catch (IamportResponseException e) {
@@ -146,7 +148,7 @@ public class PaymentServiceImpl implements PaymentService {
         return Payment.builder()
                 .paymentId(generateUniquePaymentId())
                 .purchaser(order.getPurchaser())
-                .weeklyId(order.getWeeklyId())
+                .weeklyId(order.getWeeklyDietId())
                 .paymentUid(paymentUid)
                 .totalPrice(order.getTotalPrice())
                 .dateTime(LocalDateTime.now())

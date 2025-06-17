@@ -1,7 +1,7 @@
 package com.demo.nimn.service.payment;
 
 import com.demo.nimn.dto.payment.*;
-import com.demo.nimn.entity.payment.Order;
+import com.demo.nimn.entity.order.Order;
 
 public interface PaymentService {
     public PaymentResponseDTO createImportPayment(PaymentRequestDTO request);
