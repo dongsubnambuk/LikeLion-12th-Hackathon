@@ -1,6 +1,6 @@
 package com.demo.nimn.entity.diet;
 
-import com.demo.nimn.entity.meal.FoodMenu;
+import com.demo.nimn.entity.food.Food;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,7 +20,7 @@ public class FoodSelection {
 
     @ManyToOne
     @JoinColumn(name = "food_menu_id")
-    private FoodMenu foodMenu;
+    private Food food;
 
     private String mealTime;
 

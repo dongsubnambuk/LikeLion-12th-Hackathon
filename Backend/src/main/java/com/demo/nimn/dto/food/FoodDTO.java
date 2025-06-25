@@ -1,4 +1,4 @@
-package com.demo.nimn.dto.meal;
+package com.demo.nimn.dto.food;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class FoodMenuDTO {
+public class FoodDTO {
     Long id;
     String name;
     String image;

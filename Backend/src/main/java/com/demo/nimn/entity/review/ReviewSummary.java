@@ -1,6 +1,6 @@
 package com.demo.nimn.entity.review;
 
-import com.demo.nimn.entity.meal.FoodMenu;
+import com.demo.nimn.entity.food.Food;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +22,7 @@ public class ReviewSummary {
     @OneToOne
     @JoinColumn(name = "food_menu_id", nullable = false)
     @MapsId
-    private FoodMenu foodMenu;
+    private Food food;
 
     @Builder.Default
     private Double averageRating = 0.0;

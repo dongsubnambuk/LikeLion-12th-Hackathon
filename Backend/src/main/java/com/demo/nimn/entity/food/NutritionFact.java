@@ -1,4 +1,4 @@
-package com.demo.nimn.entity.meal;
+package com.demo.nimn.entity.food;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

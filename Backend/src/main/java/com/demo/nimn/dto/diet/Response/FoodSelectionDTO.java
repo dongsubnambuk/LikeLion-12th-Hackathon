@@ -1,6 +1,6 @@
 package com.demo.nimn.dto.diet.Response;
 
-import com.demo.nimn.dto.meal.FoodMenuDTO;
+import com.demo.nimn.dto.food.FoodDTO;
 import lombok.*;
 
 @Getter
@@ -13,6 +13,6 @@ public class FoodSelectionDTO {
     private Long foodSelectionId;
     private String userEmail;
     private String foodTime;
-    private FoodMenuDTO foodMenu;
+    private FoodDTO foodMenu;
     private int count;
 }

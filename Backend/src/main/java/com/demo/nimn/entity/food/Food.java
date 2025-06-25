@@ -1,4 +1,4 @@
-package com.demo.nimn.entity.meal;
+package com.demo.nimn.entity.food;
 
 import com.demo.nimn.entity.review.ReviewSummary;
 import jakarta.persistence.*;
@@ -8,12 +8,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "t_food_menu")
+@Table(name = "t_food")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FoodMenu {
+public class Food {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,6 +38,6 @@ public class FoodMenu {
     @JoinColumn
     private NutritionFact nutritionFact;
 
-    @OneToOne(mappedBy = "foodMenu", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "food", cascade = CascadeType.ALL)
     private ReviewSummary reviewSummary;
 }
