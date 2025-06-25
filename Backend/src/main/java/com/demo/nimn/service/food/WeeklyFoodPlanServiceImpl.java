@@ -8,7 +8,7 @@ import com.demo.nimn.entity.food.DailyFoodPlan;
 import com.demo.nimn.entity.food.Food;
 import com.demo.nimn.entity.food.FoodChoiceSet;
 import com.demo.nimn.entity.food.WeeklyFoodPlan;
-import com.demo.nimn.enums.FoodType;
+import com.demo.nimn.enums.FoodTime;
 import com.demo.nimn.repository.food.FoodRepository;
 import com.demo.nimn.repository.food.WeeklyFoodPlanRepository;
 import jakarta.transaction.Transactional;
@@ -95,7 +95,7 @@ public class WeeklyFoodPlanServiceImpl implements  WeeklyFoodPlanService {
     public FoodChoiceSetDTO convertToFoodChoiceSetDTO(FoodChoiceSet foodChoiceSet) {
         return FoodChoiceSetDTO.builder()
                 .foods(convertToFoodDTOList(foodChoiceSet.getFoods()))
-                .foodType(foodChoiceSet.getFoodType())
+                .foodTime(foodChoiceSet.getFoodTime())
                 .build();
     }
 
@@ -112,10 +112,10 @@ public class WeeklyFoodPlanServiceImpl implements  WeeklyFoodPlanService {
 
         for (int day = 1; day <= 7; day++) {
             List<FoodChoiceSet> foodChoiceSets = new ArrayList<>();
-            for (FoodType foodType : FoodType.values()) {
+            for (FoodTime foodTime : FoodTime.values()) {
                 List<Food> foods = getRandomFoods(3);
                 FoodChoiceSet foodChoiceSet = FoodChoiceSet.builder()
-                        .foodType(foodType)
+                        .foodTime(foodTime)
                         .foods(foods)
                         .build();
                 foodChoiceSets.add(foodChoiceSet);

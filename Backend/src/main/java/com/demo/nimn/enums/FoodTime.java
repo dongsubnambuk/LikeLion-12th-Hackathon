@@ -1,6 +1,6 @@
 package com.demo.nimn.enums;
 
-public enum FoodType {
+public enum FoodTime {
     Breakfast,
     Lunch,
     Dinner
