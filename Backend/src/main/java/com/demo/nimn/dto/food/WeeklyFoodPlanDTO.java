@@ -1,4 +1,4 @@
-package com.demo.nimn.dto.meal;
+package com.demo.nimn.dto.food;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DailyMealPlanDTO {
-    private LocalDate day;
-    private List<MealOptionDTO> mealOptions;
+public class WeeklyFoodPlanDTO {
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private List<DailyFoodPlanDTO> dailyFoodPlans;
 }

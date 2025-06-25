@@ -1,6 +1,6 @@
 package com.demo.nimn.entity.review;
 
-import com.demo.nimn.entity.meal.FoodMenu;
+import com.demo.nimn.entity.food.Food;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -27,7 +27,7 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "food_menu_id", nullable = false)
-    private FoodMenu foodMenu;
+    private Food food;
 
     @DecimalMin("1.0")
     @DecimalMax("5.0")

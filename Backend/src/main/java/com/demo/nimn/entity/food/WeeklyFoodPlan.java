@@ -1,4 +1,4 @@
-package com.demo.nimn.entity.meal;
+package com.demo.nimn.entity.food;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,14 +15,14 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WeeklyMealPlan {
+public class WeeklyFoodPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn
-    private List<DailyMealPlan> dailyMealPlans;
+    private List<DailyFoodPlan> dailyFoodPlans;
 
     private LocalDate startDate;
 

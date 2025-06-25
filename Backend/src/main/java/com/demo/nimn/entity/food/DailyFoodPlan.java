@@ -1,4 +1,4 @@
-package com.demo.nimn.entity.meal;
+package com.demo.nimn.entity.food;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,12 +10,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "t_daily_meal_plan")
+@Table(name = "t_daily_food_plan")
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DailyMealPlan {
+public class DailyFoodPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,9 +24,9 @@ public class DailyMealPlan {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "t_daily_meal_plan_meal_option",
-            joinColumns = @JoinColumn(name = "daily_meal_plan_id"),
-            inverseJoinColumns = @JoinColumn(name = "meal_option_id", referencedColumnName = "id")
+            name = "t_daily_food_plan_food_choice_set",
+            joinColumns = @JoinColumn(name = "daily_food_plan_id"),
+            inverseJoinColumns = @JoinColumn(name = "food_choice_set_id", referencedColumnName = "id")
     )
-    private List<MealOption> mealOptions;
+    private List<FoodChoiceSet> foodChoiceSets;
 }

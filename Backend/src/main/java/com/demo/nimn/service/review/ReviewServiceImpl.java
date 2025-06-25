@@ -4,11 +4,11 @@ import com.demo.nimn.dto.review.DailyDietReviewDTO;
 import com.demo.nimn.dto.review.ReviewDTO;
 import com.demo.nimn.dto.review.ReviewSummaryDTO;
 import com.demo.nimn.entity.diet.DailyDiet;
-import com.demo.nimn.entity.meal.FoodMenu;
+import com.demo.nimn.entity.food.Food;
 import com.demo.nimn.entity.review.DailyDietReview;
 import com.demo.nimn.entity.review.Review;
 import com.demo.nimn.entity.review.ReviewSummary;
-import com.demo.nimn.repository.meal.MealRepository;
+import com.demo.nimn.repository.meal.FoodRepository;
 import com.demo.nimn.repository.review.DailyDietReviewRepository;
 import com.demo.nimn.repository.review.ReviewRepository;
 import com.demo.nimn.repository.review.ReviewSummaryRepository;
@@ -27,26 +27,26 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewSummaryRepository reviewSummaryRepository;
     private final DailyDietReviewRepository dailyDietReviewRepository;
-    private final MealRepository mealRepository;
+    private final FoodRepository foodRepository;
 
     public ReviewServiceImpl(ReviewRepository reviewRepository,
                              ReviewSummaryRepository reviewSummaryRepository,
                              DailyDietReviewRepository dailyDietReviewRepository,
-                             MealRepository mealRepository) {
+                             FoodRepository foodRepository) {
         this.reviewRepository = reviewRepository;
         this.reviewSummaryRepository = reviewSummaryRepository;
         this.dailyDietReviewRepository = dailyDietReviewRepository;
-        this.mealRepository = mealRepository;
+        this.foodRepository = foodRepository;
     }
 
     // Review 관련
     public ReviewDTO createReview(ReviewDTO reviewDTO) {
-        FoodMenu foodMenu = mealRepository.findById(reviewDTO.getFoodMenuId())
+        Food food = foodRepository.findById(reviewDTO.getFoodMenuId())
                 .orElseThrow(() -> new RuntimeException("FoodMenu not found"));
 
         Review review = Review.builder()
                 .userEmail(reviewDTO.getUserEmail())
-                .foodMenu(foodMenu)
+                .food(food)
                 .rating(reviewDTO.getRating())
                 .comment(reviewDTO.getComment())
                 .createdAt(LocalDateTime.now())
@@ -59,7 +59,7 @@ public class ReviewServiceImpl implements ReviewService {
     // ReviewSummary 관련
     @Override
     public ReviewSummaryDTO getReviewSummaryByFoodMenuId(Long foodMenuId) {
-        ReviewSummary reviewSummary = reviewSummaryRepository.findByFoodMenuId(foodMenuId)
+        ReviewSummary reviewSummary = reviewSummaryRepository.findByFoodId(foodMenuId)
                 .orElseThrow(() -> new RuntimeException("ReviewSummary not found"));
 
         List<Review> completedReviews = reviewSummary.getReviews().stream()
@@ -92,13 +92,13 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     private void updateReviewSummaryByFoodMenuId(Long foodMenuId) {
-        ReviewSummary summary = reviewSummaryRepository.findByFoodMenuId(foodMenuId)
+        ReviewSummary summary = reviewSummaryRepository.findByFoodId(foodMenuId)
                 .orElseThrow(() -> new RuntimeException("ReviewSummary not found"));
         updateReviewSummaryData(summary);
     }
 
     private void updateReviewSummaryData(ReviewSummary summary) {
-        Long foodMenuId = summary.getFoodMenu().getId();
+        Long foodMenuId = summary.getFood().getId();
         Double averageRating = reviewRepository.calculateAverageRatingByFoodMenuId(foodMenuId);
         Long totalReviews = reviewRepository.countCompletedReviewsByFoodMenuId(foodMenuId);
 
@@ -116,7 +116,7 @@ public class ReviewServiceImpl implements ReviewService {
             List<Review> emptyReviews = dailyDiet.getFoodSelections().stream()
                     .map(foodSelection -> Review.builder()
                             .userEmail(foodSelection.getUserEmail())
-                            .foodMenu(foodSelection.getFoodMenu())
+                            .food(foodSelection.getFood())
                             .rating(null)
                             .comment(null)
                             .build())
@@ -173,9 +173,9 @@ public class ReviewServiceImpl implements ReviewService {
         return ReviewDTO.builder()
                 .id(review.getId())
                 .userEmail(review.getUserEmail())
-                .foodMenuId(review.getFoodMenu().getId())
-                .foodMenuName(review.getFoodMenu().getName())
-                .foodMenuImage(review.getFoodMenu().getImage())
+                .foodMenuId(review.getFood().getId())
+                .foodMenuName(review.getFood().getName())
+                .foodMenuImage(review.getFood().getImage())
                 .rating(review.getRating())
                 .comment(review.getComment())
                 .createdAt(review.getCreatedAt())
@@ -183,13 +183,13 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     private Review convertToReviewEntity(ReviewDTO reviewDTO) {
-        FoodMenu foodMenu = mealRepository.findById(reviewDTO.getFoodMenuId())
+        Food food = foodRepository.findById(reviewDTO.getFoodMenuId())
                 .orElseThrow(() -> new RuntimeException("FoodMenu not found"));
 
         return Review.builder()
                 .id(reviewDTO.getId())
                 .userEmail(reviewDTO.getUserEmail())
-                .foodMenu(foodMenu)
+                .food(food)
                 .rating(reviewDTO.getRating())
                 .comment(reviewDTO.getComment())
                 .createdAt(reviewDTO.getCreatedAt())
@@ -204,9 +204,9 @@ public class ReviewServiceImpl implements ReviewService {
 
         return ReviewSummaryDTO.builder()
                 .id(reviewSummary.getId())
-                .foodMenuId(reviewSummary.getFoodMenu().getId())
-                .foodMenuName(reviewSummary.getFoodMenu().getName())
-                .foodMenuImage(reviewSummary.getFoodMenu().getImage())
+                .foodMenuId(reviewSummary.getFood().getId())
+                .foodMenuName(reviewSummary.getFood().getName())
+                .foodMenuImage(reviewSummary.getFood().getImage())
                 .averageRating(reviewSummary.getAverageRating())
                 .totalReviews(reviewSummary.getTotalReviews())
                 .reviews(reviewDTOs)

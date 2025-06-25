@@ -3,9 +3,9 @@ package com.demo.nimn.service.diet;
 import com.demo.nimn.dto.diet.Response.FoodSelectionDTO;
 import com.demo.nimn.dto.diet.Request.FoodSelectionRequestDTO;
 import com.demo.nimn.entity.diet.FoodSelection;
-import com.demo.nimn.entity.meal.FoodMenu;
+import com.demo.nimn.entity.food.Food;
 import com.demo.nimn.repository.diet.FoodSelectionRepository;
-import com.demo.nimn.repository.meal.MealRepository;
+import com.demo.nimn.repository.meal.FoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
 public class FoodSelectionServiceImpl implements FoodSelectionService {
 
     private final FoodSelectionRepository foodSelectionRepository;
-    private final MealRepository mealRepository;
+    private final FoodRepository foodRepository;
 
     @Autowired
-    public FoodSelectionServiceImpl(FoodSelectionRepository foodSelectionRepository , MealRepository mealRepository) {
+    public FoodSelectionServiceImpl(FoodSelectionRepository foodSelectionRepository , FoodRepository foodRepository) {
         this.foodSelectionRepository = foodSelectionRepository;
-        this.mealRepository = mealRepository;
+        this.foodRepository = foodRepository;
     }
 
     @Override
@@ -30,11 +30,11 @@ public class FoodSelectionServiceImpl implements FoodSelectionService {
     }
 
     public FoodSelection convertToMealSelectionEntity(FoodSelectionRequestDTO mealSelectionDTO) {
-        FoodMenu foodMenu = mealRepository.getReferenceById(mealSelectionDTO.getFoodMenuId());
+        Food food = foodRepository.getReferenceById(mealSelectionDTO.getFoodMenuId());
 
         return FoodSelection.builder()
                 .userEmail(mealSelectionDTO.getUserEmail())
-                .foodMenu(foodMenu)
+                .food(food)
                 .mealTime(mealSelectionDTO.getFoodTime())
                 .count(mealSelectionDTO.getCount())
                 .build();

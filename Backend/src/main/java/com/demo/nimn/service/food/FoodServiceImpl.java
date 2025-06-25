@@ -1,0 +1,138 @@
+package com.demo.nimn.service.food;
+
+import com.demo.nimn.dto.food.*;
+import com.demo.nimn.entity.food.*;
+import com.demo.nimn.repository.meal.FoodRepository;
+import com.demo.nimn.service.ai.AiService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+@Slf4j
+@Service
+public class FoodServiceImpl implements FoodService {
+    private final FoodRepository foodRepository;
+    private final AiService aiService;
+
+    @Autowired
+    public FoodServiceImpl(FoodRepository foodRepository,
+                           AiService aiService) {
+        this.foodRepository = foodRepository;
+        this.aiService = aiService;
+    }
+
+    @Override
+    public FoodDTO createFood(String price) {
+        String foodPlanText = aiService.generateFood(price);
+
+        Food food = toFoodEntity(foodPlanText);
+
+        if (food == null) {
+            throw new IllegalStateException("응답을 Food 엔티티로 변환하는 데 실패했습니다.");
+        }
+
+        return foodRepository.save(food).toFoodDTO();
+    }
+
+    @Override
+    public Food readFoodByFoodId(Long foodId) {
+        return foodRepository.findById(foodId)
+                .orElseThrow(() -> new IllegalStateException("Invalid Food Id: " + foodId));
+    }
+
+    @Override
+    public FoodDTO readFoodDTOByFoodId(Long foodId) {
+        Food food = foodRepository.findById(foodId)
+                .orElseThrow(() -> new IllegalStateException("Invalid Food Id: " + foodId));
+        return food.toFoodDTO();
+    }
+
+    @Override
+    public List<FoodDTO> readAll() {
+        List<Food> foods = foodRepository.findAll();
+        return toFoodDTOS(foods);
+    }
+
+    public List<FoodDTO> toFoodDTOS(List<Food> foods) {
+        List<FoodDTO> foodDTOS = new ArrayList<>();
+        for (Food food : foods) {
+            foodDTOS.add(food.toFoodDTO());
+        }
+        return foodDTOS;
+    }
+
+    public Food toFoodEntity(String input) {
+        Pattern namePattern = Pattern.compile("식단 이름: (.+)");
+        Pattern pricePattern = Pattern.compile("가격: (.+)");
+        Pattern main1Pattern = Pattern.compile("Main1: (.+)");
+        Pattern main2Pattern = Pattern.compile("Main2: (.+)");
+        Pattern side1Pattern = Pattern.compile("Side1: (.+)");
+        Pattern side2Pattern = Pattern.compile("Side2: (.+)");
+        Pattern side3Pattern = Pattern.compile("Side3: (.+)");
+        Pattern caloriesPattern = Pattern.compile("칼로리: (.+)kcal");
+        Pattern carbohydratePattern = Pattern.compile("탄수화물: (.+)g");
+        Pattern proteinPattern = Pattern.compile("단백질: (.+)g");
+        Pattern fatPattern = Pattern.compile("지방: (.+)g");
+        Pattern sugarPattern = Pattern.compile("당류: (.+)g");
+        Pattern sodiumPattern = Pattern.compile("나트륨: (.+)mg");
+
+        NutritionFact nutritionFact = NutritionFact.builder()
+                .calories(getMatchedValue(caloriesPattern, input) + "kcal")
+                .carbohydrate(getMatchedValue(carbohydratePattern, input) + "g")
+                .protein(getMatchedValue(proteinPattern, input) + "g")
+                .fat(getMatchedValue(fatPattern, input) + "g")
+                .sugar(getMatchedValue(sugarPattern, input) + "g")
+                .sodium(getMatchedValue(sodiumPattern, input) + "mg")
+                .build();
+
+        return Food.builder()
+                .name(getMatchedValue(namePattern, input))
+                .image(createFoodImage(extractMainAndSideMenus(input)))
+                .price(getMatchedValue(pricePattern, input))
+                .main1(getMatchedValue(main1Pattern, input))
+                .main2(getMatchedValue(main2Pattern, input))
+                .side1(getMatchedValue(side1Pattern, input))
+                .side2(getMatchedValue(side2Pattern, input))
+                .side3(getMatchedValue(side3Pattern, input))
+                .nutritionFact(nutritionFact)
+                .build();
+    }
+
+    /**
+     * AI 서비스를 통해 식단 이미지 생성
+     */
+    private String createFoodImage(String menuDescription) {
+        // TODO: 이미지 생성 고쳐지면 수정해야함
+//        return aiService.generateFoodImage(menuDescription);
+        return "테스트 이미지값";
+    }
+
+    public String extractMainAndSideMenus(String input) {
+        StringBuilder result = new StringBuilder();
+
+        // 정규 표현식 패턴: Main1, Main2, Side1, Side2, Side3 항목과 괄호 안의 내용
+        Pattern pattern = Pattern.compile("(Main\\d+:|Side\\d+:)\\s*([^\\(]+)");
+        Matcher matcher = pattern.matcher(input);
+
+        while (matcher.find()) {
+            // 메뉴 항목 추출
+            String foodItem = matcher.group(1) + " " + matcher.group(2).trim();
+            result.append(foodItem).append(" ");
+        }
+
+        // 결과 문자열 반환
+        return result.toString().trim();
+    }
+
+    private String getMatchedValue(Pattern pattern, String input) {
+        Matcher matcher = pattern.matcher(input);
+        if (matcher.find()) {
+            return matcher.group(1).trim();
+        }
+        return null;
+    }
+}

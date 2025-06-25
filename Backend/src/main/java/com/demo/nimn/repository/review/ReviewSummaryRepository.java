@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface ReviewSummaryRepository extends JpaRepository<ReviewSummary, Long> {
 
     // 특정 음식의 ReviewSummary 조회
-    Optional<ReviewSummary> findByFoodMenuId(Long foodMenuId);
+    Optional<ReviewSummary> findByFoodId(Long foodId);
 
     // 평균 별점 기준 정렬 조회 (높은순)
     @Query("SELECT rs FROM ReviewSummary rs ORDER BY rs.averageRating DESC")

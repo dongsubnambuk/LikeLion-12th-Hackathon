@@ -1,4 +1,4 @@
-package com.demo.nimn.dto.meal;
+package com.demo.nimn.dto.food;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MealOptionDTO {
-    private String mealType;
-    private List<FoodMenuDTO> foodMenus;
+public class FoodChoiceSetDTO {
+    private String foodType;
+    private List<FoodDTO> foods;
 }

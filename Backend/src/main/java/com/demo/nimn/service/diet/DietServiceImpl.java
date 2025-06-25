@@ -116,7 +116,7 @@ public class DietServiceImpl implements DietService {
     public List<Long> convertToFoodMenuIds(DailyDiet dailyDiet){
         List<Long> foodMenuIds = new ArrayList<>();
         for(FoodSelection foodSelection : dailyDiet.getFoodSelections()) {
-            foodMenuIds.add(foodSelection.getFoodMenu().getId());
+            foodMenuIds.add(foodSelection.getFood().getId());
         }
         return foodMenuIds;
     }
