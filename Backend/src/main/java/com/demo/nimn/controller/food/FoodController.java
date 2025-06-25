@@ -31,19 +31,19 @@ public class FoodController {
     }
 
     @Operation(summary = "한 주 식단 선택지 생성(CreateWeeklyFoodPlan)", description = "한 주 식단 선택지 생성")
-    @PostMapping(value = "/food-plans/weekly")
+    @PostMapping(value = "/plans/weekly")
     public WeeklyFoodPlanDTO createWeeklyFoodPlan() {
         return weeklyFoodPlanService.createWeeklyPlan();
     }
 
     @Operation(summary = "한 주 식단 선택지 조회(ReadWeeklyFoodPlan)", description = "한 주 식단 선택지 조회")
-    @GetMapping(value = "/food-plans/weekly")
+    @GetMapping(value = "/plans/weekly")
     public WeeklyFoodPlanDTO readWeeklyFoodPlan() {
         return weeklyFoodPlanService.readWeeklyFoodPlan();
     }
 
     @Operation(summary = "모든 식단 선택지 조회(ReadAllFood)", description = "모든 식단 선택지 조회")
-    @GetMapping(value = "/food")
+    @GetMapping(value = "/plans")
     public List<FoodDTO> readAllFood() {
         return foodService.readAll();
     }
