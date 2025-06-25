@@ -16,7 +16,7 @@ public class FoodSelectionController {
     public FoodSelectionController(FoodSelectionService foodSelectionService) {
         this.foodSelectionService = foodSelectionService;
     }
-
+    // 선택한 음식 조회
     @GetMapping("read/{mealSelectionId}")
     public ResponseEntity<FoodSelectionDTO> getMealSelectionById(@PathVariable Long mealSelectionId) {
         FoodSelectionDTO foodSelectionDTO = foodSelectionService.getById(mealSelectionId);
