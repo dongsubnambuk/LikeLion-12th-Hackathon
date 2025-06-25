@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,9 +24,9 @@ import java.util.Optional;
 public class ImageServiceImpl implements ImageService{
     private static final Logger logger = LoggerFactory.getLogger(ImageServiceImpl.class);
 
-
-//    private String imageURI = "http://localhost:11000";
-    private String imageURI = "http://3.37.64.39:8000";
+    @Value("${IMAGE_URI}")
+    private String imageURI;
+//    private String imageURI = "http://3.37.64.39:8000";
 
     @Autowired
     @Qualifier("generalRestTemplate")

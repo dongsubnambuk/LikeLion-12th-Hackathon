@@ -17,12 +17,12 @@ public class WeeklyDietController {
         this.dietService = dietService;
     }
 
-    @PostMapping("/create") // 일주일 식단 생성
+    @PostMapping("/create") // 유저 일주일 식단 생성
     public WeeklyDietDTO createWeeklyDiet(@RequestBody WeeklyDietRequestDTO weeklyDietDTO) {
         return dietService.createWeeklyDiet(weeklyDietDTO);
     }
 
-    @GetMapping("/read/{userEmail}") // 특정 일주일 식단 조회
+    @GetMapping("/read/{userEmail}") // 유저 특정 일주일 식단 조회
     public WeeklyDietDTO getWeeklyByUserEmail(@PathVariable("userEmail") String userEmail) {
         return dietService.getWeeklyDietByUserEmail(userEmail);
     }

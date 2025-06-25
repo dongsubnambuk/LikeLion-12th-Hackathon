@@ -21,12 +21,13 @@ public class DailyDietController {
         this.dietService = dietService;
     }
 
+    // email과 date로 하루 식단 조회?
     @GetMapping("/read")
     public ResponseEntity<List<DailyDietDTO>> getDailyDietsByUserEmailAndDate(@RequestBody DailyRequestDTO dailyRequestDTO) {
         List<DailyDietDTO> dailyDiets = dietService.getByUserEmailAndDate(dailyRequestDTO.getUserEmail(), dailyRequestDTO.getDate());
         return ResponseEntity.ok(dailyDiets);
     }
-
+    // date에 해당되는 식단 조회
     @GetMapping("/read/{date}")
     public ResponseEntity<List<DailyDietDTO>> getDailyDietsByDate(@PathVariable("date") LocalDate date) {
         List<DailyDietDTO> dailyDiets = dietService.getByDate(date);
