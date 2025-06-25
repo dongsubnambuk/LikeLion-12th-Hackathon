@@ -8,8 +8,8 @@ import com.demo.nimn.entity.food.DailyFoodPlan;
 import com.demo.nimn.entity.food.Food;
 import com.demo.nimn.entity.food.FoodChoiceSet;
 import com.demo.nimn.entity.food.WeeklyFoodPlan;
-import com.demo.nimn.repository.meal.FoodRepository;
-import com.demo.nimn.repository.meal.WeeklyFoodPlanRepository;
+import com.demo.nimn.repository.food.FoodRepository;
+import com.demo.nimn.repository.food.WeeklyFoodPlanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

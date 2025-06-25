@@ -8,7 +8,7 @@ import com.demo.nimn.entity.food.Food;
 import com.demo.nimn.entity.review.DailyDietReview;
 import com.demo.nimn.entity.review.Review;
 import com.demo.nimn.entity.review.ReviewSummary;
-import com.demo.nimn.repository.meal.FoodRepository;
+import com.demo.nimn.repository.food.FoodRepository;
 import com.demo.nimn.repository.review.DailyDietReviewRepository;
 import com.demo.nimn.repository.review.ReviewRepository;
 import com.demo.nimn.repository.review.ReviewSummaryRepository;

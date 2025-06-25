@@ -1,4 +1,4 @@
-package com.demo.nimn.repository.meal;
+package com.demo.nimn.repository.food;
 
 import com.demo.nimn.entity.food.WeeklyFoodPlan;
 import org.springframework.data.jpa.repository.JpaRepository;

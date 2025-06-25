@@ -5,7 +5,7 @@ import com.demo.nimn.dto.diet.Request.FoodSelectionRequestDTO;
 import com.demo.nimn.entity.diet.FoodSelection;
 import com.demo.nimn.entity.food.Food;
 import com.demo.nimn.repository.diet.FoodSelectionRepository;
-import com.demo.nimn.repository.meal.FoodRepository;
+import com.demo.nimn.repository.food.FoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

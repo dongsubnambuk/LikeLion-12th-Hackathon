@@ -2,7 +2,7 @@ package com.demo.nimn.service.food;
 
 import com.demo.nimn.dto.food.*;
 import com.demo.nimn.entity.food.*;
-import com.demo.nimn.repository.meal.FoodRepository;
+import com.demo.nimn.repository.food.FoodRepository;
 import com.demo.nimn.service.ai.AiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
