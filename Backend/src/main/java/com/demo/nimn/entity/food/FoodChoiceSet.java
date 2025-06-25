@@ -1,5 +1,6 @@
 package com.demo.nimn.entity.food;
 
+import com.demo.nimn.enums.FoodType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,8 @@ public class FoodChoiceSet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String mealType;
+    @Enumerated(EnumType.STRING)
+    private FoodType foodType;
 
     @ManyToMany(mappedBy = "foodChoiceSets")
     private List<DailyFoodPlan> dailyFoodPlans;

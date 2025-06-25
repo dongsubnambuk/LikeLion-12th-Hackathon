@@ -29,13 +29,13 @@ public class FoodServiceImpl implements FoodService {
     public FoodDTO createFood(String price) {
         String foodPlanText = aiService.generateFood(price);
 
-        Food food = toFoodEntity(foodPlanText);
+        Food food = convertToFood(foodPlanText);
 
         if (food == null) {
             throw new IllegalStateException("응답을 Food 엔티티로 변환하는 데 실패했습니다.");
         }
 
-        return foodRepository.save(food).toFoodDTO();
+        return convertToFoodDTO(foodRepository.save(food));
     }
 
     @Override
@@ -48,7 +48,7 @@ public class FoodServiceImpl implements FoodService {
     public FoodDTO readFoodDTOByFoodId(Long foodId) {
         Food food = foodRepository.findById(foodId)
                 .orElseThrow(() -> new IllegalStateException("Invalid Food Id: " + foodId));
-        return food.toFoodDTO();
+        return convertToFoodDTO(food);
     }
 
     @Override
@@ -60,12 +60,12 @@ public class FoodServiceImpl implements FoodService {
     public List<FoodDTO> toFoodDTOS(List<Food> foods) {
         List<FoodDTO> foodDTOS = new ArrayList<>();
         for (Food food : foods) {
-            foodDTOS.add(food.toFoodDTO());
+            foodDTOS.add(convertToFoodDTO(food));
         }
         return foodDTOS;
     }
 
-    public Food toFoodEntity(String input) {
+    public Food convertToFood(String input) {
         Pattern namePattern = Pattern.compile("식단 이름: (.+)");
         Pattern pricePattern = Pattern.compile("가격: (.+)");
         Pattern main1Pattern = Pattern.compile("Main1: (.+)");
@@ -134,5 +134,26 @@ public class FoodServiceImpl implements FoodService {
             return matcher.group(1).trim();
         }
         return null;
+    }
+
+    @Override
+    public FoodDTO convertToFoodDTO(Food food) {
+        return FoodDTO.builder()
+                .id(food.getId())
+                .name(food.getName())
+                .image(food.getImage())
+                .price(food.getPrice())
+                .main1(food.getMain1())
+                .main2(food.getMain2())
+                .side1(food.getSide1())
+                .side2(food.getSide2())
+                .side3(food.getSide3())
+                .calories(food.getNutritionFact().getCalories())
+                .carbohydrate(food.getNutritionFact().getCarbohydrate())
+                .protein(food.getNutritionFact().getProtein())
+                .fat(food.getNutritionFact().getFat())
+                .sugar(food.getNutritionFact().getSugar())
+                .sodium(food.getNutritionFact().getSodium())
+                .build();
     }
 }

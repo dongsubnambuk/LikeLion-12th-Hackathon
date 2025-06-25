@@ -24,31 +24,31 @@ public class FoodController {
         this.weeklyFoodPlanService = weeklyFoodPlanService;
     }
 
-    @Operation(summary = "식단 생성(CreateFood)", description = "가격을 입력하면 가격에 맞는 영양 있는 식단 생성")
+    @Operation(summary = "음식 생성(CreateFood)", description = "가격을 입력하면 가격에 맞는 영양 있는 음식 생성")
     @PostMapping(value = "/food")
     public FoodDTO createFood(@RequestParam(name = "price") String price) {
         return foodService.createFood(price);
     }
 
-    @Operation(summary = "한 주 식단 생성(CreateWeeklyFoodPlan)", description = "한 주 식단 생성")
+    @Operation(summary = "한 주 식단 선택지 생성(CreateWeeklyFoodPlan)", description = "한 주 식단 선택지 생성")
     @PostMapping(value = "/food-plans/weekly")
     public WeeklyFoodPlanDTO createWeeklyFoodPlan() {
         return weeklyFoodPlanService.createWeeklyPlan();
     }
 
-    @Operation(summary = "한 주 식단 조회(ReadWeeklyFoodPlan)", description = "한 주 식단 조회")
+    @Operation(summary = "한 주 식단 선택지 조회(ReadWeeklyFoodPlan)", description = "한 주 식단 선택지 조회")
     @GetMapping(value = "/food-plans/weekly")
     public WeeklyFoodPlanDTO readWeeklyFoodPlan() {
         return weeklyFoodPlanService.readWeeklyFoodPlan();
     }
 
-    @Operation(summary = "모든 식단 조회(ReadAllFood)", description = "모든 식단 조회")
+    @Operation(summary = "모든 식단 선택지 조회(ReadAllFood)", description = "모든 식단 선택지 조회")
     @GetMapping(value = "/food")
     public List<FoodDTO> readAllFood() {
         return foodService.readAll();
     }
 
-    @Operation(summary = "특정 식단 식단 조회(readByFoodId)", description = "식단 ID로 특정 식단 조회")
+    @Operation(summary = "특정 음식 조회(readByFoodId)", description = "음식 ID로 특정 음식 조회")
     @GetMapping(value = "/food/{foodId}")
     public FoodDTO readByFoodId(@PathVariable("foodId") Long foodId) {
         return foodService.readFoodDTOByFoodId(foodId);

@@ -8,9 +8,12 @@ import com.demo.nimn.entity.food.DailyFoodPlan;
 import com.demo.nimn.entity.food.Food;
 import com.demo.nimn.entity.food.FoodChoiceSet;
 import com.demo.nimn.entity.food.WeeklyFoodPlan;
+import com.demo.nimn.enums.FoodType;
 import com.demo.nimn.repository.food.FoodRepository;
 import com.demo.nimn.repository.food.WeeklyFoodPlanRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -19,29 +22,29 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class WeeklyFoodPlanServiceImpl implements  WeeklyFoodPlanService {
     private final WeeklyFoodPlanRepository weeklyFoodPlanRepository;
     private final FoodRepository foodRepository;
+    private final FoodService foodService;
 
-    private Map<Long, Integer> foodFrequency;
-    private Map<Long, Double> weights;
-    private Random random;
+    private final Random random = new Random();
 
+    // 매주 일요일에 생섵
+    @Scheduled(cron = "0 0 22 ? * SUN")
     @Override
     public WeeklyFoodPlanDTO createWeeklyPlan() {
-        LocalDate today = LocalDate.now();
-        LocalDate nextMonday = today.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
+        LocalDate nextMonday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.MONDAY));
 
         if (weeklyFoodPlanRepository.existsByCurrentWeeklyFoodPlan(nextMonday)) {
             WeeklyFoodPlan weeklyFoodPlan = weeklyFoodPlanRepository.findCurrentWeeklyFoodPlan(nextMonday);
-            return toWeeklyFoodPlanDTO(weeklyFoodPlan);
+            return convertToWeeklyFoodPlanDTO(weeklyFoodPlan);
         }
 
-        initWeights();
         WeeklyFoodPlan weeklyFoodPlan = generateWeeklyFoodPlan(nextMonday);
         weeklyFoodPlanRepository.save(weeklyFoodPlan);
-        return toWeeklyFoodPlanDTO(weeklyFoodPlan);
+        return convertToWeeklyFoodPlanDTO(weeklyFoodPlan);
     }
 
     @Override
@@ -55,51 +58,51 @@ public class WeeklyFoodPlanServiceImpl implements  WeeklyFoodPlanService {
             return createWeeklyPlan();
         }
 
-        return toWeeklyFoodPlanDTO(weeklyFoodPlan);
+        return convertToWeeklyFoodPlanDTO(weeklyFoodPlan);
     }
 
-    public WeeklyFoodPlanDTO toWeeklyFoodPlanDTO(WeeklyFoodPlan weeklyFoodPlan) {
+    public WeeklyFoodPlanDTO convertToWeeklyFoodPlanDTO(WeeklyFoodPlan weeklyFoodPlan) {
         return WeeklyFoodPlanDTO.builder()
-                .dailyFoodPlans(toDailyFoodPlansDTOS(weeklyFoodPlan.getDailyFoodPlans()))
+                .dailyFoodPlans(convertToDailyFoodPlansDTOList(weeklyFoodPlan.getDailyFoodPlans()))
                 .startDate(weeklyFoodPlan.getStartDate())
                 .endDate(weeklyFoodPlan.getEndDate())
                 .build();
     }
 
-    public List<DailyFoodPlanDTO> toDailyFoodPlansDTOS(List<DailyFoodPlan> dailyFoodPlans) {
+    public List<DailyFoodPlanDTO> convertToDailyFoodPlansDTOList(List<DailyFoodPlan> dailyFoodPlans) {
         List<DailyFoodPlanDTO> dailyFoodPlansDTOS = new ArrayList<>();
         for (DailyFoodPlan dailyFoodPlan : dailyFoodPlans) {
-            dailyFoodPlansDTOS.add(toDailyFoodPlanDTO(dailyFoodPlan));
+            dailyFoodPlansDTOS.add(convertToDailyFoodPlanDTO(dailyFoodPlan));
         }
         return dailyFoodPlansDTOS;
     }
 
-    public DailyFoodPlanDTO toDailyFoodPlanDTO(DailyFoodPlan dailyFoodPlan) {
+    public DailyFoodPlanDTO convertToDailyFoodPlanDTO(DailyFoodPlan dailyFoodPlan) {
         return DailyFoodPlanDTO.builder()
                 .day(dailyFoodPlan.getDay())
-                .foodChoiceSets(toFoodChoiceSetDTOS(dailyFoodPlan.getFoodChoiceSets()))
+                .foodChoiceSets(convertToFoodChoiceSetDTOList(dailyFoodPlan.getFoodChoiceSets()))
                 .build();
     }
 
-    public List<FoodChoiceSetDTO> toFoodChoiceSetDTOS(List<FoodChoiceSet> foodChoiceSets) {
+    public List<FoodChoiceSetDTO> convertToFoodChoiceSetDTOList(List<FoodChoiceSet> foodChoiceSets) {
         List<FoodChoiceSetDTO> foodChoiceSetDTOS = new ArrayList<>();
         for (FoodChoiceSet foodChoiceSet : foodChoiceSets) {
-            foodChoiceSetDTOS.add(toFoodChoiceSetDTO(foodChoiceSet));
+            foodChoiceSetDTOS.add(convertToFoodChoiceSetDTO(foodChoiceSet));
         }
         return foodChoiceSetDTOS;
     }
 
-    public FoodChoiceSetDTO toFoodChoiceSetDTO(FoodChoiceSet foodChoiceSet) {
+    public FoodChoiceSetDTO convertToFoodChoiceSetDTO(FoodChoiceSet foodChoiceSet) {
         return FoodChoiceSetDTO.builder()
-                .foods(toFoodDTOS(foodChoiceSet.getFoods()))
-                .foodType(foodChoiceSet.getMealType())
+                .foods(convertToFoodDTOList(foodChoiceSet.getFoods()))
+                .foodType(foodChoiceSet.getFoodType())
                 .build();
     }
 
-    public List<FoodDTO> toFoodDTOS(List<Food> foods) {
+    public List<FoodDTO> convertToFoodDTOList(List<Food> foods) {
         List<FoodDTO> foodDTOS = new ArrayList<>();
         for (Food food : foods) {
-            foodDTOS.add(food.toFoodDTO());
+            foodDTOS.add(foodService.convertToFoodDTO(food));
         }
         return foodDTOS;
     }
@@ -109,10 +112,10 @@ public class WeeklyFoodPlanServiceImpl implements  WeeklyFoodPlanService {
 
         for (int day = 1; day <= 7; day++) {
             List<FoodChoiceSet> foodChoiceSets = new ArrayList<>();
-            for (String mealType : Arrays.asList("아침", "점심", "저녁")) {
+            for (FoodType foodType : FoodType.values()) {
                 List<Food> foods = getRandomFoods(3);
                 FoodChoiceSet foodChoiceSet = FoodChoiceSet.builder()
-                        .mealType(mealType)
+                        .foodType(foodType)
                         .foods(foods)
                         .build();
                 foodChoiceSets.add(foodChoiceSet);
@@ -134,68 +137,11 @@ public class WeeklyFoodPlanServiceImpl implements  WeeklyFoodPlanService {
     public List<Food> getRandomFoods(int count) {
         List<Food> selectedFoods = new ArrayList<>();
         List<Food> foods = foodRepository.findAll();
-        Set<Long> usedFoodIds = new HashSet<>();
 
         for (int i = 0; i < count; i++) {
-            Food food = selectUniqueFood(foods, usedFoodIds);
-            selectedFoods.add(food);
-            foodFrequency.put(food.getId(), foodFrequency.get(food.getId()) + 1);
-            updateWeights();
-            usedFoodIds.add(food.getId());
+            selectedFoods.add(foods.get(random.nextInt(foods.size())));
         }
 
         return selectedFoods;
-    }
-
-    private void initWeights() {
-        foodFrequency = new HashMap<>();
-        weights = new HashMap<>();
-        random = new Random();
-        List<Food> foods = foodRepository.findAll();
-        for (Food food : foods) {
-            foodFrequency.put(food.getId(), 0);
-            weights.put(food.getId(), 1.0);
-        }
-    }
-
-    private void updateWeights() {
-        int maxFrequency = Collections.max(foodFrequency.values());
-        for (Long foodId : foodFrequency.keySet()) {
-            weights.put(foodId, (maxFrequency - foodFrequency.get(foodId)) + 1.0);
-        }
-    }
-
-    public Food selectUniqueFood(List<Food> foods, Set<Long> usedFoodIds) {
-        // 중복되지 않은 메뉴만 필터링합니다.
-        List<Food> availableFoods = foods.stream()
-                .filter(food -> !usedFoodIds.contains(food.getId()))
-                .toList();
-
-        if (availableFoods.isEmpty()) {
-            throw new RuntimeException("No available unique foods to select from.");
-        }
-
-        // 가중치 총합 계산
-        double totalWeight = availableFoods.stream()
-                .mapToDouble(food -> weights.get(food.getId()))
-                .sum();
-
-        if (totalWeight <= 0) {
-            throw new RuntimeException("Total weight is zero or negative, cannot select a food.");
-        }
-
-        // 랜덤 값 생성
-        double randomValue = random.nextDouble() * totalWeight;
-
-        // 가중치 기반 메뉴 선택
-        for (Food food : availableFoods) {
-            randomValue -= weights.get(food.getId());
-            if (randomValue <= 0) {
-                return food;
-            }
-        }
-
-        // 최악의 경우를 대비한 fallback (이 경우는 발생하지 않아야 함)
-        return availableFoods.get(availableFoods.size() - 1);
     }
 }

@@ -10,4 +10,5 @@ public interface FoodService {
     Food readFoodByFoodId(Long foodMenuId);
     FoodDTO readFoodDTOByFoodId(Long foodMenuId);
     List<FoodDTO> readAll();
+    FoodDTO convertToFoodDTO(Food food);
 }
