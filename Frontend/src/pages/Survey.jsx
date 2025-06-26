@@ -3,15 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 import { v4 as uuidv4 } from 'uuid';
-import '../CSS/Survey.css'; // CSS 파일 import
+import '../CSS/Survey.css'; 
 import testfood from '../images/mainCardImg1.jpeg'; // 예시 이미지
 
 function Survey() {
     const navigate = useNavigate();
     const email = localStorage.getItem("email") || "test@example.com";
     const [selectedSurvey, setSelectedSurvey] = useState(null);
-    const [responses, setResponses] = useState({});
-    const [feedback, setFeedback] = useState({});
+    const [ratings, setRatings] = useState({}); // 별점 상태
+    const [comments, setComments] = useState({}); // 코멘트 상태
+    const [hoveredStars, setHoveredStars] = useState({}); // 호버된 별점 상태
     
     // JSON 응답 양식에 맞는 예시 데이터 - 많은 설문을 포함
     const getSampleSurveys = () => [
@@ -145,34 +146,75 @@ function Survey() {
         setSelectedSurvey(survey);
         // body에 modal-open 클래스 추가 (스크롤 방지)
         document.body.classList.add('modal-open');
-        // 응답 상태 초기화
-        const initialResponses = {};
-        const initialFeedback = {};
+        // 별점과 코멘트 상태 초기화
+        const initialRatings = {};
+        const initialComments = {};
+        const initialHoveredStars = {};
         survey.reviews.forEach(review => {
-            initialResponses[review.id] = '';
-            initialFeedback[review.id] = '';
+            initialRatings[review.id] = 0;
+            initialComments[review.id] = '';
+            initialHoveredStars[review.id] = 0;
         });
-        setResponses(initialResponses);
-        setFeedback(initialFeedback);
+        setRatings(initialRatings);
+        setComments(initialComments);
+        setHoveredStars(initialHoveredStars);
     };
 
     // 모달 닫기
     const closeSurveyModal = () => {
         setSelectedSurvey(null);
-        setResponses({});
-        setFeedback({});
+        setRatings({});
+        setComments({});
+        setHoveredStars({});
         // body에서 modal-open 클래스 제거
         document.body.classList.remove('modal-open');
     };
 
-    // 응답 변경
-    const handleResponseChange = (reviewId, value) => {
-        setResponses((prevResponses) => ({ ...prevResponses, [reviewId]: value }));
+    // 별점 변경
+    const handleRatingChange = (reviewId, rating) => {
+        setRatings((prevRatings) => ({ ...prevRatings, [reviewId]: rating }));
     };
 
-    // 피드백 변경
-    const handleFeedbackChange = (reviewId, value) => {
-        setFeedback((prevFeedback) => ({ ...prevFeedback, [reviewId]: value }));
+    // 별점 호버
+    const handleStarHover = (reviewId, starIndex) => {
+        setHoveredStars((prevHovered) => ({ ...prevHovered, [reviewId]: starIndex }));
+    };
+
+    // 별점 호버 종료
+    const handleStarLeave = (reviewId) => {
+        setHoveredStars((prevHovered) => ({ ...prevHovered, [reviewId]: 0 }));
+    };
+
+    // 코멘트 변경
+    const handleCommentChange = (reviewId, value) => {
+        setComments((prevComments) => ({ ...prevComments, [reviewId]: value }));
+    };
+
+    // 별점 렌더링 함수
+    const renderStars = (reviewId) => {
+        const currentRating = ratings[reviewId] || 0;
+        const displayRating =  currentRating;
+
+        return (
+            <div className="star_rating_container">
+                <div className="star_rating">
+                    {[1, 2, 3, 4, 5].map((starIndex) => (
+                        <span
+                            key={starIndex}
+                            className={`star ${starIndex <= displayRating ? 'star_filled' : 'star_empty'}`}
+                            onClick={() => handleRatingChange(reviewId, starIndex)}
+                            onMouseEnter={() => handleStarHover(reviewId, starIndex)}
+                            onMouseLeave={() => handleStarLeave(reviewId)}
+                        >
+                            ★
+                        </span>
+                    ))}
+                </div>
+                <span className="rating_text">
+                    {displayRating > 0 ? `${displayRating}.0` : '평가해주세요'}
+                </span>
+            </div>
+        );
     };
 
     const fetchReviews = async (reviewDate) => {
@@ -253,9 +295,17 @@ function Survey() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
+        // 모든 항목에 별점이 있는지 확인
+        const incompleteItems = selectedSurvey.reviews.filter(review => !ratings[review.id] || ratings[review.id] === 0);
+        
+        if (incompleteItems.length > 0) {
+            alert('모든 메뉴에 대해 별점 평가를 해주세요.');
+            return;
+        }
+        
         console.log("설문 제출 시뮬레이션");
-        console.log("응답:", responses);
-        console.log("피드백:", feedback);
+        console.log("별점:", ratings);
+        console.log("코멘트:", comments);
         
         // 설문을 완료 상태로 업데이트
         setSurveys(prevSurveys => {
@@ -347,45 +397,21 @@ function Survey() {
                                                 <p className="survey_modal_food_name">[{review.foodMenuName}]</p>
                                             </div>
                                             <div className="survey_modal_right">
-                                                <label className="survey_modal_label">
-                                                    <input
-                                                        type="radio"
-                                                        value="좋아요"
-                                                        checked={responses[review.id] === '좋아요'}
-                                                        onChange={(e) => handleResponseChange(review.id, e.target.value)}
-                                                        className="survey_modal_radio"
+                                                <div className="rating_section">
+                                                    <label className="rating_label">만족도 평가 *</label>
+                                                    {renderStars(review.id)}
+                                                </div>
+                                                
+                                                <div className="comment_section">
+                                                    <label className="comment_label">리뷰내용 (선택사항)</label>
+                                                    <textarea
+                                                        value={comments[review.id] || ''}
+                                                        onChange={(e) => handleCommentChange(review.id, e.target.value)}
+                                                        placeholder="이 음식에 대한 의견을 자유롭게 남겨주세요."
+                                                        className="comment_textarea"
+                                                        rows="4"
                                                     />
-                                                    <span className="survey_modal_label_text">😊 좋아요</span>
-                                                </label>
-                                                <label className="survey_modal_label">
-                                                    <input
-                                                        type="radio"
-                                                        value="별로예요"
-                                                        checked={responses[review.id] === '별로예요'}
-                                                        onChange={(e) => handleResponseChange(review.id, e.target.value)}
-                                                        className="survey_modal_radio"
-                                                    />
-                                                    <span className="survey_modal_label_text">😐 별로예요</span>
-                                                </label>
-                                                <label className="survey_modal_label">
-                                                    <input
-                                                        type="radio"
-                                                        value="기타"
-                                                        checked={responses[review.id] === '기타'}
-                                                        onChange={(e) => handleResponseChange(review.id, e.target.value)}
-                                                        className="survey_modal_radio"
-                                                    />
-                                                    <span className="survey_modal_label_text">💭 기타 (의견을 입력해주세요.)</span>
-                                                </label>
-                                                {responses[review.id] === '기타' && (
-                                                    <input
-                                                        type="text"
-                                                        value={feedback[review.id]}
-                                                        onChange={(e) => handleFeedbackChange(review.id, e.target.value)}
-                                                        placeholder="의견을 입력해주세요..."
-                                                        className="survey_modal_feedback_input"
-                                                    />
-                                                )}
+                                                </div>
                                             </div>
                                         </div>
                                     ))}

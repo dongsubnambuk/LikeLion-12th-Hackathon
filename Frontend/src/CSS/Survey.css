@@ -370,52 +370,97 @@ body.modal-open {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     padding-top: 30px;
+    gap: 30px;
 }
 
-.survey_modal_label {
+/* 별점 관련 스타일 */
+.rating_section {
     display: flex;
-    align-items: center;
-    margin-bottom: 12px;
-    cursor: pointer;
-    padding: 12px;
-    border-radius: 8px;
-    transition: background-color 0.3s ease;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.survey_modal_label:hover {
-    background-color: rgba(157, 146, 116, 0.05);
-}
-
-.survey_modal_radio {
-    margin-right: 12px;
-    cursor: pointer;
-    accent-color: #9d9274;
-}
-
-.survey_modal_label_text {
+.rating_label {
     font-size: 16px;
+    font-weight: 600;
     color: #333;
+    margin-bottom: 5px;
+}
+
+.star_rating_container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.star_rating {
+    display: flex;
+    gap: 4px;
+}
+
+.star {
+    font-size: 32px;
     cursor: pointer;
+    transition: all 0.2s ease;
     user-select: none;
 }
 
-.survey_modal_feedback_input {
+.star_filled {
+    color: #ffd700;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+}
+
+.star_empty {
+    color: #ddd;
+}
+
+.star:hover {
+    transform: scale(1.1);
+}
+
+.rating_text {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+    margin-left: 8px;
+}
+
+/* 코멘트 관련 스타일 */
+.comment_section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.comment_label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.comment_textarea {
     width: 100%;
     padding: 12px;
     border: 2px solid #e0e0e0;
     border-radius: 8px;
     font-size: 14px;
-    margin-top: 8px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 80px;
     transition: border-color 0.3s ease;
     box-sizing: border-box;
 }
 
-.survey_modal_feedback_input:focus {
+.comment_textarea:focus {
     outline: none;
     border-color: #9d9274;
     box-shadow: 0 0 0 3px rgba(157, 146, 116, 0.1);
+}
+
+.comment_textarea::placeholder {
+    color: #999;
 }
 
 .survey_modal_submit {
@@ -442,6 +487,11 @@ body.modal-open {
 
 .survey_modal_submit_button:hover {
     background: #8a825f;
+}
+
+.survey_modal_submit_button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
 }
 
 /* 반응형 디자인 */
@@ -506,6 +556,23 @@ body.modal-open {
     .survey_modal_right {
         width: 100%;
     }
+
+    .survey_modal_right {
+        padding-top: 0;
+    }
+
+    .star {
+        font-size: 28px;
+    }
+
+    .rating_label,
+    .comment_label {
+        font-size: 15px;
+    }
+
+    .comment_textarea {
+        min-height: 70px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -540,5 +607,45 @@ body.modal-open {
     .survey_modal_container {
         height: 100vh;
         border-radius: 0;
+    }
+
+    .survey_modal_header {
+        padding: 20px 25px;
+    }
+
+    .survey_modal_title {
+        font-size: 20px;
+    }
+
+    .survey_modal_section {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .survey_modal_food_image {
+        height: 200px;
+    }
+
+    .star {
+        font-size: 24px;
+    }
+
+    .rating_label,
+    .comment_label {
+        font-size: 14px;
+    }
+
+    .comment_textarea {
+        min-height: 60px;
+        padding: 10px;
+    }
+
+    .survey_modal_submit {
+        padding: 15px 20px;
+    }
+
+    .survey_modal_submit_button {
+        padding: 12px 30px;
+        font-size: 16px;
     }
 }
