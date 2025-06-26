@@ -70,6 +70,7 @@ public class UserServiceImpl implements UserService {
             for (Cookie cookie : cookies) {
                 if ("token".equals(cookie.getName())) {
                     cookie.setValue(null);
+                    cookie.setPath("/");
                     cookie.setMaxAge(0); // 브라우저에 삭제 요청
                     response.addCookie(cookie);
                 }
