@@ -52,9 +52,11 @@ public class NotificationServiceImpl implements NotificationService {
                                                 .userEmail(userEmail)
                                                 .content(content)
                                                 .type(notificationType)
+                                                .sendTime(LocalDateTime.now())
                                                 .dailyReviewId(dailyReviewId)
+                                                .check(false)
                                                 .build())
-                                        .toNotificationDTO(notificationRepository.countByUserEmailAndCheckIsFalse(userEmail));
+                                        .toNotificationDTO(notificationRepository.countByUserEmailAndCheckIsFalse(userEmail).orElse(0));
         // 연결 되어 있는지 확인 후 발송
         if (sessionManageService.isUserConnected(userEmail)) {
             simpMessagingTemplate.convertAndSendToUser(
@@ -64,6 +66,31 @@ public class NotificationServiceImpl implements NotificationService {
             );
             log.info("Notification sent to userId={}, type={}, content={}, dailyReviewId={}", userEmail, notificationType, content, dailyReviewId);
         }
+    }
+
+    @Override
+    public NotificationCountDTO testNotification(NotificationType notificationType,
+                                                  String userEmail,
+                                                  String content) {
+        NotificationDTO notificationDTO = notificationRepository.save(Notification.builder()
+                        .userEmail(userEmail)
+                        .content(content)
+                        .type(notificationType)
+                        .sendTime(LocalDateTime.now())
+                        .dailyReviewId(null)
+                        .check(false)
+                        .build())
+                .toNotificationDTO(notificationRepository.countByUserEmailAndCheckIsFalse(userEmail).orElse(0));
+        // 연결 되어 있는지 확인 후 발송
+        if (sessionManageService.isUserConnected(userEmail)) {
+            simpMessagingTemplate.convertAndSendToUser(
+                    userEmail,
+                    "/queue/notification",
+                    notificationDTO
+            );
+            log.info("Notification sent to userId={}, type={}, content={}", userEmail, notificationType, content);
+        }
+        return countUnreadNotifications(userEmail);
     }
 
     // 식단 알림 및 캐시 초기화 ( 매일 7시 )
@@ -154,7 +181,7 @@ public class NotificationServiceImpl implements NotificationService {
     public NotificationCountDTO countUnreadNotifications(String userEmail) {
         return NotificationCountDTO.builder()
                 .userEmail(userEmail)
-                .count(notificationRepository.countByUserEmailAndCheckIsFalse(userEmail))
+                .count(notificationRepository.countByUserEmailAndCheckIsFalse(userEmail).orElse(0))
                 .build();
     }
 
