@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import '../CSS/Admin.css';
 import { useNavigate } from 'react-router-dom';
-import foodimage from'../images/mainCardImg1.jpeg';
 
 function Admin() {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [dietSubTab, setDietSubTab] = useState('create'); // 식단 관리 내 서브탭
-  const [users, setUsers] = useState([]);
+  const [dietSubTab, setDietSubTab] = useState('create');
+  const [dietDetailSubTab, setDietDetailSubTab] = useState('list');
+  const [selectedDiet, setSelectedDiet] = useState(null);
+  const [orderSubTab, setOrderSubTab] = useState('list');
+  const [orders, setOrders] = useState([]);
   const [dietList, setDietList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [priceFilter, setPriceFilter] = useState('all');
   const [price, setPrice] = useState('');
   const [loading, setLoading] = useState(false);
   const [item, setItem] = useState({
@@ -30,6 +33,8 @@ function Admin() {
   const [itemVisible, setItemVisible] = useState(false);
   const navigate = useNavigate();
 
+  const foodimage = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop';
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("email");
@@ -41,19 +46,15 @@ function Admin() {
     setPrice(selectedPrice);
   };
 
-  // 식단 생성 fetch
   const handleButtonClick = async () => {
     if (!price) {
       alert('가격을 선택해주세요.');
       return;
     }
 
-    const token = localStorage.getItem("token");
     setLoading(true);
     
-    // 예시 데이터를 사용한 시뮬레이션
     try {
-      // 실제 API 호출 대신 예시 데이터 사용
       setTimeout(() => {
         const exampleMenus = {
           "4000": {
@@ -84,7 +85,8 @@ function Admin() {
             fat: "12g",
             sugar: "6g",
             sodium: "750mg",
-            image: foodimage          },
+            image: foodimage
+          },
           "7000": {
             name: "프리미엄 한식 세트",
             main1: "갈비찜",
@@ -98,7 +100,8 @@ function Admin() {
             fat: "22g",
             sugar: "12g",
             sodium: "1200mg",
-            image: foodimage          }
+            image: foodimage
+          }
         };
 
         const selectedMenu = exampleMenus[price];
@@ -108,40 +111,7 @@ function Admin() {
         });
         setItemVisible(true);
         setLoading(false);
-      }, 2000); // 2초 로딩 시뮬레이션
-
-      // 실제 API 호출 코드 (주석 처리)
-      /*
-      const response = await fetch(`http://3.37.64.39:8000/api/meal/food-menu?price=${price}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": token,
-        },
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      setItem({
-        name: data.name,
-        main1: data.main1,
-        main2: data.main2,
-        price: `${price}원`,
-        side1: data.side1,
-        side2: data.side2,
-        side3: data.side3,
-        calories: data.calories,
-        carbohydrate: data.carbohydrate,
-        protein: data.protein,
-        fat: data.fat,
-        sugar: data.sugar,
-        sodium: data.sodium,
-        image: data.image
-      });
-      setItemVisible(true);
-      setLoading(false);
-      */
+      }, 2000);
     } catch (error) {
       console.error('Fetch error:', error);
       setLoading(false);
@@ -149,7 +119,6 @@ function Admin() {
     }
   };
 
-  // 식단 적용 버튼
   const handleApplyDiet = () => {
     const newDiet = {
       id: dietList.length + 1,
@@ -162,40 +131,85 @@ function Admin() {
     alert('식단이 적용되었습니다!');
   };
 
-  // 사용자 정보 가져오기 (예시 데이터)
+  const handleDietClick = (diet) => {
+    setSelectedDiet(diet);
+    if (activeTab === 'dashboard') {
+      setActiveTab('diet');
+      setDietSubTab('list');
+      setDietDetailSubTab('detail');
+    } else {
+      setDietDetailSubTab('detail');
+    }
+  };
+
+  const handleViewMoreDiets = () => {
+    setActiveTab('diet');
+    setDietSubTab('list');
+    setDietDetailSubTab('list');
+  };
+
+  const handleViewMoreOrders = () => {
+    setActiveTab('orders');
+    setOrderSubTab('list');
+  };
+
+  // 가격 필터링 함수
+  const getFilteredDietList = () => {
+    if (priceFilter === 'all') {
+      return dietList;
+    }
+    return dietList.filter(diet => diet.price === `${priceFilter}원`);
+  };
+
+  const filteredDietList = getFilteredDietList();
+
   useEffect(() => {
-    const mockUsers = [
+    const mockOrders = [
       {
         id: 1,
-        name: "테스트1",
-        email: "test1@naver.com",
-        phone: "01012345678",
-        postcode: "12345",
-        address: "도봉구 주소",
-        detail: "상세 주소"
+        paymentDate: "2025-06-26",
+        userName: "김영희",
+        amount: "7000원"
       },
       {
         id: 2,
-        name: "테스트",
-        email: "test14@naver.com",
-        phone: "010-2222-3333",
-        postcode: "13480",
-        address: "경기 성남시 분당구 대왕판교로 477",
-        detail: "111"
+        paymentDate: "2025-06-25",
+        userName: "이철수",
+        amount: "5500원"
       },
       {
         id: 3,
-        name: "테스트2",
-        email: "test3@naver.com",
-        phone: "01012345678",
-        postcode: "12345",
-        address: "도봉구 주소",
-        detail: "상세 주소"
+        paymentDate: "2025-06-25",
+        userName: "박민수",
+        amount: "4000원"
+      },
+      {
+        id: 4,
+        paymentDate: "2025-06-24",
+        userName: "정수연",
+        amount: "7000원"
+      },
+      {
+        id: 5,
+        paymentDate: "2025-06-24",
+        userName: "최지영",
+        amount: "5500원"
+      },
+      {
+        id: 6,
+        paymentDate: "2025-06-23",
+        userName: "김태호",
+        amount: "7000원"
+      },
+      {
+        id: 7,
+        paymentDate: "2025-06-23",
+        userName: "이미영",
+        amount: "4000원"
       }
     ];
-    setUsers(mockUsers);
+    setOrders(mockOrders);
 
-    // 예시 식단 데이터
     const mockDietList = [
       {
         id: 1,
@@ -309,10 +323,10 @@ function Admin() {
     setDietList(mockDietList);
   }, []);
 
-  const usersPerPage = 5;
-  const totalPages = Math.ceil(users.length / usersPerPage);
-  const startIndex = (currentPage - 1) * usersPerPage;
-  const currentUsers = users.slice(startIndex, startIndex + usersPerPage);
+  const ordersPerPage = 10;
+  const totalOrderPages = Math.ceil(orders.length / ordersPerPage);
+  const startOrderIndex = (currentPage - 1) * ordersPerPage;
+  const currentOrders = orders.slice(startOrderIndex, startOrderIndex + ordersPerPage);
 
   return (
     <div className="admin_layout">
@@ -335,18 +349,18 @@ function Admin() {
             <span className="admin_nav_text">대시보드</span>
           </button>
           <button 
-            className={`admin_nav_button ${activeTab === 'users' ? 'admin_nav_active' : ''}`}
-            onClick={() => setActiveTab('users')}
-          >
-            <span className="admin_nav_icon">👥</span>
-            <span className="admin_nav_text">유저 관리</span>
-          </button>
-          <button 
             className={`admin_nav_button ${activeTab === 'diet' ? 'admin_nav_active' : ''}`}
             onClick={() => setActiveTab('diet')}
           >
             <span className="admin_nav_icon">🍽️</span>
             <span className="admin_nav_text">식단 관리</span>
+          </button>
+          <button 
+            className={`admin_nav_button ${activeTab === 'orders' ? 'admin_nav_active' : ''}`}
+            onClick={() => setActiveTab('orders')}
+          >
+            <span className="admin_nav_icon">📦</span>
+            <span className="admin_nav_text">주문 관리</span>
           </button>
         </nav>
       </div>
@@ -358,8 +372,8 @@ function Admin() {
             <h1 className="admin_title">우리동네영양사</h1>
             <div className="admin_breadcrumb">
               {activeTab === 'dashboard' && '대시보드'}
-              {activeTab === 'users' && '유저 정보'}
               {activeTab === 'diet' && '식단 관리'}
+              {activeTab === 'orders' && '주문 관리'}
             </div>
           </div>
           <div className="admin_header_right">
@@ -378,23 +392,23 @@ function Admin() {
               <div className="admin_dashboard_grid">
                 <div className="admin_dashboard_card">
                   <div className="admin_card_header">
-                    <h3 className="admin_card_title">전체 유저</h3>
-                    <span className="admin_card_icon">👥</span>
+                    <h3 className="admin_card_title">생성된 식단</h3>
+                    <span className="admin_card_icon diet_icon">🍽️</span>
                   </div>
                   <div className="admin_card_content">
-                    <div className="admin_card_number">{users.length}</div>
-                    <div className="admin_card_label">명</div>
+                    <div className="admin_card_number">{dietList.length}</div>
+                    <div className="admin_card_label">개</div>
                   </div>
                 </div>
 
                 <div className="admin_dashboard_card">
                   <div className="admin_card_header">
-                    <h3 className="admin_card_title">생성된 식단</h3>
-                    <span className="admin_card_icon">🍽️</span>
+                    <h3 className="admin_card_title">총 주문</h3>
+                    <span className="admin_card_icon">📦</span>
                   </div>
                   <div className="admin_card_content">
-                    <div className="admin_card_number">{dietList.length}</div>
-                    <div className="admin_card_label">개</div>
+                    <div className="admin_card_number">{orders.length}</div>
+                    <div className="admin_card_label">건</div>
                   </div>
                 </div>
               </div>
@@ -402,14 +416,21 @@ function Admin() {
               <div className="admin_dashboard_lists">
                 <div className="admin_list_container">
                   <div className="admin_list_header">
-                    <h3 className="admin_list_title">최근 유저</h3>
+                    <h3 className="admin_list_title">전체 식단</h3>
+                    <button className="admin_more_btn" onClick={handleViewMoreDiets}>
+                      목록보기
+                    </button>
                   </div>
-                  <div className="admin_simple_list">
-                    {users.slice(0, 5).map((user) => (
-                      <div key={user.id} className="admin_simple_item">
-                        <div className="admin_item_info">
-                          <div className="admin_item_name">{user.name}</div>
-                          <div className="admin_item_email">{user.email}</div>
+                  <div className="admin_dashboard_diet_list">
+                    {dietList.slice(0, 5).map((diet) => (
+                      <div 
+                        key={diet.id} 
+                        className="admin_dashboard_diet_item"
+                        onClick={() => handleDietClick(diet)}
+                      >
+                        <div className="admin_dashboard_diet_info">
+                          <div className="admin_dashboard_diet_name">{diet.name}</div>
+                          <div className="admin_dashboard_diet_detail">{diet.price} • {diet.calories}</div>
                         </div>
                       </div>
                     ))}
@@ -418,16 +439,19 @@ function Admin() {
 
                 <div className="admin_list_container">
                   <div className="admin_list_header">
-                    <h3 className="admin_list_title">최근 생성 식단</h3>
+                    <h3 className="admin_list_title">최근 주문 내역</h3>
+                    <button className="admin_more_btn" onClick={handleViewMoreOrders}>
+                      목록보기
+                    </button>
                   </div>
-                  <div className="admin_simple_list">
-                    {dietList.slice(0, 5).map((diet) => (
-                      <div key={diet.id} className="admin_simple_item">
-                        <div className="admin_item_info">
-                          <div className="admin_item_name">{diet.name}</div>
-                          <div className="admin_item_detail">{diet.price} • {diet.calories}</div>
+                  <div className="admin_dashboard_order_list">
+                    {orders.slice(0, 5).map((order) => (
+                      <div key={order.id} className="admin_dashboard_order_item">
+                        <div className="admin_dashboard_order_info">
+                          <div className="admin_dashboard_order_name">{order.userName}</div>
+                          <div className="admin_dashboard_order_detail">{order.amount}</div>
                         </div>
-                        <div className="admin_item_date">{diet.createdAt}</div>
+                        <div className="admin_dashboard_order_date">{order.paymentDate}</div>
                       </div>
                     ))}
                   </div>
@@ -436,33 +460,27 @@ function Admin() {
             </div>
           )}
 
-          {/* 유저 관리 */}
-          {activeTab === 'users' && (
-            <div className="admin_users_section">
+          {/* 주문 관리 */}
+          {activeTab === 'orders' && (
+            <div className="admin_orders_section">
               <div className="admin_section_header">
-                <h2 className="admin_section_title">전체 유저 정보</h2>
+                <h2 className="admin_section_title">주문 관리</h2>
               </div>
               
-              <table className="admin_users_table">
+              <table className="admin_orders_table">
                 <thead className="admin_table_head">
                   <tr className="admin_table_row">
-                    <th className="admin_table_header">이름</th>
-                    <th className="admin_table_header">이메일</th>
-                    <th className="admin_table_header">전화번호</th>
-                    <th className="admin_table_header">우편번호</th>
-                    <th className="admin_table_header">도로명 주소</th>
-                    <th className="admin_table_header">상세 주소</th>
+                    <th className="admin_table_header">결제 날짜</th>
+                    <th className="admin_table_header">유저 이름</th>
+                    <th className="admin_table_header">결제 금액</th>
                   </tr>
                 </thead>
                 <tbody className="admin_table_body">
-                  {currentUsers.map((user) => (
-                    <tr key={user.id} className="admin_table_row">
-                      <td className="admin_table_cell">{user.name}</td>
-                      <td className="admin_table_cell">{user.email}</td>
-                      <td className="admin_table_cell">{user.phone}</td>
-                      <td className="admin_table_cell">{user.postcode}</td>
-                      <td className="admin_table_cell">{user.address}</td>
-                      <td className="admin_table_cell">{user.detail}</td>
+                  {currentOrders.map((order) => (
+                    <tr key={order.id} className="admin_table_row">
+                      <td className="admin_table_cell">{order.paymentDate}</td>
+                      <td className="admin_table_cell">{order.userName}</td>
+                      <td className="admin_table_cell">{order.amount}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -479,8 +497,8 @@ function Admin() {
                 <span className="admin_page_number">{currentPage}</span>
                 <button 
                   className="admin_pagination_btn"
-                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalOrderPages))}
+                  disabled={currentPage === totalOrderPages}
                 >
                   다음
                 </button>
@@ -491,18 +509,23 @@ function Admin() {
           {/* 식단 관리 */}
           {activeTab === 'diet' && (
             <div className="admin_diet_section">
-          
               {/* 식단 관리 서브탭 */}
               <div className="admin_diet_subtabs">
                 <button 
                   className={`admin_subtab_btn ${dietSubTab === 'create' ? 'admin_subtab_active' : ''}`}
-                  onClick={() => setDietSubTab('create')}
+                  onClick={() => {
+                    setDietSubTab('create');
+                    setDietDetailSubTab('list');
+                  }}
                 >
                   🍽️ 식단 생성하기
                 </button>
                 <button 
                   className={`admin_subtab_btn ${dietSubTab === 'list' ? 'admin_subtab_active' : ''}`}
-                  onClick={() => setDietSubTab('list')}
+                  onClick={() => {
+                    setDietSubTab('list');
+                    setDietDetailSubTab('list');
+                  }}
                 >
                   📋 생성된 식단 ({dietList.length})
                 </button>
@@ -539,7 +562,7 @@ function Admin() {
                     {itemVisible && !loading && (
                       <div className="admin_diet_result">
                         <div className="admin_result_header">
-                          <h4 className="admin_result_title">✨ 생성된 식단</h4>
+                          <h4 className="admin_result_title"> 생성된 식단</h4>
                           <span className="admin_new_badge">NEW</span>
                         </div>
                         <div className="admin_diet_card">
@@ -553,11 +576,9 @@ function Admin() {
                                 <h3 className="admin_diet_name">{item.name}</h3>
                                 <div className="admin_diet_info_summary">
                                   <div className="admin_diet_info">
-                                    <span className="admin_info_icon">🔥</span>
                                     <span className="admin_info_text">{item.calories}</span>
                                   </div>
                                   <div className="admin_diet_info">
-                                    <span className="admin_info_icon">💰</span>
                                     <span className="admin_info_text">{item.price}</span>
                                   </div>
                                 </div>
@@ -641,15 +662,6 @@ function Admin() {
                                   </div>
                                 </div>
                               </div>
-
-                              <div className="admin_action_buttons">
-                                <button className="admin_apply_btn" onClick={handleApplyDiet}>
-                                  ✅ 식단 적용하기
-                                </button>
-                                <button className="admin_regenerate_btn" onClick={handleButtonClick}>
-                                  🔄 다시 생성하기
-                                </button>
-                              </div>
                             </div>
                           </div>
                         </div>
@@ -661,57 +673,188 @@ function Admin() {
 
               {/* 생성된 식단 목록 탭 */}
               {dietSubTab === 'list' && (
-                <div className="admin_diet_list_container">
-                  <div className="admin_diet_list_header">
-                    <h3 className="admin_list_title">생성된 식단 목록</h3>
-                    <span className="admin_list_count">총 {dietList.length}개</span>
-                  </div>
-                  <div className="admin_diet_list_content">
-                    {dietList.length > 0 ? (
-                      <div className="admin_diet_list">
-                        {dietList.map((diet) => (
-                          <div key={diet.id} className="admin_diet_list_item">
-                            <div className="admin_diet_list_image">
-                              <img src={diet.image} alt={diet.name} />
-                            </div>
-                            <div className="admin_diet_list_info">
-                              <div className="admin_diet_list_name">{diet.name}</div>
-                              <div className="admin_diet_list_details">
-                                <span>{diet.price}</span>
-                                <span>•</span>
-                                <span>{diet.calories}</span>
-                                <span>•</span>
-                                <span>메인: {diet.main1}, {diet.main2}</span>
+                <>
+                  {dietDetailSubTab === 'list' && (
+                    <div className="admin_diet_list_container">
+                      <div className="admin_diet_list_header">
+                        <h3 className="admin_list_title">생성된 식단 목록</h3>
+                        <div className="admin_filter_section">
+                          <select 
+                            value={priceFilter} 
+                            onChange={(e) => setPriceFilter(e.target.value)}
+                            className="admin_price_filter"
+                          >
+                            <option value="all">전체 가격</option>
+                            <option value="4000">4000원</option>
+                            <option value="5500">5500원</option>
+                            <option value="7000">7000원</option>
+                          </select>
+                          <span className="admin_list_count">총 {filteredDietList.length}개</span>
+                        </div>
+                      </div>
+                      <div className="admin_diet_list_content">
+                        {filteredDietList.length > 0 ? (
+                          <div className="admin_diet_list">
+                            {filteredDietList.map((diet) => (
+                              <div 
+                                key={diet.id} 
+                                className="admin_diet_list_item"
+                                onClick={() => handleDietClick(diet)}
+                              >
+                                <div className="admin_diet_list_image">
+                                  <img src={diet.image} alt={diet.name} />
+                                </div>
+                                <div className="admin_diet_list_info">
+                                  <div className="admin_diet_list_name">{diet.name}</div>
+                                  <div className="admin_diet_list_details">
+                                    <span>{diet.price}</span>
+                                    <span>•</span>
+                                    <span>{diet.calories}</span>
+                                    <span>•</span>
+                                    <span>메인: {diet.main1}, {diet.main2}</span>
+                                  </div>
+                                  <div className="admin_diet_list_nutrients">
+                                    단백질: {diet.protein} | 탄수화물: {diet.carbohydrate} | 지방: {diet.fat}
+                                  </div>
+                                </div>
+                                <div className="admin_diet_list_meta">
+                                  <div className="admin_diet_list_actions">
+                                    <button className="admin_diet_action_btn admin_delete_btn">삭제</button>
+                                  </div>
+                                </div>
                               </div>
-                              <div className="admin_diet_list_nutrients">
-                                단백질: {diet.protein} | 탄수화물: {diet.carbohydrate} | 지방: {diet.fat}
-                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="admin_empty_state">
+                            <div className="admin_empty_icon">🍽️</div>
+                            <div className="admin_empty_text">해당 가격대의 식단이 없습니다.</div>
+                            <div className="admin_empty_subtext">
+                              <button 
+                                className="admin_empty_link"
+                                onClick={() => setDietSubTab('create')}
+                              >
+                                새로운 식단 생성하기
+                              </button>
                             </div>
-                            <div className="admin_diet_list_meta">
-                              <div className="admin_diet_list_date">{diet.createdAt}</div>
-                              <div className="admin_diet_list_actions">
-                                <button className="admin_diet_action_btn admin_delete_btn">삭제</button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 식단 상세 보기 */}
+                  {dietDetailSubTab === 'detail' && selectedDiet && (
+                    <div className="admin_diet_detail_container">
+                      <div className="admin_diet_detail_header">
+                        <button 
+                          className="admin_back_btn"
+                          onClick={() => setDietDetailSubTab('list')}
+                        >
+                          ← 목록으로 돌아가기
+                        </button>
+                        <h3 className="admin_detail_main_title">{selectedDiet.name}</h3>
+                      </div>
+                      
+                      <div className="admin_diet_card">
+                        <div className="admin_diet_content">
+                          {/* 첫 번째 섹션 - 이미지와 기본 정보 */}
+                          <div className="admin_diet_left">
+                            <div className="admin_diet_image_container">
+                              <img src={selectedDiet.image} alt="food" className="admin_diet_image" />
+                            </div>
+                            <div className="admin_diet_info_container">
+                              <h3 className="admin_diet_name">{selectedDiet.name}</h3>
+                              <div className="admin_diet_info_summary">
+                                <div className="admin_diet_info">
+                                  <span className="admin_info_text">{selectedDiet.calories}</span>
+                                </div>
+                                <div className="admin_diet_info">
+                                  <span className="admin_info_text">{selectedDiet.price}</span>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="admin_empty_state">
-                        <div className="admin_empty_icon">🍽️</div>
-                        <div className="admin_empty_text">아직 생성된 식단이 없습니다.</div>
-                        <div className="admin_empty_subtext">
-                          <button 
-                            className="admin_empty_link"
-                            onClick={() => setDietSubTab('create')}
-                          >
-                            새로운 식단 생성하기
-                          </button>
+                          
+                          {/* 두 번째 섹션 - 메뉴 구성 */}
+                          <div className="admin_menu_section">
+                            <h4 className="admin_detail_title">메뉴 구성</h4>
+                            <div className="admin_menu_grid">
+                              <div className="admin_menu_item">
+                                <span className="admin_menu_label">메인1:</span>
+                                <span className="admin_menu_value">{selectedDiet.main1}</span>
+                              </div>
+                              <div className="admin_menu_item">
+                                <span className="admin_menu_label">메인2:</span>
+                                <span className="admin_menu_value">{selectedDiet.main2}</span>
+                              </div>
+                              <div className="admin_menu_item">
+                                <span className="admin_menu_label">사이드1:</span>
+                                <span className="admin_menu_value">{selectedDiet.side1}</span>
+                              </div>
+                              <div className="admin_menu_item">
+                                <span className="admin_menu_label">사이드2:</span>
+                                <span className="admin_menu_value">{selectedDiet.side2}</span>
+                              </div>
+                              <div className="admin_menu_item">
+                                <span className="admin_menu_label">사이드3:</span>
+                                <span className="admin_menu_value">{selectedDiet.side3}</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* 세 번째 섹션 - 영양성분 */}
+                          <div className="admin_nutrition_section">
+                            <h4 className="admin_detail_title">영양성분</h4>
+                            <div className="admin_nutrition_grid">
+                              <div className="admin_nutrition_item">
+                                <span className="admin_nutrition_label">탄수화물</span>
+                                <span className="admin_nutrition_value">{selectedDiet.carbohydrate}</span>
+                              </div>
+                              <div className="admin_nutrition_item">
+                                <span className="admin_nutrition_label">단백질</span>
+                                <span className="admin_nutrition_value">{selectedDiet.protein}</span>
+                              </div>
+                              <div className="admin_nutrition_item">
+                                <span className="admin_nutrition_label">지방</span>
+                                <span className="admin_nutrition_value">{selectedDiet.fat}</span>
+                              </div>
+                              <div className="admin_nutrition_item">
+                                <span className="admin_nutrition_label">당류</span>
+                                <span className="admin_nutrition_value">{selectedDiet.sugar}</span>
+                              </div>
+                              <div className="admin_nutrition_item">
+                                <span className="admin_nutrition_label">나트륨</span>
+                                <span className="admin_nutrition_value">{selectedDiet.sodium}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* 네 번째 섹션 - 요약 정보 */}
+                          <div className="admin_diet_extra">
+                            <div className="admin_diet_summary">
+                              <h4 className="admin_summary_title">식단 요약</h4>
+                              <div className="admin_summary_stats">
+                                <div className="admin_summary_item">
+                                  <span className="admin_summary_label">가격대</span>
+                                  <span className="admin_summary_value">{selectedDiet.price}</span>
+                                </div>
+                                <div className="admin_summary_item">
+                                  <span className="admin_summary_label">칼로리</span>
+                                  <span className="admin_summary_value">{selectedDiet.calories}</span>
+                                </div>
+                                <div className="admin_summary_item">
+                                  <span className="admin_summary_label">메뉴 구성</span>
+                                  <span className="admin_summary_value">5개</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    )}
-                  </div>
-                </div>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           )}

@@ -179,12 +179,8 @@
   transition: all 0.3s ease;
 }
 
-.admin_dashboard_card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-}
 
-.admin_dashboard_card:nth-child(2) {
+.admin_dashboard_card:nth-child(1) {
   border-left-color: #6b8e5a;
 }
 
@@ -207,7 +203,7 @@
   color: #9d9274;
 }
 
-.admin_dashboard_card:nth-child(2) .admin_card_icon {
+.admin_card_icon.diet_icon {
   color: #6b8e5a;
 }
 
@@ -245,6 +241,9 @@
   margin-bottom: 20px;
   padding-bottom: 10px;
   border-bottom: 2px solid #f8f9fa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .admin_list_title {
@@ -252,6 +251,20 @@
   font-weight: 600;
   color: #333;
   margin: 0;
+}
+
+.admin_more_btn {
+  background: none;
+  border: none;
+  color: #9d9274;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: all 0.3s ease;
+}
+
+.admin_more_btn:hover {
+  color: #8a805f;
 }
 
 .admin_simple_list {
@@ -276,20 +289,99 @@
   border-left-color: #9d9274;
 }
 
-.admin_item_info {
+.admin_simple_item.clickable {
+  cursor: pointer;
+}
+
+.admin_simple_item.no_hover:hover {
+  background: #f8f9fa;
+  border-left-color: transparent;
+}
+
+/* 대시보드 식단 리스트 스타일 */
+.admin_dashboard_diet_list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.admin_dashboard_diet_item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+}
+
+.admin_dashboard_diet_item:hover {
+  background: #f0f2f5;
+  border-left-color: #9d9274;
+}
+
+.admin_dashboard_diet_info {
   flex: 1;
 }
 
-.admin_item_name {
+.admin_dashboard_diet_name {
   font-weight: 600;
   color: #333;
   margin-bottom: 4px;
 }
 
-.admin_item_email,
-.admin_item_detail {
+.admin_dashboard_diet_detail {
   font-size: 14px;
   color: #666;
+}
+
+/* 대시보드 주문 리스트 스타일 */
+.admin_dashboard_order_list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.admin_dashboard_order_item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 3px solid transparent;
+}
+
+/* 호버 효과 완전 제거 */
+.admin_dashboard_order_item:hover {
+  background: #f8f9fa;
+  border-left-color: transparent;
+}
+
+.admin_dashboard_order_info {
+  flex: 1;
+}
+
+.admin_dashboard_order_name {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.admin_dashboard_order_detail {
+  font-size: 14px;
+  color: #666;
+}
+
+.admin_dashboard_order_date {
+  font-size: 12px;
+  color: #9d9274;
+  font-weight: 500;
+  padding: 4px 8px;
+  background: rgba(157, 146, 116, 0.1);
+  border-radius: 4px;
 }
 
 .admin_item_date {
@@ -301,8 +393,8 @@
   border-radius: 4px;
 }
 
-/* 사용자 관리 섹션 */
-.admin_users_section {
+/* 주문 관리 섹션 */
+.admin_orders_section {
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
@@ -310,14 +402,15 @@
   padding: 30px;
 }
 
-/* 사용자 테이블 스타일 */
-.admin_users_table {
+/* 주문 테이블 스타일 */
+.admin_orders_table {
   width: 100%;
   background: white;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   margin-bottom: 20px;
+  border-collapse: collapse;
 }
 
 .admin_table_head {
@@ -346,9 +439,6 @@
   color: #666;
 }
 
-.admin_table_body .admin_table_row:hover {
-  background: #f8f9fa;
-}
 
 .admin_table_body .admin_table_row:nth-child(even) {
   background: #fafbfc;
@@ -584,7 +674,6 @@
   border: 1px solid #e9ecef;
   display: flex;
   flex-direction: column;
- 
 }
 
 /* 첫 번째 섹션 - 이미지와 기본 정보 */
@@ -610,11 +699,6 @@
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   transition: all 0.3s ease;
-}
-
-.admin_diet_image:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
 }
 
 .admin_diet_info_container {
@@ -647,11 +731,6 @@
   transition: all 0.3s ease;
 }
 
-.admin_diet_info:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-  background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
-}
 
 .admin_info_icon {
   font-size: 20px;
@@ -706,11 +785,7 @@
   transition: all 0.3s ease;
 }
 
-.admin_menu_item:hover {
-  transform: translateX(5px);
-  box-shadow: 0 4px 12px rgba(157, 146, 116, 0.15);
-  border-color: #9d9274;
-}
+
 
 .admin_menu_label {
   font-weight: 600;
@@ -757,11 +832,6 @@
   transition: all 0.3s ease;
 }
 
-.admin_nutrition_item:hover {
-  transform: translateX(5px);
-  box-shadow: 0 4px 12px rgba(107, 142, 90, 0.15);
-  border-color: #6b8e5a;
-}
 
 .admin_nutrition_label {
   font-size: 15px;
@@ -827,11 +897,6 @@
   transition: all 0.3s ease;
 }
 
-.admin_summary_item:hover {
-  transform: translateX(5px);
-  box-shadow: 0 4px 12px rgba(212, 197, 160, 0.15);
-  border-color: #d4c5a0;
-}
 
 .admin_summary_label {
   color: #6c757d;
@@ -843,53 +908,7 @@
   font-weight: 700;
 }
 
-/* 액션 버튼 */
-.admin_action_buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin-top: auto;
-}
 
-.admin_apply_btn {
-  padding: 18px 24px;
-  background: linear-gradient(135deg, #6b8e5a 0%, #5a7a4a 100%);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 6px 18px rgba(107, 142, 90, 0.3);
-  white-space: nowrap;
-}
-
-.admin_apply_btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(107, 142, 90, 0.4);
-  background: linear-gradient(135deg, #5a7a4a 0%, #4a6a3a 100%);
-}
-
-.admin_regenerate_btn {
-  padding: 18px 24px;
-  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 6px 18px rgba(108, 117, 125, 0.3);
-  white-space: nowrap;
-}
-
-.admin_regenerate_btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(108, 117, 125, 0.4);
-  background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
-}
 
 /* 식단 목록 컨테이너 */
 .admin_diet_list_container {
@@ -905,6 +924,50 @@
   margin-bottom: 25px;
   padding-bottom: 15px;
   border-bottom: 2px solid #f8f9fa;
+}
+
+.admin_filter_section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.admin_price_filter {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.admin_price_filter:focus {
+  border-color: #9d9274;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(157, 146, 116, 0.1);
+}
+
+.admin_filter_section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.admin_price_filter {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.admin_price_filter:focus {
+  border-color: #9d9274;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(157, 146, 116, 0.1);
 }
 
 .admin_list_count {
@@ -940,6 +1003,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 1px solid #f0f0f0;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .admin_diet_list_item:hover {
@@ -1039,6 +1103,47 @@
   background: #c82333;
 }
 
+/* 식단 상세 컨테이너 */
+.admin_diet_detail_container {
+  padding: 30px;
+  max-height: calc(100vh - 300px);
+  overflow-y: auto;
+}
+
+.admin_diet_detail_header {
+  margin-bottom: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.admin_back_btn {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  color: #6c757d;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+}
+
+.admin_back_btn:hover {
+  background: #e9ecef;
+  border-color: #9d9274;
+  color: #9d9274;
+}
+
+.admin_detail_main_title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+  text-align: center;
+}
+
 /* 빈 상태 스타일 */
 .admin_empty_state {
   text-align: center;
@@ -1079,26 +1184,30 @@
 /* 스크롤바 스타일 */
 .admin_diet_create_container::-webkit-scrollbar,
 .admin_diet_list_container::-webkit-scrollbar,
-.admin_diet_list_content::-webkit-scrollbar {
+.admin_diet_list_content::-webkit-scrollbar,
+.admin_diet_detail_container::-webkit-scrollbar {
   width: 6px;
 }
 
 .admin_diet_create_container::-webkit-scrollbar-track,
 .admin_diet_list_container::-webkit-scrollbar-track,
-.admin_diet_list_content::-webkit-scrollbar-track {
+.admin_diet_list_content::-webkit-scrollbar-track,
+.admin_diet_detail_container::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 3px;
 }
 
 .admin_diet_create_container::-webkit-scrollbar-thumb,
 .admin_diet_list_container::-webkit-scrollbar-thumb,
-.admin_diet_list_content::-webkit-scrollbar-thumb {
+.admin_diet_list_content::-webkit-scrollbar-thumb,
+.admin_diet_detail_container::-webkit-scrollbar-thumb {
   background: #9d9274;
   border-radius: 3px;
 }
 
 .admin_diet_create_container::-webkit-scrollbar-thumb:hover,
 .admin_diet_list_container::-webkit-scrollbar-thumb:hover,
-.admin_diet_list_content::-webkit-scrollbar-thumb:hover {
+.admin_diet_list_content::-webkit-scrollbar-thumb:hover,
+.admin_diet_detail_container::-webkit-scrollbar-thumb:hover {
   background: #8a805f;
 }
