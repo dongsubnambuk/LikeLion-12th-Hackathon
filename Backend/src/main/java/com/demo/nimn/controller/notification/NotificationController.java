@@ -2,6 +2,7 @@ package com.demo.nimn.controller.notification;
 
 import com.demo.nimn.dto.notification.NotificationDTO;
 import com.demo.nimn.dto.notification.response.NotificationCountDTO;
+import com.demo.nimn.enums.NotificationType;
 import com.demo.nimn.service.notification.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,5 +41,13 @@ public class NotificationController {
     @GetMapping
     public ResponseEntity<NotificationCountDTO> countUnreadNotifications(@RequestParam String userEmail) {
         return ResponseEntity.ok(notificationService.countUnreadNotifications(userEmail));
+    }
+
+    @Operation(summary = "테스트용")
+    @GetMapping("/test")
+    public ResponseEntity<NotificationCountDTO> test(@RequestParam NotificationType notificationType,
+                                                     @RequestParam String userEmail,
+                                                     @RequestParam String content) {
+        return ResponseEntity.ok(notificationService.testNotification(notificationType, userEmail, content));
     }
 }

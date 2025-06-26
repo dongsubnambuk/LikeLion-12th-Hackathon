@@ -28,7 +28,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws/notification")
-                .setAllowedOrigins("http://127.0.0.1:3000", "https://nimn.store")
+                .setAllowedOrigins("http://127.0.0.1:3000", "http://nimn.store")
                 .withSockJS();
     }
 
