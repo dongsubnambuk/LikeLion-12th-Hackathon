@@ -3,12 +3,13 @@ package com.demo.nimn.controller.email;
 import com.demo.nimn.dto.email.EmailDTO;
 import com.demo.nimn.dto.email.EmailRequestDto;
 import com.demo.nimn.service.email.MailService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+@Tag(name="Email API", description = "이메일 인증 관련 API")
 @RestController
 @RequestMapping("/email")
 public class EmailController {

@@ -2,6 +2,7 @@ package com.demo.nimn.filter;
 
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -33,12 +34,26 @@ public class JWTUtil {
     }
 
     public Boolean isExpired(String token) {
-
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getExpiration().before(new Date());
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getExpiration()
+                    .before(new Date());
+        } catch (ExpiredJwtException e) {
+            // 만료된 토큰
+            return true;
+        } catch (Exception e) {
+            // 그 외 예외는 여기서 처리하거나 그대로 throw
+            throw new RuntimeException("토큰 유효성 검사 실패", e);
+        }
     }
 
+
     public String createJwt(String email, String role) {
-        long expiredMs = 60*60*10L * 1000;
+        long expiredMs = 60*60* 1L * 1000;
 
         Claims claims = Jwts.claims();
         claims.put("email", email);

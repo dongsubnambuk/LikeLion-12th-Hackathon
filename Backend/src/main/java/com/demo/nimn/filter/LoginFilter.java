@@ -102,7 +102,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 //                "\"role\": \"%s\"}",
 //                "Bearer " + token, email, role);
         String jsonResponse = String.format("{" +
-                "\"isSuccess\": \"성공\"");
+                "\"isSuccess\": \"성공\"}");
 
         response.getWriter().write(jsonResponse);
         response.getWriter().flush();
@@ -128,7 +128,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        String jsonResponse = "{\"error\": \"로그인 실패\", \"message\": \"" + failed.getMessage() + "\"}";
+        String jsonResponse = "{\"isSuccess\": \"실패\", \"message\": \"" + failed.getMessage() + "\"}";
 
         response.getWriter().write(jsonResponse);
         response.getWriter().flush();
