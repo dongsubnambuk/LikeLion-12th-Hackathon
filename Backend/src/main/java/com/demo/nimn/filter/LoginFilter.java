@@ -89,6 +89,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         Cookie cookie = new Cookie("token", token);
         cookie.setMaxAge(60 * 60 * 24); // 유효기간 설정(초), 상대시간
+        cookie.setPath("/");
         response.addCookie(cookie); // 응답에 쿠키 추가
 
         // JSON 형태로 응답 바디에 담기

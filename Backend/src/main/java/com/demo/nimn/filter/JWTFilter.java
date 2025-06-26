@@ -26,7 +26,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
+        System.out.println("요청 오긴옴");
         //request에서 Authorization 헤더를 찾음
         String token = null;
 
@@ -41,7 +41,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         //Authorization 헤더 검증
         if (token == null ) {
-
+            System.out.println("null인가?");
 
             filterChain.doFilter(request, response);
 
@@ -67,7 +67,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
             return; // 더 이상 필터 체인 타지 않도록 종료
         }
-
+        System.out.println("Token from cookie: " + token);
         //토큰에서 email과 role 획득
         String email = jwtUtil.getUsername(token);
         String role = jwtUtil.getRole(token);
