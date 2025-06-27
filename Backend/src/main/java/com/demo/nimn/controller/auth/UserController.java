@@ -43,7 +43,7 @@ public class UserController {
 
     @Operation(summary = "회원가입", description = "회원가입을 진행합니다")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "201", description = "회원가입 성공"),
             @ApiResponse(responseCode = "403", description = "회원가입 실패"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
@@ -70,7 +70,7 @@ public class UserController {
 
     @Operation(summary = "로그아웃", description = "로그아웃을 진행, 쿠키에 담긴 jwt 토큰을 삭제합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
             @ApiResponse(responseCode = "401", description = "인증 실패"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
@@ -109,7 +109,12 @@ public class UserController {
     }
 
 
-
+    @Operation(summary = "로그인 유저 정보조회", description = "로그인한 유저의 정보를 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "403", description = "권한 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
     @GetMapping
     public ResponseEntity<?> getUserDetail(@AuthenticationPrincipal CustomUserDetails userDetail){
         String email = userDetail.getUsername();
@@ -138,6 +143,12 @@ public class UserController {
         return null;
     }
 
+    @Operation(summary = "로그인 유저 정보 수정", description = "로그인한 유저의 정보를 수정한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "403", description = "권한 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
     @PutMapping
     public UserDetails updateUser(@RequestBody UserDetails user){
         return userService.updateUser(user);

@@ -15,6 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class JWTFilter extends OncePerRequestFilter {
 
@@ -26,7 +27,12 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("요청 오긴옴");
+        String uri = request.getRequestURI();
+        if (isPermitted(uri)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         //request에서 Authorization 헤더를 찾음
         String token = null;
 
@@ -41,7 +47,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
         //Authorization 헤더 검증
         if (token == null ) {
-            System.out.println("null인가?");
 
             filterChain.doFilter(request, response);
 
@@ -67,7 +72,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
             return; // 더 이상 필터 체인 타지 않도록 종료
         }
-        System.out.println("Token from cookie: " + token);
         //토큰에서 email과 role 획득
         String email = jwtUtil.getUsername(token);
         String role = jwtUtil.getRole(token);
@@ -89,5 +93,20 @@ public class JWTFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
+    }
+
+    private static final List<String> WHITELIST = List.of(
+            "/api/users/login",
+            "/api/users/logout",
+            "/api/users/isExist",
+            "/api/users/signup",
+            "/api/email",
+            "/swagger-ui",
+            "/docs",
+            "/api-docs"
+    );
+
+    private boolean isPermitted(String uri) {
+        return WHITELIST.stream().anyMatch(uri::startsWith);
     }
 }
