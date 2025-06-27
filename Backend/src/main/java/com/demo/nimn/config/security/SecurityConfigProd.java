@@ -47,6 +47,22 @@ public class SecurityConfigProd {
         http
                 .httpBasic((auth) -> auth.disable());
 
+        // CORS 설정
+        http
+                .cors(cors -> cors.configurationSource(request -> {
+                    var corsConfig = new org.springframework.web.cors.CorsConfiguration();
+                    corsConfig.setAllowedOrigins(java.util.List.of(
+                            "http://localhost:3000",
+                            "http://127.0.0.1:3000",
+                            "https://nimn.store",
+                            "http://nimn.store"
+                    ));
+                    corsConfig.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+                    corsConfig.setAllowedHeaders(java.util.List.of("*"));
+                    corsConfig.setAllowCredentials(true);
+                    return corsConfig;
+                }));
+
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
