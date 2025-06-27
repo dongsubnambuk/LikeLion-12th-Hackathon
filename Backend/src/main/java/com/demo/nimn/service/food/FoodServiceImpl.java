@@ -124,13 +124,9 @@ public class FoodServiceImpl implements FoodService {
                 .build();
     }
 
-    /**
-     * AI 서비스를 통해 식단 이미지 생성
-     */
+    // AI 서비스를 통해 식단 이미지 생성
     private String createFoodImage(String menuDescription) {
-        // TODO: 이미지 생성 고쳐지면 수정해야함
-//        return aiService.generateFoodImage(menuDescription);
-        return "테스트 이미지값";
+        return aiService.generateFoodImage(menuDescription);
     }
 
     public String extractMainAndSideMenus(String input) {

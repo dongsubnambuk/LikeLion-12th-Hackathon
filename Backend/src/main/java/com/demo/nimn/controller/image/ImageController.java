@@ -1,81 +1,51 @@
 package com.demo.nimn.controller.image;
 
-
-import com.demo.nimn.dto.image.ImageDTO;
 import com.demo.nimn.service.image.ImageService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
-@Tag(name = "IMAGE API", description = "이미지 서버 API")
+@Tag(name = "이미지 API", description = "")
 @RestController
 @RequestMapping(value = "/image")
 public class ImageController {
-    private static final Logger logger = LoggerFactory.getLogger(ImageController.class);
+
     private final ImageService imageService;
 
-    public ImageController(@Autowired ImageService imageService){
+    public ImageController(ImageService imageService) {
         this.imageService = imageService;
     }
-    
-    @PostMapping("/upload")
-    public ResponseEntity<ImageDTO> uploadImage(@RequestPart List<MultipartFile> images) throws IOException {
-        logger.info("[upload image]");
-        return this.imageService.uploadImage(images);
+
+    @PostMapping("")
+    public ResponseEntity<String> uploadImage(@RequestPart("image") MultipartFile image) throws IOException {
+        String uploadImageUrl = imageService.uploadImage(image);
+
+        return ResponseEntity.ok(uploadImageUrl);
     }
 
+    @GetMapping(value = "/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+    public ResponseEntity<byte[]> downloadImage(@PathVariable("id") Long id) {
+        byte[] byteImage = imageService.downloadImage(id);
 
-    @PostMapping(value = "/test")
-    public ResponseEntity<ImageDTO> alspdlpsldsp(
-            @RequestBody Map<String, String> value
-            )
-    {
-        System.out.println(value);
-        return this.imageService.uploadImages(value.get("url"));
-    }
-
-
-    @PostMapping(value = "/byteImage")
-    public ResponseEntity<ImageDTO> uploadByteImage(
-            @RequestBody Map<String, byte[]> value
-    )
-    {
-        System.out.println(value);
-        return this.imageService.uploadByteImage(value.get("image"));
-    }
-
-
-    @GetMapping(value = "/download/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    public  ResponseEntity<byte[]> downloadImage(
-            @PathVariable("id") Long id
-    ){
-        logger.info("[download image] " + id);
-        return this.imageService.downloadImage(id);
+        return ResponseEntity.ok(byteImage);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateImage(
-            @PathVariable("id") Long id,
-            @RequestPart("image") MultipartFile image
-    ) throws IOException {
-        return this.imageService.updateImage(id, image);
+    public ResponseEntity<String> updateImage(@PathVariable("id") Long id,
+                                              @RequestPart("image") MultipartFile image) throws IOException {
+        String uploadImageUrl = imageService.updateImage(id, image);
+
+        return ResponseEntity.ok(uploadImageUrl);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> deleteImage(
-            @PathVariable("id") Long id
-    ){
-        logger.info("[delete Image] "+id);
-        return this.imageService.deleteImage(id);
-    }
+    public ResponseEntity<Boolean> deleteImage(@PathVariable("id") Long id) {
+        Boolean result = imageService.deleteImage(id);
 
+        return ResponseEntity.ok(result);
+    }
 }

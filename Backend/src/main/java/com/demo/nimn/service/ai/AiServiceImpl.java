@@ -1,6 +1,7 @@
 package com.demo.nimn.service.ai;
 
 import com.demo.nimn.dto.chatgpt.*;
+import com.demo.nimn.service.image.ImageService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Base64;
 import java.util.Objects;
 
 @Slf4j
@@ -17,6 +19,7 @@ import java.util.Objects;
 public class AiServiceImpl implements AiService {
 
     private final RestTemplate restTemplate;
+    private final ImageService imageService;
     private final Logger logger = LoggerFactory.getLogger(AiServiceImpl.class);
 
     @Value("${openai.chatModel}")
@@ -32,13 +35,14 @@ public class AiServiceImpl implements AiService {
     private String imageModel;
 
     @Autowired
-    public AiServiceImpl(@Qualifier("openAiRestTemplate") RestTemplate restTemplate) {
+    public AiServiceImpl(@Qualifier("openAiRestTemplate") RestTemplate restTemplate,
+                         ImageService imageService) {
         this.restTemplate = restTemplate;
+        this.imageService = imageService;
     }
 
     @Override
     public String generateFood(String price) {
-        // TODO: 가끔 당류, 나트륨 nullmg 으로 나옴
         String prompt = buildMealPlanPrompt(price);
 
         ChatRequest request = new ChatRequest(chatModel, prompt);
@@ -55,18 +59,15 @@ public class AiServiceImpl implements AiService {
         String prompt = buildImagePrompt(foodDescription);
         logger.info("Image generation prompt: {}", prompt);
 
-//        ImageRequest imageRequest = new ImageRequest(imageModel, prompt, "b64_json");
-//        ImageResponse imageResponse = template.postForObject(imageApiURL, imageRequest, ImageResponse.class);
-//        String b64_image = imageResponse.getData().get(0).getB64_json();
-//        byte[] decodedBytes = Base64.getDecoder().decode(b64_image);
-
-        // TODO-jh: 이미지 생성 반환 format b64_json으로 변경해서 저장 필요. open ai에서 생성한 url은 1시간 후 자동 삭제 됨.
-        ImageRequest imageRequest = new ImageRequest(imageModel, prompt, "url");
+        ImageRequest imageRequest = new ImageRequest(imageModel, prompt, "b64_json");
         ImageResponse imageResponse = restTemplate.postForObject(imageApiURL, imageRequest, ImageResponse.class);
 
         validateImageResponse(imageResponse);
 
-        return imageResponse.getData().get(0).getUrl();
+        String b64_image = imageResponse.getData().get(0).getB64_json();
+        byte[] decodedBytes = Base64.getDecoder().decode(b64_image);
+
+        return imageService.uploadByteImage(decodedBytes);
     }
 
     private String buildMealPlanPrompt(String price) {
@@ -95,9 +96,9 @@ public class AiServiceImpl implements AiService {
             throw new IllegalStateException("이미지 생성 API 응답이 유효하지 않습니다.");
         }
 
-        String url = imageResponse.getData().get(0).getUrl();
+        String url = imageResponse.getData().get(0).getB64_json();
         if (url == null || url.isEmpty()) {
-            throw new IllegalStateException("생성된 이미지 URL이 비어 있습니다.");
+            throw new IllegalStateException("생성된 이미지 데이터가 비어 있습니다.");
         }
     }
 }
