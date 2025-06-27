@@ -1,6 +1,5 @@
 package com.demo.nimn.service.payment;
 
-import com.demo.nimn.dao.payment.PaymentDAO;
 import com.demo.nimn.dto.diet.Response.WeeklyDietDTO;
 import com.demo.nimn.dto.payment.*;
 import com.demo.nimn.entity.order.Order;
@@ -96,7 +95,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             reviewService.createWeeklyDietReviews(weeklyDietDTO);
         } catch (Exception e) {
-            logger.error("Failed to create weekly diet reviews for order: {}", order.getOrderId(), e);
+            logger.error("Failed to create weekly diet reviews for order: {}", order.getId(), e);
         }
     }
 
