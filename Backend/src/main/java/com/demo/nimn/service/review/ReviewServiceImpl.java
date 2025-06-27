@@ -6,7 +6,6 @@ import com.demo.nimn.dto.diet.Response.WeeklyDietDTO;
 import com.demo.nimn.dto.review.DailyDietReviewDTO;
 import com.demo.nimn.dto.review.ReviewDTO;
 import com.demo.nimn.dto.review.ReviewSummaryDTO;
-import com.demo.nimn.entity.diet.DailyDiet;
 import com.demo.nimn.entity.food.Food;
 import com.demo.nimn.entity.review.DailyDietReview;
 import com.demo.nimn.entity.review.Review;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -109,7 +107,7 @@ public class ReviewServiceImpl implements ReviewService {
                 Review review = Review.builder()
                         .userEmail(foodSelection.getUserEmail())
                         .food(food)
-                        .rating(null)
+                        .rating(1.0)
                         .comment(null)
                         .build();
 
@@ -196,9 +194,9 @@ public class ReviewServiceImpl implements ReviewService {
 
         return ReviewSummaryDTO.builder()
                 .id(reviewSummary.getId())
-                .foodMenuId(reviewSummary.getFood().getId())
-                .foodMenuName(reviewSummary.getFood().getName())
-                .foodMenuImage(reviewSummary.getFood().getImage())
+                .foodId(reviewSummary.getFood().getId())
+                .foodName(reviewSummary.getFood().getName())
+                .foodImage(reviewSummary.getFood().getImage())
                 .averageRating(reviewSummary.getAverageRating())
                 .totalReviews(reviewSummary.getTotalReviews())
                 .reviews(reviewDTOs)
