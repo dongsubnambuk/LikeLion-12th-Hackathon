@@ -5,7 +5,7 @@ import com.demo.nimn.dto.diet.Response.WeeklyDietDTO;
 import com.demo.nimn.dto.payment.*;
 import com.demo.nimn.entity.order.Order;
 import com.demo.nimn.entity.payment.*;
-import com.demo.nimn.service.auth.UserService;
+import com.demo.nimn.repository.payment.PaymentRepository;
 import com.demo.nimn.service.diet.DietService;
 import com.demo.nimn.service.order.OrderService;
 import com.demo.nimn.service.review.ReviewService;
@@ -20,34 +20,27 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.security.SecureRandom;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
-    private final PaymentDAO paymentDAO;
-    private final UserService userService;
+    private final PaymentRepository paymentRepository;
     private final OrderService orderService;
     private final DietService dietService;
     private final ReviewService reviewService;
     private final IamportClient iamportClient;
     private final Logger logger = LoggerFactory.getLogger(PaymentServiceImpl.class);
 
-    private static final String CHARACTERS = "0123456789";
-    private static final int ID_LENGTH = 15;
-    private static final SecureRandom random = new SecureRandom();
-
     @Autowired
-    public PaymentServiceImpl(PaymentDAO paymentDAO,
-                              UserService userService,
+    public PaymentServiceImpl(PaymentRepository paymentRepository,
                               OrderService orderService,
                               DietService dietService,
                               ReviewService reviewService,
                               IamportClient iamportClient) {
-        this.paymentDAO = paymentDAO;
-        this.userService = userService;
+        this.paymentRepository = paymentRepository;
         this.orderService = orderService;
         this.dietService = dietService;
         this.reviewService = reviewService;
@@ -55,7 +48,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentResponseDTO createImportPayment(PaymentRequestDTO request) {
+    public PaymentDTO createImportPayment(PaymentRequestDTO request) {
         try {
             // 결제 단건 조회(아임포트)
             IamportResponse<com.siot.IamportRestClient.response.Payment> iamportResponse = iamportClient.paymentByImpUid(request.getPaymentUid());
@@ -76,14 +69,14 @@ public class PaymentServiceImpl implements PaymentService {
             // 결제 금액 검증
             if (iamportPrice != price) {
                 // 주문 취소
-                orderService.cancelOrder(order.getOrderId());
+                orderService.cancelOrder(order.getId());
                 // 결제금액 위변조로 의심되는 결제금액을 취소(아임포트)
                 iamportClient.cancelPaymentByImpUid(new CancelData(iamportResponse.getResponse().getImpUid(), true, new BigDecimal(iamportPrice)));
                 logger.info("결제금액 위변조 의심: {}", request.getPaymentUid());
                 throw new RuntimeException("결제금액 위변조 의심");
             }
             // 결제 후 OrderStatus paid로 변경
-            orderService.payOrder(order.getOrderId());
+            orderService.payOrder(order.getId());
 
             createWeeklyDietReviews(order);
 
@@ -108,104 +101,86 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentResponseDTO createPayment(Order order, String paymentUid) {
-        if(paymentDAO.existsByPaymentUid(paymentUid)){
-            return new PaymentResponseDTO("이미 결제가 완료되었습니다.", null);
+    public PaymentDTO createPayment(Order order, String paymentUid) {
+        if (paymentRepository.existsByUid(paymentUid)) {
+            throw new RuntimeException("이미 결제가 완료되었습니다.");
         }
 
-        Payment payment = toPayment(order, paymentUid);
-        paymentDAO.createPayment(payment);
+        Payment payment = convertToPayment(order, paymentUid);
+        paymentRepository.save(payment);
 
-        return toPaymentResponseDTO(payment);
+        return convertToPaymentDTO(payment);
     }
 
     @Override
-    public PaymentResponseDTO readPaymentByPaymentId(String paymentId) {
-        Payment payment = paymentDAO.readPaymentById(paymentId);
-        return toPaymentResponseDTO(payment);
+    public PaymentDTO getPaymentByPaymentId(String paymentId) {
+        Payment payment = paymentRepository.findById(paymentId).orElseThrow(() -> new RuntimeException("Payment not found"));
+
+        return convertToPaymentDTO(payment);
     }
 
     @Override
-    public PaymentResponseDTOS readPaymentByPurchaser(String purchaser) {
-        List<Payment> paymentEntities = paymentDAO.readPaymentByPurchaser(purchaser);
-        return toPaymentResponseDTOS(paymentEntities);
+    public List<PaymentDTO> getPaymentByPurchaser(String purchaser) {
+        List<Payment> paymentEntities = paymentRepository.findByPurchaser(purchaser);
+
+        return convertToPaymentDTOList(paymentEntities);
     }
 
     @Override
-    public UserDTO readNonPurchasersThisWeek(){
-        // TODO-jh: 로직 수정 필요, 현재는 전체 유저에서 이번 주 구매한 유저를 제외한 모든 유저를 반환하고 있으나 이번 주에 식단을 주문한 유저 중에 결제를 안 한 유저를 반환해야 함.
-        List<String> purchasersThisWeek = paymentDAO.findPurchasersThisWeek();
-        List<String> allUsers = userService.getAllUsersEmail().getEmail();
-        List<String> nonPurchasers = allUsers.stream()
-                .filter(user -> !purchasersThisWeek.contains(user))
-                .toList();
-        return new UserDTO(nonPurchasers);
+    public List<String> getUnpaidPurchasersInWeek(LocalDate targetDate) {
+        // targetDate가 포함된 주의 월요일 00:00:00 계산
+        LocalDateTime startOfWeek = targetDate.with(java.time.DayOfWeek.MONDAY).atStartOfDay();
+        // 해당 주의 일요일 23:59:59 계산
+        LocalDateTime endOfWeek = startOfWeek.plusDays(6).withHour(23).withMinute(59).withSecond(59);
+
+        return orderService.getUnpaidPurchasersThisWeek(startOfWeek, endOfWeek);
     }
 
     @Override
-    public PaymentResponseDTO deletePayment(String paymentId) {
-        paymentDAO.deletePaymentById(paymentId);
-        return new PaymentResponseDTO("success", null);
+    public List<String> getPurchasersThisWeek() {
+        return getUnpaidPurchasersInWeek(LocalDate.now());
     }
 
-    private String generateUniquePaymentId() {
-        String paymentId;
-        do {
-            paymentId = generateRandomId();
-        } while (paymentDAO.existsByPaymentUid(paymentId)); // Check if UID already exists
-        return paymentId;
+    @Override
+    public Boolean deletePayment(String paymentId) {
+        paymentRepository.deleteById(paymentId);
+
+        return !paymentRepository.existsById(paymentId);
     }
 
-    // Generate a random 15-digit number
-    private String generateRandomId() {
-        StringBuilder sb = new StringBuilder(ID_LENGTH);
-        for (int i = 0; i < ID_LENGTH; i++) {
-            sb.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
-        }
-        return sb.toString();
+    private String generatePaymentId(String orderId) {
+        return "PAY_" + orderId;
     }
 
-    public Payment toPayment(Order order, String paymentUid) {
+    // Entity <-> DTO 변환 메소드들
+    public Payment convertToPayment(Order order, String paymentUid) {
         return Payment.builder()
-                .paymentId(generateUniquePaymentId())
+                .id(generatePaymentId(order.getId()))
+                .uid(paymentUid)
                 .purchaser(order.getPurchaser())
-                .weeklyId(order.getWeeklyDietId())
-                .paymentUid(paymentUid)
                 .totalPrice(order.getTotalPrice())
-                .dateTime(LocalDateTime.now())
+                .weeklyDietId(order.getWeeklyDietId())
                 .build();
     }
 
-    public PaymentDTO toPaymentDTO(Payment payment){
+    public PaymentDTO convertToPaymentDTO(Payment payment) {
         return PaymentDTO.builder()
-                .paymentId(payment.getPaymentId())
+                .id(payment.getId())
                 .purchaser(payment.getPurchaser())
-                .weeklyId(payment.getWeeklyId())
-                .paymentUid(payment.getPaymentUid())
+                .weeklyDietId(payment.getWeeklyDietId())
+                .uid(payment.getUid())
                 .totalPrice(payment.getTotalPrice())
-                .dateTime(payment.getDateTime())
+                .createdAt(payment.getCreatedAt())
                 .build();
     }
 
-    public List<PaymentDTO> toPaymentDTOS(List<Payment> paymentEntities){
-        List<PaymentDTO> paymentDTOS = new ArrayList<>();
+    public List<PaymentDTO> convertToPaymentDTOList(List<Payment> paymentEntities) {
+        List<PaymentDTO> paymentDTOList = new ArrayList<>();
+
         for (Payment payment : paymentEntities) {
-            paymentDTOS.add(toPaymentDTO(payment));
+            paymentDTOList.add(convertToPaymentDTO(payment));
         }
-        return paymentDTOS;
-    }
 
-    public PaymentResponseDTO toPaymentResponseDTO(Payment payment){
-        return PaymentResponseDTO.builder()
-                .result("success")
-                .data(toPaymentDTO(payment))
-                .build();
-    }
-
-    public PaymentResponseDTOS toPaymentResponseDTOS(List<Payment> paymentEntities){
-        return PaymentResponseDTOS.builder()
-                .result("success")
-                .data(toPaymentDTOS(paymentEntities))
-                .build();
+        return paymentDTOList;
     }
 }
