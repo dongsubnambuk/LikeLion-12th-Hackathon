@@ -135,8 +135,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<DailyDietReviewDTO> getDailyDietReviewsByDate(LocalDate reviewDate) {
-        // TODO: 알림 서비스에서 review 알림 보낼 때 사용
-        
         List<DailyDietReview> dailyReviews = dailyDietReviewRepository.findByReviewDate(reviewDate);
         return dailyReviews.stream()
                 .map(this::convertToDailyDietReviewDTO)

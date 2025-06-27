@@ -4,7 +4,6 @@ import com.demo.nimn.dto.diet.Response.WeeklyDietDTO;
 import com.demo.nimn.dto.review.DailyDietReviewDTO;
 import com.demo.nimn.dto.review.ReviewDTO;
 import com.demo.nimn.dto.review.ReviewSummaryDTO;
-import com.demo.nimn.entity.diet.DailyDiet;
 
 import java.time.LocalDate;
 import java.util.List;
