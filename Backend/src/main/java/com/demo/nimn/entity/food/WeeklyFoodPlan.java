@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "t_weekly_meal_plan")
+@Table(name = "t_weekly_food_plan")
 @Builder
 @Data
 @NoArgsConstructor
