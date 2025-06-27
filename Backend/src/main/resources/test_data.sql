@@ -327,6 +327,17 @@ FROM t_review_summary rs
 JOIN t_food f ON rs.food_id = f.id
 ORDER BY rs.food_id;
 
+
+INSERT INTO nimn.t_user (`detail_address`, `email`, `name`, `password`, `phone_number`, `road_address`, `role`) VALUES
+        ('101호', 'user1@example.com', '홍길동', '$2a$10$KrSz2Mv8PSBxTGDV8CzWneqNFmFTg/6xFOTbCOb5Ub1851onabPaK', '01012345678', '서울 강남구 테헤란로', 'ROLE_USER'),
+        ('202호', 'user2@example.com', '김철수', '$2a$10$qL7V0LG63jbkPrwE5csh5uot3PNg0JY3U7hYNhFls1sf3c/rZ0mty', '01023456789', '서울 서초구 반포대로', 'ROLE_USER'),
+        ('303호', 'user3@example.com', '이영희', '$2a$10$mfoFoHXAvnAd/BByUsteweJy4TgA6gk6/5ijcUL8JEhvTvOVqViry', '01034567890', '서울 마포구 월드컵북로', 'ROLE_USER'),
+        ('505호', 'user4@example.com', '박지민', '$2a$10$9aEbEwxzIA1wdwJJ4EEccON0GJ5mLdk6.a.bGZ3zTB1NX/zyQLoYa', '01056789012', '서울 송파구 송파대로', 'ROLE_USER'),
+        ('606호', 'user5@example.com', '최유리', '$2a$10$B7M3f7pv3IGeuA4I4cElmumUTl8pYdNHNyoyu72bDno5hac4nefRy', '01067890123', '서울 동작구 흑석로', 'ROLE_USER'),
+        ('404호', 'admin@example.com', '관리자', '$2a$10$/Ut06wjRs2DUww4WhWGxu.LuqHg8VG7zO9nEIhkAxJBW8kB6tLcFe', '01045678901', '서울 종로구 사직로', 'ROLE_ADMIN');
+
+SELECT * FROM nimn.t_user;
+
 -- 주의사항 및 실행 전 확인사항:
 -- 1. 실제 테이블 구조와 필드명이 일치하는지 확인
 -- 2. AUTO_INCREMENT로 생성되는 ID값들이 예상과 다를 수 있음
