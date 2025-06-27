@@ -17,7 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000", "http://127.0.0.1:3000", "https://nimn.store", "http://nimn.store")
                 .allowedMethods("GET", "POST", "PUT", "PATCH" , "DELETE", "OPTIONS")
-                .allowedHeaders("Content-Type", "Authorization")
+                .allowedHeaders("*")
                 .allowCredentials(true);
     }
 
