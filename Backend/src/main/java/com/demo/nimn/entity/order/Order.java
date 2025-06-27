@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter;
 public class Order {
     @Id
     @Column(length = 20)
-    private String orderId;
+    private String id;
 
     @Column(nullable = false)
     private String purchaser;
@@ -57,8 +57,8 @@ public class Order {
 
     @PrePersist
     private void prePersist() {
-        if (this.orderId == null) {
-            this.orderId = generateRandomOrderId();
+        if (this.id == null) {
+            this.id = generateRandomOrderId();
         }
     }
 

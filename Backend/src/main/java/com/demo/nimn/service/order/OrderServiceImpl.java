@@ -5,6 +5,9 @@ import com.demo.nimn.entity.order.Order;
 import com.demo.nimn.repository.order.OrderRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Service
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
@@ -25,6 +28,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order getOrder(String orderId) {
         return orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found: " + orderId));
+    }
+
+    @Override
+    public List<String> getUnpaidPurchasersThisWeek(LocalDateTime startDate, LocalDateTime endDate) {
+        return orderRepository.findUnpaidPurchasersThisWeek(startDate, endDate);
     }
 
     @Override
@@ -57,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
 
     public OrderDTO convertToOrderDTO(Order order) {
         return OrderDTO.builder()
-                .orderId(order.getOrderId())
+                .id(order.getId())
                 .purchaser(order.getPurchaser())
                 .totalPrice(order.getTotalPrice())
                 .weeklyDietId(order.getWeeklyDietId())

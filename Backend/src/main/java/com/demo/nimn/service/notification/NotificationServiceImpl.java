@@ -4,7 +4,6 @@ import com.demo.nimn.dto.diet.Response.DailyDietDTO;
 import com.demo.nimn.dto.diet.Response.FoodSelectionDTO;
 import com.demo.nimn.dto.notification.NotificationDTO;
 import com.demo.nimn.dto.notification.response.NotificationCountDTO;
-import com.demo.nimn.dto.payment.UserDTO;
 import com.demo.nimn.entity.notification.Notification;
 import com.demo.nimn.enums.NotificationType;
 import com.demo.nimn.repository.notification.NotificationRepository;
@@ -154,8 +153,8 @@ public class NotificationServiceImpl implements NotificationService {
     // 결제 알림
     @Scheduled(cron = "0 0 21 ? * MON")
     public void sendPayment() {
-        UserDTO users = paymentService.readNonPurchasersThisWeek();
-        for (String userEmail : users.getEmail()) {
+        List<String> users = paymentService.getPurchasersThisWeek();
+        for (String userEmail : users) {
             sendNotification(NotificationType.PAYMENT,
                     userEmail,
                     "아직 이번주 결제가 완료되지 않았습니다.",

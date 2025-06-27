@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class OrderDTO {
 
     @Schema(description = "주문 ID (자동 생성)", example = "20241217143055ABC123")
-    private String orderId;
+    private String id;
 
     @Schema(description = "주문자 이메일", example = "user@example.com", required = true)
     private String purchaser;

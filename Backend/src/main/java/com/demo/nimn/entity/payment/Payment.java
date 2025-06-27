@@ -1,5 +1,6 @@
 package com.demo.nimn.entity.payment;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -18,19 +20,21 @@ import java.time.LocalDateTime;
 @Data
 public class Payment {
     @Id
-    private String paymentId;
+    private String id;
 
-    private String paymentUid;
+    @Column(updatable = false)
+    private String uid;
 
+    @Column(updatable = false)
     private String purchaser;
 
+    @Column(updatable = false)
     private Long totalPrice;
 
-    private Long weeklyId;
+    @Column(updatable = false)
+    private Long weeklyDietId;
 
-    private LocalDateTime dateTime;
-
-    public void updateDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
-    }
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
 }

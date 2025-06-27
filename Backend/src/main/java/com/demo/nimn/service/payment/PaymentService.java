@@ -3,11 +3,15 @@ package com.demo.nimn.service.payment;
 import com.demo.nimn.dto.payment.*;
 import com.demo.nimn.entity.order.Order;
 
+import java.time.LocalDate;
+import java.util.List;
+
 public interface PaymentService {
-    public PaymentResponseDTO createImportPayment(PaymentRequestDTO request);
-    public PaymentResponseDTO createPayment(Order order, String paymentUid);
-    public PaymentResponseDTO readPaymentByPaymentId(String paymentId);
-    public PaymentResponseDTOS readPaymentByPurchaser(String purchaser);
-    public UserDTO readNonPurchasersThisWeek();
-    public PaymentResponseDTO deletePayment(String paymentId);
+    PaymentDTO createImportPayment(PaymentRequestDTO request);
+    PaymentDTO createPayment(Order order, String paymentUid);
+    PaymentDTO getPaymentByPaymentId(String paymentId);
+    List<PaymentDTO> getPaymentByPurchaser(String purchaser);
+    List<String> getUnpaidPurchasersInWeek(LocalDate targetDate);
+    List<String> getPurchasersThisWeek();
+    Boolean deletePayment(String paymentId);
 }
