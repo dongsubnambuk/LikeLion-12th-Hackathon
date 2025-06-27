@@ -68,7 +68,7 @@ function Signup(){
         return emailRegex.test(email);
     };
 
-    // 이메일 중복 검사(수정 필요)
+    // 이메일 중복 검사
     const handleEmailCheck = async () => {
         if (!email) {
             setEmailError("이메일을 입력해주세요.");
@@ -85,26 +85,26 @@ function Signup(){
         setEmailSuccess("");
 
         try {
-            const response = await fetch(`http://3.37.64.39:8000/api/users/check-email`, {
-                method: "POST",
+            const response = await fetch(`http://nimn.store/api/users/isExist?email=${encodeURIComponent(email)}`, {
+                method: "GET",
                 headers: {
                     "Content-Type": "application/json",
+                    "Accept": "*/*",
                 },
-                body: JSON.stringify({
-                    email: email,
-                }),
             });
 
-            const result = await response.json();
-
-            if (response.status === 200) {
-                // 사용 가능한 이메일
-                setEmailSuccess("사용 가능한 이메일입니다.");
-                setIsEmailChecked(true);
-            } else if (response.status === 409) {
-                // 이미 사용 중인 이메일
-                setEmailError("이미 사용 중인 이메일입니다.");
-                setIsEmailChecked(false);
+            if (response.ok) {
+                const result = await response.json();
+                
+                if (result === true) {
+                    // 이미 사용 중인 이메일
+                    setEmailError("이미 사용 중인 이메일입니다.");
+                    setIsEmailChecked(false);
+                } else {
+                    // 사용 가능한 이메일
+                    setEmailSuccess("사용 가능한 이메일입니다.");
+                    setIsEmailChecked(true);
+                }
             } else {
                 setEmailError("이메일 확인 중 오류가 발생했습니다.");
                 setIsEmailChecked(false);
@@ -191,22 +191,21 @@ function Signup(){
         }
 
         try {
-            const response = await fetch('http://3.37.64.39:8000/api/users/signup', {
+            const response = await fetch('http://nimn.store/api/users/signup', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Accept": "*/*",
                 },
                 body: JSON.stringify({
+                    name: userName,
                     email: email,
                     password: password,
-                    name: userName,
                     phoneNumber: phoneNumber.replace(/-/g, ''), // 하이픈 제거
                     roadAddress: roadAddress,
                     detailAddress: detailAddress,
                 }),
             });
-
-            const result = await response.json();
 
             if (response.status === 201) {
                 console.log("회원가입 성공");
@@ -214,7 +213,8 @@ function Signup(){
                 navigate('/login');
             } else {
                 console.log("회원가입 실패");
-                alert("회원가입 실패: " + result.message);
+                const result = await response.json();
+                alert("회원가입 실패: " + (result.message || "알 수 없는 오류"));
             }
         } catch (error) {
             console.error("Signup error: ", error);
@@ -226,14 +226,14 @@ function Signup(){
         <>
             <div className="signup_inner">
                 <div className="signup_form_group">
-                    <label htmlFor="email">이메일</label>
+                    <label htmlFor="email" className="signup_form_group_label">이메일</label>
                     <div className="signup_email_check_group">
                         <div className="signup_email_input_wrapper">
                             <input
                                 type="email"
                                 id="email"
                                 value={email}
-                                className={`signup_email ${isEmailChecked ? 'signup_valid' : emailError ? 'signup_invalid' : ''}`}
+                                className={`signup_inner_input ${isEmailChecked ? 'signup_valid' : emailError ? 'signup_invalid' : ''}`}
                                 placeholder="이메일을 입력해주세요"
                                 onChange={handleEmailChange}
                             />
@@ -252,12 +252,12 @@ function Signup(){
                 </div>
 
                 <div className="signup_form_group">
-                    <label htmlFor="password">비밀번호</label>
+                    <label htmlFor="password" className="signup_form_group_label">비밀번호</label>
                     <input
                         type="password"
                         id="password"
                         value={password}
-                        className={`signup_password ${password.length >= 8 ? 'signup_valid' : password ? 'signup_invalid' : ''}`}
+                        className={`signup_inner_input ${password.length >= 8 ? 'signup_valid' : password ? 'signup_invalid' : ''}`}
                         placeholder="비밀번호를 입력해주세요 (8자 이상)"
                         onChange={(e) => {
                             setPassword(e.target.value);
@@ -267,12 +267,12 @@ function Signup(){
                 </div>
 
                 <div className="signup_form_group">
-                    <label htmlFor="confirm-password">비밀번호 확인</label>
+                    <label htmlFor="confirm-password" className="signup_form_group_label">비밀번호 확인</label>
                     <input
                         type="password"
                         id="confirm-password"
                         value={confirmPassword}
-                        className={`${confirmPassword && password === confirmPassword ? 'signup_valid' : confirmPassword ? 'signup_invalid' : ''}`}
+                        className={`signup_inner_input ${confirmPassword && password === confirmPassword ? 'signup_valid' : confirmPassword ? 'signup_invalid' : ''}`}
                         placeholder="비밀번호를 다시 입력해 주세요"
                         onChange={(e) => {
                             setConfirmPassword(e.target.value);
@@ -283,24 +283,24 @@ function Signup(){
                 </div>
 
                 <div className="signup_form_group">
-                    <label htmlFor="username">이름</label>
+                    <label htmlFor="username" className="signup_form_group_label">이름</label>
                     <input
                         type="text"
                         id="username"
                         value={userName}
-                        className={userName ? 'signup_valid' : ''}
+                        className={`signup_inner_input ${userName ? 'signup_valid' : ''}`}
                         placeholder="이름을 입력해주세요"
                         onChange={(e) => setUserName(e.target.value)}
                     />
                 </div>
 
                 <div className="signup_form_group">
-                    <label htmlFor="phonenumber">연락처</label>
+                    <label htmlFor="phonenumber" className="signup_form_group_label">연락처</label>
                     <input
                         type="text"
                         id="phonenumber"
                         value={phoneNumber}
-                        className={phoneNumber.length >= 13 ? 'signup_valid' : phoneNumber ? 'signup_invalid' : ''}
+                        className={`signup_inner_input ${phoneNumber.length >= 13 ? 'signup_valid' : phoneNumber ? 'signup_invalid' : ''}`}
                         placeholder="010-1234-5678"
                         maxLength="13"
                         onChange={handlePhoneNumberChange}
@@ -309,13 +309,13 @@ function Signup(){
 
                 <div className="signup_form_group">
                     <div className="signup_address">
-                        <label htmlFor="address">주소</label>
+                        <label htmlFor="address" className="signup_form_group_label">주소</label>
                         <div className="signup_address_serch">
                             <input 
                                 value={zipCode} 
                                 readOnly 
                                 placeholder="우편번호"
-                                className={zipCode ? 'signup_valid' : ''}
+                                className={`signup_inner_input ${zipCode ? 'signup_valid' : ''}`}
                             />
                             <button type="button" onClick={toggle}>주소 찾기</button>
                         </div>
@@ -324,7 +324,7 @@ function Signup(){
                                 value={roadAddress} 
                                 readOnly 
                                 placeholder="도로명 주소"
-                                className={roadAddress ? 'signup_valid' : ''}
+                                className={`signup_inner_input ${roadAddress ? 'signup_valid' : ''}`}
                             />
                             <Modal isOpen={isOpen} ariaHideApp={false} style={SignupCustomStyles}>
                                 <div style={{ 
@@ -355,7 +355,7 @@ function Signup(){
                                 onChange={changeHandler}
                                 value={detailAddress}
                                 placeholder="상세주소"
-                                className={detailAddress ? 'signup_valid' : ''}
+                                className={`signup_inner_input ${detailAddress ? 'signup_valid' : ''}`}
                             />
                         </div>
                     </div>
