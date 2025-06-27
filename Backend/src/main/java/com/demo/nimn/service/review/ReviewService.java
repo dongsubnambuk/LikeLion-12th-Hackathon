@@ -1,5 +1,6 @@
 package com.demo.nimn.service.review;
 
+import com.demo.nimn.dto.diet.Response.WeeklyDietDTO;
 import com.demo.nimn.dto.review.DailyDietReviewDTO;
 import com.demo.nimn.dto.review.ReviewDTO;
 import com.demo.nimn.dto.review.ReviewSummaryDTO;
@@ -16,7 +17,7 @@ public interface ReviewService {
     List<ReviewSummaryDTO> getReviewSummariesOrderByRating(String sortOrder); // "desc" or "asc"
 
     // DailyDietReview 관련
-    void createWeeklyDietReviews(LocalDate startDate, List<DailyDiet> dailyDiets);
+    void createWeeklyDietReviews(WeeklyDietDTO weeklyDietDTO);
     DailyDietReviewDTO getDailyDietReviewByUserAndDate(String userEmail, LocalDate reviewDate);
     List<DailyDietReviewDTO> getDailyDietReviewsByDate(LocalDate reviewDate);
     DailyDietReviewDTO updateDailyDietReview(Long id, List<ReviewDTO> reviews);

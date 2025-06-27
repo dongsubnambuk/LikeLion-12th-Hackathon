@@ -1,5 +1,8 @@
 package com.demo.nimn.service.review;
 
+import com.demo.nimn.dto.diet.Response.DailyDietDTO;
+import com.demo.nimn.dto.diet.Response.FoodSelectionDTO;
+import com.demo.nimn.dto.diet.Response.WeeklyDietDTO;
 import com.demo.nimn.dto.review.DailyDietReviewDTO;
 import com.demo.nimn.dto.review.ReviewDTO;
 import com.demo.nimn.dto.review.ReviewSummaryDTO;
@@ -17,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,23 +41,6 @@ public class ReviewServiceImpl implements ReviewService {
         this.reviewSummaryRepository = reviewSummaryRepository;
         this.dailyDietReviewRepository = dailyDietReviewRepository;
         this.foodRepository = foodRepository;
-    }
-
-    // Review 관련
-    public ReviewDTO createReview(ReviewDTO reviewDTO) {
-        Food food = foodRepository.findById(reviewDTO.getFoodMenuId())
-                .orElseThrow(() -> new RuntimeException("FoodMenu not found"));
-
-        Review review = Review.builder()
-                .userEmail(reviewDTO.getUserEmail())
-                .food(food)
-                .rating(reviewDTO.getRating())
-                .comment(reviewDTO.getComment())
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        Review savedReview = reviewRepository.save(review);
-        return convertToReviewDTO(savedReview);
     }
 
     // ReviewSummary 관련
@@ -110,21 +97,28 @@ public class ReviewServiceImpl implements ReviewService {
 
     // DailyDietReview 관련
     @Override
-    public void createWeeklyDietReviews(LocalDate startDate, List<DailyDiet> dailyDiets) {
-        for (DailyDiet dailyDiet : dailyDiets) {
+    public void createWeeklyDietReviews(WeeklyDietDTO weeklyDietDTO) {
+        for (DailyDietDTO dailyDietDTO : weeklyDietDTO.getDailyDiets()) {
             // 해당 날짜의 음식들로 빈 Review 생성
-            List<Review> emptyReviews = dailyDiet.getFoodSelections().stream()
-                    .map(foodSelection -> Review.builder()
-                            .userEmail(foodSelection.getUserEmail())
-                            .food(foodSelection.getFood())
-                            .rating(null)
-                            .comment(null)
-                            .build())
-                    .collect(Collectors.toList());
+            List<Review> emptyReviews = new ArrayList<>();
+
+            for (FoodSelectionDTO foodSelection : dailyDietDTO.getMealSelections()) {
+                Food food = foodRepository.findById(foodSelection.getFoodMenu().getId())
+                        .orElseThrow(() -> new RuntimeException("Food not found: " + foodSelection.getFoodMenu().getId()));
+
+                Review review = Review.builder()
+                        .userEmail(foodSelection.getUserEmail())
+                        .food(food)
+                        .rating(null)
+                        .comment(null)
+                        .build();
+
+                emptyReviews.add(review);
+            }
 
             DailyDietReview dailyReview = DailyDietReview.builder()
-                    .userEmail(dailyDiet.getUserEmail())
-                    .reviewDate(dailyDiet.getDate())
+                    .userEmail(dailyDietDTO.getUserEmail())
+                    .reviewDate(dailyDietDTO.getDate())
                     .reviews(emptyReviews)
                     .build();
 
@@ -162,7 +156,7 @@ public class ReviewServiceImpl implements ReviewService {
         DailyDietReview savedDailyReview = dailyDietReviewRepository.save(dailyReview);
 
         for(ReviewDTO reviewDTO : reviewDTOs){
-            updateReviewSummaryByFoodMenuId(reviewDTO.getFoodMenuId());
+            updateReviewSummaryByFoodMenuId(reviewDTO.getFoodId());
         }
 
         return convertToDailyDietReviewDTO(savedDailyReview);
@@ -173,9 +167,9 @@ public class ReviewServiceImpl implements ReviewService {
         return ReviewDTO.builder()
                 .id(review.getId())
                 .userEmail(review.getUserEmail())
-                .foodMenuId(review.getFood().getId())
-                .foodMenuName(review.getFood().getName())
-                .foodMenuImage(review.getFood().getImage())
+                .foodId(review.getFood().getId())
+                .foodName(review.getFood().getName())
+                .foodImage(review.getFood().getImage())
                 .rating(review.getRating())
                 .comment(review.getComment())
                 .createdAt(review.getCreatedAt())
@@ -183,7 +177,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     private Review convertToReviewEntity(ReviewDTO reviewDTO) {
-        Food food = foodRepository.findById(reviewDTO.getFoodMenuId())
+        Food food = foodRepository.findById(reviewDTO.getFoodId())
                 .orElseThrow(() -> new RuntimeException("FoodMenu not found"));
 
         return Review.builder()

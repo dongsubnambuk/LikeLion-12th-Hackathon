@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 public class DietServiceImpl implements DietService {
 
 
-
     private final DailyDietRepository dailyDietRepository;
     private final WeeklyDietRepository weeklyDietRepository;
 
@@ -38,6 +37,7 @@ public class DietServiceImpl implements DietService {
         this.weeklyDietRepository = weeklyDietRepository;
         this.foodSelectionService = foodSelectionService;
     }
+
     //DailyDiet
     @Override
     public List<DailyDietDTO> getByUserEmailAndDate(String userEmail, LocalDate date) {
@@ -45,7 +45,7 @@ public class DietServiceImpl implements DietService {
     }
 
     @Override
-    public List<DailyDietDTO> getByDate(LocalDate date){
+    public List<DailyDietDTO> getByDate(LocalDate date) {
         return dailyDietRepository.findByDate(date).stream().map(this::convertToDailyDietDTO).collect(Collectors.toList());
     }
 
@@ -72,7 +72,7 @@ public class DietServiceImpl implements DietService {
     }
 
     @Override
-    public List<DailyDietDTO> convertToDailyDietDTOS(List<DailyDiet> dailyDietEntities){
+    public List<DailyDietDTO> convertToDailyDietDTOS(List<DailyDiet> dailyDietEntities) {
         return dailyDietEntities.stream().map(this::convertToDailyDietDTO).collect(Collectors.toList());
     }
 
@@ -81,7 +81,7 @@ public class DietServiceImpl implements DietService {
     @Override
     @Transactional
     public WeeklyDietDTO createWeeklyDiet(WeeklyDietRequestDTO weeklyDietDTO) {
-        if(weeklyDietRepository.existsByCurrentWeeklyMealPlan(weeklyDietDTO.getStartDate(), weeklyDietDTO.getUserEmail())){
+        if (weeklyDietRepository.existsByCurrentWeeklyMealPlan(weeklyDietDTO.getStartDate(), weeklyDietDTO.getUserEmail())) {
             return null;
         }
         WeeklyDiet entity = convertToWeeklyDietEntity(weeklyDietDTO);
@@ -92,6 +92,13 @@ public class DietServiceImpl implements DietService {
     @Override
     public WeeklyDietDTO getWeeklyDietByUserEmail(String userEmail) {
         return convertToWeeklyDietDTO(weeklyDietRepository.findByUserEmail(userEmail));
+    }
+
+    @Override
+    public WeeklyDietDTO getWeeklyDietById(Long weeklyDietId) {
+        WeeklyDiet weeklyDiet = weeklyDietRepository.findById(weeklyDietId).orElseThrow(() -> new RuntimeException("WeeklyDiet Not Found"));
+
+        return convertToWeeklyDietDTO(weeklyDiet);
     }
 
     public WeeklyDiet convertToWeeklyDietEntity(WeeklyDietRequestDTO weeklyDietDTO) {
@@ -113,9 +120,9 @@ public class DietServiceImpl implements DietService {
                 .build();
     }
 
-    public List<Long> convertToFoodMenuIds(DailyDiet dailyDiet){
+    public List<Long> convertToFoodMenuIds(DailyDiet dailyDiet) {
         List<Long> foodMenuIds = new ArrayList<>();
-        for(FoodSelection foodSelection : dailyDiet.getFoodSelections()) {
+        for (FoodSelection foodSelection : dailyDiet.getFoodSelections()) {
             foodMenuIds.add(foodSelection.getFood().getId());
         }
         return foodMenuIds;
@@ -130,7 +137,7 @@ public class DietServiceImpl implements DietService {
 
     public List<UserDailyMealPlanDTO> convertToDailyMealPlanDTOS(WeeklyDiet weeklyDiet) {
         List<UserDailyMealPlanDTO> userDailyMealPlanDTOS = new ArrayList<>();
-        for(DailyDiet dailyDiet : weeklyDiet.getDailyDiets()) {
+        for (DailyDiet dailyDiet : weeklyDiet.getDailyDiets()) {
             userDailyMealPlanDTOS.add(convertToDailyMealPlanDTO(dailyDiet));
         }
         return userDailyMealPlanDTOS;

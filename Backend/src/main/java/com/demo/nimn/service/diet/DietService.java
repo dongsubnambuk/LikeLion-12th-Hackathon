@@ -19,4 +19,5 @@ public interface DietService {
     // WeeklyDiet
     WeeklyDietDTO createWeeklyDiet(WeeklyDietRequestDTO weeklyDietDTO);
     WeeklyDietDTO getWeeklyDietByUserEmail(String userEmail);
+    WeeklyDietDTO getWeeklyDietById(Long weeklyDietId);
 }
