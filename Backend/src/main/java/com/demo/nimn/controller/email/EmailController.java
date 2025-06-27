@@ -3,6 +3,9 @@ package com.demo.nimn.controller.email;
 import com.demo.nimn.dto.email.EmailDTO;
 import com.demo.nimn.dto.email.EmailRequestDto;
 import com.demo.nimn.service.email.MailService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
@@ -20,7 +23,12 @@ public class EmailController {
         this.mailService = mailService;
     }
 
-
+    @Operation(summary = "인증 이메일 전송", description = "해당 이메일로 인증 메일을 전송합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
     // 인증 이메일 전송
     @PostMapping("/send")
     public ResponseEntity<EmailDTO> mailSend(@RequestBody EmailRequestDto emailRequestDto, HttpSession session) {
@@ -52,6 +60,12 @@ public class EmailController {
     }
 
     // 인증번호 일치여부 확인
+    @Operation(summary = "인증번호 일치여부 확인", description = "인증번호 검증을 진행합니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
     @PostMapping("/check")
     public ResponseEntity<EmailDTO> mailCheck(
             @RequestBody EmailRequestDto requestDto,

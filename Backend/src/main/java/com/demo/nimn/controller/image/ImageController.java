@@ -3,6 +3,7 @@ package com.demo.nimn.controller.image;
 
 import com.demo.nimn.dto.image.ImageDTO;
 import com.demo.nimn.service.image.ImageService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+@Tag(name = "IMAGE API", description = "이미지 서버 API")
 @RestController
 @RequestMapping(value = "/image")
 public class ImageController {

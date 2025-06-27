@@ -53,7 +53,7 @@ public class JWTUtil {
 
 
     public String createJwt(String email, String role) {
-        long expiredMs = 60*60* 1L * 1000;
+        long expiredMs = 60*60* 1000 * 1L; // 60 * 60 * 1000 * 1L == 1 시간
 
         Claims claims = Jwts.claims();
         claims.put("email", email);
