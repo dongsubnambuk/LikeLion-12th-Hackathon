@@ -12,6 +12,7 @@ import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.IamportClient;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ public class PaymentServiceImpl implements PaymentService {
         this.iamportClient = iamportClient;
     }
 
+    @Transactional
     @Override
     public PaymentDTO createImportPayment(PaymentRequestDTO request) {
         try {

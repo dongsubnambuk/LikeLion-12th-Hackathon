@@ -2,10 +2,19 @@ package com.demo.nimn.controller.payment;
 
 import com.demo.nimn.dto.payment.*;
 import com.demo.nimn.service.payment.PaymentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "결제 API", description = "아임포트 결제 검증 및 결제 내역 관리")
 @RestController
 @RequestMapping("/payment")
 public class PaymentController {
@@ -15,23 +24,82 @@ public class PaymentController {
         this.paymentService = paymentService;
     }
 
+    @Operation(summary = "결제 내역 생성", description = "아임포트 결제 UID와 주문 ID를 받아 결제를 검증하고 저장합니다.\n\n결제 금액 위변조 검증을 포함합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "결제 생성 및 검증 성공",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = PaymentDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "결제 실패 (결제 미완료, 결제금액 위변조 의심, 주문 내역 없음, 중복 결제 등)",
+                    content = @Content
+            )
+    })
     @PostMapping("")
-    public PaymentDTO createPayment(@RequestBody PaymentRequestDTO paymentRequestDTO){
-        return paymentService.createImportPayment(paymentRequestDTO);
+    public ResponseEntity<PaymentDTO> createPayment(@RequestBody PaymentRequestDTO paymentRequestDTO) {
+        PaymentDTO created = paymentService.createImportPayment(paymentRequestDTO);
+        return ResponseEntity.status(201).body(created);
     }
 
+    @Operation(summary = "결제 내역 조회", description = "결제 ID를 통해 특정 결제 내역의 상세 정보를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "결제 내역 조회 성공",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = PaymentDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "결제 내역을 찾을 수 없거나 서버 내부 오류",
+                    content = @Content
+            )
+    })
     @GetMapping("/{paymentId}")
-    public PaymentDTO getPaymentByPaymentId(@PathVariable("paymentId") String paymentId){
-        return paymentService.getPaymentByPaymentId(paymentId);
+    public ResponseEntity<PaymentDTO> getPaymentByPaymentId(@Parameter(description = "조회할 결제 ID", required = true, example = "PAY_20241217143055ABC123")
+                                                                @PathVariable("paymentId") String paymentId) {
+        PaymentDTO payment = paymentService.getPaymentByPaymentId(paymentId);
+        return ResponseEntity.ok(payment);
     }
 
+    @Operation(summary = "사용자별 결제 내역 조회", description = "특정 사용자(구매자)의 모든 결제 내역을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "사용자별 결제 내역 조회 성공 (결제 내역이 없어도 빈 배열 반환)",
+                    content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = PaymentDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 내부 오류",
+                    content = @Content
+            )
+    })
     @GetMapping("")
-    public List<PaymentDTO> getPaymentByPurchaser(@RequestParam("purchaser") String purchaser){
-        return paymentService.getPaymentByPurchaser(purchaser);
+    public ResponseEntity<List<PaymentDTO>> getPaymentByPurchaser(@Parameter(description = "조회할 구매자 이메일", required = true, example = "user@example.com")
+                                                                      @RequestParam("purchaser") String purchaser) {
+        List<PaymentDTO> payments = paymentService.getPaymentByPurchaser(purchaser);
+        return ResponseEntity.ok(payments);
     }
 
+    @Operation(summary = "결제 내역 삭제", description = "특정 결제 내역을 삭제합니다.\n\n아임포트와 연동된 실제 결제 취소는 동작하지 않습니다.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "결제 내역 삭제 성공",
+                    content = @Content(mediaType = "application/json", schema = @Schema(type = "boolean", example = "true"))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 내부 오류",
+                    content = @Content
+            )
+    })
     @DeleteMapping("/{paymentId}")
-    public Boolean deletePayment(@PathVariable("paymentId") String paymentId){
-        return paymentService.deletePayment(paymentId);
+    public ResponseEntity<Boolean> deletePayment(@Parameter(description = "삭제할 결제 ID", required = true, example = "PAY_20241217143055ABC123")
+                                                     @PathVariable("paymentId") String paymentId) {
+        Boolean result = paymentService.deletePayment(paymentId);
+        return ResponseEntity.ok(result);
     }
 }
