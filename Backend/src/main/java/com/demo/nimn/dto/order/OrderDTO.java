@@ -25,7 +25,7 @@ public class OrderDTO {
     @Schema(description = "총 주문 금액", example = "50000")
     private Long totalPrice;
 
-    @Schema(description = "주간 식단 ID", example = "1", required = true)
+    @Schema(description = "사용자가 선택한 주간 식단 ID", example = "1", required = true)
     private Long weeklyDietId;
 
     @Schema(description = "주문 상태", example = "PENDING")

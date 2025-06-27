@@ -38,6 +38,7 @@ public class Order {
     private OrderStatus status = OrderStatus.PENDING;
 
     @CreationTimestamp
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     private static String generateRandomOrderId() {

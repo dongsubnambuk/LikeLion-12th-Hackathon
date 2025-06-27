@@ -166,7 +166,7 @@ public class NotificationServiceImpl implements NotificationService {
     // 리뷰 알림
     @Scheduled(cron = "0 0 21 ? * *")
     public void sendReview() {
-        // TODO: Review 도메인 수정 후 재구현
+        // TODO-dg: ReviewService의 getDailyDietReviewsByDate 메소드를 사용하면 날짜에 해당하는 DailyReview들 가져올 수 있음.
 //        List<DailyReviewDTO> reviewList = reviewService.readDailyReviewDTOByDate(LocalDate.now());
 //        for (DailyReviewDTO dailyReviewDTO : reviewList) {
 //            sendNotification(NotificationType.REVIEW,

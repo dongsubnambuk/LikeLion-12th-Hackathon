@@ -27,7 +27,7 @@ public class ReviewController {
     @Operation(summary = "음식별 종합 리뷰 조회", description = "특정 음식의 종합 리뷰(평균 별점, 총 리뷰 수 등)를 조회합니다")
     @GetMapping("/summary/{foodMenuId}")
     public ResponseEntity<ReviewSummaryDTO> getReviewSummary(@PathVariable Long foodMenuId) {
-        ReviewSummaryDTO reviewSummary = reviewService.getReviewSummaryByFoodMenuId(foodMenuId);
+        ReviewSummaryDTO reviewSummary = reviewService.getReviewSummaryByFoodId(foodMenuId);
         return ResponseEntity.ok(reviewSummary);
     }
 
