@@ -19,7 +19,7 @@ public class FoodSelection {
     private String userEmail;
 
     @ManyToOne
-    @JoinColumn(name = "food_menu_id")
+    @JoinColumn(name = "food_id")
     private Food food;
 
     private String mealTime;

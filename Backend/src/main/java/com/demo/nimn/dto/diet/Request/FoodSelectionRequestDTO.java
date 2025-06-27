@@ -11,7 +11,7 @@ import lombok.*;
 public class FoodSelectionRequestDTO {
     private Long foodSelectionId;
     private String foodTime;
-    private Long foodMenuId;
+    private Long foodId;
     private int count;
     private String userEmail;
 }

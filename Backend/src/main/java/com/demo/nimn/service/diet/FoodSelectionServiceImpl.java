@@ -24,13 +24,15 @@ public class FoodSelectionServiceImpl implements FoodSelectionService {
         this.foodRepository = foodRepository;
     }
 
+    // ID로 FoodSelection 엔티티 조회 후 DTO로 변환
     @Override
     public FoodSelectionDTO getById(Long mealSelectionId) {
         return convertToMealSelectionDTO(foodSelectionRepository.getReferenceById(mealSelectionId));
     }
 
+    // 클라이언트에서 보낸 요청 DTO를 실제 DB 저장용 FoodSelection 엔티티로 변환
     public FoodSelection convertToMealSelectionEntity(FoodSelectionRequestDTO mealSelectionDTO) {
-        Food food = foodRepository.getReferenceById(mealSelectionDTO.getFoodMenuId());
+        Food food = foodRepository.getReferenceById(mealSelectionDTO.getFoodId());
 
         return FoodSelection.builder()
                 .userEmail(mealSelectionDTO.getUserEmail())
@@ -39,7 +41,7 @@ public class FoodSelectionServiceImpl implements FoodSelectionService {
                 .count(mealSelectionDTO.getCount())
                 .build();
     }
-
+    // DB에서 가져온 FoodSelection 엔티티를 클라이언트 응답용 DTO로 변환
     public FoodSelectionDTO convertToMealSelectionDTO(FoodSelection foodSelection) {
         // TODO: foodMenu 조회해서 가져오는 로직 들어가야 함
         return FoodSelectionDTO.builder()
@@ -50,12 +52,12 @@ public class FoodSelectionServiceImpl implements FoodSelectionService {
                 .count(foodSelection.getCount())
                 .build();
     }
-
+    // DTO 리스트를 엔티티 리스트로 일괄 변환
     @Override
     public List<FoodSelection> convertToMealSelectionEntities(List<FoodSelectionRequestDTO> mealSelectionDTOS){
         return mealSelectionDTOS.stream().map(this::convertToMealSelectionEntity).collect(Collectors.toList());
     }
-
+    // FoodSelection 엔티티 리스트를 DTO 리스트로 일괄 변환
     @Override
     public List<FoodSelectionDTO> convertToMealSelectionDTOS(List<FoodSelection> foodSelectionEntities){
         return foodSelectionEntities.stream().map(this::convertToMealSelectionDTO).collect(Collectors.toList());
