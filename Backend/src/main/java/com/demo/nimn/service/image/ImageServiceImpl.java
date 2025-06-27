@@ -1,7 +1,6 @@
 package com.demo.nimn.service.image;
 
 import com.demo.nimn.entity.image.Image;
-import com.demo.nimn.dao.image.ImageDAO;
 import com.demo.nimn.dto.image.ImageDTO;
 import com.demo.nimn.repository.image.ImageRepository;
 import org.slf4j.Logger;
@@ -33,12 +32,10 @@ public class ImageServiceImpl implements ImageService{
     @Qualifier("generalRestTemplate")
     private RestTemplate restTemplate;
 
-    private final ImageDAO imageDAO;
     private final ImageRepository imageRepository;
 //    private static final Long[] ids = {1L, 2L, 3L};
 
-    public ImageServiceImpl(@Autowired ImageDAO imageDAO, @Autowired ImageRepository imageRepository) {
-        this.imageDAO = imageDAO;
+    public ImageServiceImpl(@Autowired ImageRepository imageRepository) {
         this.imageRepository = imageRepository;
     }
 
