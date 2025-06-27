@@ -1,10 +1,14 @@
 package com.demo.nimn.service.payment;
 
+import com.demo.nimn.dao.payment.PaymentDAO;
+import com.demo.nimn.dto.diet.Response.WeeklyDietDTO;
 import com.demo.nimn.dto.payment.*;
 import com.demo.nimn.entity.order.Order;
 import com.demo.nimn.entity.payment.*;
 import com.demo.nimn.repository.payment.PaymentRepository;
+import com.demo.nimn.service.diet.DietService;
 import com.demo.nimn.service.order.OrderService;
+import com.demo.nimn.service.review.ReviewService;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
@@ -25,15 +29,21 @@ import java.util.List;
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final OrderService orderService;
+    private final DietService dietService;
+    private final ReviewService reviewService;
     private final IamportClient iamportClient;
     private final Logger logger = LoggerFactory.getLogger(PaymentServiceImpl.class);
 
     @Autowired
     public PaymentServiceImpl(PaymentRepository paymentRepository,
                               OrderService orderService,
+                              DietService dietService,
+                              ReviewService reviewService,
                               IamportClient iamportClient) {
         this.paymentRepository = paymentRepository;
         this.orderService = orderService;
+        this.dietService = dietService;
+        this.reviewService = reviewService;
         this.iamportClient = iamportClient;
     }
 
@@ -68,7 +78,7 @@ public class PaymentServiceImpl implements PaymentService {
             // 결제 후 OrderStatus paid로 변경
             orderService.payOrder(order.getId());
 
-            // TODO-jh: 결제 완료 후 일주일치 DailyDietReview 생성하는 로직 추가, ReviewService createWeeklyDietReviews 호출
+            createWeeklyDietReviews(order);
 
             return createPayment(order, request.getPaymentUid());
         } catch (IamportResponseException e) {
@@ -77,6 +87,16 @@ public class PaymentServiceImpl implements PaymentService {
         } catch (IOException e) {
             logger.error("입출력 예외 발생: {}", e.getMessage());
             throw new RuntimeException(e);
+        }
+    }
+
+    private void createWeeklyDietReviews(Order order) {
+        try {
+            WeeklyDietDTO weeklyDietDTO = dietService.getWeeklyDietById(order.getWeeklyDietId());
+
+            reviewService.createWeeklyDietReviews(weeklyDietDTO);
+        } catch (Exception e) {
+            logger.error("Failed to create weekly diet reviews for order: {}", order.getOrderId(), e);
         }
     }
 

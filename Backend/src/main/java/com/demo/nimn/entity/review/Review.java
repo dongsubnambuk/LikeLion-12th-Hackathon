@@ -26,7 +26,7 @@ public class Review {
     private String userEmail;
 
     @ManyToOne
-    @JoinColumn(name = "food_menu_id", nullable = false)
+    @JoinColumn(name = "food_id", nullable = false)
     private Food food;
 
     @DecimalMin("1.0")
@@ -37,5 +37,6 @@ public class Review {
     private String comment;
 
     @Builder.Default
+    @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 }

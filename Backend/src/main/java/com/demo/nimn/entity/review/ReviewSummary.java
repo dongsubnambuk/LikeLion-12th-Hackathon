@@ -20,7 +20,7 @@ public class ReviewSummary {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "food_menu_id", nullable = false)
+    @JoinColumn(name = "food_id", nullable = false)
     @MapsId
     private Food food;
 
@@ -31,6 +31,6 @@ public class ReviewSummary {
     private Long totalReviews = 0L;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "food_menu_id")
+    @JoinColumn(name = "food_id")
     private List<Review> reviews;
 }

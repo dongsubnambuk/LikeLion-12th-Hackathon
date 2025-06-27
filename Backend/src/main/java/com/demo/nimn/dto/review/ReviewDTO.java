@@ -14,9 +14,9 @@ import java.time.LocalDateTime;
 public class ReviewDTO {
     private Long id;
     private String userEmail;
-    private Long foodMenuId;
-    private String foodMenuName;
-    private String foodMenuImage;
+    private Long foodId;
+    private String foodName;
+    private String foodImage;
     private Double rating;
     private String comment;
     private LocalDateTime createdAt;
