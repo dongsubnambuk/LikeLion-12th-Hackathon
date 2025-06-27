@@ -2,8 +2,11 @@ package com.demo.nimn.service.food;
 
 import com.demo.nimn.dto.food.*;
 import com.demo.nimn.entity.food.*;
+import com.demo.nimn.entity.review.ReviewSummary;
 import com.demo.nimn.repository.food.FoodRepository;
+import com.demo.nimn.repository.review.ReviewSummaryRepository;
 import com.demo.nimn.service.ai.AiService;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,14 +20,18 @@ import java.util.regex.Pattern;
 public class FoodServiceImpl implements FoodService {
     private final FoodRepository foodRepository;
     private final AiService aiService;
+    private final ReviewSummaryRepository reviewSummaryRepository;
 
     @Autowired
     public FoodServiceImpl(FoodRepository foodRepository,
-                           AiService aiService) {
+                           AiService aiService,
+                           ReviewSummaryRepository reviewSummaryRepository) {
         this.foodRepository = foodRepository;
         this.aiService = aiService;
+        this.reviewSummaryRepository = reviewSummaryRepository;
     }
 
+    @Transactional
     @Override
     public FoodDTO createFood(String price) {
         String foodPlanText = aiService.generateFood(price);
@@ -35,7 +42,22 @@ public class FoodServiceImpl implements FoodService {
             throw new IllegalStateException("응답을 Food 엔티티로 변환하는 데 실패했습니다.");
         }
 
-        return convertToFoodDTO(foodRepository.save(food));
+        Food savedFood = foodRepository.save(food);
+
+        createInitialReviewSummary(savedFood);
+
+        return convertToFoodDTO(savedFood);
+    }
+
+    private void createInitialReviewSummary(Food food) {
+        ReviewSummary reviewSummary = ReviewSummary.builder()
+                .food(food)
+                .reviews(new ArrayList<>())
+                .build();
+
+        reviewSummaryRepository.save(reviewSummary);
+
+        food.setReviewSummary(reviewSummary);
     }
 
     @Override

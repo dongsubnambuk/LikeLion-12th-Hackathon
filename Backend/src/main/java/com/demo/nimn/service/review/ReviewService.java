@@ -11,7 +11,7 @@ import java.util.List;
 public interface ReviewService {
 
     // ReviewSummary 관련
-    ReviewSummaryDTO getReviewSummaryByFoodMenuId(Long foodMenuId);
+    ReviewSummaryDTO getReviewSummaryByFoodId(Long foodId);
     List<ReviewSummaryDTO> getAllReviewSummaries();
     List<ReviewSummaryDTO> getReviewSummariesOrderByRating(String sortOrder); // "desc" or "asc"
 

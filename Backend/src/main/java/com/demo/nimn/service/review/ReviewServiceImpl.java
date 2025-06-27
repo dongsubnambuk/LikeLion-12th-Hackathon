@@ -58,8 +58,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     // ReviewSummary 관련
     @Override
-    public ReviewSummaryDTO getReviewSummaryByFoodMenuId(Long foodMenuId) {
-        ReviewSummary reviewSummary = reviewSummaryRepository.findByFoodId(foodMenuId)
+    public ReviewSummaryDTO getReviewSummaryByFoodId(Long foodId) {
+        ReviewSummary reviewSummary = reviewSummaryRepository.findByFoodId(foodId)
                 .orElseThrow(() -> new RuntimeException("ReviewSummary not found"));
 
         List<Review> completedReviews = reviewSummary.getReviews().stream()
