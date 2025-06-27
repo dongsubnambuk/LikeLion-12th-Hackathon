@@ -89,6 +89,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         Cookie cookie = new Cookie("token", token);
         cookie.setMaxAge(60 * 60 * 24); // 유효기간 설정(초), 상대시간
+        cookie.setPath("/");
         response.addCookie(cookie); // 응답에 쿠키 추가
 
         // JSON 형태로 응답 바디에 담기
@@ -102,7 +103,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 //                "\"role\": \"%s\"}",
 //                "Bearer " + token, email, role);
         String jsonResponse = String.format("{" +
-                "\"isSuccess\": \"성공\"");
+                "\"isSuccess\": \"성공\"}");
 
         response.getWriter().write(jsonResponse);
         response.getWriter().flush();
@@ -128,7 +129,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        String jsonResponse = "{\"error\": \"로그인 실패\", \"message\": \"" + failed.getMessage() + "\"}";
+        String jsonResponse = "{\"isSuccess\": \"실패\", \"message\": \"" + failed.getMessage() + "\"}";
 
         response.getWriter().write(jsonResponse);
         response.getWriter().flush();

@@ -4,6 +4,9 @@ import com.demo.nimn.dto.auth.UserDetails;
 import com.demo.nimn.dto.auth.UsersEmailDTO;
 import com.demo.nimn.entity.auth.Users;
 import com.demo.nimn.repository.auth.UserRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -58,6 +61,23 @@ public class UserServiceImpl implements UserService {
                 .roadAddress(userDetails.getRoadAddress())
                 .detailAddress(userDetails.getDetailAddress())
                 .build();
+    }
+
+    @Override
+    public boolean userLogout(HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("token".equals(cookie.getName())) {
+                    cookie.setValue(null);
+                    cookie.setPath("/");
+                    cookie.setMaxAge(0); // 브라우저에 삭제 요청
+                    response.addCookie(cookie);
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean existsByEmail(String email){
