@@ -16,7 +16,7 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "image_data")
-    @Lob()
-    private byte[] image;
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] byteImage;
 }
