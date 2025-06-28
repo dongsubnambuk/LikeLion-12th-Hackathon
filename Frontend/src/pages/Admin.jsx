@@ -7,7 +7,6 @@ function Admin() {
   const [dietSubTab, setDietSubTab] = useState('create');
   const [dietDetailSubTab, setDietDetailSubTab] = useState('list');
   const [selectedDiet, setSelectedDiet] = useState(null);
-  const [orderSubTab, setOrderSubTab] = useState('list');
   const [orders, setOrders] = useState([]);
   const [dietList, setDietList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -15,6 +14,7 @@ function Admin() {
   const [price, setPrice] = useState('');
   const [loading, setLoading] = useState(false);
   const [item, setItem] = useState({
+    id: "",
     name: "",
     main1: "",
     main2: "",
@@ -31,21 +31,156 @@ function Admin() {
     image: ""
   });
   const [itemVisible, setItemVisible] = useState(false);
+  const [adminInfo, setAdminInfo] = useState({
+    name: "관리자",
+    role: "관리자1"
+  });
   const navigate = useNavigate();
 
-  const foodimage = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop';
+  // 로그아웃 처리
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('http://nimn.store/api/users/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("email");
-    navigate("/");
+      if (response.ok) {
+        // 로컬스토리지 정리 (혹시 남아있을 수 있는 데이터)
+        localStorage.removeItem("token");
+        localStorage.removeItem("email");
+        navigate("/");
+      } else {
+        // 로그아웃 API 실패 시에도 프론트엔드에서 로그아웃 처리
+        console.log("로그아웃 API 실패, 프론트엔드에서 로그아웃 처리");
+        localStorage.removeItem("token");
+        localStorage.removeItem("email");
+        navigate("/");
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+      // 에러 발생 시에도 프론트엔드에서 로그아웃 처리
+      localStorage.removeItem("token");
+      localStorage.removeItem("email");
+      navigate("/");
+    }
   };
 
+  // 가격 선택 핸들러
   const handlePriceChange = (e) => {
     const selectedPrice = e.target.value;
     setPrice(selectedPrice);
   };
 
+  // 관리자 정보 조회
+  const fetchAdminInfo = async () => {
+    try {
+      const response = await fetch('http://nimn.store/api/users', {
+        method: 'GET',
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setAdminInfo({
+          name: result.name || "관리자",
+          role: "관리자"
+        });
+      } else {
+        console.log("관리자 정보 조회 실패");
+      }
+    } catch (error) {
+      console.error('Fetch admin info error:', error);
+    }
+  };
+
+  // 주문 목록 조회
+  const fetchOrders = async () => {
+    try {
+      const response = await fetch('http://nimn.store/api/payment/all', {
+        method: 'GET',
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        throw new Error('주문 목록 조회에 실패했습니다.');
+      }
+
+      const result = await response.json();
+      
+      // API 응답 데이터를 UI에 맞는 형태로 변환
+      const processedOrders = (result || []).map(order => ({
+        id: order.id,
+        paymentDate: order.createdAt ? order.createdAt.split('T')[0] : '', // ISO 날짜에서 날짜 부분만 추출
+        userName: order.purchaser || '알 수 없음',
+        amount: order.totalPrice ? `${order.totalPrice}원` : '0원',
+        weeklyDietId: order.weeklyDietId || '',
+        uid: order.uid || ''
+      }));
+      
+      setOrders(processedOrders);
+    } catch (error) {
+      console.error('Fetch orders error:', error);
+      setOrders([]);
+    }
+  };
+
+  // 이미지 다운로드 함수
+  const fetchImage = async (imagePath) => {
+    if (!imagePath) return "";
+    
+    try {
+      const response = await fetch(`http://nimn.store${imagePath}`, {
+        method: 'GET',
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        throw new Error('이미지 다운로드에 실패했습니다.');
+      }
+      
+      const blob = await response.blob();
+      const imageUrl = URL.createObjectURL(blob);
+      return imageUrl;
+    } catch (error) {
+      console.error('Image fetch error:', error);
+      return "";
+    }
+  };
+
+  // 식단 목록 조회
+  const fetchDietList = async () => {
+    try {
+      const response = await fetch('http://nimn.store/api/foods/plans', {
+        method: 'GET',
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        throw new Error('식단 목록 조회에 실패했습니다.');
+      }
+
+      const result = await response.json();
+      
+      // 각 식단의 이미지를 개별적으로 다운로드
+      const processedDietList = await Promise.all(
+        (result || []).map(async (diet) => {
+          const imageUrl = await fetchImage(diet.image);
+          return {
+            ...diet,
+            image: imageUrl
+          };
+        })
+      );
+      
+      setDietList(processedDietList);
+    } catch (error) {
+      console.error('Fetch diet list error:', error);
+      setDietList([]);
+    }
+  };
+
+  // 식단 생성
   const handleButtonClick = async () => {
     if (!price) {
       alert('가격을 선택해주세요.');
@@ -55,82 +190,51 @@ function Admin() {
     setLoading(true);
     
     try {
-      setTimeout(() => {
-        const exampleMenus = {
-          "4000": {
-            name: "건강한 가정식",
-            main1: "제육볶음",
-            main2: "달걀찜",
-            side1: "배추김치",
-            side2: "시금치나물",
-            side3: "미소된장국",
-            calories: "520kcal",
-            carbohydrate: "65g",
-            protein: "22g",
-            fat: "16g",
-            sugar: "8g",
-            sodium: "980mg",
-            image: foodimage
-          },
-          "5500": {
-            name: "균형 영양 도시락",
-            main1: "닭가슴살 구이",
-            main2: "연근조림",
-            side1: "현미밥",
-            side2: "브로콜리 무침",
-            side3: "맑은 콩나물국",
-            calories: "465kcal",
-            carbohydrate: "58g",
-            protein: "28g",
-            fat: "12g",
-            sugar: "6g",
-            sodium: "750mg",
-            image: foodimage
-          },
-          "7000": {
-            name: "프리미엄 한식 세트",
-            main1: "갈비찜",
-            main2: "생선구이",
-            side1: "나물 3종",
-            side2: "김치찌개",
-            side3: "깍두기",
-            calories: "680kcal",
-            carbohydrate: "72g",
-            protein: "35g",
-            fat: "22g",
-            sugar: "12g",
-            sodium: "1200mg",
-            image: foodimage
-          }
-        };
+      const response = await fetch(`http://nimn.store/api/foods/food?price=${price}`, {
+        method: 'POST',
+        credentials: 'include'
+      });
 
-        const selectedMenu = exampleMenus[price];
-        setItem({
-          ...selectedMenu,
-          price: `${price}원`
-        });
-        setItemVisible(true);
-        setLoading(false);
-      }, 2000);
+      if (!response.ok) {
+        throw new Error('식단 생성에 실패했습니다.');
+      }
+
+      const result = await response.json();
+      
+      // 생성된 식단의 이미지 다운로드
+      const imageUrl = await fetchImage(result.image);
+      
+      setItem({
+        id: result.id || "",
+        name: result.name || "",
+        main1: result.main1 || "",
+        main2: result.main2 || "",
+        price: result.price || `${price}원`,
+        side1: result.side1 || "",
+        side2: result.side2 || "",
+        side3: result.side3 || "",
+        calories: result.calories || "",
+        carbohydrate: result.carbohydrate || "",
+        protein: result.protein || "",
+        fat: result.fat || "",
+        sugar: result.sugar || "",
+        sodium: result.sodium || "",
+        image: imageUrl
+      });
+      
+      setItemVisible(true);
+      await fetchDietList(); // 목록 새로고침
+      setPrice('');
+      alert('식단이 생성되었습니다!');
     } catch (error) {
       console.error('Fetch error:', error);
-      setLoading(false);
       alert('식단 생성 중 오류가 발생했습니다.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleApplyDiet = () => {
-    const newDiet = {
-      id: dietList.length + 1,
-      ...item,
-      createdAt: new Date().toLocaleDateString()
-    };
-    setDietList([newDiet, ...dietList]);
-    setItemVisible(false);
-    setPrice('');
-    alert('식단이 적용되었습니다!');
-  };
-
+  // 식단 클릭 핸들러
   const handleDietClick = (diet) => {
     setSelectedDiet(diet);
     if (activeTab === 'dashboard') {
@@ -142,6 +246,7 @@ function Admin() {
     }
   };
 
+  // 더보기 버튼 핸들러들
   const handleViewMoreDiets = () => {
     setActiveTab('diet');
     setDietSubTab('list');
@@ -150,10 +255,9 @@ function Admin() {
 
   const handleViewMoreOrders = () => {
     setActiveTab('orders');
-    setOrderSubTab('list');
   };
 
-  // 가격 필터링 함수
+  // 가격 필터링
   const getFilteredDietList = () => {
     if (priceFilter === 'all') {
       return dietList;
@@ -163,166 +267,14 @@ function Admin() {
 
   const filteredDietList = getFilteredDietList();
 
+  // 컴포넌트 마운트 시 데이터 로드
   useEffect(() => {
-    const mockOrders = [
-      {
-        id: 1,
-        paymentDate: "2025-06-26",
-        userName: "김영희",
-        amount: "7000원"
-      },
-      {
-        id: 2,
-        paymentDate: "2025-06-25",
-        userName: "이철수",
-        amount: "5500원"
-      },
-      {
-        id: 3,
-        paymentDate: "2025-06-25",
-        userName: "박민수",
-        amount: "4000원"
-      },
-      {
-        id: 4,
-        paymentDate: "2025-06-24",
-        userName: "정수연",
-        amount: "7000원"
-      },
-      {
-        id: 5,
-        paymentDate: "2025-06-24",
-        userName: "최지영",
-        amount: "5500원"
-      },
-      {
-        id: 6,
-        paymentDate: "2025-06-23",
-        userName: "김태호",
-        amount: "7000원"
-      },
-      {
-        id: 7,
-        paymentDate: "2025-06-23",
-        userName: "이미영",
-        amount: "4000원"
-      }
-    ];
-    setOrders(mockOrders);
-
-    const mockDietList = [
-      {
-        id: 1,
-        name: "균형잡힌 한식 도시락",
-        main1: "불고기",
-        main2: "계란말이",
-        side1: "김치",
-        side2: "콩나물무침",
-        side3: "미역국",
-        price: "7000원",
-        calories: "650kcal",
-        carbohydrate: "85g",
-        protein: "28g",
-        fat: "18g",
-        sugar: "12g",
-        sodium: "1200mg",
-        image: foodimage,   
-        createdAt: "2025-06-16"
-      },
-      {
-        id: 2,
-        name: "저칼로리 샐러드 세트",
-        main1: "그릴드 치킨",
-        main2: "방울토마토",
-        side1: "믹스 샐러드",
-        side2: "견과류",
-        side3: "발사믹 드레싱",
-        price: "5500원",
-        calories: "420kcal",
-        carbohydrate: "25g",
-        protein: "35g",
-        fat: "15g",
-        sugar: "8g",
-        sodium: "680mg",
-        image: foodimage,
-        createdAt: "2025-06-15"
-      },
-      {
-        id: 3,
-        name: "단백질 파워 도시락",
-        main1: "연어구이",
-        main2: "두부스테이크",
-        side1: "현미밥",
-        side2: "브로콜리",
-        side3: "새싹채소",
-        price: "7000원",
-        calories: "580kcal",
-        carbohydrate: "45g",
-        protein: "42g",
-        fat: "20g",
-        sugar: "6g",
-        sodium: "850mg",
-        image: foodimage,
-        createdAt: "2025-06-14"
-      },
-      {
-        id: 4,
-        name: "채식주의자 건강식",
-        main1: "두부버거",
-        main2: "퀴노아",
-        side1: "아보카도",
-        side2: "당근스틱",
-        side3: "허브소스",
-        price: "5500원",
-        calories: "480kcal",
-        carbohydrate: "55g",
-        protein: "18g",
-        fat: "22g",
-        sugar: "10g",
-        sodium: "590mg",
-        image: foodimage,
-        createdAt: "2025-06-13"
-      },
-      {
-        id: 5,
-        name: "전통 한정식",
-        main1: "갈비찜",
-        main2: "생선구이",
-        side1: "나물 3종",
-        side2: "된장찌개",
-        side3: "깍두기",
-        price: "7000원",
-        calories: "720kcal",
-        carbohydrate: "78g",
-        protein: "32g",
-        fat: "25g",
-        sugar: "15g",
-        sodium: "1350mg",
-        image: foodimage,
-        createdAt: "2025-06-12"
-      },
-      {
-        id: 6,
-        name: "지중해식 다이어트",
-        main1: "그릴드 생선",
-        main2: "올리브오일 파스타",
-        side1: "그릭 샐러드",
-        side2: "체리토마토",
-        side3: "페타치즈",
-        price: "6000원",
-        calories: "520kcal",
-        carbohydrate: "48g",
-        protein: "28g",
-        fat: "24g",
-        sugar: "9g",
-        sodium: "750mg",
-        image: foodimage,
-        createdAt: "2025-06-11"
-      }
-    ];
-    setDietList(mockDietList);
+    fetchAdminInfo(); // 관리자 정보 조회
+    fetchDietList();
+    fetchOrders(); // 주문 목록 조회
   }, []);
 
+  // 페이지네이션 계산
   const ordersPerPage = 10;
   const totalOrderPages = Math.ceil(orders.length / ordersPerPage);
   const startOrderIndex = (currentPage - 1) * ordersPerPage;
@@ -335,8 +287,8 @@ function Admin() {
         <div className="admin_profile">
           <div className="admin_profile_icon">👤</div>
           <div className="admin_profile_info">
-            <div className="admin_profile_name">관리자</div>
-            <div className="admin_profile_role">관리자1</div>
+            <div className="admin_profile_name">{adminInfo.name}</div>
+            <div className="admin_profile_role">{adminInfo.role}</div>
           </div>
         </div>
         
@@ -470,17 +422,21 @@ function Admin() {
               <table className="admin_orders_table">
                 <thead className="admin_table_head">
                   <tr className="admin_table_row">
+                    <th className="admin_table_header">결제 ID</th>
                     <th className="admin_table_header">결제 날짜</th>
-                    <th className="admin_table_header">유저 이름</th>
+                    <th className="admin_table_header">구매자</th>
                     <th className="admin_table_header">결제 금액</th>
+                    <th className="admin_table_header">주문 ID</th>
                   </tr>
                 </thead>
                 <tbody className="admin_table_body">
                   {currentOrders.map((order) => (
                     <tr key={order.id} className="admin_table_row">
+                      <td className="admin_table_cell">{order.id}</td>
                       <td className="admin_table_cell">{order.paymentDate}</td>
                       <td className="admin_table_cell">{order.userName}</td>
                       <td className="admin_table_cell">{order.amount}</td>
+                      <td className="admin_table_cell">{order.uid}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -509,7 +465,7 @@ function Admin() {
           {/* 식단 관리 */}
           {activeTab === 'diet' && (
             <div className="admin_diet_section">
-              {/* 식단 관리 서브탭 */}
+              {/* 서브탭 */}
               <div className="admin_diet_subtabs">
                 <button 
                   className={`admin_subtab_btn ${dietSubTab === 'create' ? 'admin_subtab_active' : ''}`}
@@ -531,7 +487,7 @@ function Admin() {
                 </button>
               </div>
 
-              {/* 식단 생성 탭 */}
+              {/* 식단 생성 */}
               {dietSubTab === 'create' && (
                 <div className="admin_diet_create_container">
                   <div className="admin_diet_form">
@@ -562,12 +518,11 @@ function Admin() {
                     {itemVisible && !loading && (
                       <div className="admin_diet_result">
                         <div className="admin_result_header">
-                          <h4 className="admin_result_title"> 생성된 식단</h4>
+                          <h4 className="admin_result_title">생성된 식단</h4>
                           <span className="admin_new_badge">NEW</span>
                         </div>
                         <div className="admin_diet_card">
                           <div className="admin_diet_content">
-                            {/* 첫 번째 섹션 - 이미지와 기본 정보 */}
                             <div className="admin_diet_left">
                               <div className="admin_diet_image_container">
                                 <img src={item.image} alt="food" className="admin_diet_image" />
@@ -585,7 +540,6 @@ function Admin() {
                               </div>
                             </div>
                             
-                            {/* 두 번째 섹션 - 메뉴 구성 */}
                             <div className="admin_menu_section">
                               <h4 className="admin_detail_title">메뉴 구성</h4>
                               <div className="admin_menu_grid">
@@ -612,7 +566,6 @@ function Admin() {
                               </div>
                             </div>
                             
-                            {/* 세 번째 섹션 - 영양성분 */}
                             <div className="admin_nutrition_section">
                               <h4 className="admin_detail_title">영양성분</h4>
                               <div className="admin_nutrition_grid">
@@ -639,7 +592,6 @@ function Admin() {
                               </div>
                             </div>
 
-                            {/* 네 번째 섹션 - 요약 정보와 버튼 */}
                             <div className="admin_diet_extra">
                               <div className="admin_diet_summary">
                                 <h4 className="admin_summary_title">식단 요약</h4>
@@ -671,7 +623,7 @@ function Admin() {
                 </div>
               )}
 
-              {/* 생성된 식단 목록 탭 */}
+              {/* 식단 목록 */}
               {dietSubTab === 'list' && (
                 <>
                   {dietDetailSubTab === 'list' && (
@@ -719,7 +671,7 @@ function Admin() {
                                 </div>
                                 <div className="admin_diet_list_meta">
                                   <div className="admin_diet_list_actions">
-                                    <button className="admin_diet_action_btn admin_delete_btn">삭제</button>
+                                    <button className="admin_diet_action_btn admin_view_btn">보기</button>
                                   </div>
                                 </div>
                               </div>
@@ -758,7 +710,6 @@ function Admin() {
                       
                       <div className="admin_diet_card">
                         <div className="admin_diet_content">
-                          {/* 첫 번째 섹션 - 이미지와 기본 정보 */}
                           <div className="admin_diet_left">
                             <div className="admin_diet_image_container">
                               <img src={selectedDiet.image} alt="food" className="admin_diet_image" />
@@ -776,7 +727,6 @@ function Admin() {
                             </div>
                           </div>
                           
-                          {/* 두 번째 섹션 - 메뉴 구성 */}
                           <div className="admin_menu_section">
                             <h4 className="admin_detail_title">메뉴 구성</h4>
                             <div className="admin_menu_grid">
@@ -803,7 +753,6 @@ function Admin() {
                             </div>
                           </div>
                           
-                          {/* 세 번째 섹션 - 영양성분 */}
                           <div className="admin_nutrition_section">
                             <h4 className="admin_detail_title">영양성분</h4>
                             <div className="admin_nutrition_grid">
@@ -830,7 +779,6 @@ function Admin() {
                             </div>
                           </div>
 
-                          {/* 네 번째 섹션 - 요약 정보 */}
                           <div className="admin_diet_extra">
                             <div className="admin_diet_summary">
                               <h4 className="admin_summary_title">식단 요약</h4>
