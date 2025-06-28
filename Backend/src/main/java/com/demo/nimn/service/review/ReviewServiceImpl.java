@@ -100,7 +100,7 @@ public class ReviewServiceImpl implements ReviewService {
             // 해당 날짜의 음식들로 빈 Review 생성
             List<Review> emptyReviews = new ArrayList<>();
 
-            for (FoodSelectionDTO foodSelection : dailyDietDTO.getMealSelections()) {
+            for (FoodSelectionDTO foodSelection : dailyDietDTO.getFoodSelections()) {
                 Food food = foodRepository.findById(foodSelection.getFoodMenu().getId())
                         .orElseThrow(() -> new RuntimeException("Food not found: " + foodSelection.getFoodMenu().getId()));
 

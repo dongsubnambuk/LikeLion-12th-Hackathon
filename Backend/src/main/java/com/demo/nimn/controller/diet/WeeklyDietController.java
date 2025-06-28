@@ -6,11 +6,15 @@ import com.demo.nimn.service.diet.DietService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name="WEEKLY DIET API", description = "유저 Weekly 식단 API")
 @RestController
-@RequestMapping("/userMeal/weekly")
+@RequestMapping("/diet/weekly")
 public class WeeklyDietController {
 
     private final DietService dietService;
@@ -22,14 +26,14 @@ public class WeeklyDietController {
 
     @Operation(summary = "유저 일주일 식단 생성", description = "유저 일주일 식단 생성")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "201", description = "성공"),
             @ApiResponse(responseCode = "401", description = "인증 실패"),
             @ApiResponse(responseCode = "403", description = "권한 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     @PostMapping("/create") // 유저 일주일 식단 생성
-    public WeeklyDietDTO createWeeklyDiet(@RequestBody WeeklyDietRequestDTO weeklyDietDTO) {
-        return dietService.createWeeklyDiet(weeklyDietDTO);
+    public ResponseEntity<WeeklyDietDTO> createWeeklyDiet(@RequestBody WeeklyDietRequestDTO weeklyDietDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(dietService.createWeeklyDiet(weeklyDietDTO));
     }
 
     @Operation(summary = "유저의 일주일 식단 조회", description = "유저의 특정 일주일 식단 조회")
@@ -40,7 +44,7 @@ public class WeeklyDietController {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     @GetMapping("/read/{userEmail}") // 유저 특정 일주일 식단 조회
-    public WeeklyDietDTO getWeeklyByUserEmail(@PathVariable("userEmail") String userEmail) {
-        return dietService.getWeeklyDietByUserEmail(userEmail);
+    public ResponseEntity<WeeklyDietDTO> getWeeklyByUserEmail(@PathVariable("userEmail") String userEmail) {
+        return ResponseEntity.status(HttpStatus.OK).body(dietService.getWeeklyDietByUserEmail(userEmail));
     }
 }

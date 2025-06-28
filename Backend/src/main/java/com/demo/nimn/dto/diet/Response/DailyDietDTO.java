@@ -15,5 +15,5 @@ public class DailyDietDTO {
     private Long dailyDietId;
     private String userEmail;
     private LocalDate date;
-    private List<FoodSelectionDTO> mealSelections;
+    private List<FoodSelectionDTO> foodSelections;
 }

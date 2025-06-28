@@ -67,7 +67,7 @@ public class DietServiceImpl implements DietService {
                 .dailyDietId(dailyDiet.getId())
                 .date(dailyDiet.getDate())
                 .userEmail(dailyDiet.getUserEmail())
-                .mealSelections(foodSelectionService.convertToMealSelectionDTOS(dailyDiet.getFoodSelections()))
+                .foodSelections(foodSelectionService.convertToMealSelectionDTOS(dailyDiet.getFoodSelections()))
                 .build();
     }
 

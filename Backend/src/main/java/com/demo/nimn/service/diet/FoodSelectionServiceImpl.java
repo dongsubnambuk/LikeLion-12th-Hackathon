@@ -2,10 +2,12 @@ package com.demo.nimn.service.diet;
 
 import com.demo.nimn.dto.diet.Response.FoodSelectionDTO;
 import com.demo.nimn.dto.diet.Request.FoodSelectionRequestDTO;
+import com.demo.nimn.dto.food.FoodDTO;
 import com.demo.nimn.entity.diet.FoodSelection;
 import com.demo.nimn.entity.food.Food;
 import com.demo.nimn.repository.diet.FoodSelectionRepository;
 import com.demo.nimn.repository.food.FoodRepository;
+import com.demo.nimn.service.food.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +19,13 @@ public class FoodSelectionServiceImpl implements FoodSelectionService {
 
     private final FoodSelectionRepository foodSelectionRepository;
     private final FoodRepository foodRepository;
+    private final FoodService foodService;
 
     @Autowired
-    public FoodSelectionServiceImpl(FoodSelectionRepository foodSelectionRepository , FoodRepository foodRepository) {
+    public FoodSelectionServiceImpl(FoodSelectionRepository foodSelectionRepository , FoodRepository foodRepository, FoodService foodService) {
         this.foodSelectionRepository = foodSelectionRepository;
         this.foodRepository = foodRepository;
+        this.foodService = foodService;
     }
 
     // ID로 FoodSelection 엔티티 조회 후 DTO로 변환
@@ -47,7 +51,7 @@ public class FoodSelectionServiceImpl implements FoodSelectionService {
         return FoodSelectionDTO.builder()
                 .foodSelectionId(foodSelection.getId())
                 .userEmail(foodSelection.getUserEmail())
-                .foodMenu(null)
+                .foodMenu(foodService.convertToFoodDTO(foodSelection.getFood()))
                 .foodTime(foodSelection.getMealTime())
                 .count(foodSelection.getCount())
                 .build();
@@ -62,4 +66,6 @@ public class FoodSelectionServiceImpl implements FoodSelectionService {
     public List<FoodSelectionDTO> convertToMealSelectionDTOS(List<FoodSelection> foodSelectionEntities){
         return foodSelectionEntities.stream().map(this::convertToMealSelectionDTO).collect(Collectors.toList());
     }
+
+
 }

@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
-//@Tag(name="DIET API", description = "유저 식단 API")
+@Tag(name="DAILYDIET API", description = "유저 Daily 식단 API")
 @RestController
-@RequestMapping("/userMeal/daily")
+@RequestMapping("/diet/daily")
 public class DailyDietController {
 
     private final DietService dietService;
@@ -34,7 +34,7 @@ public class DailyDietController {
             @ApiResponse(responseCode = "403", description = "권한 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    @GetMapping("/read")
+    @PostMapping("/read")
     public ResponseEntity<List<DailyDietDTO>> getDailyDietsByUserEmailAndDate(@RequestBody DailyRequestDTO dailyRequestDTO) {
         List<DailyDietDTO> dailyDiets = dietService.getByUserEmailAndDate(dailyRequestDTO.getUserEmail(), dailyRequestDTO.getDate());
         return ResponseEntity.ok(dailyDiets);
