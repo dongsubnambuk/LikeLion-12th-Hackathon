@@ -87,10 +87,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //헤더에 토큰 값을 넣을 때.
         //response.addHeader("Authorization", "Bearer " + token);
 
-        Cookie cookie = new Cookie("token", token);
-        cookie.setMaxAge(60 * 60 * 24); // 유효기간 설정(초), 상대시간
-        cookie.setPath("/");
-        response.addCookie(cookie); // 응답에 쿠키 추가
+//        Cookie cookie = new Cookie("token", token);
+//        cookie.setMaxAge(60 * 60 * 24); // 유효기간 설정(초), 상대시간
+//        cookie.setPath("/");
+//        response.addCookie(cookie); // 응답에 쿠키 추가
+            
+        // 개발환경 토큰 임시 수정
+        response.setHeader("Set-Cookie",
+                "token=" + token + "; Max-Age=86400; Path=/; SameSite=None; HttpOnly");
 
         // JSON 형태로 응답 바디에 담기
         response.setContentType("application/json");
