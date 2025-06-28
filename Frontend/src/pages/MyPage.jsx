@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Avatar } from 'antd';
 import '../CSS/Mypage.css';
+import Cookies from 'js-cookie';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faReceipt, faSignOutAlt, faUserMinus, faChevronRight, faMapMarkerAlt, faPhone } from "@fortawesome/free-solid-svg-icons";
 
@@ -16,14 +17,37 @@ const [showPopup, setShowPopup] = useState(false);
 const navigate = useNavigate();
 
     // 로그아웃 함수
-    const handleLogout = () => {
-        localStorage.removeItem("email");
-        localStorage.removeItem("isLoggedIn");
-        localStorage.removeItem("isPay");
-        localStorage.removeItem("checkMealLoad");
-        localStorage.removeItem("Meal");
-        localStorage.removeItem("token");
-        navigate("/");
+    const handleLogout = async () => {
+        try {
+            const response = await fetch('http://nimn.store/api/users/logout', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include', // 쿠키에 있는 토큰 자동 전송
+            });
+            
+            if (response.ok) {
+                navigate("/");
+            } else {
+                try {
+                    const result = await response.json();
+                    if (result.message === "토큰소멸") {
+                        alert("로그인이 만료되었습니다. 다시 로그인 해주세요");
+                        navigate('/login');
+                        return;
+                    }
+                } catch (e) {
+                    console.error("로그아웃 응답 파싱 실패");
+                }
+                
+                console.error("로그아웃 실패");
+                navigate("/");
+            }
+        } catch (error) {
+            console.error("로그아웃 오류:", error);
+            navigate("/");
+        }
     };
 
     const handleUnsubscribeClick = () => {
@@ -42,39 +66,66 @@ const navigate = useNavigate();
 
     useEffect(() => {
         const handleget = async () => {
-            const token = localStorage.getItem("token");
-            const email = localStorage.getItem("email");
-            
-            const response = await fetch(`http://3.37.64.39:8000/api/users?email=${email}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json", 
-                    "Authorization": token,
-                }
-            });
-      
-            const result = await response.json();
-      
-            if (response.status === 200) {
-                setUserName(result.name);
-                setphoneNumber(result.phoneNumber)
-                setAddress({
-                    roadAddress: result.roadAddress,
-                    detailAddress: result.detailAddress,
+            try {
+                const response = await fetch('http://nimn.store/api/users', {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'include', // 쿠키에 있는 토큰 자동 전송
                 });
-            } else {
-                console.log("로그인 실패");
-                alert("로그인 실패: " + result.message);
+
+                console.log(Cookies.get('token')); 
+          
+                if (response.status === 200) {
+                    const result = await response.json();
+                    
+                    // 토큰 만료 체크
+                    if (result.message === "토큰소멸") {
+                        alert("로그인이 만료되었습니다. 다시 로그인 해주세요");
+                        navigate('/login');
+                        return;
+                    }
+                    
+                    setUserName(result.name);
+                    setphoneNumber(result.phoneNumber)
+                    setAddress({
+                        roadAddress: result.roadAddress,
+                        detailAddress: result.detailAddress,
+                    });
+                } else {
+                    console.log("사용자 정보 조회 실패", response.status);
+                    
+                    try {
+                        const result = await response.json();
+                        
+                        // 토큰 만료 체크
+                        if (result.message === "토큰소멸") {
+                            alert("로그인이 만료되었습니다. 다시 로그인 해주세요");
+                            navigate('/login');
+                            return;
+                        }
+                        
+                        if (response.status === 403) {
+                            alert("접근 권한이 없습니다. 다시 로그인해주세요.");
+                        } else {
+                            alert("사용자 정보 조회 실패: " + result.message);
+                        }
+                    } catch (e) {
+                        alert("사용자 정보 조회 실패");
+                    }
+                }
+            } catch (error) {
+                console.error("사용자 정보 조회 오류:", error);
+                alert("사용자 정보 조회 중 오류가 발생했습니다.");
             }
         };
         handleget();
-    }, [])
+    }, [navigate])
 
     return(
         <>
         <div className="mypage_container">
-     
-
             {/* 프로필 카드 */}
             <div className="mypage_profile_card">
                 <Avatar 
