@@ -21,9 +21,6 @@ const navigate = useNavigate();
         try {
             const response = await fetch('http://nimn.store/api/users/logout', {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
                 credentials: 'include', // 쿠키에 있는 토큰 자동 전송
             });
             
@@ -69,10 +66,7 @@ const navigate = useNavigate();
             try {
                 const response = await fetch('http://nimn.store/api/users', {
                     method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: 'include', // 쿠키에 있는 토큰 자동 전송
+                    credentials: 'include',
                 });
 
                 console.log(Cookies.get('token')); 

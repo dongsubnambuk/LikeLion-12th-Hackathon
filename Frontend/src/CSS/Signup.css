@@ -1,11 +1,53 @@
+/* 컨테이너 높이 제한 - 하단 네비게이션 공간 확보 */
+html, body {
+    height: 100%;
+    overflow: hidden; /* body 레벨에서 스크롤 방지 */
+}
+
 .signup_inner {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    padding: 20px;
-    align-items: center;
     max-width: 500px;
     margin: 0 auto;
+    height: calc(100vh - 120px); /* 네비게이션 높이를 더 크게 설정 (120px) */
+    max-height: calc(100vh - 120px);
+    box-sizing: border-box;
+}
+
+/* 스크롤 가능한 폼 영역 */
+.signup_form_container {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 20px;
+    scroll-behavior: smooth;
+}
+
+/* 고정된 회원가입 버튼 영역 */
+.signup_button_container {
+    flex-shrink: 0;
+    padding: 0 20px 20px 20px;
+    background: white;
+    border-top: 1px solid #f3f4f6;
+}
+
+/* 스크롤바 스타일링 (웹킷 기반 브라우저) */
+.signup_form_container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.signup_form_container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.signup_form_container::-webkit-scrollbar-thumb {
+    background: rgba(157, 146, 116, 0.3);
+    border-radius: 4px;
+}
+
+.signup_form_container::-webkit-scrollbar-thumb:hover {
+    background: rgba(157, 146, 116, 0.5);
 }
 
 .signup_form_group {
@@ -35,8 +77,6 @@
     transition: all 0.3s ease;
     outline: none;
 }
-
-
 
 .signup_inner input::placeholder {
     color: #9ca3af;
@@ -206,3 +246,156 @@
     animation: shake 0.5s ease-in-out;
 }
 
+/* 이메일 인증 관련 스타일 */
+.signup_verification_send {
+    margin-bottom: 12px;
+}
+
+.signup_verification_send_btn {
+    width: 100%;
+    height: 48px;
+    background: rgb(157, 146, 116); /* 메인 색상으로 변경 */
+    color: white!important;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 12px rgba(157, 146, 116, 0.25); /* 메인 색상 반영 */
+    letter-spacing: 0.3px;
+}
+
+.signup_verification_send_btn:hover {
+    background: rgb(127, 116, 86); /* 메인 색상의 호버 효과 */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(157, 146, 116, 0.35); /* 메인 색상 반영 */
+}
+
+.signup_verification_send_btn:disabled {
+    background: #d1d5db;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.signup_verification_check_group {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+    margin-bottom: 12px;
+}
+
+.signup_verification_input_wrapper {
+    flex: 2;
+    display: flex;
+}
+
+.signup_verification_input_wrapper input {
+    width: 100%;
+    height: 48px;
+}
+
+.signup_verification_check_btn {
+    height: 48px;
+    padding: 0 20px;
+    background: rgb(157, 146, 116); /* 메인 색상으로 변경 */
+    color: white!important;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    flex: 0.8;
+    min-width: 100px;
+    box-shadow: 0 3px 12px rgba(157, 146, 116, 0.25); /* 메인 색상 반영 */
+    letter-spacing: 0.3px;
+}
+
+.signup_verification_check_btn:hover {
+    background: rgb(127, 116, 86); /* 메인 색상의 호버 효과 */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(157, 146, 116, 0.35); /* 메인 색상 반영 */
+}
+
+.signup_verification_check_btn:disabled {
+    background: #d1d5db;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.signup_resend_section {
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.signup_resend_btn {
+    background: transparent;
+    color: #6b7280!important;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: underline;
+}
+
+.signup_resend_btn:hover {
+    background: #f9fafb;
+    color: #374151!important;
+    border-color: #9ca3af;
+}
+
+.signup_resend_btn:disabled {
+    background: #f9fafb;
+    color: #d1d5db!important;
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
+/* 인증 완료 상태 스타일 */
+.signup_inner input.signup_valid {
+    border-color: #10b981;
+    background: #f0fdf4;
+}
+
+.signup_inner input:disabled {
+    background: #f9fafb;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+/* 애니메이션 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-5px);
+    }
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+/* 스크롤 스무스 처리 */
+.signup_form_container {
+    scroll-behavior: smooth;
+}
