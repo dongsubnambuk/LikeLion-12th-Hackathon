@@ -43,22 +43,13 @@ public class OrderServiceImpl implements OrderService {
 
             for (FoodSelection foodSelection : dailyDiet.getFoodSelections()) {
 
-                String priceStr = foodSelection.getFood().getPrice();
-                Long unitPrice = parsePriceString(priceStr);
+                Long unitPrice = foodSelection.getFood().getPrice();
 
                 totalPrice += unitPrice * foodSelection.getCount();
             }
         }
 
         return totalPrice;
-    }
-
-    private Long parsePriceString(String priceStr) {
-        try {
-            return Long.parseLong(priceStr.replaceAll("[^0-9]", ""));
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("Invalid price format: " + priceStr);
-        }
     }
 
     @Override

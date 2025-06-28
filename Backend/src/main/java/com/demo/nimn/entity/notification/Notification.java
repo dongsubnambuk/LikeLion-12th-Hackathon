@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long notificationId;
+    private Long id;
 
     @Column(nullable = false)
     private String userEmail;
@@ -39,7 +39,7 @@ public class Notification {
 
     public NotificationDTO toNotificationDTO(int checksum) {
         return NotificationDTO.builder()
-                .notificationId(this.notificationId)
+                .notificationId(this.id)
                 .content(this.content)
                 .type(this.type)
                 .sendTime(this.sendTime)
