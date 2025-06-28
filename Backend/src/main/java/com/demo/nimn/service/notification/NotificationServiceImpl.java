@@ -4,18 +4,24 @@ import com.demo.nimn.dto.diet.Response.DailyDietDTO;
 import com.demo.nimn.dto.diet.Response.FoodSelectionDTO;
 import com.demo.nimn.dto.notification.NotificationDTO;
 import com.demo.nimn.dto.notification.response.NotificationCountDTO;
+import com.demo.nimn.dto.review.DailyDietReviewDTO;
 import com.demo.nimn.entity.notification.Notification;
 import com.demo.nimn.enums.NotificationType;
 import com.demo.nimn.repository.notification.NotificationRepository;
 import com.demo.nimn.service.diet.DietService;
 import com.demo.nimn.service.payment.PaymentService;
 import com.demo.nimn.service.review.ReviewService;
+import com.demo.nimn.websocket.CustomChannelInterceptor;
 import com.demo.nimn.websocket.SessionManageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.user.SimpUser;
+import org.springframework.messaging.simp.user.SimpSession;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +38,7 @@ public class NotificationServiceImpl implements NotificationService {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final NotificationRepository notificationRepository;
     private final SessionManageService sessionManageService;
+
     @Lazy
     private final DietService dietService;
     @Lazy
@@ -40,82 +47,83 @@ public class NotificationServiceImpl implements NotificationService {
     private final ReviewService reviewService;
 
     // 오늘의 유저별 식단 리스트
-    private List<DailyDietDTO>  dailyDietDTOList = new ArrayList<>();
+    private List<DailyDietDTO> dailyDietDTOList = new ArrayList<>();
 
-    // 알림 전송
+
     private void sendNotification(NotificationType notificationType,
-                                 String userEmail,
-                                 String content,
-                                 Long dailyReviewId) {
-        NotificationDTO notificationDTO = notificationRepository.save(Notification.builder()
-                                                .userEmail(userEmail)
-                                                .content(content)
-                                                .type(notificationType)
-                                                .sendTime(LocalDateTime.now())
-                                                .dailyReviewId(dailyReviewId)
-                                                .check(false)
-                                                .build())
-                                        .toNotificationDTO(notificationRepository.countByUserEmailAndCheckIsFalse(userEmail).orElse(0));
-        // 연결 되어 있는지 확인 후 발송
+                                  String userEmail,
+                                  String content,
+                                  Long dailyReviewId) {
+        NotificationDTO notificationDTO = notificationRepository.save(
+                Notification.builder()
+                        .userEmail(userEmail)
+                        .content(content)
+                        .type(notificationType)
+                        .sendTime(LocalDateTime.now())
+                        .dailyReviewId(dailyReviewId)
+                        .check(false)
+                        .build()
+        ).toNotificationDTO(
+                notificationRepository.countByUserEmailAndCheckIsFalse(userEmail).orElse(0)
+        );
+
         if (sessionManageService.isUserConnected(userEmail)) {
-            simpMessagingTemplate.convertAndSendToUser(
-                    userEmail,
-                    "/queue/notification",
-                    notificationDTO
-            );
-            log.info("Notification sent to userId={}, type={}, content={}, dailyReviewId={}", userEmail, notificationType, content, dailyReviewId);
+            try {
+                simpMessagingTemplate.convertAndSendToUser(
+                        userEmail,
+                        "/queue/notification",
+                        notificationDTO
+                );
+                log.info("Notification sent to {}: {}", userEmail, notificationDTO);
+            } catch (Exception e) {
+                log.error("Failed to send notification to {}", userEmail, e);
+            }
+        } else {
+            log.warn("User {} not connected – notification queued.", userEmail);
         }
     }
 
+    // 기존 testNotification 메서드 대체
     @Override
     public NotificationCountDTO testNotification(NotificationType notificationType,
-                                                  String userEmail,
-                                                  String content) {
-        NotificationDTO notificationDTO = notificationRepository.save(Notification.builder()
+                                                 String userEmail,
+                                                 String content) {
+        NotificationDTO notificationDTO = notificationRepository.save(
+                Notification.builder()
                         .userEmail(userEmail)
                         .content(content)
                         .type(notificationType)
                         .sendTime(LocalDateTime.now())
                         .dailyReviewId(null)
                         .check(false)
-                        .build())
-                .toNotificationDTO(notificationRepository.countByUserEmailAndCheckIsFalse(userEmail).orElse(0));
-        // 연결 되어 있는지 확인 후 발송
-        if (sessionManageService.isUserConnected(userEmail)) {
+                        .build()
+        ).toNotificationDTO(
+                notificationRepository.countByUserEmailAndCheckIsFalse(userEmail).orElse(0)
+        );
+
+        try {
+            // 브로드캐스트
+            simpMessagingTemplate.convertAndSend(
+                    "/queue/broadcast-notification",
+                    notificationDTO
+            );
+            // 개인 알림
             simpMessagingTemplate.convertAndSendToUser(
                     userEmail,
                     "/queue/notification",
                     notificationDTO
             );
-            log.info("Notification sent to userId={}, type={}, content={}", userEmail, notificationType, content);
+            log.info("Test notification sent to {}: {}", userEmail, notificationDTO);
+        } catch (Exception e) {
+            log.error("Failed to send test notification to {}", userEmail, e);
         }
+
         return countUnreadNotifications(userEmail);
     }
 
-    // 식단 알림 및 캐시 초기화 ( 매일 7시 )
-    @Scheduled(cron = "0 0 7 ? * *")
-    public void sendDailyDiet() {
-        dailyDietDTOList = dietService.getByDate(LocalDate.now());
-
-        for (DailyDietDTO dailyDietDTO : dailyDietDTOList) {
-            StringBuilder content = new StringBuilder();
-            content.append("오늘의 식단은 ");
-            for (FoodSelectionDTO foodSelectionDTO : dailyDietDTO.getMealSelections()) {
-                content.append(foodSelectionDTO.getFoodTime())
-                        .append(" ")
-                        .append(foodSelectionDTO.getFoodMenu().getName())
-                        .append(" ")
-                        .append(foodSelectionDTO.getCount())
-                        .append("개, ");
-            }
-            content.delete(content.length() - 3, content.length());
-            content.append("입니다.");
-
-            sendNotification(NotificationType.DIET,
-                    dailyDietDTO.getUserEmail(),
-                    content.toString(),
-                    null);
-        }
+    @Scheduled(cron = "0 0 0 ? * *")
+    public void initDailyDietDTOList() {
+        this.dailyDietDTOList = dietService.getByDate(LocalDate.now());
     }
 
     // 아침, 점심, 저녁 식사 알림
@@ -166,13 +174,13 @@ public class NotificationServiceImpl implements NotificationService {
     @Scheduled(cron = "0 0 21 ? * *")
     public void sendReview() {
         // TODO-dg: ReviewService의 getDailyDietReviewsByDate 메소드를 사용하면 날짜에 해당하는 DailyReview들 가져올 수 있음.
-//        List<DailyReviewDTO> reviewList = reviewService.readDailyReviewDTOByDate(LocalDate.now());
-//        for (DailyReviewDTO dailyReviewDTO : reviewList) {
-//            sendNotification(NotificationType.REVIEW,
-//                    dailyReviewDTO.getUserEmail(),
-//                    "오늘의 식단 리뷰에 참여해주세요~",
-//                    dailyReviewDTO.getDailyReviewId());
-//        }
+        List<DailyDietReviewDTO> reviewList = reviewService.getDailyDietReviewsByDate(LocalDate.now());
+        for (DailyDietReviewDTO dailyReviewDTO : reviewList) {
+            sendNotification(NotificationType.REVIEW,
+                    dailyReviewDTO.getUserEmail(),
+                    "오늘의 식단 리뷰에 참여해주세요~",
+                    dailyReviewDTO.getId());
+        }
     }
 
     // 안읽은 알림 갯수 조회
@@ -198,7 +206,7 @@ public class NotificationServiceImpl implements NotificationService {
     public NotificationCountDTO markAllAsRead(String userEmail) {
         List<Notification> notifications = notificationRepository.findAllByUserEmailAndCheckIsFalse(userEmail);
 
-        for(Notification notification : notifications) {
+        for (Notification notification : notifications) {
             notification.setCheck(Boolean.TRUE);
             notificationRepository.save(notification);
         }

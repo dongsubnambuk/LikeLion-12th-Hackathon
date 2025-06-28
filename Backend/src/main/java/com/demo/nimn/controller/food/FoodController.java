@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
-@Tag(name = "FOOD SERVER API", description = "AI를 사용한 식단 및 이미지 자동 생성")
+@Tag(name = "음식 API", description = "AI를 사용한 식단 및 이미지 자동 생성")
 @RestController
 @RequestMapping(value = "/foods")
 public class FoodController {

@@ -15,6 +15,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.lang.Long.parseLong;
+
 @Slf4j
 @Service
 public class FoodServiceImpl implements FoodService {
@@ -114,7 +116,8 @@ public class FoodServiceImpl implements FoodService {
         return Food.builder()
                 .name(getMatchedValue(namePattern, input))
                 .image(createFoodImage(extractMainAndSideMenus(input)))
-                .price(getMatchedValue(pricePattern, input))
+                .price(Long.parseLong(Objects.requireNonNull(getMatchedValue(pricePattern, input))
+                        .replaceAll("원$", "")))
                 .main1(getMatchedValue(main1Pattern, input))
                 .main2(getMatchedValue(main2Pattern, input))
                 .side1(getMatchedValue(side1Pattern, input))
