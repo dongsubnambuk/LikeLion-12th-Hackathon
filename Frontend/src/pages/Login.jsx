@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import '../CSS/Login.css';
+import Cookies from 'js-cookie';
 import logo from '../images/logo.png';
 
 function Login() {
@@ -27,7 +28,10 @@ function Login() {
         try {
             const response = await fetch('http://nimn.store/api/users/login', {
                 method: "POST",
-                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include", 
                 body: JSON.stringify({
                     email: email,
                     password: password,
@@ -37,15 +41,17 @@ function Login() {
             const result = await response.json();
     
             if (response.status === 200) {
-
-                    navigate('/');
-                
+                console.log(Cookies.get('token')); 
+                console.log("로그인 성공!");
+                console.log("서버에서 쿠키 자동 저장됨");
+                navigate('/');
             } else {
                 console.log("로그인 실패");
                 alert("로그인 실패: " + result.message);
             }
         } catch (error) {
             console.error("Fetch error: ", error);
+            alert("로그인 중 오류가 발생했습니다.");
         }
     };
 
@@ -59,7 +65,6 @@ function Login() {
 
                 <button className="login-btn" onClick={handleLogin}>로그인</button>
                 <div className="login-options">
-                 
                     {/* <div>
                         <a href="/find-id">아이디 찾기</a> | <a href="/find-password">비밀번호 찾기</a>
                     </div> */}
