@@ -83,6 +83,25 @@ public class PaymentController {
         return ResponseEntity.ok(payments);
     }
 
+    @Operation(summary = "전체 결제 내역 조회", description = "모든 결제 내역을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "결제 내역 조회 성공 (결제 내역이 없어도 빈 배열 반환)",
+                    content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = PaymentDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 내부 오류",
+                    content = @Content
+            )
+    })
+    @GetMapping("/all")
+    public ResponseEntity<List<PaymentDTO>> getAllPayments() {
+        List<PaymentDTO> payments = paymentService.getAllPayments();
+        return ResponseEntity.ok(payments);
+    }
+
     @Operation(summary = "결제 내역 삭제", description = "특정 결제 내역을 삭제합니다.\n\n아임포트와 연동된 실제 결제 취소는 동작하지 않습니다.")
     @ApiResponses(value = {
             @ApiResponse(

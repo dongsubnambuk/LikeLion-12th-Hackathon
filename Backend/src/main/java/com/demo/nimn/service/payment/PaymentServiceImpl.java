@@ -143,6 +143,13 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    public List<PaymentDTO> getAllPayments(){
+        List<Payment> payments = paymentRepository.findAllByOrderByCreatedAtDesc();
+
+        return convertToPaymentDTOList(payments);
+    }
+
+    @Override
     public Boolean deletePayment(String paymentId) {
         paymentRepository.deleteById(paymentId);
 
