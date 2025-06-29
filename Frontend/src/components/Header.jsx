@@ -4,7 +4,7 @@ import '../CSS/Header.css';
 import logo from '../images/logo.png';
 import { useNavigate, useLocation } from "react-router-dom";
 
-const Header = ({ notificationCount, surveyCount, isLoggedIn, userInfo }) => {
+const Header = ({ notificationCount, surveyCount, userInfo }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userName, setUserName] = useState('');
     const [isLoading, setIsLoading] = useState(true);
@@ -14,6 +14,12 @@ const Header = ({ notificationCount, surveyCount, isLoggedIn, userInfo }) => {
     useEffect(() => {
         checkLoginStatus();
     }, []);
+
+    // 페이지 변경 시마다 로그인 상태 확인
+    useEffect(() => {
+        checkLoginStatus();
+        console.log(`현재 경로: ${location.pathname}`);
+    }, [location.pathname]);
 
     // 쿠키 기반 로그인 상태 확인
     const checkLoginStatus = async () => {
