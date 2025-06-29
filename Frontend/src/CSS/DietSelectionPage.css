@@ -78,6 +78,7 @@
         0 20px 60px rgba(157, 146, 116, 0.15),
         0 8px 25px rgba(157, 146, 116, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 5px;
 }
 
 .diet-selection-page-slide-content {
@@ -603,4 +604,158 @@
 
 .diet-selection-page-menu-change-section.expanded .diet-selection-page-menu-change-content {
     opacity: 1;
+}
+
+/* 🔥 추가된 부분: 안내 문구 섹션 스타일 */
+.diet-selection-page-guide-section {
+    background: linear-gradient(135deg, rgba(157, 146, 116, 0.1) 0%, rgba(184, 166, 136, 0.05) 100%);
+    padding: 30px 20px;
+    margin: 20px;
+    border-radius: 20px;
+    border: 1px solid rgba(157, 146, 116, 0.2);
+    box-shadow: 0 8px 32px rgba(157, 146, 116, 0.1);
+}
+
+.diet-selection-page-guide-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.diet-selection-page-guide-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 10px 0;
+    letter-spacing: -0.5px;
+}
+
+.diet-selection-page-guide-period {
+    font-size: 16px;
+    font-weight: 600;
+    color: #9d9274;
+    margin: 0;
+    letter-spacing: -0.2px;
+}
+
+.diet-selection-page-guide-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+.diet-selection-page-guide-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    border: 1px solid rgba(157, 146, 116, 0.1);
+    transition: all 0.3s ease;
+}
+
+.diet-selection-page-guide-item:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(157, 146, 116, 0.1);
+}
+
+.diet-selection-page-guide-icon {
+    font-size: 18px;
+    min-width: 24px;
+    text-align: center;
+}
+
+.diet-selection-page-guide-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #2c3e50;
+    line-height: 1.4;
+    letter-spacing: -0.1px;
+}
+
+/* 🔥 추가된 부분: 식사 구분선 스타일 */
+.diet-selection-page-meal-divider {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(157, 146, 116, 0.3), transparent);
+    margin: 40px 0 0;
+    position: relative;
+}
+
+.diet-selection-page-meal-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(157, 146, 116, 0.2);
+    border-radius: 50%;
+    backdrop-filter: blur(10px);
+}
+
+.diet-selection-page-meal-divider::after {
+    content: '•••';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #9d9274;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .diet-selection-page-guide-section {
+        margin: 15px 10px;
+        padding: 20px 15px;
+    }
+
+    .diet-selection-page-guide-title {
+        font-size: 20px;
+    }
+
+    .diet-selection-page-guide-period {
+        font-size: 14px;
+    }
+
+    .diet-selection-page-guide-content {
+        gap: 12px;
+    }
+
+    .diet-selection-page-guide-item {
+        padding: 10px 12px;
+    }
+
+    .diet-selection-page-guide-text {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .diet-selection-page-guide-section {
+        margin: 10px;
+        padding: 16px 12px;
+    }
+
+    .diet-selection-page-guide-title {
+        font-size: 18px;
+    }
+
+    .diet-selection-page-guide-period {
+        font-size: 13px;
+    }
+
+    .diet-selection-page-guide-item {
+        padding: 8px 10px;
+    }
+
+    .diet-selection-page-guide-text {
+        font-size: 12px;
+    }
 }

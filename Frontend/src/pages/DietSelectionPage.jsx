@@ -18,6 +18,13 @@ function DietSelectionPage() {
     const [expandedMenus, setExpandedMenus] = useState({});
 
     const handleConfirmClick = () => {
+        // 확인 메시지 추가
+        const isConfirmed = window.confirm("7일간의 식단을 모두 선택하셨나요?\n\n선택하신 식단으로 결제 페이지로 이동합니다.");
+
+        if (!isConfirmed) {
+            return; // 사용자가 취소를 누르면 함수 종료
+        }
+
         // DietPaymentMainPage가 기대하는 데이터 구조로 변환
         const transformedData = mealData.map(dayData => ({
             day: dayData.day,
@@ -42,74 +49,38 @@ function DietSelectionPage() {
         }));
     };
 
-    // 풍부한 더미 데이터 생성
-    const getDummyData = () => {
-        const days = [
-            "2025-06-30", "2025-07-01", "2025-07-02",
-            "2025-07-03", "2025-07-04", "2025-07-05", "2025-07-06"
-        ];
-
-        const mealTypes = [
-            { key: "Breakfast", label: "아침" },
-            { key: "Lunch", label: "점심" },
-            { key: "Dinner", label: "저녁" }
-        ];
-
-        const sampleFoods = [
-            {
-                id: 1, name: "김치찌개 정식", image: foodImg,
-                price: "8000원", main1: "김치찌개", main2: "계란후라이", side1: "김치", side2: "단무지", side3: "밥",
-                calories: "450kcal", carbohydrate: "60g", protein: "20g", fat: "15g", sugar: "5g", sodium: "800mg"
-            },
-            {
-                id: 2, name: "된장찌개 정식", image: foodImg,
-                price: "7500원", main1: "된장찌개", main2: "계란후라이", side1: "김치", side2: "콩나물", side3: "밥",
-                calories: "420kcal", carbohydrate: "55g", protein: "18g", fat: "12g", sugar: "4g", sodium: "750mg"
-            },
-            {
-                id: 3, name: "불고기 정식", image: foodImg,
-                price: "12000원", main1: "불고기", main2: "계란찜", side1: "김치", side2: "콩나물", side3: "밥",
-                calories: "580kcal", carbohydrate: "65g", protein: "35g", fat: "18g", sugar: "8g", sodium: "900mg"
-            },
-            {
-                id: 4, name: "생선구이 정식", image: foodImg,
-                price: "10000원", main1: "생선구이", main2: "된장찌개", side1: "김치", side2: "시금치나물", side3: "밥",
-                calories: "520kcal", carbohydrate: "58g", protein: "30g", fat: "16g", sugar: "6g", sodium: "720mg"
-            },
-            {
-                id: 5, name: "미역국 정식", image: foodImg,
-                price: "7000원", main1: "미역국", main2: "계란후라이", side1: "김치", side2: "멸치볶음", side3: "밥",
-                calories: "380kcal", carbohydrate: "50g", protein: "15g", fat: "10g", sugar: "3g", sodium: "650mg"
-            },
-            {
-                id: 6, name: "닭갈비 정식", image: foodImg,
-                price: "11000원", main1: "닭갈비", main2: "계란찜", side1: "김치", side2: "콩나물", side3: "밥",
-                calories: "600kcal", carbohydrate: "70g", protein: "40g", fat: "20g", sugar: "10g", sodium: "950mg"
-            }
-        ];
-
-        return {
-            startDate: "2025-06-30",
-            endDate: "2025-07-06",
-            dailyFoodPlans: days.map((day, dayIndex) => ({
-                day: day,
-                foodChoiceSets: mealTypes.map((mealType, mealIndex) => {
-                    const availableFoods = [
-                        { ...sampleFoods[(dayIndex + mealIndex) % sampleFoods.length] },
-                        { ...sampleFoods[(dayIndex + mealIndex + 1) % sampleFoods.length] },
-                        { ...sampleFoods[(dayIndex + mealIndex + 2) % sampleFoods.length] }
-                    ];
-
-                    return {
-                        foodTime: mealType.key,
-                        foodTimeLabel: mealType.label,
-                        foods: availableFoods,
-                        selectedFood: { ...availableFoods[0], count: 1 }, // 첫 번째 음식을 기본 선택
-                        selectedIndex: 0 // 선택된 음식의 인덱스
-                    };
-                })
-            }))
+    // 실제 API에서 받은 데이터를 내부 구조로 변환
+    const transformApiData = (apiData) => {
+        const mealTypeMapping = {
+            'Breakfast': '아침',
+            'Lunch': '점심',
+            'Dinner': '저녁'
         };
+
+        const transformedData = apiData.dailyFoodPlans.map(dayPlan => ({
+            day: dayPlan.day,
+            foodChoiceSets: dayPlan.foodChoiceSets.map(choiceSet => ({
+                foodTime: choiceSet.foodTime,
+                foodTimeLabel: mealTypeMapping[choiceSet.foodTime] || choiceSet.foodTime,
+                foods: choiceSet.foods.map(food => ({
+                    ...food,
+                    // API 이미지 URL을 절대 경로로 변환
+                    image: food.image.startsWith('/api/')
+                        ? `http://nimn.store${food.image}`
+                        : food.image
+                })),
+                selectedFood: {
+                    ...choiceSet.foods[0], // 첫 번째 음식을 기본 선택
+                    count: 1,
+                    image: choiceSet.foods[0].image.startsWith('/api/')
+                        ? `http://nimn.store${choiceSet.foods[0].image}`
+                        : choiceSet.foods[0].image
+                },
+                selectedIndex: 0
+            }))
+        }));
+
+        return transformedData;
     };
 
     // 메뉴 변경 핸들러
@@ -140,23 +111,31 @@ function DietSelectionPage() {
         const handleGet = async () => {
             setIsLoading(true);
 
-            console.log('🔄 더미 데이터 모드로 실행합니다.');
-
-            // 로딩 시뮬레이션
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
             try {
-                const dummyResult = getDummyData();
-                setMealData(dummyResult.dailyFoodPlans);
+                const response = await fetch('http://nimn.store/api/foods/plans/weekly', {
+                    method: "GET",
+                    headers: {
+                        "accept": "application/json",
+                        "Content-Type": "application/json",
+                    }
+                });
 
-                localStorage.setItem("checkMealLoad", true);
-                localStorage.setItem("startDate", JSON.stringify(dummyResult.startDate));
-                localStorage.setItem("endDate", JSON.stringify(dummyResult.endDate));
+                if (response.ok) {
+                    const result = await response.json();
 
-                console.log('✅ 더미 데이터 로드 완료:', dummyResult.dailyFoodPlans);
+                    // 실제 API 데이터 사용
+                    const transformedData = transformApiData(result);
+                    setMealData(transformedData);
+
+                    localStorage.setItem("checkMealLoad", true);
+                    localStorage.setItem("startDate", JSON.stringify(result.startDate));
+                    localStorage.setItem("endDate", JSON.stringify(result.endDate));
+                } else {
+                    throw new Error(`API 요청 실패: ${response.status} ${response.statusText}`);
+                }
 
             } catch (error) {
-                console.error('더미 데이터 로드 실패:', error);
+                alert('식단 데이터를 불러오는데 실패했습니다. 다시 시도해주세요.');
             } finally {
                 setIsLoading(false);
             }
@@ -165,20 +144,21 @@ function DietSelectionPage() {
         if (!localStorage.getItem("checkMealLoad")) {
             handleGet();
         } else {
-            // 저장된 데이터가 있으면 로드하지만, 새로운 구조로 초기화
+            // 저장된 데이터가 있어도 새로운 데이터로 갱신
+            localStorage.removeItem("checkMealLoad");
             handleGet();
         }
     }, []);
 
     // 스크롤 위치를 복원하는 useEffect
-    useEffect(() => {
-        const savedScrollIndex = localStorage.getItem("scrollIndex");
-        if (swiperRef.current && savedScrollIndex !== null && mealData.length > 0) {
-            setTimeout(() => {
-                swiperRef.current.swiper.slideTo(Number(savedScrollIndex), 0);
-            }, 100);
-        }
-    }, [mealData]);
+    // useEffect(() => {
+    //     const savedScrollIndex = localStorage.getItem("scrollIndex");
+    //     if (swiperRef.current && savedScrollIndex !== null && mealData.length > 0) {
+    //         setTimeout(() => {
+    //             swiperRef.current.swiper.slideTo(Number(savedScrollIndex), 0);
+    //         }, 100);
+    //     }
+    // }, [mealData]);
 
     const handleSlideChange = (swiper) => {
         localStorage.setItem("scrollIndex", swiper.activeIndex);
@@ -190,13 +170,68 @@ function DietSelectionPage() {
             <div className="diet-selection-page-loading-container">
                 <div className="diet-selection-page-loading-spinner"></div>
                 <p>식단 데이터를 준비하는 중...</p>
-                <small>더미 데이터로 실행됩니다</small>
+                <small>실제 API 데이터를 불러오는 중입니다...</small>
             </div>
         );
     }
 
+    // 식사 시간에 따른 클래스 반환 함수
+    const getMealClass = (foodTime) => {
+        switch (foodTime.toLowerCase()) {
+            case 'breakfast': return 'breakfast';
+            case 'lunch': return 'lunch';
+            case 'dinner': return 'dinner';
+            default: return '';
+        }
+    };
+
+    // 날짜 범위 계산
+    const getDateRange = () => {
+        if (mealData.length > 0) {
+            const startDate = new Date(mealData[0].day).toLocaleDateString('ko-KR', {
+                month: 'long',
+                day: 'numeric'
+            });
+            const endDate = new Date(mealData[mealData.length - 1].day).toLocaleDateString('ko-KR', {
+                month: 'long',
+                day: 'numeric'
+            });
+            return `${startDate} ~ ${endDate}`;
+        }
+        return '';
+    };
+
     return (
         <div className="diet-selection-page-main-container">
+            {/* 🔥 추가된 부분: 안내 문구 섹션 */}
+            <div className="diet-selection-page-guide-section">
+                <div className="diet-selection-page-guide-header">
+                    <h1 className="diet-selection-page-guide-title">🍽️ 주간 식단 선택</h1>
+                    <p className="diet-selection-page-guide-period">{getDateRange()}까지의 식단을 선택해주세요</p>
+                </div>
+
+                <div className="diet-selection-page-guide-content">
+                    <div className="diet-selection-page-guide-item">
+                        <span className="diet-selection-page-guide-icon">👈👉</span>
+                        <span className="diet-selection-page-guide-text">좌우로 슬라이드하여 각 날짜별 식단을 확인할 수 있습니다</span>
+                    </div>
+
+                    <div className="diet-selection-page-guide-item">
+                        <span className="diet-selection-page-guide-icon">🔄</span>
+                        <span className="diet-selection-page-guide-text">'다른 메뉴 선택' 버튼으로 원하는 메뉴로 변경 가능합니다</span>
+                    </div>
+
+                    <div className="diet-selection-page-guide-item">
+                        <span className="diet-selection-page-guide-icon">🔢</span>
+                        <span className="diet-selection-page-guide-text">+/- 버튼으로 각 식단의 수량을 조절해주세요</span>
+                    </div>
+
+                    <div className="diet-selection-page-guide-item">
+                        <span className="diet-selection-page-guide-icon">💳</span>
+                        <span className="diet-selection-page-guide-text">선택 완료 후 다음 페이지에서 최종 확인 및 결제를 진행합니다</span>
+                    </div>
+                </div>
+            </div>
 
             {/* 주간 식단 상세 영역 */}
             <div className='diet-selection-page-user-weekly-food-detail'>
@@ -225,9 +260,13 @@ function DietSelectionPage() {
                             {dayData.foodChoiceSets.map((mealSet, mealIndex) => {
                                 const menuKey = `${dayIndex}-${mealIndex}`;
                                 const isExpanded = expandedMenus[menuKey];
+                                const isLastMeal = mealIndex === dayData.foodChoiceSets.length - 1;
 
                                 return (
-                                    <div key={mealIndex} className="diet-selection-page-meal-section">
+                                    <div
+                                        key={mealIndex}
+                                        className={`diet-selection-page-meal-section ${getMealClass(mealSet.foodTime)} ${!isLastMeal ? 'with-divider' : ''}`}
+                                    >
                                         <h3 className="diet-selection-page-meal-type-title">
                                             {mealSet.foodTimeLabel}
                                         </h3>
@@ -238,32 +277,41 @@ function DietSelectionPage() {
                                                 <h4 className="diet-selection-page-meal-name">{mealSet.selectedFood.name}</h4>
                                                 <span className="diet-selection-page-meal-price">{mealSet.selectedFood.price}</span>
                                             </div>
-
-                                            <img
-                                                src={mealSet.selectedFood.image}
-                                                alt={mealSet.selectedFood.name}
-                                                className="diet-selection-page-meal-image"
-                                            />
-
-                                            <div className="diet-selection-page-meal-description">
-                                                {mealSet.selectedFood.main1}, {mealSet.selectedFood.main2}, {mealSet.selectedFood.side1}, {mealSet.selectedFood.side2}, {mealSet.selectedFood.side3}
+                                            {/* 이미지 섹션 */}
+                                            <div className="diet-selection-page-meal-image-section">
+                                                <img
+                                                    src={mealSet.selectedFood.image}
+                                                    alt={mealSet.selectedFood.name}
+                                                    className="diet-selection-page-meal-image"
+                                                    onError={(e) => {
+                                                        e.target.src = foodImg;
+                                                    }}
+                                                />
                                             </div>
 
-                                            <div className="diet-selection-page-nutrition-info">
-                                                <div className="diet-selection-page-nutrition-item">
-                                                    <span className="diet-selection-page-nutrition-label">칼로리</span>
-                                                    <span className="diet-selection-page-nutrition-value">{mealSet.selectedFood.calories}</span>
+                                            {/* 콘텐츠 섹션 */}
+                                            <div className="diet-selection-page-meal-content-section">
+
+
+                                                <div className="diet-selection-page-meal-description">
+                                                    {mealSet.selectedFood.main1}, {mealSet.selectedFood.main2}, {mealSet.selectedFood.side1}, {mealSet.selectedFood.side2}, {mealSet.selectedFood.side3}
                                                 </div>
-                                                <div className="diet-selection-page-nutrition-item">
-                                                    <span className="diet-selection-page-nutrition-label">탄수화물</span>
-                                                    <span className="diet-selection-page-nutrition-value">{mealSet.selectedFood.carbohydrate}</span>
-                                                </div>
-                                                <div className="diet-selection-page-nutrition-item">
-                                                    <span className="diet-selection-page-nutrition-label">단백질</span>
-                                                    <span className="diet-selection-page-nutrition-value">{mealSet.selectedFood.protein}</span>
+
+                                                <div className="diet-selection-page-nutrition-info">
+                                                    <div className="diet-selection-page-nutrition-item">
+                                                        <span className="diet-selection-page-nutrition-label">칼로리</span>
+                                                        <span className="diet-selection-page-nutrition-value">{mealSet.selectedFood.calories}</span>
+                                                    </div>
+                                                    <div className="diet-selection-page-nutrition-item">
+                                                        <span className="diet-selection-page-nutrition-label">탄수화물</span>
+                                                        <span className="diet-selection-page-nutrition-value">{mealSet.selectedFood.carbohydrate}</span>
+                                                    </div>
+                                                    <div className="diet-selection-page-nutrition-item">
+                                                        <span className="diet-selection-page-nutrition-label">단백질</span>
+                                                        <span className="diet-selection-page-nutrition-value">{mealSet.selectedFood.protein}</span>
+                                                    </div>
                                                 </div>
                                             </div>
-
                                             {/* 수량 조절 */}
                                             <div className="diet-selection-page-quantity-control">
                                                 <button
@@ -311,6 +359,9 @@ function DietSelectionPage() {
                                                                 src={food.image}
                                                                 alt={food.name}
                                                                 className="diet-selection-page-option-image"
+                                                                onError={(e) => {
+                                                                    e.target.src = foodImg;
+                                                                }}
                                                             />
                                                             <div className="diet-selection-page-option-info">
                                                                 <span className="diet-selection-page-option-name">{food.name}</span>
@@ -324,6 +375,11 @@ function DietSelectionPage() {
                                                 </div>
                                             </div>
                                         </div>
+
+                                        {/* 🔥 추가된 부분: 식사 구분선 */}
+                                        {!isLastMeal && (
+                                            <div className="diet-selection-page-meal-divider"></div>
+                                        )}
                                     </div>
                                 );
                             })}
