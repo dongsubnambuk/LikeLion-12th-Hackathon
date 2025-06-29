@@ -1,12 +1,52 @@
 // src/components/Header.jsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import '../CSS/Header.css';
 import logo from '../images/logo.png';
 import { useNavigate, useLocation } from "react-router-dom";
 
 const Header = ({ notificationCount, surveyCount, isLoggedIn, userInfo }) => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userName, setUserName] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
     const location = useLocation();
+
+    useEffect(() => {
+        checkLoginStatus();
+    }, []);
+
+    // 쿠키 기반 로그인 상태 확인
+    const checkLoginStatus = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch('http://nimn.store/api/users', {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'accept': '*/*'
+                }
+            });
+
+            if (response.ok) {
+                const userData = await response.json();
+                setIsLoggedIn(true);
+                setUserName(userData.name || '사용자');
+                localStorage.setItem("isLoggedIn", "true");
+            } else {
+                setIsLoggedIn(false);
+                setUserName('');
+                localStorage.removeItem("isLoggedIn");
+                localStorage.removeItem("token");
+            }
+        } catch (error) {
+            setIsLoggedIn(false);
+            setUserName('');
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("token");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const handleLoginClick = () => {
         navigate('/login');
@@ -64,6 +104,30 @@ const Header = ({ notificationCount, surveyCount, isLoggedIn, userInfo }) => {
     };
 
     const isMainPage = location.pathname === '/';
+
+    // 로딩 중일 때 처리
+    if (isLoading && isMainPage) {
+        return (
+            <header className="header-header">
+                <div className="header-header-container">
+                    <div className="header-header-left">
+                        <div className="header-loading-placeholder"></div>
+                    </div>
+                    <div className="header-header-center">
+                        <img
+                            src={logo}
+                            className="header-logo-image"
+                            alt="NutriHub"
+                            onClick={() => navigate('/')}
+                        />
+                    </div>
+                    <div className="header-header-right">
+                        <div className="header-loading-placeholder"></div>
+                    </div>
+                </div>
+            </header>
+        );
+    }
 
     return (
         <header className="header-header">
