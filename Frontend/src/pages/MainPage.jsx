@@ -29,6 +29,7 @@ const MainPage = ({ onNotificationCountChange }) => {
   const stompClientRef = useRef(null);
   const isInitialized = useRef(false);
   const connectionAttempts = useRef(0);
+  const pollingInterval = useRef(null);
 
   const navigate = useNavigate();
 
@@ -71,7 +72,7 @@ const MainPage = ({ onNotificationCountChange }) => {
       title: "매일 새벽 6시,\n문 앞까지",
       subtitle: "하루 세 끼를 한 번에 받아\n직장에서도 건강하게",
       image: slideImg2,
-      cta: "구독 시작하기"
+      cta: "배송 지역 확인"
     },
     {
       title: "21가지 메뉴 중\n자유롭게",
@@ -172,6 +173,25 @@ const MainPage = ({ onNotificationCountChange }) => {
     return { notifCount, survCount };
   }, []);
 
+  // 알림 개수 업데이트 함수
+  const updateNotificationCounts = useCallback(async () => {
+    const notifications = await getAllNotificationsAPI();
+    if (notifications && notifications.length > 0) {
+      const { notifCount, survCount } = calculateNotificationCounts(notifications);
+      setNotificationCount(notifCount);
+      setSurveyCount(survCount);
+      if (onNotificationCountChange) {
+        onNotificationCountChange(notifCount, survCount);
+      }
+    } else {
+      setNotificationCount(0);
+      setSurveyCount(0);
+      if (onNotificationCountChange) {
+        onNotificationCountChange(0, 0);
+      }
+    }
+  }, [getAllNotificationsAPI, calculateNotificationCounts, onNotificationCountChange]);
+
   // WebSocket 연결
   const connectWebSocket = useCallback(() => {
     if (!userEmail) return;
@@ -181,14 +201,13 @@ const MainPage = ({ onNotificationCountChange }) => {
       return;
     }
 
-    // 기존 연결이 있고 연결 중인 상태라면 기다림
+    // 기존 연결 정리
     if (stompClientRef.current) {
       const currentState = stompClientRef.current.state;
       if (currentState === 1) { // CONNECTING 상태
         return;
       }
       
-      // 연결된 상태라면 해제
       if (stompClientRef.current.connected) {
         stompClientRef.current.deactivate();
       }
@@ -196,7 +215,11 @@ const MainPage = ({ onNotificationCountChange }) => {
 
     connectionAttempts.current += 1;
 
-    const socket = new SockJS(`http://nimn.store/ws/notification?userEmail=${userEmail}`);
+    // 프로토콜 자동 감지 및 URL 수정
+    const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
+    const wsUrl = `${protocol}//nimn.store/ws/notification?userEmail=${userEmail}`;
+
+    const socket = new SockJS(wsUrl);
 
     const client = new Client({
       webSocketFactory: () => socket,
@@ -208,30 +231,13 @@ const MainPage = ({ onNotificationCountChange }) => {
       heartbeatOutgoing: 10000,
       reconnectDelay: 5000,
       maxReconnectAttempts: 3,
+      connectionTimeout: 10000,
       onConnect: async (frame) => {
         setIsConnected(true);
-        connectionAttempts.current = 0; // 성공 시 카운터 리셋
+        connectionAttempts.current = 0;
 
-        // WebSocket 연결 성공 후 실제 알림 데이터 조회
-        const notifications = await getAllNotificationsAPI();
-        
-        if (notifications && notifications.length > 0) {
-          const { notifCount, survCount } = calculateNotificationCounts(notifications);
-          
-          setNotificationCount(notifCount);
-          setSurveyCount(survCount);
-          
-          if (onNotificationCountChange) {
-            onNotificationCountChange(notifCount, survCount);
-          }
-        } else {
-          setNotificationCount(0);
-          setSurveyCount(0);
-          
-          if (onNotificationCountChange) {
-            onNotificationCountChange(0, 0);
-          }
-        }
+        // 알림 데이터 조회
+        await updateNotificationCounts();
 
         const handleMessage = (message) => {
           let body = message.body;
@@ -277,7 +283,12 @@ const MainPage = ({ onNotificationCountChange }) => {
       },
       onWebSocketError: (err) => {
         setIsConnected(false);
-        // 즉시 재연결하지 않음
+        // 재연결 로직
+        if (connectionAttempts.current < 3) {
+          setTimeout(() => {
+            connectWebSocket();
+          }, 5000);
+        }
       },
       onStompError: (frame) => {
         setIsConnected(false);
@@ -289,25 +300,45 @@ const MainPage = ({ onNotificationCountChange }) => {
 
     client.activate();
     stompClientRef.current = client;
-  }, [userEmail, onNotificationCountChange, getAllNotificationsAPI, calculateNotificationCounts]);
+  }, [userEmail, updateNotificationCounts, onNotificationCountChange]);
 
-  // WebSocket 연결 관리
+  // 환경별 알림 시스템 관리
   useEffect(() => {
     if (isLogin && userEmail) {
-      // 약간의 지연을 두고 연결 시도
-      const timer = setTimeout(() => {
-        connectWebSocket();
-      }, 500);
+      // 환경 감지
+      const isDevelopment = window.location.hostname === 'localhost' || 
+                           window.location.hostname === '127.0.0.1';
+      
+      if (isDevelopment) {
+        // 로컬 환경: WebSocket 연결
+        const timer = setTimeout(() => {
+          connectWebSocket();
+        }, 500);
 
-      return () => {
-        clearTimeout(timer);
-        // 컴포넌트 언마운트 시에만 연결 해제
-        if (stompClientRef.current && stompClientRef.current.connected) {
-          stompClientRef.current.deactivate();
-        }
-      };
+        return () => {
+          clearTimeout(timer);
+          if (stompClientRef.current && stompClientRef.current.connected) {
+            stompClientRef.current.deactivate();
+          }
+        };
+      } else {
+        // 배포 환경: 폴링 방식
+        // 초기 로드
+        updateNotificationCounts();
+        
+        // 5초마다 폴링
+        pollingInterval.current = setInterval(() => {
+          updateNotificationCounts();
+        }, 5000);
+        
+        return () => {
+          if (pollingInterval.current) {
+            clearInterval(pollingInterval.current);
+          }
+        };
+      }
     }
-  }, [userEmail, isLogin, connectWebSocket]);
+  }, [userEmail, isLogin, connectWebSocket, updateNotificationCounts]);
 
   // 초기 데이터 로드
   useEffect(() => {
@@ -374,7 +405,7 @@ const MainPage = ({ onNotificationCountChange }) => {
                   <p>{slide.subtitle}</p>
                   <button
                     className="main-page-hero-cta-button"
-                    onClick={index !== 2 ? handleSubscribeClick : handleMenuClick}
+                    onClick={index === 0 ? handleSubscribeClick : handleMenuClick}
                   >
                     {slide.cta}
                   </button>
@@ -389,7 +420,7 @@ const MainPage = ({ onNotificationCountChange }) => {
       <section className="main-page-today-meals-section">
         <div className="main-page-section-header">
           <h2>
-            오늘의 추천 식단
+            {isLogin ? `${user?.name}님의 오늘 식단` : '오늘의 추천 식단'}
           </h2>
           <p>영양사가 추천하는 균형잡힌 하루 세 끼</p>
         </div>
