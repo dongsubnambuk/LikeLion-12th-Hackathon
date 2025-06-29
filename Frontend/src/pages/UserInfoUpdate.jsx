@@ -75,6 +75,9 @@ function UserInfoUpdate() {
         try {
             const response = await fetch('http://nimn.store/api/users', {
                 method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 credentials: 'include', // 쿠키 인증
                 body: JSON.stringify({
                     name: name,
