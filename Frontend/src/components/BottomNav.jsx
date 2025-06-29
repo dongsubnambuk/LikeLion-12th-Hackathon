@@ -10,19 +10,60 @@ const BottomNav = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const storedIsLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-    if (storedIsLoggedIn) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
+    const checkLoginStatus = async () => {
+      try {
+        const response = await fetch('http://nimn.store/api/users', {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'accept': '*/*'
+          }
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+          if (userData && userData.id) {
+            setIsLoggedIn(true);
+          } else {
+            setIsLoggedIn(false);
+          }
+        } else {
+          setIsLoggedIn(false);
+        }
+      } catch (error) {
+        console.error('로그인 상태 확인 중 오류:', error);
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkLoginStatus();
   }, []);
 
-  const handleNavigation = (path, requiresLogin = false) => {
-    if (requiresLogin && !isLoggedIn) {
-      // navigate('/login');
-      navigate(path);
+  const handleNavigation = async (path, requiresLogin = false) => {
+    if (requiresLogin) {
+      try {
+        const response = await fetch('http://nimn.store/api/users', {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'accept': '*/*'
+          }
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+          if (userData) {
+            navigate(path);
+          } else {
+            navigate('/login');
+          }
+        } else {
+          navigate('/login');
+        }
+      } catch (error) {
+        console.error('로그인 상태 확인 중 오류:', error);
+        navigate('/login');
+      }
     } else {
       navigate(path);
     }
@@ -61,7 +102,7 @@ const BottomNav = () => {
       icon: faUser,
       label: "내 정보",
       path: "/mypage",
-      requiresLogin: false
+      requiresLogin: true
     }
   ];
 

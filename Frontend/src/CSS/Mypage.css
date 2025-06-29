@@ -1,24 +1,29 @@
+/* src/CSS/Mypage.css */
+
 /* 전체 컨테이너 */
 .mypage_container {
-    max-width: 414px;
-    margin: 0 auto;
-    background-color: #ffffff;
-    padding: 0 20px 80px 20px;
+    min-height: 80vh;
+    background: rgba(157, 146, 116, 0.1);
+    padding: 20px;
 }
 
 /* 프로필 카드 */
 .mypage_profile_card {
-    background-color: #ffffff;
-    padding: 24px 0;
-    margin: 16px 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
     display: flex;
     align-items: center;
-    gap: 16px;
-    border-bottom: 1px solid #f5f5f5;
+    gap: 20px;
+    box-shadow: 0 8px 32px rgba(157, 146, 116, 0.15);
+    border: 1px solid rgba(157, 146, 116, 0.2);
 }
 
 .mypage_avatar {
-    border: none;
+    border: 3px solid rgba(157, 146, 116, 0.2);
+    box-shadow: 0 4px 16px rgba(157, 146, 116, 0.2);
 }
 
 .mypage_profile_text {
@@ -26,194 +31,264 @@
 }
 
 .mypage_name {
-    font-size: 20px;
-    font-weight: 600;
-    color: #000000;
-    margin: 0 0 4px 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.3px;
 }
 
 .mypage_greeting {
-    font-size: 14px;
-    color: #666666;
+    font-size: 16px;
+    color: #7f8c8d;
     margin: 0;
-    font-weight: 400;
+    font-weight: 500;
+    letter-spacing: -0.2px;
 }
 
 /* 섹션 공통 */
 .mypage_section {
-    margin-bottom: 32px;
+    margin-bottom: 30px;
 }
 
 .mypage_section_title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #000000;
-    margin: 0 0 16px 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 20px 0;
+    letter-spacing: -0.3px;
 }
 
 /* 정보 리스트 */
 .mypage_info_list {
-    background-color: #ffffff;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 8px 32px rgba(157, 146, 116, 0.15);
+    border: 1px solid rgba(157, 146, 116, 0.2);
 }
 
 .mypage_info_item {
     display: flex;
     align-items: center;
-    padding: 16px 0;
-    border-bottom: 1px solid #f5f5f5;
-    gap: 12px;
+    padding: 0 0 20px 0;
+    border-bottom: 1px solid rgba(157, 146, 116, 0.1);
+    gap: 16px;
 }
 
 .mypage_info_item:last-child {
     border-bottom: none;
+    padding-bottom: 0;
 }
 
 .mypage_info_icon_wrapper {
-    width: 24px;
-    height: 24px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    background: rgba(157, 146, 116, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(157, 146, 116, 0.2);
 }
 
 .mypage_info_icon {
-    color: #666666;
-    font-size: 16px;
+    color: #9d9274;
+    font-size: 18px;
 }
 
 .mypage_info_content {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .mypage_info_label {
     font-size: 14px;
-    color: #666666;
-    font-weight: 400;
-    margin-bottom: 4px;
+    color: #7f8c8d;
+    font-weight: 600;
 }
 
 .mypage_info_value {
     font-size: 16px;
-    color: #000000;
-    font-weight: 500;
+    color: #2c3e50;
+    font-weight: 600;
     line-height: 1.4;
 }
 
 /* 메뉴 리스트 */
 .mypage_menu_list {
-    background-color: #ffffff;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 8px 32px rgba(157, 146, 116, 0.15);
+    border: 1px solid rgba(157, 146, 116, 0.2);
 }
 
 .mypage_menu_item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 0;
+    padding: 0 0 20px 0;
     background-color: transparent;
     border: none;
-    border-bottom: 1px solid #f5f5f5;
+    border-bottom: 1px solid rgba(157, 146, 116, 0.1);
     cursor: pointer;
     width: 100%;
     text-align: left;
-    transition: background-color 0.2s ease;
+    transition: all 0.3s ease;
+    border-radius: 12px;
 }
 
 .mypage_menu_item:last-child {
     border-bottom: none;
+    padding-bottom: 0;
 }
 
-
+.mypage_menu_item:hover {
+    background: rgba(157, 146, 116, 0.05);
+    transform: translateY(-1px);
+    padding-left: 16px;
+    padding-right: 16px;
+}
 
 .mypage_menu_content {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
     flex: 1;
 }
 
 .mypage_menu_icon_wrapper {
-    width: 24px;
-    height: 24px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: rgba(157, 146, 116, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(157, 146, 116, 0.2);
+    transition: all 0.3s ease;
+}
+
+.mypage_menu_item:hover .mypage_menu_icon_wrapper {
+    background: rgba(157, 146, 116, 0.2);
+    transform: scale(1.05);
 }
 
 .mypage_menu_icon {
-    color: #666666;
-    font-size: 16px;
+    color: #9d9274;
+    font-size: 18px;
 }
 
 .mypage_menu_text {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
 }
 
 .mypage_menu_title {
     font-size: 16px;
-    font-weight: 500;
-    color: #000000;
+    font-weight: 600;
+    color: #2c3e50;
+    letter-spacing: -0.2px;
 }
 
 .mypage_menu_subtitle {
     font-size: 14px;
-    color: #666666;
-    font-weight: 400;
+    color: #7f8c8d;
+    font-weight: 500;
 }
 
 .mypage_menu_arrow {
-    color: #cccccc;
-    font-size: 14px;
-
+    color: #9d9274;
+    font-size: 16px;
+    transition: all 0.3s ease;
 }
 
 .mypage_menu_item:hover .mypage_menu_arrow {
-    color: #999999;
+    color: #8a8265;
+    transform: translateX(4px);
 }
 
 /* 액션 리스트 */
 .mypage_action_list {
-    background-color: #ffffff;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 8px 32px rgba(157, 146, 116, 0.15);
+    border: 1px solid rgba(157, 146, 116, 0.2);
 }
 
 .mypage_action_item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 16px 0;
+    gap: 16px;
     background-color: transparent;
     border: none;
-    border-bottom: 1px solid #f5f5f5;
+    border-bottom: 1px solid rgba(157, 146, 116, 0.1);
     cursor: pointer;
     width: 100%;
     text-align: left;
-
+    transition: all 0.3s ease;
+    border-radius: 12px;
 }
 
 .mypage_action_item:last-child {
     border-bottom: none;
+    padding-bottom: 0;
 }
 
-
+.mypage_action_item:hover {
+    background: rgba(157, 146, 116, 0.05);
+    transform: translateY(-1px);
+    padding-left: 16px;
+    padding-right: 16px;
+}
 
 .mypage_action_icon {
-    font-size: 16px;
-    color: #666666;
-    width: 16px;
-    text-align: center;
+    font-size: 18px;
+    color: #9d9274;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(157, 146, 116, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(157, 146, 116, 0.2);
+    transition: all 0.3s ease;
+}
+
+.mypage_action_item:hover .mypage_action_icon {
+    background: rgba(157, 146, 116, 0.2);
+    transform: scale(1.05);
 }
 
 .mypage_action_text {
     font-size: 16px;
-    font-weight: 500;
-    color: #000000;
+    font-weight: 600;
+    color: #2c3e50;
+    letter-spacing: -0.2px;
 }
 
 .mypage_danger .mypage_action_icon,
 .mypage_danger .mypage_action_text {
-    color: #ff3b30;
+    color: #e74c3c;
+}
+
+.mypage_danger .mypage_action_icon {
+    background: rgba(231, 76, 60, 0.1);
+    border-color: rgba(231, 76, 60, 0.2);
+}
+
+.mypage_danger:hover .mypage_action_icon {
+    background: rgba(231, 76, 60, 0.2);
 }
 
 /* 모달 */
@@ -223,7 +298,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -232,60 +308,152 @@
 }
 
 .mypage_modal {
-    background-color: #ffffff;
-    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
     width: 100%;
-    max-width: 320px;
+    max-width: 350px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 20px 60px rgba(157, 146, 116, 0.3);
+    border: 1px solid rgba(157, 146, 116, 0.2);
 }
 
 .mypage_modal_content {
-    padding: 24px;
+    padding: 30px;
     text-align: center;
 }
 
 .mypage_modal_title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #000000;
-    margin: 0 0 12px 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 16px 0;
+    letter-spacing: -0.3px;
 }
 
 .mypage_modal_message {
     font-size: 16px;
-    color: #000000;
-    margin: 0 0 8px 0;
+    color: #2c3e50;
+    margin: 0 0 12px 0;
     line-height: 1.5;
+    font-weight: 500;
 }
 
 .mypage_modal_warning {
     font-size: 14px;
-    color: #666666;
+    color: #7f8c8d;
     margin: 0;
     line-height: 1.4;
+    font-weight: 500;
 }
 
 .mypage_modal_buttons {
     display: flex;
-    border-top: 1px solid #f5f5f5;
+    border-top: 1px solid rgba(157, 146, 116, 0.2);
 }
 
 .mypage_modal_button {
     flex: 1;
-    padding: 16px;
+    padding: 20px;
     border: none;
     background-color: transparent;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: -0.2px;
+}
+
+.mypage_modal_button:hover {
+    background: rgba(157, 146, 116, 0.05);
 }
 
 .mypage_modal_cancel {
-    color: #000000;
-    border-right: 1px solid #f5f5f5;
+    color: #7f8c8d;
+    border-right: 1px solid rgba(157, 146, 116, 0.2);
+}
+
+.mypage_modal_cancel:hover {
+    color: #2c3e50;
 }
 
 .mypage_modal_confirm {
-    color: #ff3b30;
+    color: #e74c3c;
+}
+
+.mypage_modal_confirm:hover {
+    color: #c0392b;
+    background: rgba(231, 76, 60, 0.05);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .mypage_container {
+        padding: 15px;
+    }
+    
+    .mypage_profile_card {
+        padding: 25px 20px;
+    }
+    
+    .mypage_name {
+        font-size: 20px;
+    }
+    
+    .mypage_greeting {
+        font-size: 14px;
+    }
+    
+    .mypage_info_list,
+    .mypage_menu_list,
+    .mypage_action_list {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .mypage_container {
+        padding: 10px;
+    }
+    
+    .mypage_profile_card {
+        padding: 20px 15px;
+        margin-bottom: 20px;
+    }
+    
+    .mypage_name {
+        font-size: 18px;
+    }
+    
+    .mypage_greeting {
+        font-size: 13px;
+    }
+    
+    .mypage_section_title {
+        font-size: 18px;
+    }
+    
+    .mypage_info_list,
+    .mypage_menu_list,
+    .mypage_action_list {
+        padding: 16px;
+    }
+    
+    .mypage_info_item,
+    .mypage_menu_item,
+    .mypage_action_item {
+        padding: 16px 0;
+    }
+    
+    .mypage_modal_content {
+        padding: 25px 20px;
+    }
+    
+    .mypage_modal_title {
+        font-size: 18px;
+    }
+    
+    .mypage_modal_button {
+        padding: 16px;
+    }
 }

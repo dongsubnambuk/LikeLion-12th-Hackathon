@@ -338,7 +338,7 @@ function DietSelectionPage() {
                                         <div className="diet-selection-page-selected-meal-card">
                                             <div className="diet-selection-page-meal-card-header">
                                                 <h4 className="diet-selection-page-meal-name">{mealSet.selectedFood.name}</h4>
-                                                <span className="diet-selection-page-meal-price">{mealSet.selectedFood.price}</span>
+                                                <span className="diet-selection-page-meal-price">{mealSet.selectedFood.price}원</span>
                                             </div>
                                             {/* 이미지 섹션 */}
                                             <div className="diet-selection-page-meal-image-section">
@@ -436,7 +436,7 @@ function DietSelectionPage() {
                                                             />
                                                             <div className="diet-selection-page-option-info">
                                                                 <span className="diet-selection-page-option-name">{food.name}</span>
-                                                                <span className="diet-selection-page-option-price">{food.price}</span>
+                                                                <span className="diet-selection-page-option-price">{food.price}원</span>
                                                             </div>
                                                             {mealSet.selectedIndex === foodIndex && (
                                                                 <div className="diet-selection-page-selected-indicator">✓</div>
@@ -501,7 +501,7 @@ function DietSelectionPage() {
                                     }}
                                 />
                                 <div className="diet-selection-page-modal-price">
-                                    {selectedMealDetail.price}
+                                    {selectedMealDetail.price}원
                                 </div>
                             </div>
                             

@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faReceipt, faSignOutAlt, faUserMinus, faChevronRight, faMapMarkerAlt, faPhone } from "@fortawesome/free-solid-svg-icons";
 
-function MyPage(){
+function MyPage({ onLogoutSuccess }) { 
 
 const [Image] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
 
@@ -20,16 +20,23 @@ const navigate = useNavigate();
         try {
             const response = await fetch('http://nimn.store/api/users/logout', {
                 method: "POST",
-                credentials: 'include', // 쿠키에 있는 토큰 자동 전송
+                credentials: 'include',
             });
             
             if (response.ok) {
+                // 부모 컴포넌트에 로그아웃 성공 알림
+                if (onLogoutSuccess) {
+                    onLogoutSuccess();
+                }
                 navigate("/");
             } else {
                 try {
                     const result = await response.json();
                     if (result.message === "토큰소멸") {
                         alert("로그인이 만료되었습니다. 다시 로그인 해주세요");
+                        if (onLogoutSuccess) {
+                            onLogoutSuccess();
+                        }
                         navigate('/login');
                         return;
                     }
@@ -38,10 +45,16 @@ const navigate = useNavigate();
                 }
                 
                 console.error("로그아웃 실패");
+                if (onLogoutSuccess) {
+                    onLogoutSuccess();
+                }
                 navigate("/");
             }
         } catch (error) {
             console.error("로그아웃 오류:", error);
+            if (onLogoutSuccess) {
+                onLogoutSuccess();
+            }
             navigate("/");
         }
     };

@@ -1,16 +1,17 @@
+// src/pages/Login.jsx
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import '../CSS/Login.css';
 import Cookies from 'js-cookie';
 import logo from '../images/logo.png';
 
-function Login() {
+function Login({ onLoginSuccess }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
     const handleSignupClick = () => {
-        navigate('/signup'); // 회원가입 페이지로 이동
+        navigate('/signup');
     };
 
     const changeEmail = (e) => {
@@ -21,7 +22,6 @@ function Login() {
         setPassword(e.target.value);
     };
 
-    // login fetch 함수
     const handleLogin = async (event) => {
         event.preventDefault();
     
@@ -29,6 +29,9 @@ function Login() {
             const response = await fetch('http://nimn.store/api/users/login', {
                 method: "POST",
                 credentials: "include", 
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({
                     email: email,
                     password: password,
@@ -39,19 +42,32 @@ function Login() {
     
             if (response.status === 200) {
                 const token = Cookies.get('token');
-                console.log(token);
                 const payload = JSON.parse(atob(token.split('.')[1]));
-                console.log("로그인 성공!");
-                console.log("서버에서 쿠키 자동 저장됨");
+                
+                // 사용자 정보 조회 후 상태 업데이트
+                try {
+                    const userResponse = await fetch('http://nimn.store/api/users', {
+                        method: 'GET',
+                        credentials: 'include'
+                    });
+                    
+                    if (userResponse.ok) {
+                        const userData = await userResponse.json();
+                        // 부모 컴포넌트에 로그인 성공 알림
+                        if (onLoginSuccess) {
+                            onLoginSuccess(userData);
+                        }
+                    }
+                } catch (error) {
+                    console.error('사용자 정보 조회 실패:', error);
+                }
             
                 if (payload.role === "ROLE_ADMIN") {
                     navigate('/admin');
                 } else if (payload.role === "ROLE_USER") {
                     navigate('/');
                 }
-            }
-             else {
-                console.log("로그인 실패");
+            } else {
                 alert("로그인 실패: " + result.message);
             }
         } catch (error) {
@@ -61,7 +77,7 @@ function Login() {
     };
 
     return (
-        <>
+        <div className="login-container">
             <div className="login-inner">
                 <img src={logo} className="logoImage-login" alt="logo" />
 
@@ -78,7 +94,7 @@ function Login() {
                     아직 회원이 아니신가요? <span onClick={handleSignupClick}>회원가입</span>
                 </p>
             </div>
-        </>
+        </div>
     );
 }
 
