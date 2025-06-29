@@ -14,7 +14,7 @@ const BottomNav = () => {
       try {
         const response = await fetch('http://nimn.store/api/users', {
           method: 'GET',
-          credentials: 'include', // 쿠키를 포함하여 요청
+          credentials: 'include',
           headers: {
             'accept': '*/*'
           }
