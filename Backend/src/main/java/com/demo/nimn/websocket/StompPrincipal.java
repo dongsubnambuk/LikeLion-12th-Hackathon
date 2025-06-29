@@ -6,6 +6,7 @@ public class StompPrincipal implements Principal {
 
     private final String userEmail;
 
+
     public StompPrincipal(String userEmail) {
         this.userEmail = userEmail;
     }

@@ -11,4 +11,5 @@ public interface PaymentRepository extends JpaRepository<Payment, String> {
 
     List<Payment> findByPurchaser(String purchaser);
     Boolean existsByUid(String uid);
+    List<Payment> findAllByOrderByCreatedAtDesc();
 }

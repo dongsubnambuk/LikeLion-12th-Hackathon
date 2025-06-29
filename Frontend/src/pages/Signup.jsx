@@ -19,6 +19,16 @@ function Signup(){
     const [emailSuccess, setEmailSuccess] = useState("");
     const [isEmailChecked, setIsEmailChecked] = useState(false);
     const [isEmailChecking, setIsEmailChecking] = useState(false);
+    
+    // 이메일 인증 관련 상태
+    const [verificationCode, setVerificationCode] = useState("");
+    const [isCodeSent, setIsCodeSent] = useState(false);
+    const [isCodeSending, setIsCodeSending] = useState(false);
+    const [isCodeVerified, setIsCodeVerified] = useState(false);
+    const [isCodeVerifying, setIsCodeVerifying] = useState(false);
+    const [codeError, setCodeError] = useState("");
+    const [codeSuccess, setCodeSuccess] = useState("");
+    
     const navigate = useNavigate();
 
     const completeHandler = (data) => {
@@ -102,7 +112,7 @@ function Signup(){
                     setIsEmailChecked(false);
                 } else {
                     // 사용 가능한 이메일
-                    setEmailSuccess("사용 가능한 이메일입니다.");
+                    setEmailSuccess("사용 가능한 이메일입니다. 인증번호를 발송해주세요.");
                     setIsEmailChecked(true);
                 }
             } else {
@@ -118,12 +128,103 @@ function Signup(){
         }
     };
 
+    // 인증번호 발송
+    const handleSendVerificationCode = async () => {
+        if (!isEmailChecked) {
+            alert("이메일 중복확인을 먼저 해주세요.");
+            return;
+        }
+
+        setIsCodeSending(true);
+        setCodeError("");
+        setCodeSuccess("");
+
+        try {
+            const response = await fetch('http://nimn.store/api/email/send', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email,
+                    code: 0
+                }),
+            });
+
+            if (response.ok) {
+                setIsCodeSent(true);
+                setCodeSuccess("인증번호가 발송되었습니다. 이메일을 확인해주세요.");
+                console.log("인증번호 발송 성공 - 세션 확인:", response.headers.get('set-cookie'));
+            } else {
+                setCodeError("인증번호 발송에 실패했습니다.");
+            }
+        } catch (error) {
+            console.error("Send verification code error: ", error);
+            setCodeError("인증번호 발송 중 오류가 발생했습니다.");
+        } finally {
+            setIsCodeSending(false);
+        }
+    };
+
+    // 인증번호 확인
+    const handleVerifyCode = async () => {
+        if (!verificationCode) {
+            setCodeError("인증번호를 입력해주세요.");
+            return;
+        }
+
+        setIsCodeVerifying(true);
+        setCodeError("");
+        setCodeSuccess("");
+
+        try {
+            const response = await fetch('http://nimn.store/api/email/check', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    code: parseInt(verificationCode)
+                }),
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                if (result.success === true) {
+                    setIsCodeVerified(true);
+                    setCodeSuccess(result.message || "이메일 인증이 완료되었습니다.");
+                } else {
+                    setCodeError(result.message || "인증번호가 일치하지 않습니다.");
+                }
+            } else {
+                const errorText = await response.text();
+                try {
+                    const errorJson = JSON.parse(errorText);
+                    setCodeError(errorJson.message || "인증번호 확인에 실패했습니다.");
+                } catch (e) {
+                    setCodeError("인증번호 확인에 실패했습니다.");
+                }
+            }
+        } catch (error) {
+            console.error("Network error: ", error);
+            setCodeError("네트워크 오류가 발생했습니다.");
+        } finally {
+            setIsCodeVerifying(false);
+        }
+    };
+
     // 이메일 변경 시 중복검사 상태 초기화
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
         setIsEmailChecked(false);
         setEmailError("");
         setEmailSuccess("");
+        setIsCodeSent(false);
+        setIsCodeVerified(false);
+        setVerificationCode("");
+        setCodeError("");
+        setCodeSuccess("");
     };
 
     // 비밀번호 유효성 검사
@@ -161,6 +262,7 @@ function Signup(){
     const isFormValid = () => {
         return (
             isEmailChecked &&
+            isCodeVerified && // 이메일 인증 완료 추가
             password &&
             confirmPassword &&
             password === confirmPassword &&
@@ -178,6 +280,11 @@ function Signup(){
 
         if (!isEmailChecked) {
             alert("이메일 중복확인을 해주세요.");
+            return;
+        }
+
+        if (!isCodeVerified) {
+            alert("이메일 인증을 완료해주세요.");
             return;
         }
 
@@ -223,8 +330,8 @@ function Signup(){
     };
 
     return(
-        <>
-            <div className="signup_inner">
+        <div className="signup_inner">
+            <div className="signup_form_container">
                 <div className="signup_form_group">
                     <label htmlFor="email" className="signup_form_group_label">이메일</label>
                     <div className="signup_email_check_group">
@@ -236,13 +343,14 @@ function Signup(){
                                 className={`signup_inner_input ${isEmailChecked ? 'signup_valid' : emailError ? 'signup_invalid' : ''}`}
                                 placeholder="이메일을 입력해주세요"
                                 onChange={handleEmailChange}
+                                disabled={isCodeVerified}
                             />
                         </div>
                         <button 
                             type="button"
                             className="signup_email_check_btn"
                             onClick={handleEmailCheck}
-                            disabled={isEmailChecking || !email}
+                            disabled={isEmailChecking || !email || isCodeVerified}
                         >
                             {isEmailChecking ? "확인중..." : "중복확인"}
                         </button>
@@ -251,116 +359,187 @@ function Signup(){
                     {emailSuccess && <div className="signup_success_message">{emailSuccess}</div>}
                 </div>
 
-                <div className="signup_form_group">
-                    <label htmlFor="password" className="signup_form_group_label">비밀번호</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        className={`signup_inner_input ${password.length >= 8 ? 'signup_valid' : password ? 'signup_invalid' : ''}`}
-                        placeholder="비밀번호를 입력해주세요 (8자 이상)"
-                        onChange={(e) => {
-                            setPassword(e.target.value);
-                            validatePasswords(e.target.value, confirmPassword);
-                        }}
-                    />
-                </div>
+                {/* 이메일 인증 섹션 */}
+                {isEmailChecked && !isCodeVerified && (
+                    <div className="signup_form_group">
+                        <label htmlFor="verification" className="signup_form_group_label">이메일 인증</label>
+                        
+                        {/* 인증번호 발송 버튼 */}
+                        {!isCodeSent && (
+                            <div className="signup_verification_send">
+                                <button 
+                                    type="button"
+                                    className="signup_verification_send_btn"
+                                    onClick={handleSendVerificationCode}
+                                    disabled={isCodeSending}
+                                >
+                                    {isCodeSending ? "발송중..." : "인증번호 발송"}
+                                </button>
+                            </div>
+                        )}
 
-                <div className="signup_form_group">
-                    <label htmlFor="confirm-password" className="signup_form_group_label">비밀번호 확인</label>
-                    <input
-                        type="password"
-                        id="confirm-password"
-                        value={confirmPassword}
-                        className={`signup_inner_input ${confirmPassword && password === confirmPassword ? 'signup_valid' : confirmPassword ? 'signup_invalid' : ''}`}
-                        placeholder="비밀번호를 다시 입력해 주세요"
-                        onChange={(e) => {
-                            setConfirmPassword(e.target.value);
-                            validatePasswords(password, e.target.value);
-                        }}
-                    />
-                    {error && <div className="signup_error_message">{error}</div>}
-                </div>
-
-                <div className="signup_form_group">
-                    <label htmlFor="username" className="signup_form_group_label">이름</label>
-                    <input
-                        type="text"
-                        id="username"
-                        value={userName}
-                        className={`signup_inner_input ${userName ? 'signup_valid' : ''}`}
-                        placeholder="이름을 입력해주세요"
-                        onChange={(e) => setUserName(e.target.value)}
-                    />
-                </div>
-
-                <div className="signup_form_group">
-                    <label htmlFor="phonenumber" className="signup_form_group_label">연락처</label>
-                    <input
-                        type="text"
-                        id="phonenumber"
-                        value={phoneNumber}
-                        className={`signup_inner_input ${phoneNumber.length >= 13 ? 'signup_valid' : phoneNumber ? 'signup_invalid' : ''}`}
-                        placeholder="010-1234-5678"
-                        maxLength="13"
-                        onChange={handlePhoneNumberChange}
-                    />
-                </div>
-
-                <div className="signup_form_group">
-                    <div className="signup_address">
-                        <label htmlFor="address" className="signup_form_group_label">주소</label>
-                        <div className="signup_address_serch">
-                            <input 
-                                value={zipCode} 
-                                readOnly 
-                                placeholder="우편번호"
-                                className={`signup_inner_input ${zipCode ? 'signup_valid' : ''}`}
-                            />
-                            <button type="button" onClick={toggle}>주소 찾기</button>
-                        </div>
-                        <div className="signup_address_detail">
-                            <input 
-                                value={roadAddress} 
-                                readOnly 
-                                placeholder="도로명 주소"
-                                className={`signup_inner_input ${roadAddress ? 'signup_valid' : ''}`}
-                            />
-                            <Modal isOpen={isOpen} ariaHideApp={false} style={SignupCustomStyles}>
-                                <div style={{ 
-                                    display: 'flex', 
-                                    justifyContent: 'center', 
-                                    padding: '15px',
-                                    borderBottom: '1px solid #e5e7eb'
-                                }}>
-                                    <button 
-                                        onClick={toggle} 
-                                        style={{ 
-                                            padding: '8px 16px', 
-                                            fontSize: '14px',
-                                            background: '#6b7280',
-                                            color: 'white',
-                                            border: 'none',
-                                            borderRadius: '8px',
-                                            cursor: 'pointer'
-                                        }}
-                                    >
-                                        닫기
-                                    </button>
+                        {/* 인증번호 입력 및 확인 */}
+                        {isCodeSent && (
+                            <div className="signup_verification_check_group">
+                                <div className="signup_verification_input_wrapper">
+                                    <input
+                                        type="text"
+                                        id="verification"
+                                        value={verificationCode}
+                                        className={`signup_inner_input ${isCodeVerified ? 'signup_valid' : codeError ? 'signup_invalid' : ''}`}
+                                        placeholder="인증번호를 입력해주세요"
+                                        onChange={(e) => setVerificationCode(e.target.value)}
+                                        maxLength="6"
+                                    />
                                 </div>
-                                <DaumPostcode onComplete={completeHandler} height="100%" />
-                            </Modal>
+                                <button 
+                                    type="button"
+                                    className="signup_verification_check_btn"
+                                    onClick={handleVerifyCode}
+                                    disabled={isCodeVerifying || !verificationCode}
+                                >
+                                    {isCodeVerifying ? "확인중..." : "인증확인"}
+                                </button>
+                            </div>
+                        )}
+
+                        {codeError && <div className="signup_error_message">{codeError}</div>}
+                        {codeSuccess && <div className="signup_success_message">{codeSuccess}</div>}
+                        
+                        {/* 재발송 버튼 */}
+                        {isCodeSent && !isCodeVerified && (
+                            <div className="signup_resend_section">
+                                <button 
+                                    type="button"
+                                    className="signup_resend_btn"
+                                    onClick={handleSendVerificationCode}
+                                    disabled={isCodeSending}
+                                >
+                                    {isCodeSending ? "재발송중..." : "인증번호 재발송"}
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {/* 이메일 인증이 완료된 후에만 하위 입력창들 표시 */}
+                {isCodeVerified && (
+                    <>
+                        <div className="signup_form_group">
+                            <label htmlFor="password" className="signup_form_group_label">비밀번호</label>
+                            <input
+                                type="password"
+                                id="password"
+                                value={password}
+                                className={`signup_inner_input ${password.length >= 8 ? 'signup_valid' : password ? 'signup_invalid' : ''}`}
+                                placeholder="비밀번호를 입력해주세요 (8자 이상)"
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                    validatePasswords(e.target.value, confirmPassword);
+                                }}
+                            />
+                        </div>
+
+                        <div className="signup_form_group">
+                            <label htmlFor="confirm-password" className="signup_form_group_label">비밀번호 확인</label>
+                            <input
+                                type="password"
+                                id="confirm-password"
+                                value={confirmPassword}
+                                className={`signup_inner_input ${confirmPassword && password === confirmPassword ? 'signup_valid' : confirmPassword ? 'signup_invalid' : ''}`}
+                                placeholder="비밀번호를 다시 입력해 주세요"
+                                onChange={(e) => {
+                                    setConfirmPassword(e.target.value);
+                                    validatePasswords(password, e.target.value);
+                                }}
+                            />
+                            {error && <div className="signup_error_message">{error}</div>}
+                        </div>
+
+                        <div className="signup_form_group">
+                            <label htmlFor="username" className="signup_form_group_label">이름</label>
                             <input
                                 type="text"
-                                onChange={changeHandler}
-                                value={detailAddress}
-                                placeholder="상세주소"
-                                className={`signup_inner_input ${detailAddress ? 'signup_valid' : ''}`}
+                                id="username"
+                                value={userName}
+                                className={`signup_inner_input ${userName ? 'signup_valid' : ''}`}
+                                placeholder="이름을 입력해주세요"
+                                onChange={(e) => setUserName(e.target.value)}
                             />
                         </div>
-                    </div>
-                </div>
 
+                        <div className="signup_form_group">
+                            <label htmlFor="phonenumber" className="signup_form_group_label">연락처</label>
+                            <input
+                                type="text"
+                                id="phonenumber"
+                                value={phoneNumber}
+                                className={`signup_inner_input ${phoneNumber.length >= 13 ? 'signup_valid' : phoneNumber ? 'signup_invalid' : ''}`}
+                                placeholder="010-1234-5678"
+                                maxLength="13"
+                                onChange={handlePhoneNumberChange}
+                            />
+                        </div>
+
+                        <div className="signup_form_group">
+                            <div className="signup_address">
+                                <label htmlFor="address" className="signup_form_group_label">주소</label>
+                                <div className="signup_address_serch">
+                                    <input 
+                                        value={zipCode} 
+                                        readOnly 
+                                        placeholder="우편번호"
+                                        className={`signup_inner_input ${zipCode ? 'signup_valid' : ''}`}
+                                    />
+                                    <button type="button" onClick={toggle}>주소 찾기</button>
+                                </div>
+                                <div className="signup_address_detail">
+                                    <input 
+                                        value={roadAddress} 
+                                        readOnly 
+                                        placeholder="도로명 주소"
+                                        className={`signup_inner_input ${roadAddress ? 'signup_valid' : ''}`}
+                                    />
+                                    <Modal isOpen={isOpen} ariaHideApp={false} style={SignupCustomStyles}>
+                                        <div style={{ 
+                                            display: 'flex', 
+                                            justifyContent: 'center', 
+                                            padding: '15px',
+                                            borderBottom: '1px solid #e5e7eb'
+                                        }}>
+                                            <button 
+                                                onClick={toggle} 
+                                                style={{ 
+                                                    padding: '8px 16px', 
+                                                    fontSize: '14px',
+                                                    background: '#6b7280',
+                                                    color: 'white',
+                                                    border: 'none',
+                                                    borderRadius: '8px',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                닫기
+                                            </button>
+                                        </div>
+                                        <DaumPostcode onComplete={completeHandler} height="100%" />
+                                    </Modal>
+                                    <input
+                                        type="text"
+                                        onChange={changeHandler}
+                                        value={detailAddress}
+                                        placeholder="상세주소"
+                                        className={`signup_inner_input ${detailAddress ? 'signup_valid' : ''}`}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )}
+            </div>
+
+            {/* 고정된 회원가입 버튼 */}
+            <div className="signup_button_container">
                 <button 
                     className="signup_btn" 
                     onClick={handleSignup}
@@ -369,7 +548,7 @@ function Signup(){
                     회원가입
                 </button>
             </div>
-        </>
+        </div>
     );
 }
 

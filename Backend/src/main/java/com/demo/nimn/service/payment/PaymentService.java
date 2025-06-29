@@ -13,5 +13,6 @@ public interface PaymentService {
     List<PaymentDTO> getPaymentByPurchaser(String purchaser);
     List<String> getUnpaidPurchasersInWeek(LocalDate targetDate);
     List<String> getPurchasersThisWeek();
+    List<PaymentDTO> getAllPayments();
     Boolean deletePayment(String paymentId);
 }
