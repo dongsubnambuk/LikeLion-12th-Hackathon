@@ -121,9 +121,30 @@ public class NotificationServiceImpl implements NotificationService {
         return countUnreadNotifications(userEmail);
     }
 
-    @Scheduled(cron = "0 0 0 ? * *")
-    public void initDailyDietDTOList() {
-        this.dailyDietDTOList = dietService.getByDate(LocalDate.now());
+    // 식단 알림 및 캐시 초기화 ( 매일 7시 )
+    @Scheduled(cron = "0 0 7 ? * *")
+    public void sendDailyDiet() {
+        dailyDietDTOList = dietService.getByDate(LocalDate.now());
+
+        for (DailyDietDTO dailyDietDTO : dailyDietDTOList) {
+            StringBuilder content = new StringBuilder();
+            content.append("오늘의 식단은 ");
+            for (FoodSelectionDTO foodSelectionDTO : dailyDietDTO.getFoodSelections()) {
+                content.append(foodSelectionDTO.getFoodTime())
+                        .append(" ")
+                        .append(foodSelectionDTO.getFoodMenu().getName())
+                        .append(" ")
+                        .append(foodSelectionDTO.getCount())
+                        .append("개, ");
+            }
+            content.delete(content.length() - 3, content.length());
+            content.append("입니다.");
+
+            sendNotification(NotificationType.DIET,
+                    dailyDietDTO.getUserEmail(),
+                    content.toString(),
+                    null);
+        }
     }
 
     // 아침, 점심, 저녁 식사 알림
@@ -135,7 +156,7 @@ public class NotificationServiceImpl implements NotificationService {
         for (DailyDietDTO dailyDietDTO : dailyDietDTOList) {
             StringBuilder content = new StringBuilder();
 
-            FoodSelectionDTO mealSelection = dailyDietDTO.getMealSelections()
+            FoodSelectionDTO mealSelection = dailyDietDTO.getFoodSelections()
                     .stream()
                     .filter(mealSelectionDTO -> mealSelectionDTO.getFoodTime().equals(mealTime))
                     .findFirst()

@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name="Email API", description = "이메일 인증 관련 API")
+@Tag(name="이메일 API", description = "이메일 인증 관련 API")
 @RestController
 @RequestMapping("/email")
 public class EmailController {
