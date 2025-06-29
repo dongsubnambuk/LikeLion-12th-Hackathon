@@ -1,0 +1,441 @@
+/* src/CSS/DietPaymentComplete.css */
+
+/* 메인 컨테이너 */
+.diet-payment-complete-container {
+    min-height: 85vh;
+    background: rgba(157, 146, 116, 0.1);
+    padding: 20px 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    margin: 0;
+}
+
+/* 성공 헤더 */
+.diet-payment-complete-header {
+    text-align: center;
+    margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(157, 146, 116, 0.15);
+    border: 1px solid rgba(157, 146, 116, 0.2);
+    width: 100%;
+    max-width: 330px;
+}
+
+/* 체크마크 애니메이션 */
+.diet-payment-complete-success-icon {
+    margin-bottom: 20px;
+}
+
+.diet-payment-complete-checkmark {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: block;
+    stroke-width: 3;
+    stroke: #4CAF50;
+    stroke-miterlimit: 10;
+    margin: 0 auto 20px;
+    box-shadow: inset 0px 0px 0px #4CAF50;
+    animation: fill 0.4s ease-in-out 0.4s forwards, scale 0.3s ease-in-out 0.9s both;
+    position: relative;
+}
+
+.diet-payment-complete-checkmark-circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 3;
+    stroke-miterlimit: 10;
+    stroke: #4CAF50;
+    fill: none;
+    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 3px solid #4CAF50;
+}
+
+.diet-payment-complete-checkmark-stem {
+    position: absolute;
+    width: 3px;
+    height: 20px;
+    background-color: #4CAF50;
+    left: 32px;
+    top: 45px;
+    transform: rotate(45deg);
+    transform-origin: left bottom;
+    animation: checkmark-stem 0.3s ease-in-out 0.9s both;
+}
+
+.diet-payment-complete-checkmark-kick {
+    position: absolute;
+    width: 3px;
+    height: 12px;
+    background-color: #4CAF50;
+    left: 25px;
+    top: 52px;
+    transform: rotate(-45deg);
+    transform-origin: left bottom;
+    animation: checkmark-kick 0.3s ease-in-out 1.1s both;
+}
+
+@keyframes stroke {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes scale {
+    0%, 100% {
+        transform: none;
+    }
+    50% {
+        transform: scale3d(1.1, 1.1, 1);
+    }
+}
+
+@keyframes fill {
+    100% {
+        box-shadow: inset 0px 0px 0px 80px #4CAF50;
+    }
+}
+
+@keyframes checkmark-stem {
+    0% {
+        height: 0;
+    }
+    100% {
+        height: 20px;
+    }
+}
+
+@keyframes checkmark-kick {
+    0% {
+        height: 0;
+    }
+    100% {
+        height: 12px;
+    }
+}
+
+.diet-payment-complete-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 10px 0;
+    letter-spacing: -0.5px;
+}
+
+.diet-payment-complete-subtitle {
+    font-size: 16px;
+    font-weight: 500;
+    color: #7f8c8d;
+    margin: 0;
+    letter-spacing: -0.2px;
+}
+
+/* 정보 카드 */
+.diet-payment-complete-info-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 32px rgba(157, 146, 116, 0.15);
+    border: 1px solid rgba(157, 146, 116, 0.2);
+    width: 100%;
+    max-width: 330px;
+}
+
+.diet-payment-complete-section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    letter-spacing: -0.3px;
+}
+
+.diet-payment-complete-info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.diet-payment-complete-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: rgba(157, 146, 116, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(157, 146, 116, 0.1);
+}
+
+.diet-payment-complete-info-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #7f8c8d;
+}
+
+.diet-payment-complete-info-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.diet-payment-complete-info-value.highlight {
+    color: #9d9274;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* 안내 카드 */
+.diet-payment-complete-notice-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 32px rgba(157, 146, 116, 0.15);
+    border: 1px solid rgba(157, 146, 116, 0.2);
+    width: 100%;
+    max-width: 330px;
+}
+
+.diet-payment-complete-notice-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 16px 0;
+}
+
+.diet-payment-complete-notice-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.diet-payment-complete-notice-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.diet-payment-complete-notice-icon {
+    font-size: 20px;
+    margin-top: 2px;
+}
+
+.diet-payment-complete-notice-text {
+    font-size: 14px;
+    color: #7f8c8d;
+    line-height: 1.5;
+}
+
+.diet-payment-complete-notice-text strong {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+/* 버튼 섹션 */
+.diet-payment-complete-button-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 30px;
+}
+
+.diet-payment-complete-secondary-btn {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    color: #7f8c8d;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 16px 24px;
+    border-radius: 50px;
+    border: 2px solid rgba(157, 146, 116, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: -0.2px;
+}
+
+.diet-payment-complete-secondary-btn:hover {
+    background: rgba(157, 146, 116, 0.1);
+    border-color: rgba(157, 146, 116, 0.3);
+    transform: translateY(-1px);
+}
+
+.diet-payment-complete-primary-btn {
+    background: linear-gradient(135deg, #9d9274 0%, #b8a688 100%);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 16px 24px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 8px 24px rgba(157, 146, 116, 0.3),
+        0 3px 12px rgba(157, 146, 116, 0.1);
+    letter-spacing: -0.2px;
+    position: relative;
+    overflow: hidden;
+}
+
+.diet-payment-complete-primary-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.diet-payment-complete-primary-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 12px 32px rgba(157, 146, 116, 0.4),
+        0 6px 20px rgba(157, 146, 116, 0.15);
+    background: linear-gradient(135deg, #8a8265 0%, #a39378 100%);
+}
+
+.diet-payment-complete-primary-btn:hover::before {
+    left: 100%;
+}
+
+/* 푸터 */
+.diet-payment-complete-footer {
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.diet-payment-complete-footer-text {
+    font-size: 14px;
+    color: #7f8c8d;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.1px;
+}
+
+.diet-payment-complete-footer-contact {
+    font-size: 14px;
+    color: #9d9274;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.1px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {    
+    .diet-payment-complete-header {
+        padding: 30px 25px;
+    }
+    
+    .diet-payment-complete-title {
+        font-size: 24px;
+    }
+    
+    .diet-payment-complete-subtitle {
+        font-size: 14px;
+    }
+    
+    .diet-payment-complete-info-card,
+    .diet-payment-complete-notice-card {
+        padding: 25px 20px;
+    }
+    
+    .diet-payment-complete-button-section {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .diet-payment-complete-secondary-btn,
+    .diet-payment-complete-primary-btn {
+        padding: 14px 20px;
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {    
+    .diet-payment-complete-header {
+        padding: 25px 20px;
+    }
+    
+    .diet-payment-complete-title {
+        font-size: 20px;
+    }
+    
+    .diet-payment-complete-subtitle {
+        font-size: 13px;
+    }
+    
+    .diet-payment-complete-info-card,
+    .diet-payment-complete-notice-card {
+        padding: 20px 15px;
+    }
+    
+    .diet-payment-complete-section-title {
+        font-size: 18px;
+    }
+    
+    .diet-payment-complete-info-item {
+        padding: 14px 16px;
+    }
+    
+    .diet-payment-complete-checkmark {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .diet-payment-complete-checkmark-circle {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .diet-payment-complete-checkmark-stem {
+        left: 24px;
+        top: 34px;
+        height: 15px;
+    }
+    
+    .diet-payment-complete-checkmark-kick {
+        left: 19px;
+        top: 39px;
+        height: 9px;
+    }
+}
+
+
+/* 🔥 추가된 부분: 간단한 체크마크 아이콘 스타일 */
+.diet-payment-complete-simple-checkmark {
+    font-size: 80px;
+    margin-bottom: 20px;
+    animation: checkmark-bounce 0.6s ease-in-out;
+}
+
+@keyframes checkmark-bounce {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
