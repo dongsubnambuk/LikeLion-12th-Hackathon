@@ -18,7 +18,6 @@ const Header = ({ notificationCount, surveyCount, userInfo }) => {
     // 페이지 변경 시마다 로그인 상태 확인
     useEffect(() => {
         checkLoginStatus();
-        console.log(`현재 경로: ${location.pathname}`);
     }, [location.pathname]);
 
     // 쿠키 기반 로그인 상태 확인
@@ -155,7 +154,7 @@ const Header = ({ notificationCount, surveyCount, userInfo }) => {
                         <div className="header-header-left">
                             {isLoggedIn ? (
                                 <span className="header-user-greeting">
-                                    {userInfo?.name || '사용자'}님
+                                    {userName || '사용자'}님
                                 </span>
                             ) : (
                                 <button
