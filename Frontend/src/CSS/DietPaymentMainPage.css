@@ -1,102 +1,464 @@
-.DPMPcontainer {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    height: 85%;
-    margin-top: 20px;
-    flex-direction: column;
+/* src/CSS/DietPaymentMainPage.css */
+
+/* 메인 컨테이너 */
+.diet-payment-main-page-container {
+    min-height: 100vh;
+    background: rgba(157, 146, 116, 0.1);
+    padding: 20px;
+    padding-bottom: calc(100px + env(safe-area-inset-bottom)); /* 바텀 네비게이션 고려 */
 }
 
-.DPMPdateRange {
-    font-size: 13px;
-    margin-bottom: 5%;
-    font-weight: bold;
-}
-
-.DPMPlistContainer {
-    width: 85%;
-    height: 80%;
-    max-height: 90%;
-    padding: 10px;
-    background-color: white;
-    border-radius: 15px;
-    border: 1px solid black;
-    display: flex;
-    flex-direction: column; /* 날짜별 컨테이너를 수직으로 정렬 */
-    gap: 15px; /* 날짜별 컨테이너 간의 간격 설정 */
-    overflow-y: auto;
-    scrollbar-width: none;
-}
-
-.DPMPdayContainer {
-    display: flex;
-    flex-wrap: wrap; /* 카드가 줄바꿈되도록 설정 */
-    gap: 15px; /* 카드 간의 간격 설정 */
-}
-
-.DPMPdate {
-    width: 100%;
-    font-weight: bold;
-    font-size: 16px;
-    margin-bottom: 5px;
-}
-
-.DPMPitemCard {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid black;
+/* 헤더 섹션 */
+.diet-payment-main-page-header {
     text-align: center;
-    border-radius: 15px;
-    justify-content: space-around;
-    padding: 2px 0;
-    height: 125px;
-    width: calc(33.33% - 10px); /* 3개의 카드가 한 줄에 맞게 정렬되도록 조정 */
-    box-sizing: border-box; /* 패딩과 테두리를 포함한 총 너비 및 높이 계산 */
+    margin-bottom: 20px; /* 🔥 수정: 30px → 20px */
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 20px; /* 🔥 수정: 30px 20px → 20px */
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(157, 146, 116, 0.15);
+    border: 1px solid rgba(157, 146, 116, 0.2);
+}
+
+.diet-payment-main-page-title {
+    font-size: 24px; /* 🔥 수정: 28px → 24px */
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 8px 0; /* 🔥 수정: 10px → 8px */
+    letter-spacing: -0.5px;
+}
+
+.diet-payment-main-page-period {
+    font-size: 14px; /* 🔥 수정: 16px → 14px */
+    font-weight: 600;
+    color: #9d9274;
+    margin: 0;
+    letter-spacing: -0.2px;
+}
+
+/* 주문 요약 섹션 */
+.diet-payment-main-page-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px; /* 🔥 수정: 15px → 12px */
+    margin-bottom: 20px; /* 🔥 수정: 30px → 20px */
+}
+
+.diet-payment-main-page-summary-item {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 16px; /* 🔥 수정: 20px → 16px */
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(157, 146, 116, 0.1);
+    border: 1px solid rgba(157, 146, 116, 0.1);
+    transition: all 0.3s ease;
+}
+
+.diet-payment-main-page-summary-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(157, 146, 116, 0.15);
+}
+
+.diet-payment-main-page-summary-label {
+    display: block;
+    font-size: 12px; /* 🔥 수정: 14px → 12px */
+    color: #7f8c8d;
+    margin-bottom: 6px; /* 🔥 수정: 8px → 6px */
+    font-weight: 500;
+}
+
+.diet-payment-main-page-summary-value {
+    font-size: 18px; /* 🔥 수정: 20px → 18px */
+    font-weight: 700;
+    color: #9d9274;
+}
+
+/* 콘텐츠 섹션 */
+.diet-payment-main-page-content {
+    margin-bottom: 20px; /* 🔥 수정: 30px → 20px */
+}
+
+.diet-payment-main-page-section-title {
+    font-size: 20px; /* 🔥 수정: 22px → 20px */
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 16px; /* 🔥 수정: 20px → 16px */
+    text-align: center;
+    letter-spacing: -0.3px;
+}
+
+/* 날짜별 섹션 */
+.diet-payment-main-page-day-section {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 20px; /* 🔥 수정: 25px → 20px */
+    margin-bottom: 20px; /* 🔥 수정: 25px → 20px */
+    box-shadow: 0 8px 32px rgba(157, 146, 116, 0.1);
+    border: 1px solid rgba(157, 146, 116, 0.1);
+}
+
+.diet-payment-main-page-date-header {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    margin-bottom: 16px; /* 🔥 수정: 20px → 16px */
+    padding-bottom: 12px; /* 🔥 수정: 15px → 12px */
+    border-bottom: 2px solid rgba(157, 146, 116, 0.2);
 }
 
-.DPMPitemImage {
+.diet-payment-main-page-date-title {
+    font-size: 16px; /* 🔥 수정: 18px → 16px */
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+    letter-spacing: -0.3px;
+}
+
+.diet-payment-main-page-day-total {
+    font-size: 14px; /* 🔥 수정: 16px → 14px */
+    font-weight: 700;
+    color: #9d9274;
+    background: rgba(157, 146, 116, 0.1);
+    padding: 6px 12px; /* 🔥 수정: 8px 16px → 6px 12px */
+    border-radius: 20px;
+}
+
+/* 식단 그리드 */
+.diet-payment-main-page-meals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 🔥 수정: 300px → 280px */
+    gap: 16px; /* 🔥 수정: 20px → 16px */
+}
+
+/* 식단 카드 */
+.diet-payment-main-page-meal-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+    padding: 16px; /* 🔥 수정: 20px → 16px */
+    box-shadow: 0 4px 20px rgba(157, 146, 116, 0.08);
+    border: 1px solid rgba(157, 146, 116, 0.1);
+    transition: all 0.3s ease;
+}
+
+.diet-payment-main-page-meal-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(157, 146, 116, 0.15);
+}
+
+.diet-payment-main-page-meal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px; /* 🔥 수정: 15px → 12px */
+}
+
+.diet-payment-main-page-meal-type {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* 🔥 수정: 8px → 6px */
+}
+
+.diet-payment-main-page-meal-icon {
+    font-size: 16px; /* 🔥 수정: 18px → 16px */
+}
+
+.diet-payment-main-page-meal-type-text {
+    font-size: 13px; /* 🔥 수정: 14px → 13px */
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.diet-payment-main-page-meal-quantity {
+    background: linear-gradient(135deg, #9d9274 0%, #b8a688 100%);
+    color: white;
+    padding: 4px 10px; /* 🔥 수정: 6px 12px → 4px 10px */
+    border-radius: 12px;
+    font-size: 11px; /* 🔥 수정: 12px → 11px */
+    font-weight: 600;
+}
+
+/* 식단 이미지 */
+.diet-payment-main-page-meal-image-container {
     width: 100%;
-    height: 70%;
-    background-color: #ccc;
-    border-top: solid 1px black;
-    border-bottom: solid 1px black;
-    margin: 2px 0;
+    height: 180px; /* 🔥 수정: 150px → 120px */
+    margin-bottom: 12px; /* 🔥 수정: 15px → 12px */
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(157, 146, 116, 0.1);
 }
 
-.DPMPitemTitle {
-    font-size: 13px;
-    white-space: nowrap; /* 텍스트를 한 줄로 표시합니다 */
-    overflow: hidden; /* 넘치는 텍스트를 숨깁니다 */
-    text-overflow: ellipsis; /* 넘치는 텍스트를 ...으로 표시합니다 */
-    max-width: 80%; /* 카드의 너비에 맞게 조정 */
+.diet-payment-main-page-meal-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-.DPMPitemPrice {
-    font-size: 14px;
+/* 식단 정보 */
+.diet-payment-main-page-meal-info {
+    text-align: center;
 }
 
-.DPMPitemAllPrice {
-    margin-top: 5%;
-    font-size: 18px;
+.diet-payment-main-page-meal-name {
+    font-size: 15px; /* 🔥 수정: 16px → 15px */
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 6px 0; /* 🔥 수정: 8px → 6px */
+    letter-spacing: -0.2px;
 }
 
-.DPMPpaymentConfirm {
+.diet-payment-main-page-meal-description {
+    font-size: 12px; /* 🔥 수정: 13px → 12px */
+    color: #7f8c8d;
+    margin-bottom: 10px; /* 🔥 수정: 12px → 10px */
+    line-height: 1.4;
+}
+
+.diet-payment-main-page-meal-price {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    gap: 4px; /* 🔥 수정: 6px → 4px */
+    font-size: 13px; /* 🔥 수정: 14px → 13px */
+    font-weight: 600;
 }
 
-.DPMPpaymentConfirmText {
-    font-size: 17px;
-    margin-top: 5%;
-    padding: 15px;
-    border-radius: 10px;
-    width: 20%;
+.diet-payment-main-page-unit-price {
+    color: #9d9274;
+}
+
+.diet-payment-main-page-multiply {
+    color: #7f8c8d;
+}
+
+.diet-payment-main-page-count {
+    color: #2c3e50;
+}
+
+.diet-payment-main-page-total-price {
+    color: #9d9274;
+    font-weight: 700;
+}
+
+/* 🔥 수정된 부분: 결제 섹션 크기 축소 */
+.diet-payment-main-page-payment-section {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 20px; /* 🔥 수정: 30px → 20px */
+    border-radius: 16px; /* 🔥 수정: 20px → 16px */
+    box-shadow: 0 6px 24px rgba(157, 146, 116, 0.12); /* 🔥 수정: 그림자 축소 */
+    border: 1px solid rgba(157, 146, 116, 0.2);
+    text-align: center;
+    position: sticky;
+    bottom: calc(85px + env(safe-area-inset-bottom));
+    z-index: 100;
+}
+
+.diet-payment-main-page-final-amount {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    background-color: rgb(4, 198, 0, 0.5);
+    margin-bottom: 16px; /* 🔥 수정: 20px → 16px */
+    padding: 16px; /* 🔥 수정: 20px → 16px */
+    background: rgba(157, 146, 116, 0.1);
+    border-radius: 12px; /* 🔥 수정: 16px → 12px */
+}
+
+.diet-payment-main-page-final-label {
+    font-size: 16px; /* 🔥 수정: 18px → 16px */
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.diet-payment-main-page-final-price {
+    font-size: 20px; /* 🔥 수정: 24px → 20px */
+    font-weight: 700;
+    color: #9d9274;
+}
+
+.diet-payment-main-page-payment-btn {
+    background: linear-gradient(135deg, #9d9274 0%, #b8a688 100%);
+    color: white;
+    font-size: 16px; /* 🔥 수정: 18px → 16px */
+    font-weight: 600;
+    padding: 14px 32px; /* 🔥 수정: 18px 40px → 14px 32px */
+    border-radius: 50px;
+    border: none;
     cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 8px 24px rgba(157, 146, 116, 0.25), /* 🔥 수정: 그림자 축소 */
+        0 3px 12px rgba(157, 146, 116, 0.08);
+    letter-spacing: -0.3px;
+    width: 100%;
+    max-width: 320px; /* 🔥 수정: 400px → 320px */
+    position: relative;
+    overflow: hidden;
+}
+
+.diet-payment-main-page-payment-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.diet-payment-main-page-payment-btn:hover {
+    transform: translateY(-2px); /* 🔥 수정: -3px → -2px */
+    box-shadow: 
+        0 12px 32px rgba(157, 146, 116, 0.3), /* 🔥 수정: 그림자 축소 */
+        0 6px 20px rgba(157, 146, 116, 0.12);
+    background: linear-gradient(135deg, #8a8265 0%, #a39378 100%);
+}
+
+.diet-payment-main-page-payment-btn:hover::before {
+    left: 100%;
+}
+
+.diet-payment-main-page-payment-btn:active {
+    transform: translateY(-1px);
+    box-shadow: 
+        0 10px 28px rgba(157, 146, 116, 0.28), /* 🔥 수정: 그림자 축소 */
+        0 4px 16px rgba(157, 146, 116, 0.1);
+}
+
+/* 에러 및 빈 상태 스타일 */
+.diet-payment-main-page-error-container,
+.diet-payment-main-page-empty-container {
+    width: 100%;
+    height: 100vh;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.diet-payment-main-page-error-content,
+.diet-payment-main-page-empty-content {
+    text-align: center;
+    max-width: 400px;
+    padding: 40px 30px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(157, 146, 116, 0.15);
+    border: 1px solid rgba(157, 146, 116, 0.2);
+}
+
+.diet-payment-main-page-error-icon,
+.diet-payment-main-page-empty-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.diet-payment-main-page-error-title,
+.diet-payment-main-page-empty-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 16px 0;
+    letter-spacing: -0.3px;
+}
+
+.diet-payment-main-page-error-message,
+.diet-payment-main-page-empty-message {
+    font-size: 16px;
+    color: #7f8c8d;
+    line-height: 1.5;
+    margin: 0 0 32px 0;
+}
+
+.diet-payment-main-page-retry-btn,
+.diet-payment-main-page-back-btn {
+    background: linear-gradient(135deg, #9d9274 0%, #b8a688 100%);
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(157, 146, 116, 0.3);
+    letter-spacing: -0.2px;
+}
+
+.diet-payment-main-page-retry-btn:hover,
+.diet-payment-main-page-back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(157, 146, 116, 0.4);
+    background: linear-gradient(135deg, #8a8265 0%, #a39378 100%);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .diet-payment-main-page-container {
+        padding: 15px;
+    }
+    
+    .diet-payment-main-page-title {
+        font-size: 20px; /* 🔥 수정: 24px → 20px */
+    }
+    
+    .diet-payment-main-page-summary {
+        grid-template-columns: 1fr;
+        gap: 10px; /* 🔥 수정: 12px → 10px */
+    }
+    
+    .diet-payment-main-page-meals-grid {
+        grid-template-columns: 1fr;
+        gap: 12px; /* 🔥 수정: 15px → 12px */
+    }
+    
+    .diet-payment-main-page-date-header {
+        flex-direction: column;
+        gap: 8px; /* 🔥 수정: 10px → 8px */
+        text-align: center;
+    }
+    
+    .diet-payment-main-page-final-amount {
+        flex-direction: column;
+        gap: 8px; /* 🔥 수정: 10px → 8px */
+        text-align: center;
+    }
+    
+    .diet-payment-main-page-payment-section {
+        padding: 16px; /* 🔥 수정: 20px → 16px */
+    }
+}
+
+@media (max-width: 480px) {
+    .diet-payment-main-page-container {
+        padding: 10px;
+    }
+    
+    .diet-payment-main-page-header {
+        padding: 16px 12px; /* 🔥 수정: 20px 15px → 16px 12px */
+    }
+    
+    .diet-payment-main-page-title {
+        font-size: 18px; /* 🔥 수정: 20px → 18px */
+    }
+    
+    .diet-payment-main-page-period {
+        font-size: 12px; /* 🔥 수정: 14px → 12px */
+    }
+    
+    .diet-payment-main-page-day-section {
+        padding: 16px 12px; /* 🔥 수정: 20px 15px → 16px 12px */
+    }
+    
+    .diet-payment-main-page-payment-section {
+        padding: 16px 12px; /* 🔥 수정: 20px 15px → 16px 12px */
+    }
+    
+    .diet-payment-main-page-payment-btn {
+        font-size: 14px; /* 🔥 수정: 16px → 14px */
+        padding: 12px 28px; /* 🔥 수정: 16px 32px → 12px 28px */
+    }
 }

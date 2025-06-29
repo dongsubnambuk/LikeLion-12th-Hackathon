@@ -17,7 +17,7 @@ const Header = () => {
         if (storedIsLoggedIn) {
             setIsLoggedIn(true);
             setUserName("김영희"); // 샘플 데이터
-            
+
             // 샘플 알림 데이터 (로그인된 사용자만)
             setNotificationCount(3);
             setSurveyCount(1);
@@ -129,6 +129,8 @@ const Header = () => {
                 return '메뉴 선택';
             case '/dietpayment':
                 return '식단 결제';
+            case '/dietpaymentmain':
+                return '주문 확인';
             case '/admin':
                 return '관리자 페이지';
             default:
@@ -143,7 +145,7 @@ const Header = () => {
             <div className="header-header-container">
                 {!isMainPage && (
                     <div className="header-other-page-header">
-                        <button 
+                        <button
                             className="header-back-button"
                             onClick={handleBackClick}
                             aria-label="뒤로가기"
@@ -159,7 +161,7 @@ const Header = () => {
                             {isLoggedIn ? (
                                 <span className="header-user-greeting">{userName}님</span>
                             ) : (
-                                <button 
+                                <button
                                     className="header-login-button"
                                     onClick={handleLoginClick}
                                 >
@@ -168,17 +170,17 @@ const Header = () => {
                             )}
                         </div>
                         <div className="header-header-center">
-                            <img 
-                                src={logo} 
-                                className="header-logo-image" 
-                                alt="NutriHub" 
+                            <img
+                                src={logo}
+                                className="header-logo-image"
+                                alt="NutriHub"
                                 onClick={() => navigate('/')}
                             />
                         </div>
                         <div className="header-header-right">
                             {isLoggedIn && (
                                 <div className="header-header-actions">
-                                    <button 
+                                    <button
                                         className="header-action-button"
                                         onClick={() => handleIconClick('/notification')}
                                         aria-label="알림"
@@ -188,7 +190,7 @@ const Header = () => {
                                             <span className="header-notification-badge">{notificationCount}</span>
                                         )}
                                     </button>
-                                    <button 
+                                    <button
                                         className="header-action-button"
                                         onClick={() => handleIconClick('/survey')}
                                         aria-label="설문조사"
