@@ -1,6 +1,7 @@
 package com.demo.nimn.controller.review;
 
 import com.demo.nimn.dto.review.DailyDietReviewDTO;
+import com.demo.nimn.dto.review.DailyDietReviewUpdateDTO;
 import com.demo.nimn.dto.review.ReviewDTO;
 import com.demo.nimn.dto.review.ReviewSummaryDTO;
 import com.demo.nimn.service.review.ReviewService;
@@ -44,7 +45,7 @@ public class ReviewController {
     })
     @GetMapping("/summary/{foodId}")
     public ResponseEntity<ReviewSummaryDTO> getReviewSummary(@Parameter(description = "리뷰 조회할 음식의 ID", required = true, example = "1")
-                                                                 @PathVariable("foodId") Long foodMenuId) {
+                                                             @PathVariable("foodId") Long foodMenuId) {
         ReviewSummaryDTO reviewSummary = reviewService.getReviewSummaryByFoodId(foodMenuId);
         return ResponseEntity.status(201).body(reviewSummary);
     }
@@ -83,7 +84,7 @@ public class ReviewController {
     })
     @GetMapping("/summary/sort")
     public ResponseEntity<List<ReviewSummaryDTO>> getReviewSummariesSorted(@Parameter(description = "정렬 순서", schema = @Schema(allowableValues = {"desc", "asc"}, defaultValue = "desc"), example = "desc")
-                                                                               @RequestParam(value = "order", defaultValue = "desc") String sortOrder) {
+                                                                           @RequestParam(value = "order", defaultValue = "desc") String sortOrder) {
         List<ReviewSummaryDTO> reviewSummaries = reviewService.getReviewSummariesOrderByRating(sortOrder);
         return ResponseEntity.ok(reviewSummaries);
     }
@@ -124,8 +125,8 @@ public class ReviewController {
     })
     @PutMapping("/daily/{dailyReviewId}")
     public ResponseEntity<DailyDietReviewDTO> updateDailyDietReview(@Parameter(description = "수정할 하루 식단 리뷰 ID", required = true, example = "1") @PathVariable("dailyReviewId") Long dailyReviewId,
-                                                                    @Parameter(description = "수정할 리뷰 목록", required = true, schema = @Schema(type = "array", implementation = ReviewDTO.class)) @RequestBody List<ReviewDTO> reviews) {
-        DailyDietReviewDTO updatedReview = reviewService.updateDailyDietReview(dailyReviewId, reviews);
+                                                                    @Parameter(description = "수정할 리뷰 목록", required = true) @RequestBody DailyDietReviewUpdateDTO request) {
+        DailyDietReviewDTO updatedReview = reviewService.updateDailyDietReview(dailyReviewId, request.getReviews());
         return ResponseEntity.ok(updatedReview);
     }
 }
