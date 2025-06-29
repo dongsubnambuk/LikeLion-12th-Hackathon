@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+// src/pages/MainPage.jsx
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -6,19 +7,28 @@ import 'swiper/css/autoplay';
 import { Pagination, Autoplay } from 'swiper/modules';
 import '../CSS/MainPage.css';
 import { useNavigate } from 'react-router-dom';
+import SockJS from 'sockjs-client';
+import { Client } from '@stomp/stompjs';
 
 import slideImg1 from '../images/mainSlideImg1.jpeg';
-import slideImg2 from '../images/mainSlideImg2.jpeg'; 
+import slideImg2 from '../images/mainSlideImg2.jpeg';
 import slideImg3 from '../images/mainSlideImg3.png';
 import cardImg1 from '../images/mainCardImg1.jpeg';
 import cardImg2 from '../images/mainCardImg2.jpeg';
 import cardImg3 from '../images/mainCardImg3.jpeg';
 
-const MainPage = () => {
+const MainPage = ({ onNotificationCountChange }) => {
   const [user, setUser] = useState(null);
   const [todayMeals, setTodayMeals] = useState(null);
   const [isLogin, setIsLogin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [surveyCount, setSurveyCount] = useState(0);
+  const [userEmail, setUserEmail] = useState('');
+  const [isConnected, setIsConnected] = useState(false);
+  const stompClientRef = useRef(null);
+  const isInitialized = useRef(false);
+
   const navigate = useNavigate();
 
   // 오늘의 식단 샘플 데이터
@@ -93,26 +103,206 @@ const MainPage = () => {
     }
   ];
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const storedIsLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-        
-        if (storedIsLoggedIn) {
-          setUser({ name: "김영희", email: "user@example.com" });
-          setIsLogin(true);
+  // 사용자 정보 조회 API
+  const getUserInfo = useCallback(async () => {
+    try {
+      const response = await fetch('http://nimn.store/api/users', {
+        method: "GET",
+        credentials: 'include',
+      });
+
+      if (response.status === 200) {
+        const result = await response.json();
+
+        if (result.message === "토큰소멸") {
+          setIsLogin(false);
+          return;
         }
 
+        const email = result.email;
+        const name = result.name;
+        
+        setUserEmail(email);
+        setUser({ name, email });
+        setIsLogin(true);
+      } else {
+        setIsLogin(false);
+      }
+    } catch (error) {
+      setIsLogin(false);
+    }
+  }, []);
+
+  // 모든 알림 조회 API
+  const getAllNotificationsAPI = useCallback(async () => {
+    if (!userEmail) return [];
+    
+    try {
+      const response = await fetch(`http://nimn.store/api/notification/all?userEmail=${userEmail}`);
+
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      return [];
+    }
+  }, [userEmail]);
+
+  // 알림 개수 계산 함수
+  const calculateNotificationCounts = useCallback((notifications) => {
+    let notifCount = 0;
+    let survCount = 0;
+
+    if (Array.isArray(notifications)) {
+      notifications.forEach((notification) => {
+        if (!notification.check) {
+          if (notification.type === 'DIET' || notification.type === 'PAYMENT') {
+            notifCount++;
+          } else if (notification.type === 'REVIEW') {
+            survCount++;
+          }
+        }
+      });
+    }
+
+    return { notifCount, survCount };
+  }, []);
+
+  // WebSocket 연결
+  const connectWebSocket = useCallback(() => {
+    if (!userEmail) return;
+
+    if (stompClientRef.current) {
+      stompClientRef.current.deactivate();
+    }
+
+    const socket = new SockJS(`http://nimn.store/ws/notification?userEmail=${userEmail}`);
+
+    const client = new Client({
+      webSocketFactory: () => socket,
+      connectHeaders: {
+        login: userEmail,
+        userEmail: userEmail
+      },
+      heartbeatIncoming: 10000,
+      heartbeatOutgoing: 10000,
+      reconnectDelay: 5000,
+      onConnect: async (frame) => {
+        setIsConnected(true);
+
+        // WebSocket 연결 성공 후 실제 알림 데이터 조회
+        const notifications = await getAllNotificationsAPI();
+        
+        if (notifications && notifications.length > 0) {
+          const { notifCount, survCount } = calculateNotificationCounts(notifications);
+          
+          setNotificationCount(notifCount);
+          setSurveyCount(survCount);
+          
+          if (onNotificationCountChange) {
+            onNotificationCountChange(notifCount, survCount);
+          }
+        } else {
+          setNotificationCount(0);
+          setSurveyCount(0);
+          
+          if (onNotificationCountChange) {
+            onNotificationCountChange(0, 0);
+          }
+        }
+
+        const handleMessage = (message) => {
+          let body = message.body;
+          let parsed;
+          try {
+            parsed = JSON.parse(body);
+          } catch {
+            parsed = { content: body, type: "TEXT" };
+          }
+
+          // 타입별 알림 개수 업데이트
+          if (parsed.type === 'DIET' || parsed.type === 'PAYMENT') {
+            setNotificationCount(prev => {
+              const newCount = prev + 1;
+              if (onNotificationCountChange) {
+                setSurveyCount(currentSurvCount => {
+                  onNotificationCountChange(newCount, currentSurvCount);
+                  return currentSurvCount;
+                });
+              }
+              return newCount;
+            });
+          } else if (parsed.type === 'REVIEW') {
+            setSurveyCount(prev => {
+              const newCount = prev + 1;
+              if (onNotificationCountChange) {
+                setNotificationCount(currentNotifCount => {
+                  onNotificationCountChange(currentNotifCount, newCount);
+                  return currentNotifCount;
+                });
+              }
+              return newCount;
+            });
+          }
+        };
+
+        client.subscribe(
+          "/user/queue/notification",
+          (msg) => {
+            handleMessage(msg);
+          }
+        );
+      },
+      onWebSocketError: (err) => {
+        setIsConnected(false);
+      },
+      onStompError: (frame) => {
+        setIsConnected(false);
+      },
+      onDisconnect: (receipt) => {
+        setIsConnected(false);
+      },
+    });
+
+    client.activate();
+    stompClientRef.current = client;
+  }, [userEmail, onNotificationCountChange, getAllNotificationsAPI, calculateNotificationCounts]);
+
+  // WebSocket 연결 관리
+  useEffect(() => {
+    if (isLogin && userEmail) {
+      connectWebSocket();
+
+      return () => {
+        if (stompClientRef.current) {
+          stompClientRef.current.deactivate();
+        }
+      };
+    }
+  }, [userEmail, isLogin, connectWebSocket]);
+
+  // 초기 데이터 로드
+  useEffect(() => {
+    if (isInitialized.current) return;
+    
+    const fetchData = async () => {
+      try {
+        isInitialized.current = true;
+        
+        await getUserInfo();
         setTodayMeals(sampleTodayMeals);
       } catch (error) {
-        console.error("Error fetching data: ", error);
+        // 에러 처리
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [getUserInfo]);
 
   const handleSubscribeClick = () => {
     if (isLogin) {
@@ -157,7 +347,7 @@ const MainPage = () => {
                 <div className="main-page-hero-content">
                   <h1>{slide.title}</h1>
                   <p>{slide.subtitle}</p>
-                  <button 
+                  <button
                     className="main-page-hero-cta-button"
                     onClick={index === 0 ? handleSubscribeClick : handleMenuClick}
                   >
@@ -178,7 +368,7 @@ const MainPage = () => {
           </h2>
           <p>영양사가 추천하는 균형잡힌 하루 세 끼</p>
         </div>
-        
+
         <div className="main-page-meals-grid">
           <div className="main-page-meal-card main-page-breakfast">
             <div className="main-page-meal-time">
@@ -236,10 +426,10 @@ const MainPage = () => {
       {/* Features Section */}
       <section className="main-page-features-section">
         <div className="main-page-section-header">
-          <h2>우리 동네 영양사만의 <br/> 특별함</h2>
+          <h2>우리 동네 영양사만의 <br /> 특별함</h2>
           <p>건강하고 편리한 식사 솔루션을 제공합니다</p>
         </div>
-        
+
         <div className="main-page-features-grid">
           {features.map((feature, index) => (
             <div key={index} className="main-page-feature-card">
@@ -254,9 +444,9 @@ const MainPage = () => {
       {/* CTA Section */}
       <section className="main-page-cta-section">
         <div className="main-page-cta-content">
-          <h2>건강한 식습관,<br/>지금 시작하세요!</h2>
+          <h2>건강한 식습관,<br />지금 시작하세요!</h2>
           <p>바쁜 일상 속에서도 균형잡힌 영양을 챙기세요</p>
-          <button 
+          <button
             className="main-page-cta-button"
             onClick={handleSubscribeClick}
           >

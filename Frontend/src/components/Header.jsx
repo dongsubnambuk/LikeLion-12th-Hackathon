@@ -1,89 +1,52 @@
+// src/components/Header.jsx
 import React, { useState, useEffect } from "react";
 import '../CSS/Header.css';
 import logo from '../images/logo.png';
 import { useNavigate, useLocation } from "react-router-dom";
 
-const Header = () => {
+const Header = ({ notificationCount, surveyCount }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userName, setUserName] = useState('');
-    const [notificationCount, setNotificationCount] = useState(0);
-    const [surveyCount, setSurveyCount] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
-        // 기존 로컬스토리지 기반 로그인 상태 확인
-        const storedIsLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-        if (storedIsLoggedIn) {
-            setIsLoggedIn(true);
-            setUserName("김영희"); // 샘플 데이터
-
-            // 샘플 알림 데이터 (로그인된 사용자만)
-            setNotificationCount(3);
-            setSurveyCount(1);
-        }
-
-        // TODO: 백엔드 구축 후 활성화할 API 호출 코드
-        /*
-        const checkLoginStatus = async () => {
-            try {
-                const token = localStorage.getItem("token");
-                if (!token) {
-                    setIsLoggedIn(false);
-                    return;
-                }
-
-                const response = await fetch('/api/auth/verify', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
-                    const userData = await response.json();
-                    setIsLoggedIn(true);
-                    setUserName(userData.name);
-                    
-                    // 알림 및 설문 수 가져오기
-                    await fetchNotificationCounts();
-                } else {
-                    // 토큰이 유효하지 않은 경우
-                    localStorage.removeItem("token");
-                    localStorage.removeItem("isLoggedIn");
-                    setIsLoggedIn(false);
-                }
-            } catch (error) {
-                console.error('로그인 상태 확인 실패:', error);
-                setIsLoggedIn(false);
-            }
-        };
-
-        const fetchNotificationCounts = async () => {
-            try {
-                const token = localStorage.getItem("token");
-                const response = await fetch('/api/notifications/count', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    setNotificationCount(data.notificationCount || 0);
-                    setSurveyCount(data.surveyCount || 0);
-                }
-            } catch (error) {
-                console.error('알림 수 가져오기 실패:', error);
-            }
-        };
-
         checkLoginStatus();
-        */
     }, []);
+
+    // 쿠키 기반 로그인 상태 확인
+    const checkLoginStatus = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch('http://nimn.store/api/users', {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'accept': '*/*'
+                }
+            });
+
+            if (response.ok) {
+                const userData = await response.json();
+                setIsLoggedIn(true);
+                setUserName(userData.name || '사용자');
+                localStorage.setItem("isLoggedIn", "true");
+            } else {
+                setIsLoggedIn(false);
+                setUserName('');
+                localStorage.removeItem("isLoggedIn");
+                localStorage.removeItem("token");
+            }
+        } catch (error) {
+            setIsLoggedIn(false);
+            setUserName('');
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("token");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const handleLoginClick = () => {
         navigate('/login');
@@ -131,7 +94,7 @@ const Header = () => {
                 return '식단 결제';
             case '/dietpaymentmain':
                 return '주문 확인';
-                case '/dietpaymentcomplete':
+            case '/dietpaymentcomplete':
                 return '주문 완료';
             case '/admin':
                 return '관리자 페이지';
@@ -141,6 +104,30 @@ const Header = () => {
     };
 
     const isMainPage = location.pathname === '/';
+
+    // 로딩 중일 때 처리
+    if (isLoading && isMainPage) {
+        return (
+            <header className="header-header">
+                <div className="header-header-container">
+                    <div className="header-header-left">
+                        <div className="header-loading-placeholder"></div>
+                    </div>
+                    <div className="header-header-center">
+                        <img
+                            src={logo}
+                            className="header-logo-image"
+                            alt="NutriHub"
+                            onClick={() => navigate('/')}
+                        />
+                    </div>
+                    <div className="header-header-right">
+                        <div className="header-loading-placeholder"></div>
+                    </div>
+                </div>
+            </header>
+        );
+    }
 
     return (
         <header className="header-header">
@@ -189,7 +176,9 @@ const Header = () => {
                                     >
                                         알림
                                         {notificationCount > 0 && (
-                                            <span className="header-notification-badge">{notificationCount}</span>
+                                            <span className="header-notification-badge">
+                                                {notificationCount}
+                                            </span>
                                         )}
                                     </button>
                                     <button
@@ -199,7 +188,9 @@ const Header = () => {
                                     >
                                         설문
                                         {surveyCount > 0 && (
-                                            <span className="header-notification-badge">{surveyCount}</span>
+                                            <span className="header-notification-badge">
+                                                {surveyCount}
+                                            </span>
                                         )}
                                     </button>
                                 </div>

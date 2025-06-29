@@ -7,6 +7,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import foodImg from '../images/food.png';
+import logoImg from '../images/logo.png'; // 로고 이미지
 
 const WeeklyFoodMenu = () => {
   const [mealData, setMealData] = useState(null);
@@ -117,7 +118,8 @@ const WeeklyFoodMenu = () => {
     return (
       <div className="weekly-food-menu-empty-container">
         <div className="weekly-food-menu-empty-content">
-          <div className="weekly-food-menu-empty-icon">📅</div>
+          <img className="weekly-food-menu-logo-img"
+                                          src={logoImg}></img>
           <h2 className="weekly-food-menu-empty-title">
             {error === '이번 주 식단이 없습니다.' ? '아직 이번 주 식단이 없습니다' : '식단을 불러올 수 없습니다'}
           </h2>

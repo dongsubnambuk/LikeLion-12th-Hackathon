@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+// src/App.js
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import './App.css';
 import Layout from './components/Layout';
@@ -24,6 +25,16 @@ import DietPaymentComplete from './pages/DietPaymentComplete';
 const AppContent = () => {
   const location = useLocation();
   const isAdminPage = location.pathname === '/admin';
+  
+  // 🔥 추가된 부분: 알림 개수 상태 관리
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [surveyCount, setSurveyCount] = useState(0);
+
+  // 🔥 추가된 부분: 알림 개수 업데이트 콜백 함수
+  const handleNotificationCountChange = (notifCount, survCount) => {
+    setNotificationCount(notifCount);
+    setSurveyCount(survCount);
+  };
 
   useEffect(() => {
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
@@ -79,9 +90,21 @@ const AppContent = () => {
           <Route path="/admin" element={<Admin />} />
         </Routes>
       ) : (
-        <Layout>
+        // Layout에 알림 개수 props 전달
+        <Layout 
+          notificationCount={notificationCount} 
+          surveyCount={surveyCount}
+        >
           <Routes>
-            <Route path="/" element={<MainPage />} />
+            {/* MainPage에 알림 개수 콜백 함수 전달 */}
+            <Route 
+              path="/" 
+              element={
+                <MainPage 
+                  onNotificationCountChange={handleNotificationCountChange} 
+                />
+              } 
+            />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/alldiet" element={<AllDiet />} />
