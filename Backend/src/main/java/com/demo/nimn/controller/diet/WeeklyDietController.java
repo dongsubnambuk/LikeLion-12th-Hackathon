@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name="WEEKLY DIET API", description = "유저 Weekly 식단 API")
+@Tag(name="한주 식단 API", description = "유저 Weekly 식단 API")
 @RestController
 @RequestMapping("/diet/weekly")
 public class WeeklyDietController {

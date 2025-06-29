@@ -19,7 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name="AUTH API", description = "로그인 관련 API")
+@Tag(name="유저 API", description = "로그인 관련 API")
 @RestController
 @RequestMapping(value = "/users")
 public class UserController {

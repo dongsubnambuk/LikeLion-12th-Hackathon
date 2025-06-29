@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@Tag(name="DAILYDIET API", description = "유저 Daily 식단 API")
+@Tag(name="하루 식단 API", description = "유저 Daily 식단 API")
 @RestController
 @RequestMapping("/diet/daily")
 public class DailyDietController {
