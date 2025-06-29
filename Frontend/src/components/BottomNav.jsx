@@ -21,7 +21,8 @@ const BottomNav = () => {
 
   const handleNavigation = (path, requiresLogin = false) => {
     if (requiresLogin && !isLoggedIn) {
-      navigate('/login');
+      // navigate('/login');
+      navigate(path);
     } else {
       navigate(path);
     }

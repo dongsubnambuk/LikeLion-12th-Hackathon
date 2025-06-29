@@ -1,7 +1,6 @@
 /* 컨테이너 높이 제한 - 하단 네비게이션 공간 확보 */
 html, body {
     height: 100%;
-    overflow: hidden; /* body 레벨에서 스크롤 방지 */
 }
 
 .signup_inner {
