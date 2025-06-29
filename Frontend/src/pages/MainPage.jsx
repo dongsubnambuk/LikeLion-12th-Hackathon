@@ -72,7 +72,7 @@ const MainPage = ({ onNotificationCountChange }) => {
       title: "매일 새벽 6시,\n문 앞까지",
       subtitle: "하루 세 끼를 한 번에 받아\n직장에서도 건강하게",
       image: slideImg2,
-      cta: "배송 지역 확인"
+      cta: "구독 시작하기"
     },
     {
       title: "21가지 메뉴 중\n자유롭게",
@@ -405,7 +405,7 @@ const MainPage = ({ onNotificationCountChange }) => {
                   <p>{slide.subtitle}</p>
                   <button
                     className="main-page-hero-cta-button"
-                    onClick={index === 0 ? handleSubscribeClick : handleMenuClick}
+                    onClick={index !== 2 ? handleSubscribeClick : handleMenuClick}
                   >
                     {slide.cta}
                   </button>
