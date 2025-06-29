@@ -87,14 +87,15 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public NotificationCountDTO testNotification(NotificationType notificationType,
                                                  String userEmail,
-                                                 String content) {
+                                                 String content,
+                                                 Long dailyReviewId) {
         NotificationDTO notificationDTO = notificationRepository.save(
                 Notification.builder()
                         .userEmail(userEmail)
                         .content(content)
                         .type(notificationType)
                         .sendTime(LocalDateTime.now())
-                        .dailyReviewId(null)
+                        .dailyReviewId(dailyReviewId)
                         .check(false)
                         .build()
         ).toNotificationDTO(
