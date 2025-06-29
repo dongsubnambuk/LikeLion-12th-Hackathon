@@ -4,7 +4,7 @@
     flex-direction: column;
     gap: 20px;
     margin: 20px auto;
-    max-width: 800px;
+    max-width: 600px;
     padding: 0 20px;
     overflow-y: auto;
     max-height: calc(100vh - 200px);
@@ -19,36 +19,56 @@
     border-radius: 3px;
 }
 
+.orderList_container::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 3px;
+}
 
-/* 날짜 헤더 */
-.orderList_date {
+/* 로딩, 에러, 빈 상태 */
+.loading, .error, .empty {
+    text-align: center;
+    padding: 40px 20px;
     font-size: 16px;
-    font-weight: 600;
     color: #6b7280;
-    margin-bottom: 12px;
+}
+
+.error {
+    color: #ef4444;
 }
 
 /* 카드 래퍼 */
 .orderList_wrapper {
     width: 100%;
+    animation: slideUp 0.3s ease-out;
+}
+
+.orderList_wrapper:nth-child(2) {
+    animation-delay: 0.05s;
+}
+
+.orderList_wrapper:nth-child(3) {
+    animation-delay: 0.1s;
+}
+
+.orderList_wrapper:nth-child(4) {
+    animation-delay: 0.15s;
 }
 
 /* 메인 카드 */
-.orderList_inner {
+.orderList_card {
     background: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 12px;
-    padding: 0;
     cursor: pointer;
     transition: all 0.2s ease;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
 
-.orderList_inner:hover {
+.orderList_card:hover {
     border-color: #9d9274;
     box-shadow: 0 4px 12px rgba(157, 146, 116, 0.15);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
 }
 
 /* 카드 헤더 */
@@ -56,31 +76,13 @@
     background: #9d9274;
     padding: 16px 20px;
     color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.orderList_orderInfo {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
 }
 
 .orderList_orderNumber {
-    font-size: 12px;
-    font-weight: 500;
-    opacity: 0.9;
-    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 600;
     letter-spacing: 0.5px;
 }
-
-.orderList_paymentId {
-    font-size: 16px;
-    font-weight: 600;
-    margin: 0;
-}
-
 
 /* 카드 내용 */
 .orderList_content {
@@ -89,11 +91,10 @@
 
 /* 주요 정보 섹션 */
 .orderList_mainInfo {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 20px;
-    align-items: center;
-    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
     padding-bottom: 20px;
     border-bottom: 1px solid #f3f4f6;
 }
@@ -101,7 +102,14 @@
 .orderList_dateSection {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
+}
+
+.orderList_priceSection {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: right;
 }
 
 .orderList_label {
@@ -113,70 +121,49 @@
 }
 
 .orderList_dateValue {
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 16px;
+    font-weight: 600;
     color: #374151;
     margin: 0;
-}
-
-.orderList_priceSection {
-    text-align: right;
 }
 
 .orderList_price {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 700;
     color: #1f2937;
     margin: 0;
-    line-height: 1;
 }
 
-/* 정보 그리드 */
-.orderList_infoGrid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-    margin-bottom: 24px;
-}
-
-.orderList_infoItem {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 16px;
+/* 메뉴 정보 섹션 */
+.orderList_menuInfo {
     background: #f9fafb;
     border-radius: 8px;
-    border-left: 3px solid #e5e7eb;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    border-left: 4px solid #9d9274;
 }
 
-.orderList_infoItem.address {
-    border-left-color: #9d9274;
-}
-
-.orderList_infoItem.menu {
-    border-left-color: #6b7280;
-}
-
-.orderList_infoTitle {
-    font-size: 13px;
+.orderList_menuTitle {
+    font-size: 12px;
     font-weight: 600;
-    color: #374151;
+    color: #6b7280;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    margin-bottom: 8px;
 }
 
-.orderList_infoContent {
-    font-size: 15px;
+.orderList_menuContent {
+    font-size: 16px;
+    font-weight: 600;
     color: #1f2937;
     margin: 0;
-    line-height: 1.4;
 }
 
 /* 액션 영역 */
-.orderList_detail {
+.orderList_detailSection {
     display: flex;
     justify-content: flex-end;
-    padding-top: 20px;
+    padding-top: 16px;
     border-top: 1px solid #f3f4f6;
 }
 
@@ -206,14 +193,14 @@
 }
 
 .orderList_detailButton:hover .orderList_arrow {
-    transform: translateX(2px);
+    transform: translateX(3px);
 }
 
 /* 애니메이션 */
 @keyframes slideUp {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
@@ -221,18 +208,43 @@
     }
 }
 
-.orderList_wrapper {
-    animation: slideUp 0.3s ease-out;
-}
-
-.orderList_wrapper:nth-child(2) {
-    animation-delay: 0.05s;
-}
-
-.orderList_wrapper:nth-child(3) {
-    animation-delay: 0.1s;
-}
-
-.orderList_wrapper:nth-child(4) {
-    animation-delay: 0.15s;
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .orderList_container {
+        max-width: 100%;
+        margin: 10px auto;
+        padding: 0 16px;
+        gap: 16px;
+    }
+    
+    .orderList_header {
+        padding: 14px 16px;
+    }
+    
+    .orderList_content {
+        padding: 20px 16px;
+    }
+    
+    .orderList_mainInfo {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+    
+    .orderList_priceSection {
+        text-align: left;
+    }
+    
+    .orderList_price {
+        font-size: 18px;
+    }
+    
+    .orderList_menuInfo {
+        padding: 14px 16px;
+    }
+    
+    .orderList_detailButton {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
 }

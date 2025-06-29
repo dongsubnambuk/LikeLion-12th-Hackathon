@@ -3,73 +3,104 @@ import { useNavigate } from "react-router-dom";
 import '../CSS/OrderList.css';
 
 function OrderList() {
-    const [address, setAddress] = useState({ 
-        roadAddress: '서울특별시 강남구 테헤란로 123', 
-        detailAddress: '456호' 
-    });
     const [payments, setPayments] = useState([]);
-    const [mealData, setMealData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    // 예시 데이터로 초기화
-    useEffect(() => {
-        // 예시 결제 데이터
-        const samplePayments = [
-            {
-                paymentId: "PAY20250613001",
-                dateTime: "2025-06-10T14:30:00Z",
-                totalPrice: 89000,
-                weeklyId: "WEEK_HEALTHY_001"
-            },
-            {
-                paymentId: "PAY20250613002", 
-                dateTime: "2025-06-05T09:15:00Z",
-                totalPrice: 95000,
-                weeklyId: "WEEK_PROTEIN_002"
-            },
-            {
-                paymentId: "PAY20250613003",
-                dateTime: "2025-05-28T16:45:00Z", 
-                totalPrice: 78000,
-                weeklyId: "WEEK_VEGGIE_003"
-            }
-        ];
-        
-        // 날짜 기준으로 최신순 정렬 (내림차순)
-        const sortedPayments = samplePayments.sort((a, b) => {
-            return new Date(b.dateTime) - new Date(a.dateTime);
-        });
-        
-        setPayments(sortedPayments);
-    }, []);
+    // 사용자 정보 조회 및 이메일 추출 (기본값 설정)
+    const [userEmail, setUserEmail] = useState('gisela5142@asimarif.com'); // 기본값
 
-    // 유저 정보 fetch (예시 데이터로 대체)
     useEffect(() => {
         const handleGetUser = async () => {
-            // 실제 API 호출 대신 예시 데이터 설정
-            console.log("사용자 정보 로드 완료 (예시 데이터)");
+            try {
+                const response = await fetch('http://nimn.store/api/users', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include', 
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+
+                    if (userData.message === "토큰소멸") {
+                        alert("로그인이 만료되었습니다. 다시 로그인 해주세요");
+                        navigate('/login');
+                        return;
+                    }
+                    
+                    // 사용자 이메일이 있으면 설정, 없으면 기본값 유지
+                    if (userData.email) {
+                        setUserEmail(userData.email);
+                        console.log('OrderList - 사용자 이메일 설정:', userData.email);
+                    } else {
+                        console.log('OrderList - 기본 이메일 사용:', userEmail);
+                    }
+                } else {
+                    console.log('OrderList - 사용자 정보 조회 실패, 기본 이메일 사용:', userEmail);
+                    
+                    try {
+                        const userData = await response.json();
+                        if (userData.message === "토큰소멸") {
+                            alert("로그인이 만료되었습니다. 다시 로그인 해주세요");
+                            navigate('/login');
+                            return;
+                        }
+                    } catch (e) {
+                        console.log('OrderList - 응답 파싱 실패');
+                    }
+                }
+            } catch (error) {
+                console.error('OrderList - 사용자 정보 조회 오류:', error);
+                console.log('OrderList - 오류로 인해 기본 이메일 사용:', userEmail);
+                // 에러가 발생해도 기본 이메일로 진행
+            }
         };
 
         handleGetUser();
-    }, []);
+    }, [navigate, userEmail]);
 
+    // 결제 내역 조회
     useEffect(() => {
         const handlePaymentGet = async () => {
-            // setPayments는 위의 useEffect에서 이미 설정됨
-            console.log("결제내역 로드 완료 (예시 데이터)");
-        };
-    
-        handlePaymentGet();
-    }, []);
-    
-    useEffect(() => {
-        const handleWeeklyId = async () => {
-            console.log("주간 식사 계획 로드 완료 (예시 데이터)");
-        };
-    
-        handleWeeklyId();
-    }, []);
+            try {
+                console.log(`OrderList - 결제 내역 조회 시작: ${userEmail}`);
+                
+                const response = await fetch(`http://nimn.store/api/payment?purchaser=${userEmail}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include', 
+                });
 
+                if (!response.ok) {
+                    throw new Error('결제 내역을 불러오는데 실패했습니다.');
+                }
+
+                const paymentData = await response.json();
+                console.log('OrderList - 결제 내역 조회 성공:', paymentData.length, '건');
+                
+                // 날짜 기준으로 최신순 정렬 (내림차순)
+                const sortedPayments = paymentData.sort((a, b) => {
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+                });
+                
+                setPayments(sortedPayments);
+            } catch (error) {
+                console.error('OrderList - 결제 내역 조회 오류:', error);
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+    
+        // userEmail이 설정되면 (기본값이든 실제값이든) 결제 내역 조회
+        handlePaymentGet();
+    }, [userEmail]);
+    
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         const year = date.getFullYear();
@@ -78,77 +109,73 @@ function OrderList() {
         return `${year}년 ${month}월 ${day}일`;
     };
 
-    useEffect(() => {
-        const handleGetUserDiet = async () => {
-            // 예시 식단 데이터
-            const sampleMealData = {
-                monday: "닭가슴살 샐러드, 현미밥",
-                tuesday: "연어 스테이크, 퀴노아",
-                wednesday: "두부 스테이크, 채소볶음"
-            };
-            setMealData(sampleMealData);
-            console.log("식단 데이터 로드 완료 (예시 데이터)");
-        };
-        
-        handleGetUserDiet();
-    }, []); 
-
     const handleDetailClick = (weeklyId) => {
-        navigate('/weeklyfoodmenu')
+        navigate('/weeklyfoodmenu', { state: { weeklyId } });
     };
 
-    return (
-        <>
+    if (loading) {
+        return (
             <div className="orderList_container">
-                {payments.map((payment, index) => (
-                    <div key={index} className="orderList_wrapper">
-                        <div className="orderList_date">
-                            {/* 날짜 표시 영역 */}
+                <div className="loading">주문 내역을 불러오는 중...</div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="orderList_container">
+                <div className="error">오류: {error}</div>
+            </div>
+        );
+    }
+
+    if (payments.length === 0) {
+        return (
+            <div className="orderList_container">
+                <div className="empty">주문 내역이 없습니다.</div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="orderList_container">
+            {payments.map((payment, index) => (
+                <div key={payment.id} className="orderList_wrapper">
+                    <div className="orderList_card" onClick={() => handleDetailClick(payment.weeklyDietId)}>
+                        <div className="orderList_header">
+                            <div className="orderList_orderNumber">
+                                주문 번호: PAY_{payment.id}
+                            </div>
                         </div>
-                        <div className="orderList_inner" onClick={() => handleDetailClick(payment.weeklyId)}>
-                            <div className="orderList_header">
-                                <div className="orderList_orderInfo">
-                
-                                    <div className="orderList_paymentId">주문 번호: {payment.paymentId}</div>
+                        
+                        <div className="orderList_content">
+                            <div className="orderList_mainInfo">
+                                <div className="orderList_dateSection">
+                                    <span className="orderList_label">결제 일시</span>
+                                    <div className="orderList_dateValue">{formatDate(payment.createdAt)}</div>
+                                </div>
+                                <div className="orderList_priceSection">
+                                    <span className="orderList_label">결제 금액</span>
+                                    <div className="orderList_price">{payment.totalPrice.toLocaleString()}원</div>
                                 </div>
                             </div>
                             
-                            <div className="orderList_content">
-                                <div className="orderList_mainInfo">
-                                    <div className="orderList_dateSection">
-                                        <span className="orderList_label">결제 일시</span>
-                                        <div className="orderList_dateValue">{formatDate(payment.dateTime)}</div>
-                                    </div>
-                                    <div className="orderList_priceSection">
-                                        <span className="orderList_label">결제 금액</span>
-                                        <div className="orderList_price">{payment.totalPrice.toLocaleString()}원</div>
-                                    </div>
-                                </div>
-                                
-                                <div className="orderList_infoGrid">
-                                    <div className="orderList_infoItem address">
-                                        <div className="orderList_infoTitle">배송 주소</div>
-                                        <div className="orderList_infoContent">{address.roadAddress} {address.detailAddress}</div>
-                                    </div>
-                                    
-                                    <div className="orderList_infoItem menu">
-                                        <div className="orderList_infoTitle">주문 메뉴</div>
-                                        <div className="orderList_infoContent">{payment.weeklyId}</div>
-                                    </div>
-                                </div>
-                                
-                                <div className="orderList_detail">
-                                    <button className="orderList_detailButton">
-                                        자세히 보기
-                                        <span className="orderList_arrow">→</span>
-                                    </button>
-                                </div>
+                            <div className="orderList_menuInfo">
+                                <div className="orderList_menuTitle">주문 메뉴</div>
+                                <div className="orderList_menuContent">주간 식단 #{payment.weeklyDietId}</div>
+                            </div>
+                            
+                            <div className="orderList_detailSection">
+                                <button className="orderList_detailButton">
+                                    자세히 보기
+                                    <span className="orderList_arrow">→</span>
+                                </button>
                             </div>
                         </div>
                     </div>
-                ))}
-            </div>
-        </>
+                </div>
+            ))}
+        </div>
     );
 }
 

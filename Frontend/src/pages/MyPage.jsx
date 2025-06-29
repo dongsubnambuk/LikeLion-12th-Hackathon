@@ -13,7 +13,6 @@ const [Image] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-p
 const [userName, setUserName] = useState(''); 
 const [address, setAddress] = useState({ roadAddress: '', detailAddress: '' });
 const [phoneNumber, setphoneNumber] = useState(''); 
-const [showPopup, setShowPopup] = useState(false);
 const navigate = useNavigate();
 
     // 로그아웃 함수
@@ -47,19 +46,7 @@ const navigate = useNavigate();
         }
     };
 
-    const handleUnsubscribeClick = () => {
-        setShowPopup(true);
-    };
-
-    const handleConfirmUnsubscribe = () => {
-        setShowPopup(false);
-        alert('탈퇴가 완료되었습니다.');
-        navigate('/');
-    };
-
-    const handleCancelUnsubscribe = () => {
-        setShowPopup(false);
-    };
+   
 
     useEffect(() => {
         const handleget = async () => {
@@ -184,7 +171,7 @@ const navigate = useNavigate();
                             </div>
                             <div className="mypage_menu_text">
                                 <span className="mypage_menu_title">주문 내역</span>
-                                <span className="mypage_menu_subtitle">주문 및 배송 현황 확인</span>
+                                <span className="mypage_menu_subtitle">주문 내역 전체 보기</span>
                             </div>
                         </div>
                         <FontAwesomeIcon icon={faChevronRight} className="mypage_menu_arrow"/>
@@ -200,35 +187,9 @@ const navigate = useNavigate();
                         <FontAwesomeIcon icon={faSignOutAlt} className="mypage_action_icon"/>
                         <span className="mypage_action_text">로그아웃</span>
                     </button>
-                    
-                    <button className="mypage_action_item mypage_danger" onClick={handleUnsubscribeClick}>
-                        <FontAwesomeIcon icon={faUserMinus} className="mypage_action_icon"/>
-                        <span className="mypage_action_text">회원탈퇴</span>
-                    </button>
                 </div>
             </div>
         </div>
-
-        {/* 팝업 모달 */}
-        {showPopup && (
-            <div className="mypage_modal_overlay">
-                <div className="mypage_modal">
-                    <div className="mypage_modal_content">
-                        <h3 className="mypage_modal_title">회원탈퇴</h3>
-                        <p className="mypage_modal_message">정말로 탈퇴하시겠습니까?</p>
-                        <p className="mypage_modal_warning">탈퇴 시 모든 정보가 영구적으로 삭제됩니다.</p>
-                    </div>
-                    <div className="mypage_modal_buttons">
-                        <button className="mypage_modal_button mypage_modal_cancel" onClick={handleCancelUnsubscribe}>
-                            취소
-                        </button>
-                        <button className="mypage_modal_button mypage_modal_confirm" onClick={handleConfirmUnsubscribe}>
-                            탈퇴하기
-                        </button>
-                    </div>
-                </div>
-            </div>
-        )}
         </>
     );
 }
