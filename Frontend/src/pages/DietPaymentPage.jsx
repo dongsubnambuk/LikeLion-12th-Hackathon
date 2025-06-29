@@ -10,45 +10,86 @@ function DietPaymentPage() {
 
     // Generate a string with the name of the first ordered meal and indicate the number of additional meals
     const mealCount = orderDetails.reduce((total, day) => total + day.meals.length, 0);
-    const firstMealName = orderDetails[0].meals[0].title;
+    const firstMealName = orderDetails[0].meals[0].name || orderDetails[0].meals[0].title;
     const additionalMealsCount = mealCount - 1;
     const orderedMealNames = additionalMealsCount > 0 
         ? `${firstMealName} 외 ${additionalMealsCount}개` 
         : firstMealName;
 
-    const weeklyId = 1;
+    let weeklyId = 1;
+
+    // 🔥 수정된 함수: 실제 유저 정보 가져오기
+    const getUserEmail = async () => {
+        try {
+            const response = await fetch('http://nimn.store/api/users', {
+                method: 'GET',
+                credentials: 'include'
+            });
+            if (!response.ok) {
+                throw new Error('사용자 정보를 가져올 수 없습니다.');
+            }
+            const userData = await response.json();
+            return userData.email;
+        } catch (error) {
+            throw new Error('로그인이 필요합니다.');
+        }
+    };
+
+    // localStorage 데이터를 API 형식에 맞게 변환하는 함수
+    const transformMealDataToApiFormat = (mealData, userEmail) => {
+        return mealData.map(dayData => ({
+            dailyDietId: 0,
+            date: dayData.day,
+            userEmail: userEmail,
+            foodSelections: dayData.mealOptions.map(option => ({
+                foodSelectionId: 0,
+                foodTime: option.mealType,
+                foodId: option.foodMenus[0].id,
+                count: option.count,
+                userEmail: userEmail
+            }))
+        }));
+    };
 
     const onVerification = async (response, orderId) => {
-        const token = localStorage.getItem("token");
-    
-        console.log('결제 성공', response);
-    
         if (response.error_code != null) {
             return alert(`결제에 실패하였습니다. 에러 내용: ${response.error_msg}`);
         }
-    
+
         try {
-            // Step 2: 결제 내역 생성 API 호출
-            const paymentResponse = await fetch('http://3.37.64.39:8000/api/payment/newPayment', {
+            const paymentRequestData = {
+                paymentUid: response.imp_uid,
+                orderId: String(orderId)
+            };
+
+            const paymentResponse = await fetch('http://nimn.store/api/payment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    "Authorization": token,
                 },
-                body: JSON.stringify({
-                    orderId: String(response.merchant_uid), // 주문내역 응답에서 받은 orderId를 문자열로 변환
-                    paymentUid: response.imp_uid,
-                }),
+                credentials: 'include',
+                body: JSON.stringify(paymentRequestData),
             });
-            const paymentData = await paymentResponse.json();
 
-            // Log the entire response to check the structure
-            console.log(paymentData);
             if (!paymentResponse.ok) {
-                throw new Error('결제 내역 생성에 실패했습니다.');
+                if (paymentResponse.status === 500) {
+                    alert('결제 검증 중 서버 오류가 발생했습니다. 고객센터로 문의해주세요.');
+                } else {
+                    alert(`결제 내역 생성에 실패했습니다. 상태 코드: ${paymentResponse.status}`);
+                }
+                return;
             }
 
-            const paymentId = paymentData.data?.paymentId;
+            const responseText = await paymentResponse.text();
+            let paymentData;
+            try {
+                paymentData = JSON.parse(responseText);
+            } catch (parseError) {
+                alert('서버 응답을 처리하는 중 오류가 발생했습니다.');
+                return;
+            }
+
+            const paymentId = paymentData.id;
             if (!paymentId) {
                 throw new Error('결제 내역 생성 중 오류가 발생했습니다. paymentId를 찾을 수 없습니다.');
             }
@@ -57,114 +98,117 @@ function DietPaymentPage() {
                 state: { 
                     imp_uid: response.imp_uid, 
                     merchant_uid: response.merchant_uid,
-                    paymentId: paymentId 
+                    paymentId: paymentId,
+                    totalPrice: paymentData.totalPrice
                 } 
             });
-    
+
         } catch (error) {
             alert(`결제 내역 생성 중 오류가 발생했습니다. ${error.message}`);
         }
     };
-    
+
     const requestPay = async () => {
 
         const handleCreatUserDiet = async () => {
-            const storedIsLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-            const userToken = localStorage.getItem("token");
-            const userEmail = localStorage.getItem("email");
+            try {
+                const userEmail = await getUserEmail();
 
-            const startDate = localStorage.getItem("startDate");
-            const endDate = localStorage.getItem("endDate");
+                const startDate = localStorage.getItem("startDate");
+                const endDate = localStorage.getItem("endDate");
+                const dailyDiets = localStorage.getItem("Meal");
 
-            const dailyDiets = localStorage.getItem("Meal");
+                if (!dailyDiets) {
+                    throw new Error('식단 데이터가 없습니다.');
+                }
 
-            if (storedIsLoggedIn) {
-                console.log("로그인 됨, 식단 생성");
-                console.log("유저 이메일 =", userEmail);
-                const response = await fetch(`http://3.37.64.39:8000/api/userMeal/weekly/create`, {
+                const parsedMealData = JSON.parse(dailyDiets);
+                const transformedDailyDiets = transformMealDataToApiFormat(parsedMealData, userEmail);
+
+                const response = await fetch(`http://nimn.store/api/diet/weekly/create`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": userToken,
                     },
+                    credentials: 'include',
                     body: JSON.stringify({
-                        "startDate": startDate,
-                        "endDate": endDate,
-                        "userEmail": userEmail,
-                        "dailyMealPlans": JSON.parse(dailyDiets) // 문자열을 객체로 변환
+                        "weeklyId": 0,
+                        "startDate": JSON.parse(startDate),
+                        "endDate": JSON.parse(endDate),
+                        "dailyDiets": transformedDailyDiets,
+                        "userEmail": userEmail
                     })
                 });
 
-                const result = await response.json();
-
-                if (response.status === 200) {
-                    console.log(result);
-                    console.log("식단 생성 성공");
-                    localStorage.setItem("isPay", "true");
-                    console.log("식단 생성 유무 : ", localStorage.getItem("isPay"));
-                    localStorage.setItem("isPay", true);
-
-                    weeklyId = result.weeklyId;
-
-                } else {
-                    console.log("식단 생성 실패");
-                    alert("식단 생성 실패: " + result.message);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`식단 생성 실패: ${response.status}`);
                 }
-            } else {
-                console.log("식단 : 로그인 안 됨");
+
+                const result = await response.json();
+                localStorage.setItem("isPay", "true");
+                weeklyId = result.weeklyId;
+
+            } catch (error) {
+                alert("식단 생성 중 오류가 발생했습니다: " + error.message);
+                throw error;
             }
         };
 
-        handleCreatUserDiet();
-
-        const token = localStorage.getItem("token");
-        const email = localStorage.getItem("email");
         try {
-            // Step 1: 주문내역 생성 API 호출
-            const orderResponse = await fetch('http://3.37.64.39:8000/api/payment/order/newOrder', {
+            await handleCreatUserDiet();
+
+            // 🔥 실제 유저 정보 가져오기
+            const userData = await fetch('http://nimn.store/api/users', {
+                method: 'GET',
+                credentials: 'include'
+            });
+            
+            if (!userData.ok) {
+                throw new Error('사용자 정보를 가져올 수 없습니다.');
+            }
+            
+            const userInfo = await userData.json();
+            
+            const orderResponse = await fetch('http://nimn.store/api/order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    "Authorization": token,
                 },
+                credentials: 'include',
                 body: JSON.stringify({
-                    purchaser: email,
-                    totalPrice: 100,
-                    weeklyId: 5000, 
+                    purchaser: userInfo.email,
+                    weeklyDietId: weeklyId,
                 }),
             });
 
             if (!orderResponse.ok) {
+                const errorText = await orderResponse.text();
                 throw new Error('주문내역 생성에 실패했습니다.');
             }
     
             const orderData = await orderResponse.json();
-            if (orderData.result !== 'success') {
-                throw new Error('주문내역 생성에 실패했습니다.');
-            }
-            const { orderId, weeklyId } = orderData.data; // 서버로부터 받은 주문번호와 weeklyId 사용
-            console.log(orderId);
+            const orderId = orderData.id;
+            const totalPrice = orderData.totalPrice;
     
-                // weeklyId를 로컬 스토리지에 저장
             localStorage.setItem("weeklyId", weeklyId);
 
-            // Step 2: 결제 요청 진행
-            const { IMP } = window; // 생략 가능
-            IMP.init('imp77151582'); // 아임포트 관리자 콘솔에서 확인한 가맹점 식별코드
+            const { IMP } = window;
+            IMP.init('imp77151582');
     
+            // 🔥 실제 사용자 데이터로 수정
             const data = {
-                pg: `html5_inicis.INIpayTest`, // PG사
-                pay_method: 'card', // 결제수단
-                merchant_uid: `${orderId}`, // 주문번호를 사용하여 고유한 merchant_uid 생성
-                name: orderedMealNames, // Use the generated meal names string
-                amount: 100,
-                // amount: price, 임의로 100원으로 설정
-                buyer_email: email,
-                buyer_name: '홍길동',
-                buyer_tel: '010-1234-5678',
-                buyer_addr: '서울특별시 강남구 삼성동',
+                pg: `html5_inicis.INIpayTest`,
+                pay_method: 'card',
+                merchant_uid: `${orderId}`,
+                name: orderedMealNames,
+                amount: totalPrice,
+                buyer_email: userInfo.email, // 실제 이메일
+                buyer_name: userInfo.name, // 실제 이름
+                buyer_tel: userInfo.phone_number, // 실제 전화번호
+                buyer_addr: `${userInfo.road_address} ${userInfo.detail_address}`, // 실제 주소
                 buyer_postcode: '123-456',
-                m_redirect_url: 'http://nimn.store/dietpaymentcomplete', // 결제 후 리디렉션될 URL
+                m_redirect_url: 'http://nimn.store/dietpaymentcomplete',
             };
     
             IMP.request_pay(data, (response) => onVerification(response, orderId));

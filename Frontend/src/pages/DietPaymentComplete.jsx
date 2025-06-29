@@ -69,10 +69,9 @@ function DietPaymentComplete() {
             {/* 성공 헤더 */}
             <div className="diet-payment-complete-header">
                 <div className="diet-payment-complete-success-icon">
-                    <div className="diet-payment-complete-checkmark">
-                        <div className="diet-payment-complete-checkmark-circle"></div>
-                        <div className="diet-payment-complete-checkmark-stem"></div>
-                        <div className="diet-payment-complete-checkmark-kick"></div>
+                    {/* 🔥 수정된 부분: 간단한 체크마크 아이콘으로 교체 */}
+                    <div className="diet-payment-complete-simple-checkmark">
+                        ✅
                     </div>
                 </div>
                 <h1 className="diet-payment-complete-title">결제 완료!</h1>
@@ -105,31 +104,6 @@ function DietPaymentComplete() {
                 </div>
             </div>
 
-            {/* 안내 메시지 */}
-            <div className="diet-payment-complete-notice-card">
-                <h3 className="diet-payment-complete-notice-title">📦 배송 안내</h3>
-                <div className="diet-payment-complete-notice-content">
-                    <div className="diet-payment-complete-notice-item">
-                        <span className="diet-payment-complete-notice-icon">🚚</span>
-                        <div className="diet-payment-complete-notice-text">
-                            <strong>배송 시작:</strong> 주문일 기준 1-2일 후 배송 시작
-                        </div>
-                    </div>
-                    <div className="diet-payment-complete-notice-item">
-                        <span className="diet-payment-complete-notice-icon">📱</span>
-                        <div className="diet-payment-complete-notice-text">
-                            <strong>배송 알림:</strong> SMS 및 앱 푸시로 배송 상태 안내
-                        </div>
-                    </div>
-                    <div className="diet-payment-complete-notice-item">
-                        <span className="diet-payment-complete-notice-icon">❄️</span>
-                        <div className="diet-payment-complete-notice-text">
-                            <strong>보관 방법:</strong> 수령 후 즉시 냉장 보관 권장
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             {/* 버튼 섹션 */}
             <div className="diet-payment-complete-button-section">
                 <button 
@@ -144,16 +118,6 @@ function DietPaymentComplete() {
                 >
                     홈으로 돌아가기
                 </button>
-            </div>
-
-            {/* 추가 안내 */}
-            <div className="diet-payment-complete-footer">
-                <p className="diet-payment-complete-footer-text">
-                    문의사항이 있으시면 고객센터로 연락해주세요
-                </p>
-                <p className="diet-payment-complete-footer-contact">
-                    📞 1588-0000 | 💬 채팅 상담
-                </p>
             </div>
         </div>
     );

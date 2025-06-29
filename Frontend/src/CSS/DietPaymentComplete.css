@@ -2,13 +2,14 @@
 
 /* 메인 컨테이너 */
 .diet-payment-complete-container {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    padding: 20px;
-    padding-bottom: calc(100px + env(safe-area-inset-bottom));
+    min-height: 85vh;
+    background: rgba(157, 146, 116, 0.1);
+    padding: 20px 20px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100%;
+    margin: 0;
 }
 
 /* 성공 헤더 */
@@ -22,7 +23,7 @@
     box-shadow: 0 8px 32px rgba(157, 146, 116, 0.15);
     border: 1px solid rgba(157, 146, 116, 0.2);
     width: 100%;
-    max-width: 500px;
+    max-width: 330px;
 }
 
 /* 체크마크 애니메이션 */
@@ -150,7 +151,7 @@
     box-shadow: 0 8px 32px rgba(157, 146, 116, 0.15);
     border: 1px solid rgba(157, 146, 116, 0.2);
     width: 100%;
-    max-width: 500px;
+    max-width: 330px;
 }
 
 .diet-payment-complete-section-title {
@@ -184,7 +185,7 @@
 }
 
 .diet-payment-complete-info-value {
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 600;
     color: #2c3e50;
 }
@@ -205,7 +206,7 @@
     box-shadow: 0 8px 32px rgba(157, 146, 116, 0.15);
     border: 1px solid rgba(157, 146, 116, 0.2);
     width: 100%;
-    max-width: 500px;
+    max-width: 330px;
 }
 
 .diet-payment-complete-notice-title {
@@ -337,11 +338,7 @@
 }
 
 /* 반응형 디자인 */
-@media (max-width: 768px) {
-    .diet-payment-complete-container {
-        padding: 15px;
-    }
-    
+@media (max-width: 768px) {    
     .diet-payment-complete-header {
         padding: 30px 25px;
     }
@@ -371,11 +368,7 @@
     }
 }
 
-@media (max-width: 480px) {
-    .diet-payment-complete-container {
-        padding: 10px;
-    }
-    
+@media (max-width: 480px) {    
     .diet-payment-complete-header {
         padding: 25px 20px;
     }
@@ -424,9 +417,25 @@
     }
 }
 
-/* iPhone X 이상 기기의 홈 인디케이터 대응 */
-@supports (padding-bottom: env(safe-area-inset-bottom)) {
-    .diet-payment-complete-container {
-        padding-bottom: calc(100px + env(safe-area-inset-bottom) + 8px);
+
+/* 🔥 추가된 부분: 간단한 체크마크 아이콘 스타일 */
+.diet-payment-complete-simple-checkmark {
+    font-size: 80px;
+    margin-bottom: 20px;
+    animation: checkmark-bounce 0.6s ease-in-out;
+}
+
+@keyframes checkmark-bounce {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
     }
 }
