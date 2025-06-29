@@ -1,3 +1,4 @@
+
 /* 로딩 컨테이너 */
 .allDietPage_loading_container {
     width: 100%;
@@ -16,10 +17,10 @@
     border: 3px solid rgba(157, 146, 116, 0.2);
     border-top: 3px solid #9d9274;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    animation: allDietPage_spin 1s linear infinite;
 }
 
-@keyframes spin {
+@keyframes allDietPage_spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
@@ -39,17 +40,24 @@
     justify-content: flex-start;
     padding: 20px 24px 55px 24px;
     position: relative;
-    height: 75vh;
-
+    min-height: 75vh;
 }
 
-/* 식단 컨테이너 - 그리드 제거 */
+/* 식단 컨테이너 */
 .allDietPage_meals_grid {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
     overflow: hidden;
     overflow-y: auto;
+    width: 100%;
+    max-width: 1200px;
+}
+
+/* 메인 카드 래퍼 */
+.allDietPage_meal_wrapper {
+    width: calc(50% - 8px);
+    margin-bottom: 8px;
 }
 
 /* 메인 카드 */
@@ -60,7 +68,7 @@
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
     position: relative;
-    width: calc(50% - 8px);
+    width: 100%;
     height: 300px;
     cursor: pointer;
     margin-bottom: 8px;
@@ -70,7 +78,6 @@
     transform: translateY(-4px);
     box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
 }
-
 
 /* 시간 태그 */
 .allDietPage_meal_time {
@@ -94,7 +101,7 @@
 
 /* 이미지 */
 .allDietPage_meal_image {
-    height: 45%;
+    height: 40%;
     overflow: hidden;
     position: relative;
 }
@@ -114,7 +121,7 @@
 .allDietPage_meal_info {
     padding: 16px;
     background: white;
-    height: 55%;
+    height: 60%;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -128,7 +135,8 @@
     line-height: 1.2;
     height: 40px;
     overflow: hidden;
-
+    margin-bottom: 4px;
+    margin: 0;
 }
 
 .allDietPage_meal_info_description {
@@ -136,6 +144,8 @@
     color: #666;
     line-height: 1.3;
     letter-spacing: -0.1px;
+    margin-bottom: 8px;
+    margin: 0 0 8px 0;
 }
 
 /* 영양 정보 */
@@ -201,12 +211,363 @@
     box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
 }
 
+/* 리뷰 정보 - 카드 외부 */
+.allDietPage_review_info_external {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    background: #ffffff;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.allDietPage_review_info_external.clickable {
+    cursor: pointer;
+}
+
+.allDietPage_review_info_external.clickable:hover {
+    background: #fafafa;
+    border-color: #e0e0e0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.allDietPage_review_left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.allDietPage_stars_container {
+    display: flex;
+    gap: 1px;
+    align-items: center;
+}
+
+.allDietPage_star_filled {
+    color: #ffc107;
+    font-size: 14px;
+    text-shadow: 0 1px 3px rgba(255, 193, 7, 0.3);
+    filter: drop-shadow(0 0 2px rgba(255, 193, 7, 0.4));
+}
+
+.allDietPage_star_empty {
+    color: #e8e8e8;
+    font-size: 14px;
+}
+
+.allDietPage_star_half {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    width: 14px;
+}
+
+.allDietPage_star_half .allDietPage_star_filled {
+    position: absolute;
+    left: 0;
+    width: 50%;
+    overflow: hidden;
+}
+
+.allDietPage_review_summary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.allDietPage_rating_number {
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+    line-height: 1;
+}
+
+.allDietPage_review_count {
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.allDietPage_review_view_text {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #9d9274;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: rgba(157, 146, 116, 0.1);
+    transition: all 0.2s ease;
+}
+
+.allDietPage_review_view_icon {
+    font-size: 12px;
+}
+
+.allDietPage_review_view_label {
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* 리뷰 없음 표시 */
+.allDietPage_no_review_external {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+}
+
+.allDietPage_no_review_icon {
+    font-size: 16px;
+    opacity: 0.5;
+}
+
+.allDietPage_no_review_content {
+    display: flex;
+    flex-direction: column;
+}
+
+.allDietPage_no_review_title {
+    font-size: 12px;
+    color: #6c757d;
+    font-weight: 500;
+    line-height: 1;
+}
+
+/* 리뷰 모달 스타일 */
+body.modal-open {
+    overflow: hidden;
+}
+
+.allDietPage_review_modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+.allDietPage_review_modal_container {
+    background: white;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.allDietPage_review_modal_header {
+    background: linear-gradient(135deg, #9d9274 0%, #b5a788 100%);
+    color: white;
+    padding: 25px 30px;
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.allDietPage_review_modal_header_content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.allDietPage_review_modal_title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.allDietPage_review_modal_summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.allDietPage_review_modal_stars {
+    display: flex;
+    gap: 2px;
+}
+
+.allDietPage_review_modal_stars .allDietPage_star_filled {
+    color: #ffd700;
+    font-size: 16px;
+}
+
+.allDietPage_review_modal_stars .allDietPage_star_empty {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 16px;
+}
+
+.allDietPage_review_modal_rating {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.allDietPage_review_modal_count {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.allDietPage_review_modal_close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.allDietPage_review_modal_close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.allDietPage_modal_close_icon {
+    font-size: 18px;
+}
+
+.allDietPage_review_modal_content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    min-height: 0;
+}
+
+.allDietPage_reviews_list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.allDietPage_review_item {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid #e9ecef;
+}
+
+.allDietPage_review_item_header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.allDietPage_review_item_stars {
+    display: flex;
+    gap: 2px;
+}
+
+.allDietPage_review_item_stars .allDietPage_star_filled {
+    color: #ffd700;
+    font-size: 14px;
+}
+
+.allDietPage_review_item_stars .allDietPage_star_empty {
+    color: #e0e0e0;
+    font-size: 14px;
+}
+
+.allDietPage_review_item_rating {
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+}
+
+.allDietPage_review_item_date {
+    font-size: 12px;
+    color: #888;
+    margin-left: auto;
+}
+
+.allDietPage_review_item_user {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.allDietPage_review_user_label {
+    font-weight: 500;
+}
+
+.allDietPage_review_user_name {
+    font-weight: 400;
+}
+
+.allDietPage_review_item_comment {
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 4px solid #9d9274;
+}
+
+.allDietPage_review_comment_text {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.allDietPage_no_reviews {
+    text-align: center;
+    padding: 60px 20px;
+    color: #888;
+}
+
+.allDietPage_no_reviews_main,
+.allDietPage_no_reviews_sub {
+    margin: 8px 0;
+    font-size: 14px;
+}
+
+.allDietPage_no_reviews_main {
+    font-weight: 600;
+    color: #666;
+}
+
+.allDietPage_no_reviews_sub {
+    font-weight: 400;
+}
+
 /* 슬라이드 컨트롤 */
 .allDietPage_slide_controls {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 24px;
+    margin-top: 20px;
 }
 
 /* 네비게이션 버튼 */
@@ -235,6 +596,12 @@
     cursor: not-allowed;
 }
 
+.allDietPage_nav_icon {
+    font-size: 16px;
+}
+
+
+
 /* 페이지 인디케이터 */
 .allDietPage_indicators {
     display: flex;
@@ -259,3 +626,22 @@
     width: 24px;
     border-radius: 4px;
 }
+
+/* 데이터 없음 메시지 */
+.allDietPage_no_data {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    color: #888;
+    font-size: 16px;
+}
+
+.allDietPage_no_data_text {
+    font-size: 16px;
+    color: #888;
+    margin: 0;
+}
+
+
+
