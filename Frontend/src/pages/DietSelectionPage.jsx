@@ -94,16 +94,24 @@ function DietSelectionPage() {
 
     // 실제 API에서 받은 데이터를 내부 구조로 변환
     const transformApiData = (apiData) => {
+        // 🔥 수정된 부분: 식사 시간 한국어 매핑 강화
         const mealTypeMapping = {
             'Breakfast': '아침',
+            'BREAKFAST': '아침',
+            'breakfast': '아침',
             'Lunch': '점심',
-            'Dinner': '저녁'
+            'LUNCH': '점심',
+            'lunch': '점심',
+            'Dinner': '저녁',
+            'DINNER': '저녁',
+            'dinner': '저녁'
         };
 
         const transformedData = apiData.dailyFoodPlans.map(dayPlan => ({
             day: dayPlan.day,
             foodChoiceSets: dayPlan.foodChoiceSets.map(choiceSet => ({
                 foodTime: choiceSet.foodTime,
+                // 🔥 수정된 부분: 한국어 변환 로직 강화
                 foodTimeLabel: mealTypeMapping[choiceSet.foodTime] || choiceSet.foodTime,
                 foods: choiceSet.foods.map(food => ({
                     ...food,
