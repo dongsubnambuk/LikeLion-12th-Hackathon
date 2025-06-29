@@ -649,3 +649,53 @@ body.modal-open {
         font-size: 16px;
     }
 }
+/* 개별 제출 버튼 스타일 */
+.individual_submit_section {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.individual_submit_button {
+    cursor: pointer;
+    padding: 12px 24px;
+    background: #9d9274;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    min-width: 140px;
+    text-align: center;
+}
+
+.individual_submit_button:hover:not(:disabled) {
+    background: #8a825f;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(157, 146, 116, 0.3);
+}
+
+.individual_submit_button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* 반응형 디자인 추가 */
+@media (max-width: 768px) {
+    .individual_submit_button {
+        padding: 10px 20px;
+        font-size: 13px;
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .individual_submit_button {
+        padding: 8px 16px;
+        font-size: 12px;
+        min-width: 100px;
+    }
+}

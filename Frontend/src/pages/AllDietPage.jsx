@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { LeftOutlined, RightOutlined, StarFilled } from '@ant-design/icons';
 import '../CSS/AllDietPage.css';
 import cat from '../images/cat2.png';
 
 function AllDietPage() {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(0);
-    const [isAnimating, setIsAnimating] = useState(false);
-    const [animationClass, setAnimationClass] = useState('');
     const [mealData, setMealData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedFoodReviews, setSelectedFoodReviews] = useState(null);
+    const [reviewModalOpen, setReviewModalOpen] = useState(false);
+    const [detailedReviews, setDetailedReviews] = useState([]);
 
     const handleItemClick = (item) => {
         navigate(`/dietinfo`, { state: { item } });
@@ -24,7 +25,6 @@ function AllDietPage() {
                 credentials: 'include',
             });
       
-            
             if (response.ok) {
                 const data = await response.json();
                 return data;
@@ -38,13 +38,35 @@ function AllDietPage() {
         }
     };
 
+    // 전체 리뷰 조회 API (summary가 전체 조회)
+    const getAllReviewsAPI = async () => {
+        try {
+            const response = await fetch('http://nimn.store/api/review/summary', {
+                method: "GET",
+                credentials: 'include',
+            });
+      
+            if (response.ok) {
+                const data = await response.json();
+
+                return data;
+            } else {
+                console.error('전체 리뷰 조회 실패:', response.status);
+                return [];
+            }
+        } catch (error) {
+            console.error('전체 리뷰 조회 에러:', error);
+            return [];
+        }
+    };
+
     // 이미지 URL 생성 함수
     const getImageUrl = (imageId) => {
-        if (!imageId) return cat; // 기본 이미지
+        if (!imageId) return cat;
         return `http://nimn.store/api/image/${imageId}`;
     };
 
-    // 영양 정보 포맷팅 함수 (문자열 처리)
+    // 영양 정보 포맷팅 함수
     const formatNutrition = (food) => {
         const calories = food.calories ? `${food.calories}` : '';
         const protein = food.protein ? ` ${food.protein}` : '';
@@ -86,6 +108,88 @@ function AllDietPage() {
         return parts.join(', ') || '상세 정보 없음';
     };
 
+    // summary API 응답 구조에 맞는 리뷰 데이터 매핑 함수
+    const mapReviewData = (reviewSummaries) => {
+        const reviewMap = {};
+
+        
+        if (reviewSummaries && reviewSummaries.length > 0) {
+            reviewSummaries.forEach(summary => {
+                const foodId = summary.foodId;
+                if (foodId) {
+                    reviewMap[foodId] = {
+                        averageRating: summary.averageRating || 0,
+                        totalReviews: summary.totalReviews || 0,
+                        foodName: summary.foodName || '',
+                        foodImage: summary.foodImage || '',
+                        detailedReviews: summary.reviews || [] // summary API의 reviews 배열 사용
+                    };
+                }
+            });
+        }
+ 
+        return reviewMap;
+    };
+
+    // 별점 렌더링 함수
+    const renderStars = (rating) => {
+        const stars = [];
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 !== 0;
+
+        for (let i = 0; i < fullStars; i++) {
+            stars.push(
+                <StarFilled key={i} className="allDietPage_star_filled" />
+            );
+        }
+
+        if (hasHalfStar) {
+            stars.push(
+                <div key="half" className="allDietPage_star_half">
+                    <StarFilled className="allDietPage_star_filled" />
+                </div>
+            );
+        }
+
+        const emptyStars = 5 - Math.ceil(rating);
+        for (let i = 0; i < emptyStars; i++) {
+            stars.push(
+                <StarFilled key={`empty-${i}`} className="allDietPage_star_empty" />
+            );
+        }
+
+        return stars;
+    };
+
+    // 리뷰 모달 열기
+    const openReviewModal = (e, foodItem) => {
+        e.stopPropagation();
+        
+        setSelectedFoodReviews(foodItem);
+        setDetailedReviews(foodItem.reviewInfo.detailedReviews || []);
+        setReviewModalOpen(true);
+        document.body.classList.add('modal-open');
+    };
+
+    // 리뷰 모달 닫기
+    const closeReviewModal = () => {
+        setReviewModalOpen(false);
+        setSelectedFoodReviews(null);
+        setDetailedReviews([]);
+        document.body.classList.remove('modal-open');
+    };
+
+    // 날짜 포맷팅 함수
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    };
+
     // 슬라이드 기능을 위한 설정
     const itemsPerPage = 4; 
     const totalPages = Math.ceil(mealData.length / itemsPerPage);
@@ -120,29 +224,42 @@ function AllDietPage() {
             try {
                 setLoading(true);
                 
-                // 실제 API 호출
-                const result = await getAllFoodsAPI();
+                // 음식 목록과 리뷰 요약을 동시에 조회
+                const [foodResult, reviewResult] = await Promise.all([
+                    getAllFoodsAPI(),
+                    getAllReviewsAPI()
+                ]);
                 
-                if (result && result.length > 0) {
-                    // API 응답을 컴포넌트에서 사용하는 형태로 변환
-                    const formattedData = result.map(food => {
+                // 리뷰 데이터를 foodId 기준으로 매핑
+                const mappedReviews = mapReviewData(reviewResult);
+                
+                if (foodResult && foodResult.length > 0) {
+                    const formattedData = foodResult.map(food => {
                         const nutrition = formatNutrition(food);
+                        const reviewInfo = mappedReviews[food.id] || {
+                            averageRating: 0,
+                            totalReviews: 0,
+                            detailedReviews: []
+                        };
+                        
                         
                         return {
                             id: food.id,
                             name: food.name || '메뉴명 없음',
                             price: formatPrice(food.price),
-                            image: getImageUrl(food.image), // 이미지 API 연결
+                            image: getImageUrl(food.image),
                             category: getCategoryName(food.main1, food.main2),
                             description: generateDescription(food),
                             
-                            // 표시용 영양정보 (기존 호환성 유지)
+                            // 리뷰 정보 추가
+                            reviewInfo: reviewInfo,
+                            
+                            // 표시용 영양정보
                             calories: nutrition.calories,
                             protein: nutrition.protein,
                             
-                            // 모든 영양성분 정보 (상세페이지용)
+                            // 모든 영양성분 정보
                             nutritionInfo: {
-                                // 원본 문자열 값
                                 caloriesString: food.calories || '0',
                                 proteinString: food.protein || '0',
                                 carbohydrateString: food.carbohydrate || '0',
@@ -150,7 +267,6 @@ function AllDietPage() {
                                 sugarString: food.sugar || '0',
                                 sodiumString: food.sodium || '0',
                                 
-                                // 숫자로 변환된 값
                                 calories: parseNutritionValue(food.calories),
                                 protein: parseNutritionValue(food.protein),
                                 carbohydrate: parseNutritionValue(food.carbohydrate),
@@ -158,7 +274,6 @@ function AllDietPage() {
                                 sugar: parseNutritionValue(food.sugar),
                                 sodium: parseNutritionValue(food.sodium),
                                 
-                                // 포맷된 버전 (단위 포함)
                                 formattedCalories: nutrition.calories,
                                 formattedProtein: nutrition.protein,
                                 formattedCarbs: nutrition.carbs,
@@ -176,7 +291,7 @@ function AllDietPage() {
                                 side3: food.side3 || ''
                             },
                             
-                            // 원본 데이터도 포함 (추가 정보가 필요할 경우)
+                            // 원본 데이터
                             originalData: food
                         };
                     });
@@ -209,35 +324,74 @@ function AllDietPage() {
     }
 
     return (
-        <>
+        <div className="allDietPage_main_wrapper">
             <div className="allDietPage_container">
                 <div className="allDietPage_meals_grid">
                     {getCurrentPageItems().map((item) => (
-                        <div key={item.id} className="allDietPage_meal_card" onClick={() => handleItemClick(item)}>
-                            <div className="allDietPage_meal_time">
-                                <span className="allDietPage_time_label">{item.category}</span>
-                            </div>
-                            <div className="allDietPage_meal_image">
-                                <img 
-                                    src={item.image} 
-                                    alt={item.name} 
-                                    className="allDietPage_meal_image_content"
-                                    onError={(e) => {
-                                        e.target.src = cat; // 이미지 로드 실패 시 기본 이미지
-                                    }}
-                                />
-                            </div>
-                            <div className="allDietPage_meal_info">
-                                <h3 className="allDietPage_meal_info_name">{item.name}</h3>
-                                <p className="allDietPage_meal_info_description">{item.description}</p>
-                                <div className="allDietPage_nutrition_info">
-                                    {item.calories && <span className="allDietPage_nutrition_info1">{item.calories}</span>}
-                                    {item.protein && <span className="allDietPage_nutrition_info2">{item.protein}</span>}
+                        <div key={item.id} className="allDietPage_meal_wrapper">
+                            <div className="allDietPage_meal_card" onClick={() => handleItemClick(item)}>
+                                <div className="allDietPage_meal_time">
+                                    <span className="allDietPage_time_label">{item.category}</span>
                                 </div>
-                                <div className="allDietPage_price_info">
-                                    <span className="allDietPage_price">{item.price}</span>
+                                <div className="allDietPage_meal_image">
+                                    <img 
+                                        src={item.image} 
+                                        alt={item.name} 
+                                        className="allDietPage_meal_image_content"
+                                        onError={(e) => {
+                                            e.target.src = cat;
+                                        }}
+                                    />
+                                </div>
+                                <div className="allDietPage_meal_info">
+                                    <h3 className="allDietPage_meal_info_name">{item.name}</h3>
+                                    <p className="allDietPage_meal_info_description">{item.description}</p>
+                                    
+                                    <div className="allDietPage_nutrition_info">
+                                        {item.calories && <span className="allDietPage_nutrition_info1">{item.calories}</span>}
+                                        {item.protein && <span className="allDietPage_nutrition_info2">{item.protein}</span>}
+                                    </div>
+                                    
+                                    <div className="allDietPage_price_info">
+                                        <span className="allDietPage_price">{item.price}</span>
+                                    </div>
                                 </div>
                             </div>
+                            
+                            {/* 리뷰 정보 - 카드 외부 하단에 위치 */}
+                            {item.reviewInfo ? (
+                                item.reviewInfo.totalReviews > 0 ? (
+                                    <div 
+                                        className="allDietPage_review_info_external clickable" 
+                                        onClick={(e) => openReviewModal(e, item)}
+                                    >
+                                        <div className="allDietPage_review_left">
+                                            <div className="allDietPage_stars_container">
+                                                {renderStars(item.reviewInfo.averageRating)}
+                                            </div>
+                                            <div className="allDietPage_review_summary">
+                                                <span className="allDietPage_rating_number">
+                                                    {item.reviewInfo.averageRating.toFixed(1)}
+                                                </span>
+                                                <span className="allDietPage_review_count">
+                                                    ({item.reviewInfo.totalReviews}개 리뷰)
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="allDietPage_review_view_text">
+                                            <span className="allDietPage_review_view_icon">👀</span>
+                                            <span className="allDietPage_review_view_label">리뷰 보기</span>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="allDietPage_no_review_external">
+                                        <div className="allDietPage_no_review_icon">💭</div>
+                                        <div className="allDietPage_no_review_content">
+                                            <span className="allDietPage_no_review_title">아직 리뷰가 없어요</span>
+                                        </div>
+                                    </div>
+                                )
+                            ) : null}
                         </div>
                     ))}
                 </div>
@@ -249,7 +403,7 @@ function AllDietPage() {
                             onClick={prevPage}
                             disabled={currentPage === 0}
                         >
-                            <LeftOutlined />
+                            <LeftOutlined className="allDietPage_nav_icon" />
                         </button>
 
                         <div className="allDietPage_indicators">
@@ -267,18 +421,83 @@ function AllDietPage() {
                             onClick={nextPage}
                             disabled={currentPage === totalPages - 1}
                         >
-                            <RightOutlined />
+                            <RightOutlined className="allDietPage_nav_icon" />
                         </button>
                     </div>
                 )}
 
                 {mealData.length === 0 && !loading && (
                     <div className="allDietPage_no_data">
-                        <p>등록된 음식이 없습니다.</p>
+                        <p className="allDietPage_no_data_text">등록된 음식이 없습니다.</p>
                     </div>
                 )}
             </div>
-        </>
+
+            {/* 리뷰 모달 */}
+            {reviewModalOpen && selectedFoodReviews && (
+                <div className="allDietPage_review_modal_overlay" onClick={closeReviewModal}>
+                    <div className="allDietPage_review_modal_container" onClick={(e) => e.stopPropagation()}>
+                        <div className="allDietPage_review_modal_header">
+                            <div className="allDietPage_review_modal_header_content">
+                                <h2 className="allDietPage_review_modal_title">{selectedFoodReviews.name} 리뷰</h2>
+                                <div className="allDietPage_review_modal_summary">
+                                    <div className="allDietPage_review_modal_stars">
+                                        {renderStars(selectedFoodReviews.reviewInfo.averageRating)}
+                                    </div>
+                                    <span className="allDietPage_review_modal_rating">
+                                        {selectedFoodReviews.reviewInfo.averageRating.toFixed(1)}
+                                    </span>
+                                    <span className="allDietPage_review_modal_count">
+                                        ({selectedFoodReviews.reviewInfo.totalReviews}개 리뷰)
+                                    </span>
+                                </div>
+                            </div>
+                            <button className="allDietPage_review_modal_close" onClick={closeReviewModal}>
+                                <span className="allDietPage_modal_close_icon">✕</span>
+                            </button>
+                        </div>
+                        
+                        <div className="allDietPage_review_modal_content">
+                            {detailedReviews.length > 0 ? (
+                                <div className="allDietPage_reviews_list">
+                                    {detailedReviews.map((review, index) => (
+                                        <div key={review.id || index} className="allDietPage_review_item">
+                                            <div className="allDietPage_review_item_header">
+                                                <div className="allDietPage_review_item_stars">
+                                                    {renderStars(review.rating)}
+                                                </div>
+                                                <span className="allDietPage_review_item_rating">
+                                                    {review.rating}.0
+                                                </span>
+                                                <span className="allDietPage_review_item_date">
+                                                    {formatDate(review.createdAt)}
+                                                </span>
+                                            </div>
+                                            <div className="allDietPage_review_item_user">
+                                                <span className="allDietPage_review_user_label">작성자: </span>
+                                                <span className="allDietPage_review_user_name">
+                                                    {review.userEmail ? review.userEmail.substring(0, 3) + '***' : '익명'}
+                                                </span>
+                                            </div>
+                                            {review.comment && (
+                                                <div className="allDietPage_review_item_comment">
+                                                    <p className="allDietPage_review_comment_text">{review.comment}</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="allDietPage_no_reviews">
+                                    <p className="allDietPage_no_reviews_main">아직 리뷰가 없습니다.</p>
+                                    <p className="allDietPage_no_reviews_sub">첫 번째 리뷰를 작성해보세요!</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
     );
 }
 

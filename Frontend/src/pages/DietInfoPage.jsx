@@ -1,9 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { Card, Typography, Divider } from 'antd';
 import '../CSS/DietInfoPage.css';
-
-const { Title, Text } = Typography;
+import cat from '../images/cat2.png';
 
 function DietInfoPage({ style }) {
     const location = useLocation();
@@ -14,7 +12,14 @@ function DietInfoPage({ style }) {
             <div className="dietInfoPage_card">
                 {/* 이미지 */}
                 <div className="dietInfoPage_imageSection">
-                    <img src={item.image} className="dietInfoPage_image" alt={item.name} />
+                    <img 
+                        src={item.image} 
+                        className="dietInfoPage_image" 
+                        alt={item.name}
+                        onError={(e) => {
+                            e.target.src = cat;
+                        }}
+                    />
                 </div>
 
                 {/* 메뉴명 */}
@@ -29,16 +34,16 @@ function DietInfoPage({ style }) {
                         <div className="dietInfoPage_menuGroup">
                             <span className="dietInfoPage_menuType">메인</span>
                             <div className="dietInfoPage_items">
-                                <span>{item.main1}</span>
-                                <span>{item.main2}</span>
+                                {item.menuComponents?.main1 && <span>{item.menuComponents.main1}</span>}
+                                {item.menuComponents?.main2 && <span>{item.menuComponents.main2}</span>}
                             </div>
                         </div>
                         <div className="dietInfoPage_menuGroup">
                             <span className="dietInfoPage_menuType">사이드</span>
                             <div className="dietInfoPage_items">
-                                <span>{item.side1}</span>
-                                <span>{item.side2}</span>
-                                <span>{item.side3}</span>
+                                {item.menuComponents?.side1 && <span>{item.menuComponents.side1}</span>}
+                                {item.menuComponents?.side2 && <span>{item.menuComponents.side2}</span>}
+                                {item.menuComponents?.side3 && <span>{item.menuComponents.side3}</span>}
                             </div>
                         </div>
                     </div>
@@ -49,34 +54,46 @@ function DietInfoPage({ style }) {
                     <h3 className="dietInfoPage_sectionTitle">영양성분</h3>
                     <div className="dietInfoPage_nutritionGrid">
                         <div className="dietInfoPage_nutritionItem">
+                            <span className="dietInfoPage_nutritionLabel">칼로리</span>
+                            <span className="dietInfoPage_nutritionValue">
+                                {item.nutritionInfo?.formattedCalories || `${item.nutritionInfo?.caloriesString || '0'}kcal`}
+                            </span>
+                        </div>
+                        <div className="dietInfoPage_nutritionItem">
                             <span className="dietInfoPage_nutritionLabel">탄수화물</span>
-                            <span className="dietInfoPage_nutritionValue">{item.carbohydrate}</span>
+                            <span className="dietInfoPage_nutritionValue">
+                                {item.nutritionInfo?.formattedCarbs || `${item.nutritionInfo?.carbohydrateString || '0'}g`}
+                            </span>
                         </div>
                         <div className="dietInfoPage_nutritionItem">
                             <span className="dietInfoPage_nutritionLabel">단백질</span>
-                            <span className="dietInfoPage_nutritionValue">{item.protein}</span>
+                            <span className="dietInfoPage_nutritionValue">
+                                {item.nutritionInfo?.formattedProtein || `${item.nutritionInfo?.proteinString || '0'}g`}
+                            </span>
                         </div>
                         <div className="dietInfoPage_nutritionItem">
                             <span className="dietInfoPage_nutritionLabel">지방</span>
-                            <span className="dietInfoPage_nutritionValue">{item.fat}</span>
+                            <span className="dietInfoPage_nutritionValue">
+                                {item.nutritionInfo?.formattedFat || `${item.nutritionInfo?.fatString || '0'}g`}
+                            </span>
                         </div>
                         <div className="dietInfoPage_nutritionItem">
                             <span className="dietInfoPage_nutritionLabel">당류</span>
-                            <span className="dietInfoPage_nutritionValue">{item.sugar}</span>
+                            <span className="dietInfoPage_nutritionValue">
+                                {item.nutritionInfo?.formattedSugar || `${item.nutritionInfo?.sugarString || '0'}g`}
+                            </span>
                         </div>
                         <div className="dietInfoPage_nutritionItem">
                             <span className="dietInfoPage_nutritionLabel">나트륨</span>
-                            <span className="dietInfoPage_nutritionValue">{item.sodium}</span>
+                            <span className="dietInfoPage_nutritionValue">
+                                {item.nutritionInfo?.formattedSodium || `${item.nutritionInfo?.sodiumString || '0'}mg`}
+                            </span>
                         </div>
                     </div>
                 </div>
 
-                {/* 칼로리 & 가격 */}
+                {/* 가격 */}
                 <div className="dietInfoPage_footer">
-                    <div className="dietInfoPage_info">
-                        <span className="dietInfoPage_label">칼로리</span>
-                        <span className="dietInfoPage_value">{item.calories}</span>
-                    </div>
                     <div className="dietInfoPage_info">
                         <span className="dietInfoPage_label">가격</span>
                         <span className="dietInfoPage_value">{item.price}</span>
