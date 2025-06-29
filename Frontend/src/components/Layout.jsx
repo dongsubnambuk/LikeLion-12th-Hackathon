@@ -1,13 +1,16 @@
-// Layout.js
+// src/components/Layout.js
 import Header from './Header';
 import BottomNav from './BottomNav';
 
 const HEADER_HEIGHT = 64;    // Header 높이(px)
 const BOTTOMNAV_HEIGHT = 70; // BottomNav 높이(px)
 
-const Layout = ({ children }) => (
+const Layout = ({ children, notificationCount, surveyCount }) => (
   <div className="app-layout">
-    <Header />
+    <Header 
+      notificationCount={notificationCount} 
+      surveyCount={surveyCount} 
+    />
     <main
       className="app-main"
       style={{

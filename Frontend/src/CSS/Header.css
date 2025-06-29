@@ -187,3 +187,30 @@
     font-size: 16px;
   }
 }
+
+/* 🔥 추가된 부분: 로딩 플레이스홀더 */
+.header-loading-placeholder {
+    width: 60px;
+    height: 20px;
+    background: linear-gradient(90deg, rgba(157, 146, 116, 0.1) 25%, rgba(157, 146, 116, 0.2) 50%, rgba(157, 146, 116, 0.1) 75%);
+    background-size: 200% 100%;
+    border-radius: 10px;
+    animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+    .header-loading-placeholder {
+        width: 50px;
+        height: 18px;
+    }
+}

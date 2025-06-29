@@ -635,8 +635,8 @@
     border: 1px solid rgba(157, 146, 116, 0.2);
 }
 
-.weekly-food-menu-empty-icon {
-    font-size: 64px;
+.weekly-food-menu-logo-img {
+    width: 200px;
     margin-bottom: 20px;
 }
 
