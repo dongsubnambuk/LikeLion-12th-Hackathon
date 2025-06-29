@@ -47,7 +47,6 @@ public class FoodSelectionServiceImpl implements FoodSelectionService {
     }
     // DB에서 가져온 FoodSelection 엔티티를 클라이언트 응답용 DTO로 변환
     public FoodSelectionDTO convertToMealSelectionDTO(FoodSelection foodSelection) {
-        // TODO: foodMenu 조회해서 가져오는 로직 들어가야 함
         return FoodSelectionDTO.builder()
                 .foodSelectionId(foodSelection.getId())
                 .userEmail(foodSelection.getUserEmail())

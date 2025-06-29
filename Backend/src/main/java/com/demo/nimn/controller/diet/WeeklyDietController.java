@@ -24,7 +24,7 @@ public class WeeklyDietController {
         this.dietService = dietService;
     }
 
-    @Operation(summary = "유저 일주일 식단 생성", description = "유저 일주일 식단 생성")
+    @Operation(summary = "유저 일주일 식단 생성", description = "유저의 일주일 식단 생성")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "성공"),
             @ApiResponse(responseCode = "401", description = "인증 실패"),

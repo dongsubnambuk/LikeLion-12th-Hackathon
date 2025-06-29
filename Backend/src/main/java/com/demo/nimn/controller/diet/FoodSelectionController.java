@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name="FOOD SELECTION API", description = "유저가 선택한 음식 조회 API")
+@Tag(name="FOOD SELECTION API", description = "유저가 선택한 음식의 정보 조회 API")
 @RestController
 @RequestMapping("/diet/selections")
 public class FoodSelectionController {
