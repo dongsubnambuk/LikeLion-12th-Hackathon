@@ -1,204 +1,312 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
-import { Stomp } from '@stomp/stompjs';
+import { Client } from '@stomp/stompjs';
 import '../CSS/Notification.css';
-import { v4 as uuidv4 } from 'uuid';
 
 function Notification() {
-    const email = localStorage.getItem("email") || "test@example.com"; // 기본값 설정
-    
-    // API 명세에 맞는 예시 데이터
-    const getSampleNotifications = () => [
-        {
-            notificationId: 1,
-            notificationContent: "새로운 다이어트 플랜이 추천되었습니다!",
-            notificationType: "diet",
-            notificationTime: new Date().toISOString(),
-            isRead: false,
-            userId: email
-        },
-        {
-            notificationId: 2,
-            notificationContent: "결제가 성공적으로 완료되었습니다.",
-            notificationType: "payment",
-            notificationTime: new Date(Date.now() - 3600000).toISOString(), // 1시간 전
-            isRead: false,
-            userId: email
-        },
-        {
-            notificationId: 3,
-            notificationContent: "오늘의 칼로리 목표를 달성했습니다! 🎉",
-            notificationType: "diet",
-            notificationTime: new Date(Date.now() - 7200000).toISOString(), // 2시간 전
-            isRead: true,
-            userId: email
-        },
-        {
-            notificationId: 4,
-            notificationContent: "월간 구독료 자동 결제 알림",
-            notificationType: "payment",
-            notificationTime: new Date(Date.now() - 86400000).toISOString(), // 1일 전
-            isRead: true,
-            userId: email
-        },
-        {
-            notificationId: 5,
-            notificationContent: "주간 운동 목표 50% 달성!",
-            notificationType: "diet",
-            notificationTime: new Date(Date.now() - 172800000).toISOString(), // 2일 전
-            isRead: true,
-            userId: email
-        }
-        
-    ];
-
-    const [messages, setMessages] = useState(() => {
-        console.log("초기화 중... email:", email);
-        
-        const savedMessages = localStorage.getItem(`messages_${email}`);
-        if (savedMessages) {
-            try {
-                const parsed = JSON.parse(savedMessages);
-                console.log("저장된 메시지 로드:", parsed);
-                return parsed;
-            } catch (error) {
-                console.error("저장된 메시지 파싱 오류:", error);
-            }
-        }
-        
-        // 저장된 메시지가 없으면 예시 데이터를 사용
-        const sampleData = getSampleNotifications();
-        console.log("예시 데이터 생성:", sampleData);
-        localStorage.setItem(`messages_${email}`, JSON.stringify(sampleData));
-        return sampleData;
-    });
-
+    const navigate = useNavigate();
+    const [messages, setMessages] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
+    const [isConnected, setIsConnected] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [userEmail, setUserEmail] = useState('test1@example.com'); // 기본값
+    const stompClientRef = useRef(null);
 
-    // 읽지 않은 알림 개수 업데이트
-    useEffect(() => {
-        const count = messages.filter(msg => !msg.isRead).length;
-        console.log("읽지 않은 알림 개수:", count, "전체 메시지:", messages.length);
-        setUnreadCount(count);
-    }, [messages]);
-
-    useEffect(() => {
-        // 컴포넌트 마운트 시 디버깅 정보 출력
-        console.log("컴포넌트 마운트됨");
-        console.log("현재 email:", email);
-        console.log("현재 messages:", messages);
-        console.log("messages.length:", messages.length);
-        
-        const handleGet = async () => {
-            // 예시 데이터로만 동작 (실제 API 호출 제거)
-            console.log("예시 데이터로 동작 중");
-        };
-        
-        handleGet();
-    }, [email, messages]);
-
-    const handleNotification = useCallback((message) => {
-        const notification = JSON.parse(message.body);
-
-        // API 응답 형식에 맞게 데이터 구조 통일
-        if (!notification.notificationId) {
-            notification.notificationId = Date.now(); // 임시 ID
-        }
-
-        // 타임스탬프 필드명 통일
-        if (!notification.notificationTime) {
-            notification.notificationTime = new Date().toISOString();
-        }
-
-        // 새 알림은 기본적으로 읽지 않음 상태
-        if (notification.isRead === undefined) {
-            notification.isRead = false;
-        }
-
-        // 타입 필드명 통일
-        if (!notification.notificationType && notification.type) {
-            notification.notificationType = notification.type;
-        }
-
-        setMessages(prevMessages => {
-            const isDuplicate = prevMessages.some(msg => 
-                (msg.notificationContent || msg.content) === (notification.notificationContent || notification.content)
-            );
-
-            if (!isDuplicate) {
-                const newMessages = [notification, ...prevMessages]; // 새 알림을 맨 앞에 추가
-                localStorage.setItem(`messages_${email}`, JSON.stringify(newMessages));
-                return newMessages;
+    // 사용자 정보 조회 API
+    const getUserInfo = useCallback(async () => {
+        try {
+            const response = await fetch('http://nimn.store/api/users', {
+                method: "GET",
+                credentials: 'include',
+            });
+      
+            if (response.status === 200) {
+                const result = await response.json();
+                
+                // 토큰 만료 체크
+                if (result.message === "토큰소멸") {
+                    alert("로그인이 만료되었습니다. 다시 로그인 해주세요");
+                    navigate('/login');
+                    return;
+                }
+                
+                const email = result.email || 'test@example.com';
+                setUserEmail(email);
+                console.log('사용자 이메일 설정:', email);
+            } else {
+                console.log("사용자 정보 조회 실패", response.status);
+                
+                try {
+                    const result = await response.json();
+                    
+                    // 토큰 만료 체크
+                    if (result.message === "토큰소멸") {
+                        alert("로그인이 만료되었습니다. 다시 로그인 해주세요");
+                        navigate('/login');
+                        return;
+                    }
+                } catch (e) {
+                    console.log("사용자 정보 파싱 실패");
+                }
+                
+                // 실패 시 기본값 유지 (이미 test@example.com으로 설정됨)
+                console.log('기본 이메일 사용:', userEmail);
             }
-            return prevMessages;
-        });
-    }, [email]);
+        } catch (error) {
+            console.error("사용자 정보 조회 오류:", error);
+            // 오류 시 기본값 유지 (이미 test@example.com으로 설정됨)
+            console.log('기본 이메일 사용:', userEmail);
+        }
+    }, [navigate, userEmail]);
 
-    // 알림 읽음 처리 함수 (예시 데이터로만 동작)
-    const markAsRead = useCallback((notificationId) => {
-        setMessages(prevMessages => {
-            const updatedMessages = prevMessages.map(msg => 
-                msg.notificationId === notificationId ? { ...msg, isRead: true } : msg
+    // 모든 알림 조회 API
+    const getAllNotificationsAPI = useCallback(async () => {
+        try {
+            setIsLoading(true);
+            const response = await fetch(`http://nimn.store/api/notification/all?userEmail=${userEmail}`);
+            
+            if (response.ok) {
+                const data = await response.json();
+                return data;
+            } else {
+                return [];
+            }
+        } catch (error) {
+            console.error('알림 조회 실패:', error);
+            return [];
+        } finally {
+            setIsLoading(false);
+        }
+    }, [userEmail]);
+
+    // 알림 읽음 처리 API
+    const markAsReadAPI = useCallback(async (notificationId) => {
+        try {
+            const response = await fetch(`http://nimn.store/api/notification/${notificationId}`, {
+                method: 'PATCH'
+            });
+            return response.ok;
+        } catch (error) {
+            return false;
+        }
+    }, []);
+
+    // 모든 알림 읽음 처리 API
+    const markAllAsReadAPI = useCallback(async () => {
+        try {
+            const response = await fetch(`http://nimn.store/api/notification?userEmail=${userEmail}`, {
+                method: 'PATCH'
+            });
+            return response.ok;
+        } catch (error) {
+            return false;
+        }
+    }, [userEmail]);
+
+    const connectWebSocket = useCallback(() => {
+        console.log(`🔄 WebSocket 연결 시도: ${userEmail}`);
+        
+        // 기존 연결이 있으면 먼저 해제
+        if (stompClientRef.current) {
+            console.log('🔌 기존 연결 해제');
+            stompClientRef.current.deactivate();
+        }
+
+        // SockJS 연결 시 query param으로 userEmail 전달
+        const socket = new SockJS(`http://nimn.store/ws/notification?userEmail=${userEmail}`);
+
+        const client = new Client({
+            webSocketFactory: () => socket,
+            connectHeaders: {
+                login: userEmail,        
+                userEmail: userEmail     
+            },
+            debug: (str) => console.log("🔍 STOMP Debug:", str),
+            heartbeatIncoming: 10000,
+            heartbeatOutgoing: 10000,
+            reconnectDelay: 5000,
+            onConnect: (frame) => {
+                console.log("✅ STOMP CONNECTED - userEmail:", userEmail);
+                setIsConnected(true);
+
+                // 받은 메시지를 state에 추가하는 함수
+                const handleMessage = (message) => {
+                    console.log("📨 원본 메시지 수신:", message.body);
+                    
+                    let body = message.body;
+                    let parsed;
+                    try {
+                        parsed = JSON.parse(body);
+                        console.log("📝 파싱된 메시지:", parsed);
+                    } catch {
+                        parsed = { content: body, type: "TEXT" };
+                        console.log("📝 파싱 실패, 기본값 사용:", parsed);
+                    }
+                    
+                    // PAYMENT와 DIET 타입만 알림에 표시
+                    if (parsed.type !== 'PAYMENT' && parsed.type !== 'DIET') {
+                        console.log(`⚠️ 알림에서 제외된 타입: ${parsed.type}`);
+                        return;
+                    }
+                    
+                    console.log(`✅ 알림 추가: ${parsed.type} - ${parsed.content}`);
+                    
+                    const notification = {
+                        notificationId: parsed.notificationId || Date.now(),
+                        content: parsed.content || parsed.notificationContent,
+                        type: parsed.type || "TEXT",
+                        sendTime: parsed.sendTime || new Date().toISOString(),
+                        check: parsed.check || false
+                    };
+                    
+                    setMessages(prev => {
+                        console.log(`📊 이전 메시지 수: ${prev.length}, 새 메시지 추가 후: ${prev.length + 1}`);
+                        return [notification, ...prev];
+                    });
+                    setUnreadCount(prev => {
+                        console.log(`📢 읽지 않은 알림 수: ${prev} → ${prev + 1}`);
+                        return prev + 1;
+                    });
+                };
+
+                // 유저 전용 알림만 구독
+                const sub = client.subscribe(
+                    "/user/queue/notification",
+                    (msg) => {
+                        console.log("📥 /user/queue/notification 수신:", msg.body);
+                        handleMessage(msg);
+                    }
+                );
+
+                console.log("📡 구독 완료 - ID:", sub.id, "경로: /user/queue/notification");
+            },
+            onWebSocketError: (err) => {
+                console.error("❌ WebSocket Error:", err);
+                setIsConnected(false);
+            },
+            onStompError: (frame) => {
+                console.error("❌ STOMP ERROR:", frame.headers?.message || frame);
+                setIsConnected(false);
+            },
+            onDisconnect: (receipt) => {
+                console.log("🔌 STOMP DISCONNECTED:", receipt);
+                setIsConnected(false);
+            },
+        });
+
+        client.activate();
+        stompClientRef.current = client;
+        
+        console.log("🚀 STOMP 클라이언트 활성화 완료");
+    }, [userEmail]);
+
+    // 단일 알림 읽음 처리
+    const markAsRead = useCallback(async (notificationId) => {
+        // UI 먼저 업데이트
+        setMessages(prev => 
+            prev.map(msg => 
+                msg.notificationId === notificationId 
+                    ? { ...msg, check: true }
+                    : msg
+            )
+        );
+        setUnreadCount(prev => Math.max(0, prev - 1));
+        
+        // API 호출
+        const success = await markAsReadAPI(notificationId);
+        if (!success) {
+            // API 실패 시 UI 롤백
+            setMessages(prev => 
+                prev.map(msg => 
+                    msg.notificationId === notificationId 
+                        ? { ...msg, check: false }
+                        : msg
+                )
             );
-            localStorage.setItem(`messages_${email}`, JSON.stringify(updatedMessages));
-            return updatedMessages;
-        });
-    }, [email]);
+            setUnreadCount(prev => prev + 1);
+        }
+    }, [markAsReadAPI]);
 
-    // 모든 알림 읽음 처리 함수 (예시 데이터로만 동작)
-    const markAllAsRead = useCallback(() => {
-        setMessages(prevMessages => {
-            const updatedMessages = prevMessages.map(msg => ({ ...msg, isRead: true }));
-            localStorage.setItem(`messages_${email}`, JSON.stringify(updatedMessages));
-            return updatedMessages;
-        });
-    }, [email]);
+    // 모든 알림 읽음 처리
+    const markAllAsRead = useCallback(async () => {
+        // UI 먼저 업데이트
+        const prevMessages = messages;
+        const prevUnreadCount = unreadCount;
+        
+        setMessages(prev => 
+            prev.map(msg => ({ ...msg, check: true }))
+        );
+        setUnreadCount(0);
+        
+        // API 호출
+        const success = await markAllAsReadAPI();
+        if (!success) {
+            // API 실패 시 UI 롤백
+            setMessages(prevMessages);
+            setUnreadCount(prevUnreadCount);
+        }
+    }, [markAllAsReadAPI, messages, unreadCount]);
 
+    // 초기 사용자 정보 조회 useEffect
     useEffect(() => {
-        if (!email) return;
-        
-        // WebSocket 연결도 예시 데이터로만 동작하도록 주석 처리
-        console.log("WebSocket 연결 시뮬레이션 (예시 데이터로만 동작)");
-        
-        /*
-        const socket = new SockJS(`http://chatex.p-e.kr:14000/ws?userId=${email}`);
-        const client = Stomp.over(socket);
+        getUserInfo();
+    }, [getUserInfo]);
 
-        client.connect({}, () => {
-            console.log("Connected to WebSocket");
+    // 알림 데이터 로드 useEffect (userEmail이 변경될 때마다)
+    useEffect(() => {
+        const loadInitialNotifications = async () => {
+            const notifications = await getAllNotificationsAPI();
+            if (notifications && notifications.length > 0) {
+                // PAYMENT와 DIET 타입만 필터링
+                const filteredNotifications = notifications.filter(
+                    notification => notification.type === 'PAYMENT' || notification.type === 'DIET'
+                );
+                
+                // API 응답 데이터를 컴포넌트 상태에 맞게 변환 및 최신순 정렬
+                const formattedNotifications = filteredNotifications
+                    .map(notification => ({
+                        notificationId: notification.notificationId,
+                        content: notification.content,
+                        type: notification.type || "TEXT",
+                        sendTime: notification.sendTime,
+                        check: notification.check || false
+                    }))
+                    .sort((a, b) => new Date(b.sendTime) - new Date(a.sendTime)); // 최신순 정렬
+                
+                setMessages(formattedNotifications);
+                
+                // 읽지 않은 알림 개수 계산
+                const unreadCount = formattedNotifications.filter(notification => !notification.check).length;
+                setUnreadCount(unreadCount);
+            }
+        };
 
-            const dietSubscription = client.subscribe(`/topic/notification/diet/${email}`, message => {
-                handleNotification(message);
-            });
+        loadInitialNotifications();
+    }, [userEmail, getAllNotificationsAPI]);
 
-            const paymentSubscription = client.subscribe(`/topic/notification/payment/${email}`, message => {
-                handleNotification(message);
-            });
-
-            return () => {
-                dietSubscription.unsubscribe();
-                paymentSubscription.unsubscribe();
-                client.disconnect(() => {
-                    console.log('Disconnected');
-                });
-            };
-        }, error => {
-            console.error('Connection error: ', error);
-        });
+    // WebSocket 연결 useEffect (userEmail이 변경될 때마다 항상 실행)
+    useEffect(() => {
+        connectWebSocket();
 
         return () => {
-            if (client && client.connected) {
-                client.disconnect(() => {
-                    console.log('Disconnected');
-                });
+            if (stompClientRef.current) {
+                stompClientRef.current.deactivate();
             }
         };
-        */
-    }, [email]);
+    }, [userEmail, connectWebSocket]);
 
     return (
         <>
             <div className="notification_container" data-count={messages.length}>
+
+                {/* 로딩 상태 표시 */}
+                {isLoading && (
+                    <div style={{ padding: '10px', textAlign: 'center', color: '#666' }}>
+                        알림 목록을 불러오는 중...
+                    </div>
+                )}
+
                 {/* 읽지 않은 알림 개수 및 전체 읽음 처리 버튼 */}
                 {unreadCount > 0 && (
                     <div className="notification_header">
@@ -208,6 +316,7 @@ function Notification() {
                         <button 
                             className="notification_mark_all_button"
                             onClick={markAllAsRead}
+                            disabled={isLoading}
                         >
                             모두 읽음
                         </button>
@@ -218,24 +327,25 @@ function Notification() {
                 {messages.length > 0 ? (
                     messages.map((msg) => (
                         <div 
-                            className={`notification_item ${msg.isRead ? 'notification_read' : 'notification_unread'}`}
+                            className={`notification_item ${msg.check ? 'notification_read' : 'notification_unread'}`}
                             key={msg.notificationId}
-                            data-type={msg.notificationType}
+                            data-type={msg.type}
                             onClick={() => markAsRead(msg.notificationId)}
                         >
                             <div className="notification_content">
-                                <span>{msg.notificationContent || msg.content}</span>
+                                <span>{msg.content}</span>
                             </div>
                             
                             <div className="notification_meta">
-                                {msg.notificationType && (
+                                {msg.type && (
                                     <div className="notification_type">
-                                        {msg.notificationType === 'diet' ? '🍎 식단' : '💳 결제'}
+                                        {msg.type === 'DIET' ? '🍎 식단' : 
+                                         msg.type === 'PAYMENT' ? '💳 결제' : '📝 기타'}
                                     </div>
                                 )}
-                                {msg.notificationTime && (
+                                {msg.sendTime && (
                                     <div className="notification_timestamp">
-                                        {new Date(msg.notificationTime).toLocaleString('ko-KR', {
+                                        {new Date(msg.sendTime).toLocaleString('ko-KR', {
                                             month: 'short',
                                             day: 'numeric',
                                             hour: '2-digit',
@@ -246,7 +356,7 @@ function Notification() {
                             </div>
 
                             {/* 읽지 않은 알림 인디케이터 */}
-                            {!msg.isRead && <div className="notification_unread_indicator"></div>}
+                            {!msg.check && <div className="notification_unread_indicator"></div>}
                         </div>
                     ))
                 ) : (
