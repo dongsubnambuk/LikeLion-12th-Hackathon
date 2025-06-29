@@ -14,5 +14,6 @@ public interface NotificationService {
 
     NotificationCountDTO testNotification(NotificationType notificationType,
                                           String userEmail,
-                                          String content);
+                                          String content,
+                                          Long dailyReviewId);
 }

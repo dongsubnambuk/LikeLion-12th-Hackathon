@@ -120,7 +120,8 @@ public class NotificationController {
     @GetMapping("/test")
     public ResponseEntity<NotificationCountDTO> test(@RequestParam NotificationType notificationType,
                                                      @RequestParam String userEmail,
-                                                     @RequestParam String content) {
-        return ResponseEntity.ok(notificationService.testNotification(notificationType, userEmail, content));
+                                                     @RequestParam String content,
+                                                     @RequestParam Long dailyReviewId) {
+        return ResponseEntity.ok(notificationService.testNotification(notificationType, userEmail, content, dailyReviewId));
     }
 }
