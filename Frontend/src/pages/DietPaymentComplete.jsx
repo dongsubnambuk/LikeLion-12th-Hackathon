@@ -61,7 +61,7 @@ function DietPaymentComplete() {
     };
 
     const handleViewOrders = () => {
-        navigate('/mypage/orders'); // 주문 내역 페이지로 이동 (경로는 실제 구조에 맞게 수정)
+        navigate('/orderlist'); // 주문 내역 페이지로 이동 (경로는 실제 구조에 맞게 수정)
     };
 
     return (
