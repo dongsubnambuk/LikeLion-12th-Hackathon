@@ -28,6 +28,7 @@ const MainPage = ({ onNotificationCountChange }) => {
   const [isConnected, setIsConnected] = useState(false);
   const stompClientRef = useRef(null);
   const isInitialized = useRef(false);
+  const connectionAttempts = useRef(0);
 
   const navigate = useNavigate();
 
@@ -70,7 +71,7 @@ const MainPage = ({ onNotificationCountChange }) => {
       title: "매일 새벽 6시,\n문 앞까지",
       subtitle: "하루 세 끼를 한 번에 받아\n직장에서도 건강하게",
       image: slideImg2,
-      cta: "배송 지역 확인"
+      cta: "구독 시작하기"
     },
     {
       title: "21가지 메뉴 중\n자유롭게",
@@ -175,9 +176,25 @@ const MainPage = ({ onNotificationCountChange }) => {
   const connectWebSocket = useCallback(() => {
     if (!userEmail) return;
 
-    if (stompClientRef.current) {
-      stompClientRef.current.deactivate();
+    // 연결 시도 횟수 제한
+    if (connectionAttempts.current >= 3) {
+      return;
     }
+
+    // 기존 연결이 있고 연결 중인 상태라면 기다림
+    if (stompClientRef.current) {
+      const currentState = stompClientRef.current.state;
+      if (currentState === 1) { // CONNECTING 상태
+        return;
+      }
+      
+      // 연결된 상태라면 해제
+      if (stompClientRef.current.connected) {
+        stompClientRef.current.deactivate();
+      }
+    }
+
+    connectionAttempts.current += 1;
 
     const socket = new SockJS(`http://nimn.store/ws/notification?userEmail=${userEmail}`);
 
@@ -190,8 +207,10 @@ const MainPage = ({ onNotificationCountChange }) => {
       heartbeatIncoming: 10000,
       heartbeatOutgoing: 10000,
       reconnectDelay: 5000,
+      maxReconnectAttempts: 3,
       onConnect: async (frame) => {
         setIsConnected(true);
+        connectionAttempts.current = 0; // 성공 시 카운터 리셋
 
         // WebSocket 연결 성공 후 실제 알림 데이터 조회
         const notifications = await getAllNotificationsAPI();
@@ -258,6 +277,7 @@ const MainPage = ({ onNotificationCountChange }) => {
       },
       onWebSocketError: (err) => {
         setIsConnected(false);
+        // 즉시 재연결하지 않음
       },
       onStompError: (frame) => {
         setIsConnected(false);
@@ -274,10 +294,15 @@ const MainPage = ({ onNotificationCountChange }) => {
   // WebSocket 연결 관리
   useEffect(() => {
     if (isLogin && userEmail) {
-      connectWebSocket();
+      // 약간의 지연을 두고 연결 시도
+      const timer = setTimeout(() => {
+        connectWebSocket();
+      }, 500);
 
       return () => {
-        if (stompClientRef.current) {
+        clearTimeout(timer);
+        // 컴포넌트 언마운트 시에만 연결 해제
+        if (stompClientRef.current && stompClientRef.current.connected) {
           stompClientRef.current.deactivate();
         }
       };
@@ -349,7 +374,7 @@ const MainPage = ({ onNotificationCountChange }) => {
                   <p>{slide.subtitle}</p>
                   <button
                     className="main-page-hero-cta-button"
-                    onClick={index === 0 ? handleSubscribeClick : handleMenuClick}
+                    onClick={index !== 2 ? handleSubscribeClick : handleMenuClick}
                   >
                     {slide.cta}
                   </button>
@@ -364,7 +389,7 @@ const MainPage = ({ onNotificationCountChange }) => {
       <section className="main-page-today-meals-section">
         <div className="main-page-section-header">
           <h2>
-            {isLogin ? `${user?.name}님의 오늘 식단` : '오늘의 추천 식단'}
+            오늘의 추천 식단
           </h2>
           <p>영양사가 추천하는 균형잡힌 하루 세 끼</p>
         </div>
