@@ -2,14 +2,16 @@
 import Header from './Header';
 import BottomNav from './BottomNav';
 
-const HEADER_HEIGHT = 64;    // Header 높이(px)
-const BOTTOMNAV_HEIGHT = 70; // BottomNav 높이(px)
+const HEADER_HEIGHT = 64;
+const BOTTOMNAV_HEIGHT = 70;
 
-const Layout = ({ children, notificationCount, surveyCount }) => (
+const Layout = ({ children, notificationCount, surveyCount, isLoggedIn, userInfo }) => (
   <div className="app-layout">
     <Header 
       notificationCount={notificationCount} 
-      surveyCount={surveyCount} 
+      surveyCount={surveyCount}
+      isLoggedIn={isLoggedIn}
+      userInfo={userInfo}
     />
     <main
       className="app-main"

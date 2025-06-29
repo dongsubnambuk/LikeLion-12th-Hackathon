@@ -420,7 +420,7 @@ const MainPage = ({ onNotificationCountChange }) => {
       <section className="main-page-today-meals-section">
         <div className="main-page-section-header">
           <h2>
-            {isLogin ? `${user?.name}님의 오늘 식단` : '오늘의 추천 식단'}
+            오늘의 추천 식단
           </h2>
           <p>영양사가 추천하는 균형잡힌 하루 세 끼</p>
         </div>

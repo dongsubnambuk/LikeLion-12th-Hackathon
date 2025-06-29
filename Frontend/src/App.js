@@ -26,15 +26,57 @@ const AppContent = () => {
   const location = useLocation();
   const isAdminPage = location.pathname === '/admin';
   
-  // 🔥 추가된 부분: 알림 개수 상태 관리
+  // 알림 개수 상태 관리
   const [notificationCount, setNotificationCount] = useState(0);
   const [surveyCount, setSurveyCount] = useState(0);
 
-  // 🔥 추가된 부분: 알림 개수 업데이트 콜백 함수
+  // 로그인 상태 전역 관리
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+
+  // 알림 개수 업데이트 콜백 함수
   const handleNotificationCountChange = (notifCount, survCount) => {
     setNotificationCount(notifCount);
     setSurveyCount(survCount);
   };
+
+  // 로그인 상태 확인 함수
+  const checkAuthStatus = async () => {
+    try {
+      const response = await fetch('http://nimn.store/api/users', {
+        method: 'GET',
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        setIsLoggedIn(true);
+        setUserInfo(userData);
+      } else {
+        setIsLoggedIn(false);
+        setUserInfo(null);
+      }
+    } catch (error) {
+      setIsLoggedIn(false);
+      setUserInfo(null);
+    }
+  };
+
+  // 🔥 로그인 성공 핸들러
+  const handleLoginSuccess = (userData) => {
+    setIsLoggedIn(true);
+    setUserInfo(userData);
+  };
+
+  // 🔥 로그아웃 핸들러
+  const handleLogoutSuccess = () => {
+    setIsLoggedIn(false);
+    setUserInfo(null);
+  };
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
 
   useEffect(() => {
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
@@ -105,11 +147,11 @@ const AppContent = () => {
                 />
               } 
             />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/alldiet" element={<AllDiet />} />
             <Route path="/dietinfo" element={<DietInfo />} />
-            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/mypage" element={<MyPage onLogoutSuccess={handleLogoutSuccess} />} />
             <Route path="/userinfoupdate" element={<UserInfoUpdate />} />
             <Route path="/orderlist" element={<OrderList />} />
             <Route path="/weeklyfoodmenu" element={<WeeklyFoodMenu />} />
