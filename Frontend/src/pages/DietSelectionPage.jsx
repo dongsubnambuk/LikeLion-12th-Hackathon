@@ -14,8 +14,13 @@ function DietSelectionPage() {
     const swiperRef = useRef(null);
     const [isLoading, setIsLoading] = useState(true);
     const [mealData, setMealData] = useState([]);
+    // 🔥 추가된 부분: 에러 상태 관리
+    const [error, setError] = useState(null);
     // 각 식사별 메뉴 변경 섹션의 열림/닫힘 상태 관리
     const [expandedMenus, setExpandedMenus] = useState({});
+    // 모달 상태 관리
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedMealDetail, setSelectedMealDetail] = useState(null);
 
     const handleConfirmClick = () => {
         // 확인 메시지 추가
@@ -49,6 +54,44 @@ function DietSelectionPage() {
         }));
     };
 
+    // 모달 열기 함수
+    const openMealDetailModal = (mealDetail) => {
+        setSelectedMealDetail(mealDetail);
+        setIsModalOpen(true);
+    };
+
+    // 모달 닫기 함수
+    const closeMealDetailModal = () => {
+        setIsModalOpen(false);
+        setSelectedMealDetail(null);
+    };
+
+    // 이미지 ID 추출 및 검증 함수
+    const extractImageId = (imagePath) => {
+        if (!imagePath) return null;
+        
+        // "/api/image/test28" 형태에서 "test28" 추출
+        const match = imagePath.match(/\/api\/image\/(.+)$/);
+        if (match && match[1]) {
+            const imageId = match[1];
+            // 숫자만 포함된 ID인지 확인 (test28 → 28)
+            const numericId = imageId.replace(/\D/g, '');
+            return numericId || imageId; // 숫자가 있으면 숫자만, 없으면 원본 반환
+        }
+        return null;
+    };
+
+    // 이미지 URL 생성 함수
+    const getImageUrl = (imagePath) => {
+        if (!imagePath) return foodImg;
+        
+        const imageId = extractImageId(imagePath);
+        if (!imageId) return foodImg;
+        
+        // 숫자 ID로 이미지 URL 생성
+        return `http://nimn.store/api/image/${imageId}`;
+    };
+
     // 실제 API에서 받은 데이터를 내부 구조로 변환
     const transformApiData = (apiData) => {
         const mealTypeMapping = {
@@ -64,17 +107,15 @@ function DietSelectionPage() {
                 foodTimeLabel: mealTypeMapping[choiceSet.foodTime] || choiceSet.foodTime,
                 foods: choiceSet.foods.map(food => ({
                     ...food,
-                    // API 이미지 URL을 절대 경로로 변환
-                    image: food.image.startsWith('/api/')
-                        ? `http://nimn.store${food.image}`
-                        : food.image
+                    // 이미지 URL 처리
+                    image: getImageUrl(food.image),
+                    originalImagePath: food.image
                 })),
                 selectedFood: {
                     ...choiceSet.foods[0], // 첫 번째 음식을 기본 선택
                     count: 1,
-                    image: choiceSet.foods[0].image.startsWith('/api/')
-                        ? `http://nimn.store${choiceSet.foods[0].image}`
-                        : choiceSet.foods[0].image
+                    image: getImageUrl(choiceSet.foods[0].image),
+                    originalImagePath: choiceSet.foods[0].image
                 },
                 selectedIndex: 0
             }))
@@ -110,6 +151,7 @@ function DietSelectionPage() {
     useEffect(() => {
         const handleGet = async () => {
             setIsLoading(true);
+            setError(null); // 🔥 추가된 부분: 요청 시작 시 에러 초기화
 
             try {
                 const response = await fetch('http://nimn.store/api/foods/plans/weekly', {
@@ -131,11 +173,12 @@ function DietSelectionPage() {
                     localStorage.setItem("startDate", JSON.stringify(result.startDate));
                     localStorage.setItem("endDate", JSON.stringify(result.endDate));
                 } else {
-                    throw new Error(`API 요청 실패: ${response.status} ${response.statusText}`);
+                    throw new Error(`서버 오류: ${response.status} ${response.statusText}`);
                 }
 
             } catch (error) {
-                alert('식단 데이터를 불러오는데 실패했습니다. 다시 시도해주세요.');
+                // 🔥 수정된 부분: 에러 상태 설정
+                setError('식단 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.');
             } finally {
                 setIsLoading(false);
             }
@@ -150,16 +193,6 @@ function DietSelectionPage() {
         }
     }, []);
 
-    // 스크롤 위치를 복원하는 useEffect
-    // useEffect(() => {
-    //     const savedScrollIndex = localStorage.getItem("scrollIndex");
-    //     if (swiperRef.current && savedScrollIndex !== null && mealData.length > 0) {
-    //         setTimeout(() => {
-    //             swiperRef.current.swiper.slideTo(Number(savedScrollIndex), 0);
-    //         }, 100);
-    //     }
-    // }, [mealData]);
-
     const handleSlideChange = (swiper) => {
         localStorage.setItem("scrollIndex", swiper.activeIndex);
     };
@@ -171,6 +204,28 @@ function DietSelectionPage() {
                 <div className="diet-selection-page-loading-spinner"></div>
                 <p>식단 데이터를 준비하는 중...</p>
                 <small>실제 API 데이터를 불러오는 중입니다...</small>
+            </div>
+        );
+    }
+
+    // 🔥 추가된 부분: 에러 상태 처리
+    if (error) {
+        return (
+            <div className="diet-selection-page-error-container">
+                <div className="diet-selection-page-error-content">
+                    <div className="diet-selection-page-error-icon">⚠️</div>
+                    <h2 className="diet-selection-page-error-title">식단 데이터 로드 실패</h2>
+                    <p className="diet-selection-page-error-message">{error}</p>
+                    <button 
+                        className="diet-selection-page-retry-btn"
+                        onClick={() => {
+                            localStorage.removeItem("checkMealLoad");
+                            window.location.reload();
+                        }}
+                    >
+                        다시 시도
+                    </button>
+                </div>
             </div>
         );
     }
@@ -203,7 +258,7 @@ function DietSelectionPage() {
 
     return (
         <div className="diet-selection-page-main-container">
-            {/* 🔥 추가된 부분: 안내 문구 섹션 */}
+            {/* 안내 문구 섹션 */}
             <div className="diet-selection-page-guide-section">
                 <div className="diet-selection-page-guide-header">
                     <h1 className="diet-selection-page-guide-title">🍽️ 주간 식단 선택</h1>
@@ -291,8 +346,6 @@ function DietSelectionPage() {
 
                                             {/* 콘텐츠 섹션 */}
                                             <div className="diet-selection-page-meal-content-section">
-
-
                                                 <div className="diet-selection-page-meal-description">
                                                     {mealSet.selectedFood.main1}, {mealSet.selectedFood.main2}, {mealSet.selectedFood.side1}, {mealSet.selectedFood.side2}, {mealSet.selectedFood.side3}
                                                 </div>
@@ -310,6 +363,16 @@ function DietSelectionPage() {
                                                         <span className="diet-selection-page-nutrition-label">단백질</span>
                                                         <span className="diet-selection-page-nutrition-value">{mealSet.selectedFood.protein}</span>
                                                     </div>
+                                                </div>
+
+                                                {/* 상세 정보 버튼 추가 */}
+                                                <div className="diet-selection-page-detail-btn-section">
+                                                    <button 
+                                                        className="diet-selection-page-detail-btn"
+                                                        onClick={() => openMealDetailModal(mealSet.selectedFood)}
+                                                    >
+                                                        📋 상세 정보 보기
+                                                    </button>
                                                 </div>
                                             </div>
                                             {/* 수량 조절 */}
@@ -370,13 +433,23 @@ function DietSelectionPage() {
                                                             {mealSet.selectedIndex === foodIndex && (
                                                                 <div className="diet-selection-page-selected-indicator">✓</div>
                                                             )}
+                                                            {/* 옵션 메뉴에도 상세 정보 버튼 추가 */}
+                                                            <button 
+                                                                className="diet-selection-page-option-detail-btn"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    openMealDetailModal(food);
+                                                                }}
+                                                            >
+                                                                ℹ️
+                                                            </button>
                                                         </div>
                                                     ))}
                                                 </div>
                                             </div>
                                         </div>
 
-                                        {/* 🔥 추가된 부분: 식사 구분선 */}
+                                        {/* 식사 구분선 */}
                                         {!isLastMeal && (
                                             <div className="diet-selection-page-meal-divider"></div>
                                         )}
@@ -394,6 +467,107 @@ function DietSelectionPage() {
                     결제 화면으로 이동
                 </button>
             </div>
+
+            {/* 식단 상세 정보 모달 */}
+            {isModalOpen && selectedMealDetail && (
+                <div className="diet-selection-page-modal-overlay" onClick={closeMealDetailModal}>
+                    <div className="diet-selection-page-modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="diet-selection-page-modal-header">
+                            <h2 className="diet-selection-page-modal-title">{selectedMealDetail.name}</h2>
+                            <button 
+                                className="diet-selection-page-modal-close-btn"
+                                onClick={closeMealDetailModal}
+                            >
+                                ✕
+                            </button>
+                        </div>
+                        
+                        <div className="diet-selection-page-modal-body">
+                            <div className="diet-selection-page-modal-image-section">
+                                <img 
+                                    src={selectedMealDetail.image}
+                                    alt={selectedMealDetail.name}
+                                    className="diet-selection-page-modal-image"
+                                    onError={(e) => {
+                                        e.target.src = foodImg;
+                                    }}
+                                />
+                                <div className="diet-selection-page-modal-price">
+                                    {selectedMealDetail.price}
+                                </div>
+                            </div>
+                            
+                            <div className="diet-selection-page-modal-info-section">
+                                <div className="diet-selection-page-modal-section">
+                                    <h3 className="diet-selection-page-modal-section-title">🍽️ 구성 메뉴</h3>
+                                    <div className="diet-selection-page-modal-menu-grid">
+                                        <div className="diet-selection-page-modal-menu-item">
+                                            <span className="diet-selection-page-modal-menu-label">메인 1</span>
+                                            <span className="diet-selection-page-modal-menu-value">{selectedMealDetail.main1}</span>
+                                        </div>
+                                        <div className="diet-selection-page-modal-menu-item">
+                                            <span className="diet-selection-page-modal-menu-label">메인 2</span>
+                                            <span className="diet-selection-page-modal-menu-value">{selectedMealDetail.main2}</span>
+                                        </div>
+                                        <div className="diet-selection-page-modal-menu-item">
+                                            <span className="diet-selection-page-modal-menu-label">반찬 1</span>
+                                            <span className="diet-selection-page-modal-menu-value">{selectedMealDetail.side1}</span>
+                                        </div>
+                                        <div className="diet-selection-page-modal-menu-item">
+                                            <span className="diet-selection-page-modal-menu-label">반찬 2</span>
+                                            <span className="diet-selection-page-modal-menu-value">{selectedMealDetail.side2}</span>
+                                        </div>
+                                        <div className="diet-selection-page-modal-menu-item">
+                                            <span className="diet-selection-page-modal-menu-label">반찬 3</span>
+                                            <span className="diet-selection-page-modal-menu-value">{selectedMealDetail.side3}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="diet-selection-page-modal-section">
+                                    <h3 className="diet-selection-page-modal-section-title">📊 영양 정보</h3>
+                                    <div className="diet-selection-page-modal-nutrition-grid">
+                                        <div className="diet-selection-page-modal-nutrition-item">
+                                            <span className="diet-selection-page-modal-nutrition-label">칼로리</span>
+                                            <span className="diet-selection-page-modal-nutrition-value">{selectedMealDetail.calories}</span>
+                                        </div>
+                                        <div className="diet-selection-page-modal-nutrition-item">
+                                            <span className="diet-selection-page-modal-nutrition-label">탄수화물</span>
+                                            <span className="diet-selection-page-modal-nutrition-value">{selectedMealDetail.carbohydrate}</span>
+                                        </div>
+                                        <div className="diet-selection-page-modal-nutrition-item">
+                                            <span className="diet-selection-page-modal-nutrition-label">단백질</span>
+                                            <span className="diet-selection-page-modal-nutrition-value">{selectedMealDetail.protein}</span>
+                                        </div>
+                                        <div className="diet-selection-page-modal-nutrition-item">
+                                            <span className="diet-selection-page-modal-nutrition-label">지방</span>
+                                            <span className="diet-selection-page-modal-nutrition-value">{selectedMealDetail.fat}</span>
+                                        </div>
+                                        <div className="diet-selection-page-modal-nutrition-item">
+                                            <span className="diet-selection-page-modal-nutrition-label">당분</span>
+                                            <span className="diet-selection-page-modal-nutrition-value">{selectedMealDetail.sugar}</span>
+                                        </div>
+                                        <div className="diet-selection-page-modal-nutrition-item">
+                                            <span className="diet-selection-page-modal-nutrition-label">나트륨</span>
+                                            <span className="diet-selection-page-modal-nutrition-value">{selectedMealDetail.sodium}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="diet-selection-page-modal-section">
+                                    <h3 className="diet-selection-page-modal-section-title">🏷️ 기본 정보</h3>
+                                    <div className="diet-selection-page-modal-basic-info">
+                                        <div className="diet-selection-page-modal-basic-item">
+                                            <span className="diet-selection-page-modal-basic-label">식단 ID</span>
+                                            <span className="diet-selection-page-modal-basic-value">{selectedMealDetail.id}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
