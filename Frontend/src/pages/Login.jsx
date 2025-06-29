@@ -38,11 +38,19 @@ function Login() {
             const result = await response.json();
     
             if (response.status === 200) {
-                console.log(Cookies.get('token')); 
+                const token = Cookies.get('token');
+                console.log(token);
+                const payload = JSON.parse(atob(token.split('.')[1]));
                 console.log("로그인 성공!");
                 console.log("서버에서 쿠키 자동 저장됨");
-                navigate('/');
-            } else {
+            
+                if (payload.role === "ROLE_ADMIN") {
+                    navigate('/admin');
+                } else if (payload.role === "ROLE_USER") {
+                    navigate('/');
+                }
+            }
+             else {
                 console.log("로그인 실패");
                 alert("로그인 실패: " + result.message);
             }
