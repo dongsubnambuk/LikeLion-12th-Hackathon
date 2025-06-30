@@ -82,7 +82,6 @@ function UserInfoUpdate() {
                 body: JSON.stringify({
                     name: name,
                     email: email,
-                    password: password ? password : null,
                     phoneNumber: phoneNumber,
                     roadAddress: roadAddress,
                     detailAddress: detailAddress,
@@ -144,8 +143,9 @@ function UserInfoUpdate() {
                     type="text"
                     id="name"
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="userinfoupdate_update-form-group_input"
+                    readOnly
+                    className="userinfoupdate_update-form-group_input userinfoupdate_readonly"
+      
                 />
             </div>
             <div className="userinfoupdate_update-form-group">
@@ -154,8 +154,9 @@ function UserInfoUpdate() {
                     type="email"
                     id="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="userinfoupdate_update-form-group_input"
+                    readOnly
+                    className="userinfoupdate_update-form-group_input userinfoupdate_readonly"
+
                 />
             </div>
             <div className="userinfoupdate_update-form-group">
@@ -168,36 +169,7 @@ function UserInfoUpdate() {
                     className="userinfoupdate_update-form-group_input"
                 />
             </div>
-            <div className="userinfoupdate_update-form-group">
-                <label htmlFor="password" className="userinfoupdate_update-form-group_label">비밀번호</label>
-                <input
-                    type="password"
-                    id="password"
-                    value={password}
-                    className="userinfoupdate_update-form-group_input"
-                    placeholder="비밀번호를 입력해주세요"
-                    onChange={(e) => {
-                        setPassword(e.target.value);
-                        validatePasswords(e.target.value, confirmPassword);
-                    }}
-                />
-            </div>
 
-            <div className="userinfoupdate_update-form-group">
-                <label htmlFor="confirm-password" className="userinfoupdate_update-form-group_label">비밀번호 확인</label>
-                <input
-                    type="password"
-                    id="confirm-password"
-                    value={confirmPassword}
-                    placeholder="비밀번호를 다시 입력해 주세요"
-                    onChange={(e) => {
-                        setConfirmPassword(e.target.value);
-                        validatePasswords(password, e.target.value);
-                    }}
-                    className="userinfoupdate_update-form-group_input"
-                />
-                {error && <div className="userinfoupdate_error-message">{error}</div>}
-            </div>
 
             <div className="userinfoupdate_update-form-group">
                 <div className="userinfoupdate_update-address">
