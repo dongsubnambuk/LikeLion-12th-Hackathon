@@ -19,7 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -144,14 +146,30 @@ public class ReviewServiceImpl implements ReviewService {
         DailyDietReview dailyReview = dailyDietReviewRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("DailyDietReview not found"));
 
-        List<Review> reviews = reviewDTOs.stream()
-                .map(this::convertToReviewEntity)
-                .collect(Collectors.toList());
+        Map<Long, ReviewDTO> reviewDTOMap = new HashMap<>();
+        for (ReviewDTO reviewDTO : reviewDTOs) {
+            if (reviewDTO.getFoodId() == null) {
+                throw new IllegalArgumentException("FoodId cannot be null");
+            }
+            if (reviewDTO.getRating() == null || reviewDTO.getRating() < 1.0 || reviewDTO.getRating() > 5.0) {
+                throw new IllegalArgumentException("Rating must be between 1.0 and 5.0 for foodId: " + reviewDTO.getFoodId());
+            }
+            reviewDTOMap.put(reviewDTO.getFoodId(), reviewDTO);
+        }
 
-        dailyReview.setReviews(reviews);
+        for (Review review : dailyReview.getReviews()) {
+            Long foodId = review.getFood().getId();
+            ReviewDTO reviewDTO = reviewDTOMap.get(foodId);
+
+            if (reviewDTO != null) {
+                review.setRating(reviewDTO.getRating());
+                review.setComment(reviewDTO.getComment());
+            }
+        }
+
         DailyDietReview savedDailyReview = dailyDietReviewRepository.save(dailyReview);
 
-        for(ReviewDTO reviewDTO : reviewDTOs){
+        for (ReviewDTO reviewDTO : reviewDTOs) {
             updateReviewSummaryByFoodMenuId(reviewDTO.getFoodId());
         }
 
@@ -169,20 +187,6 @@ public class ReviewServiceImpl implements ReviewService {
                 .rating(review.getRating())
                 .comment(review.getComment())
                 .createdAt(review.getCreatedAt())
-                .build();
-    }
-
-    private Review convertToReviewEntity(ReviewDTO reviewDTO) {
-        Food food = foodRepository.findById(reviewDTO.getFoodId())
-                .orElseThrow(() -> new RuntimeException("FoodMenu not found"));
-
-        return Review.builder()
-                .id(reviewDTO.getId())
-                .userEmail(reviewDTO.getUserEmail())
-                .food(food)
-                .rating(reviewDTO.getRating())
-                .comment(reviewDTO.getComment())
-                .createdAt(reviewDTO.getCreatedAt())
                 .build();
     }
 
