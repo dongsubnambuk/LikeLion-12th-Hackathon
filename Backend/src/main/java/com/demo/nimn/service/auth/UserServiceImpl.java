@@ -123,14 +123,15 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserDTO changePassword(PasswordChangeDTO passwordChangeDto) {
+        String email = passwordChangeDto.getEmail();
         String oldPassword = passwordChangeDto.getOldPassword();
         String newPassword = passwordChangeDto.getNewPassword();
 
         UserDTO user = UserDTO.builder()
-                .email(passwordChangeDto.getEmail())
+                .email(email)
                 .build();
 
-        Users userEntity = userRepository.findByEmail(passwordChangeDto.getEmail());
+        Users userEntity = userRepository.findByEmail(email);
         if (userEntity == null) {
             throw new RuntimeException("사용자를 찾을 수 없습니다.");
         }
@@ -138,19 +139,47 @@ public class UserServiceImpl implements UserService {
         // oldPassword가 일치함
         if(bCryptPasswordEncoder.matches(oldPassword, userEntity.getPassword())){
             if(bCryptPasswordEncoder.matches(newPassword, userEntity.getPassword())){
-                user = user.builder()
+                user = user.toBuilder()
                         .password("중복")
                         .build();
+                return user;
             }
             // 새로운 비밀번호를 encode 한 이후 set
             userEntity.setPassword(bCryptPasswordEncoder.encode(passwordChangeDto.getNewPassword()));
         }
         // oldPassword가 일치하지 않음
         else{
-            user = user.builder()
+            user = user.toBuilder()
                     .password("불일치")
                     .build();
         }
+        return user;
+    }
+
+    @Transactional
+    @Override
+    public UserDTO updatePassword(PasswordChangeDTO passwordChangeDto) {
+        String email = passwordChangeDto.getEmail();
+        String newPassword = passwordChangeDto.getNewPassword();
+
+        UserDTO user = UserDTO.builder()
+                .email(email)
+                .build();
+
+        Users userEntity = userRepository.findByEmail(email);
+        if (userEntity == null) {
+            throw new RuntimeException("사용자를 찾을 수 없습니다.");
+        }
+
+        if(bCryptPasswordEncoder.matches(newPassword, userEntity.getPassword())){
+            user = user.toBuilder()
+                    .password("중복")
+                    .build();
+            return user;
+        }
+        // 새로운 비밀번호를 encode 한 이후 set
+        userEntity.setPassword(bCryptPasswordEncoder.encode(passwordChangeDto.getNewPassword()));
+
         return user;
     }
 

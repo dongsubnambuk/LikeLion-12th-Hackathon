@@ -6,6 +6,7 @@ import com.demo.nimn.dto.auth.UserDetails;
 import com.demo.nimn.dto.auth.UsersEmailDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.catalina.User;
 
 public interface UserService {
 
@@ -20,6 +21,8 @@ public interface UserService {
     public UserDetails updateUser(UserDetails user);
 
     public UserDTO changePassword(PasswordChangeDTO passwordChangeDto);
+
+    public UserDTO updatePassword(PasswordChangeDTO passwordChangeDto);
 
     public UsersEmailDTO getAllUsersEmail();
 
