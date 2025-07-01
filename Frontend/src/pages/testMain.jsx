@@ -12,8 +12,6 @@ function DietPaymentMainPage() {
 
     const [mealData, setMealData] = useState(null);
     const [allMealsPrice, setAllMealsPrice] = useState(0);
-    const [startDate, setStartDate] = useState(0);
-    const [lastDate, setLaseDate] = useState(0);
     const [dateSet, setDateSet] = useState([]);
 
     useEffect(() => {
@@ -21,34 +19,10 @@ function DietPaymentMainPage() {
         if (storedMeal) {
             const parsedMealData = JSON.parse(storedMeal);
             setMealData(parsedMealData);
-            //calculateTotalPrice(parsedMealData);
-
-            //console.log(localStorage.getItem('Meal'));
-
-
-            // console.log(parsedMealData[0].day);
-            // console.log(parsedMealData[6].day);
-            // setStartDate(parsedMealData[0].day);
-            // setStartDate(parsedMealData[6].day);
-
-            console.log([parsedMealData[0].day, parsedMealData[6].day]);
             setDateSet([parsedMealData[0].day, parsedMealData[6].day])
 
         }
     }, []);
-
-    const calculateTotalPrice = (data) => {
-        const totalPrice = data.reduce((total, day) => {
-            return total + day.meals.reduce((dayTotal, meal) => {
-                const mealPrice = meal.mealOptions.reduce((mealTotal, option) => {
-                    const optionPrice = parseInt(option.foodMenus[0].price.replace(/[^0-9]/g, ''), 10);
-                    return mealTotal + (optionPrice * option.count);
-                }, 0);
-                return dayTotal + mealPrice;
-            }, 0);
-        }, 0);
-        setAllMealsPrice(totalPrice);
-    };
 
     const dateRange = mealData ? `${mealData[0].date} ~ ${mealData[mealData.length - 1].date}` : '';
 

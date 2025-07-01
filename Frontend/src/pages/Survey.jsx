@@ -35,9 +35,7 @@ function Survey() {
                 
                 const email = result.email || 'user5@example.com';
                 setUserEmail(email);
-                console.log('Survey - 사용자 이메일 설정:', email);
             } else {
-                console.log("Survey - 사용자 정보 조회 실패", response.status);
                 const result = await response.json().catch(() => ({}));
                 
                 if (result.message === "토큰소멸") {
@@ -45,12 +43,8 @@ function Survey() {
                     navigate('/login');
                     return;
                 }
-                
-                console.log('Survey - 기본 이메일 사용:', userEmail);
             }
         } catch (error) {
-            console.error("Survey - 사용자 정보 조회 오류:", error);
-            console.log('Survey - 기본 이메일 사용:', userEmail);
         }
     }, [navigate, userEmail]);
 
@@ -63,14 +57,11 @@ function Survey() {
             if (response.ok) {
                 const data = await response.json();
                 const reviewNotifications = data.filter(notification => notification.type === 'REVIEW');
-                console.log('기존 REVIEW 알림 조회:', reviewNotifications.length, '건');
                 return reviewNotifications;
             } else {
-                console.error('알림 조회 실패:', response.status);
                 return [];
             }
         } catch (error) {
-            console.error('알림 조회 실패:', error);
             return [];
         } finally {
             setIsLoading(false);
@@ -80,8 +71,6 @@ function Survey() {
     // 일일 리뷰 조회 API
     const getDailyReviewAPI = useCallback(async (userEmail, date) => {
         try {
-            console.log(`일일 리뷰 조회 시작 - userEmail: ${userEmail}, date: ${date}`);
-            
             const response = await fetch(`http://nimn.store/api/review/daily?userEmail=${userEmail}&date=2025-07-07`, {
                 method: "GET",
                 credentials: 'include',
@@ -89,14 +78,11 @@ function Survey() {
             
             if (response.ok) {
                 const data = await response.json();
-                console.log('일일 리뷰 조회 성공:', data);
                 return data;
             } else {
-                console.error('일일 리뷰 조회 실패:', response.status);
                 return null;
             }
         } catch (error) {
-            console.error('일일 리뷰 조회 에러:', error);
             return null;
         }
     }, []);
@@ -104,9 +90,6 @@ function Survey() {
     // 하루 식단 리뷰 수정 API
     const updateDailyReviewAPI = useCallback(async (dailyReviewId, requestBody) => {
         try {
-            console.log(`하루 식단 리뷰 수정 시작 - dailyReviewId: ${dailyReviewId}`);
-            console.log('요청 데이터:', JSON.stringify(requestBody, null, 2));
-            
             const response = await fetch(`http://nimn.store/api/review/daily/${dailyReviewId}`, {
                 method: 'PUT',
                 headers: {
@@ -116,38 +99,28 @@ function Survey() {
                 body: JSON.stringify(requestBody)
             });
             
-            console.log(`dailyReviewId ${dailyReviewId} 응답 상태:`, response.status);
-            
             if (response.ok) {
                 const result = await response.json();
-                console.log(`하루 식단 리뷰 수정 성공:`, result);
                 return true;
             } else {
                 try {
                     const errorText = await response.text();
-                    console.error(`서버 에러 응답:`, errorText);
                 } catch (e) {
-                    console.error(`에러 응답 파싱 실패`);
                 }
-                console.error(`하루 식단 리뷰 수정 실패:`, response.status);
                 return false;
             }
         } catch (error) {
-            console.error(`하루 식단 리뷰 수정 에러:`, error);
             return false;
         }
     }, []);
 
     // WebSocket 연결
     const connectWebSocket = useCallback(() => {
-        console.log(`🔄 Survey WebSocket 연결 시도: ${userEmail}`);
         
         if (stompClientRef.current) {
-            console.log('🔌 Survey 기존 연결 해제');
             try {
                 stompClientRef.current.deactivate();
             } catch (error) {
-                console.log('기존 연결 해제 중 오류:', error);
             }
         }
 
@@ -163,25 +136,15 @@ function Survey() {
             heartbeatOutgoing: 4000,
             reconnectDelay: 3000,
             onConnect: (frame) => {
-                console.log("✅ Survey STOMP CONNECTED - userEmail:", userEmail);
-                console.log("Connection frame:", frame);
-
                 const handleMessage = async (message) => {
-                    console.log("📨 Survey 원본 메시지 수신:", message.body);
-                    
                     let parsed;
                     try {
                         parsed = JSON.parse(message.body);
-                        console.log("📝 Survey 파싱된 메시지:", parsed);
                     } catch (error) {
-                        console.log("파싱 오류:", error);
                         parsed = { content: message.body, type: "TEXT" };
-                        console.log("📝 Survey 파싱 실패, 기본값 사용:", parsed);
                     }
                     
                     if (parsed.type === 'REVIEW' && parsed.dailyReviewId) {
-                        console.log(`✅ Survey REVIEW 타입 알림 처리 - dailyReviewId: ${parsed.dailyReviewId}`);
-                        
                         const today = new Date().toISOString().split('T')[0];
                         const reviewData = await getDailyReviewAPI(userEmail, today);
                         
@@ -196,32 +159,24 @@ function Survey() {
                                 dailyReviewId: reviewData.id
                             };
                             
-                            console.log("📝 Survey 데이터 생성:", surveyData);
-                            
                             setSurveys(prev => {
                                 const isDuplicate = prev.some(survey => 
                                     survey.dailyReviewId === reviewData.id && 
                                     survey.reviewDate === surveyData.reviewDate
                                 );
                                 if (!isDuplicate) {
-                                    console.log("📌 새 설문 추가:", surveyData);
                                     return [surveyData, ...prev];
                                 }
-                                console.log("⚠️ 중복 설문 제외");
                                 return prev;
                             });
                         } else {
-                            console.error('리뷰 데이터 조회 실패 또는 빈 데이터');
                         }
-                    } else {
-                        console.log(`⚠️ Survey에서 제외된 타입 또는 dailyReviewId 없음: ${parsed.type}, dailyReviewId: ${parsed.dailyReviewId}`);
                     }
                 };
 
                 const userQueueSub = client.subscribe(
                     `/user/queue/notification`,
                     (msg) => {
-                        console.log("📥 Survey /user/queue/notification 수신:", msg.body);
                         handleMessage(msg);
                     }
                 );
@@ -229,33 +184,23 @@ function Survey() {
                 const userTopicSub = client.subscribe(
                     `/topic/notification/${userEmail}`,
                     (msg) => {
-                        console.log("📥 Survey /topic/notification 수신:", msg.body);
                         handleMessage(msg);
                     }
                 );
 
-                console.log("📡 Survey 구독 완료 - Queue ID:", userQueueSub.id, "Topic ID:", userTopicSub.id);
             },
             onWebSocketError: (err) => {
-                console.error("❌ Survey WebSocket Error:", err);
-                console.log("WebSocket 연결 실패 - 재시도 중...");
             },
             onStompError: (frame) => {
-                console.error("❌ Survey STOMP ERROR:", frame.headers?.message || frame);
-                console.error("STOMP Error details:", frame);
             },
             onDisconnect: (receipt) => {
-                console.log("🔌 Survey STOMP DISCONNECTED:", receipt);
-                console.log("연결 해제됨 - 자동 재연결 시도");
             },
         });
 
         try {
             client.activate();
             stompClientRef.current = client;
-            console.log("🚀 Survey STOMP 클라이언트 활성화 완료");
         } catch (error) {
-            console.error("STOMP 클라이언트 활성화 실패:", error);
         }
     }, [userEmail, getDailyReviewAPI]);
 
@@ -263,7 +208,6 @@ function Survey() {
     const loadExistingReviewNotifications = useCallback(async () => {
         const notifications = await getAllNotificationsAPI();
         if (notifications && notifications.length > 0) {
-            console.log('기존 알림 처리 시작:', notifications.length, '건');
             
             const formattedSurveys = await Promise.all(
                 notifications.map(async (notification) => {
@@ -293,7 +237,6 @@ function Survey() {
             const validSurveys = formattedSurveys.filter(survey => survey !== null);
             const sortedSurveys = validSurveys.sort((a, b) => new Date(b.reviewDate) - new Date(a.reviewDate));
             
-            console.log('유효한 설문 데이터:', sortedSurveys.length, '건');
             setSurveys(sortedSurveys);
         }
     }, [userEmail, getAllNotificationsAPI, getDailyReviewAPI]);
@@ -305,7 +248,6 @@ function Survey() {
 
     useEffect(() => {
         if (userEmail && userEmail !== '') {
-            console.log('🔄 사용자 이메일 설정됨, 데이터 로드 시작:', userEmail);
             loadExistingReviewNotifications();
             
             const timer = setTimeout(() => {
@@ -315,11 +257,9 @@ function Survey() {
             return () => {
                 clearTimeout(timer);
                 if (stompClientRef.current) {
-                    console.log('🔌 컴포넌트 언마운트 - WebSocket 연결 해제');
                     try {
                         stompClientRef.current.deactivate();
                     } catch (error) {
-                        console.log('WebSocket 해제 중 오류:', error);
                     }
                 }
             };
@@ -328,7 +268,6 @@ function Survey() {
 
     // 모달 열기
     const openSurveyModal = (survey) => {
-        console.log('설문 모달 열기:', survey);
         setSelectedSurvey(survey);
         document.body.classList.add('modal-open');
         
@@ -341,8 +280,6 @@ function Survey() {
             // 정수를 .0 형태로 변환
             const doubleRating = parseFloat(existingRating + '.0');
             initialRatings[review.id] = doubleRating;
-            console.log(`모달 열기 - 리뷰 ${review.id} 초기 rating: ${existingRating} → ${doubleRating}`);
-            
             initialComments[review.id] = review.comment || '';
             initialHoveredStars[review.id] = 0;
         });
@@ -365,7 +302,6 @@ function Survey() {
     const handleRatingChange = (reviewId, rating) => {
         // 정수를 .0 형태로 변환
         const doubleRating = parseFloat(rating + '.0');
-        console.log(`별점 변경 - reviewId: ${reviewId}, rating: ${rating} → ${doubleRating}`);
         setRatings(prevRatings => ({ ...prevRatings, [reviewId]: doubleRating }));
     };
 
@@ -424,7 +360,6 @@ function Survey() {
         
         try {
             setIsLoading(true);
-            console.log('전체 설문 제출 시작');
             
             // 모든 리뷰를 배열로 구성
             const reviewsArray = selectedSurvey.reviews.map(review => {
@@ -444,8 +379,6 @@ function Survey() {
                 reviews: reviewsArray
             };
             
-            console.log('최종 제출할 요청 데이터:', requestBody);
-            
             const success = await updateDailyReviewAPI(selectedSurvey.dailyReviewId, requestBody);
             
             if (success) {
@@ -459,13 +392,10 @@ function Survey() {
                 
                 alert('설문이 제출되었습니다!');
                 closeSurveyModal();
-                console.log('전체 설문 제출 완료');
             } else {
                 alert('설문 제출에 실패했습니다. 다시 시도해주세요.');
-                console.error('전체 설문 제출 실패');
             }
         } catch (error) {
-            console.error('전체 설문 제출 에러:', error);
             alert('설문 제출 중 오류가 발생했습니다.');
         } finally {
             setIsLoading(false);

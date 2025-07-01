@@ -14,7 +14,6 @@ function DietSelectionPage() {
     const swiperRef = useRef(null);
     const [isLoading, setIsLoading] = useState(true);
     const [mealData, setMealData] = useState([]);
-    // 🔥 추가된 부분: 에러 상태 관리
     const [error, setError] = useState(null);
     // 각 식사별 메뉴 변경 섹션의 열림/닫힘 상태 관리
     const [expandedMenus, setExpandedMenus] = useState({});
@@ -94,7 +93,6 @@ function DietSelectionPage() {
 
     // 실제 API에서 받은 데이터를 내부 구조로 변환
     const transformApiData = (apiData) => {
-        // 🔥 수정된 부분: 식사 시간 한국어 매핑 강화
         const mealTypeMapping = {
             'Breakfast': '아침',
             'BREAKFAST': '아침',
@@ -111,7 +109,6 @@ function DietSelectionPage() {
             day: dayPlan.day,
             foodChoiceSets: dayPlan.foodChoiceSets.map(choiceSet => ({
                 foodTime: choiceSet.foodTime,
-                // 🔥 수정된 부분: 한국어 변환 로직 강화
                 foodTimeLabel: mealTypeMapping[choiceSet.foodTime] || choiceSet.foodTime,
                 foods: choiceSet.foods.map(food => ({
                     ...food,
@@ -159,7 +156,7 @@ function DietSelectionPage() {
     useEffect(() => {
         const handleGet = async () => {
             setIsLoading(true);
-            setError(null); // 🔥 추가된 부분: 요청 시작 시 에러 초기화
+            setError(null);
 
             try {
                 const response = await fetch('http://nimn.store/api/foods/plans/weekly', {
@@ -185,7 +182,6 @@ function DietSelectionPage() {
                 }
 
             } catch (error) {
-                // 🔥 수정된 부분: 에러 상태 설정
                 setError('식단 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.');
             } finally {
                 setIsLoading(false);
@@ -216,7 +212,6 @@ function DietSelectionPage() {
         );
     }
 
-    // 🔥 추가된 부분: 에러 상태 처리
     if (error) {
         return (
             <div className="diet-selection-page-error-container">

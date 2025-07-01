@@ -59,7 +59,6 @@ function Login({ onLoginSuccess }) {
                         }
                     }
                 } catch (error) {
-                    console.error('사용자 정보 조회 실패:', error);
                 }
             
                 if (payload.role === "ROLE_ADMIN") {
@@ -71,7 +70,6 @@ function Login({ onLoginSuccess }) {
                 alert("로그인 실패: " + result.message);
             }
         } catch (error) {
-            console.error("Fetch error: ", error);
             alert("로그인 중 오류가 발생했습니다.");
         }
     };

@@ -34,13 +34,8 @@ function OrderList() {
                     // 사용자 이메일이 있으면 설정, 없으면 기본값 유지
                     if (userData.email) {
                         setUserEmail(userData.email);
-                        console.log('OrderList - 사용자 이메일 설정:', userData.email);
-                    } else {
-                        console.log('OrderList - 기본 이메일 사용:', userEmail);
                     }
-                } else {
-                    console.log('OrderList - 사용자 정보 조회 실패, 기본 이메일 사용:', userEmail);
-                    
+                } else {                    
                     try {
                         const userData = await response.json();
                         if (userData.message === "토큰소멸") {
@@ -49,12 +44,9 @@ function OrderList() {
                             return;
                         }
                     } catch (e) {
-                        console.log('OrderList - 응답 파싱 실패');
                     }
                 }
             } catch (error) {
-                console.error('OrderList - 사용자 정보 조회 오류:', error);
-                console.log('OrderList - 오류로 인해 기본 이메일 사용:', userEmail);
                 // 에러가 발생해도 기본 이메일로 진행
             }
         };
@@ -66,8 +58,6 @@ function OrderList() {
     useEffect(() => {
         const handlePaymentGet = async () => {
             try {
-                console.log(`OrderList - 결제 내역 조회 시작: ${userEmail}`);
-                
                 const response = await fetch(`http://nimn.store/api/payment?purchaser=${userEmail}`, {
                     method: 'GET',
                     headers: {
@@ -81,7 +71,6 @@ function OrderList() {
                 }
 
                 const paymentData = await response.json();
-                console.log('OrderList - 결제 내역 조회 성공:', paymentData.length, '건');
                 
                 // 날짜 기준으로 최신순 정렬 (내림차순)
                 const sortedPayments = paymentData.sort((a, b) => {
@@ -90,7 +79,6 @@ function OrderList() {
                 
                 setPayments(sortedPayments);
             } catch (error) {
-                console.error('OrderList - 결제 내역 조회 오류:', error);
                 setError(error.message);
             } finally {
                 setLoading(false);

@@ -29,11 +29,9 @@ function AllDietPage() {
                 const data = await response.json();
                 return data;
             } else {
-                console.error('음식 목록 조회 실패:', response.status);
                 return [];
             }
         } catch (error) {
-            console.error('음식 목록 조회 에러:', error);
             return [];
         }
     };
@@ -51,11 +49,9 @@ function AllDietPage() {
 
                 return data;
             } else {
-                console.error('전체 리뷰 조회 실패:', response.status);
                 return [];
             }
         } catch (error) {
-            console.error('전체 리뷰 조회 에러:', error);
             return [];
         }
     };
@@ -298,12 +294,10 @@ function AllDietPage() {
                     
                     setMealData(formattedData);
                 } else {
-                    console.log("음식 데이터가 없습니다.");
                     setMealData([]);
                 }
 
             } catch (error) {
-                console.error("Error fetching data:", error);
                 alert("데이터를 가져오는 중 오류가 발생했습니다.");
                 setMealData([]);
             } finally {

@@ -33,10 +33,7 @@ function Notification() {
                 
                 const email = result.email || 'test@example.com';
                 setUserEmail(email);
-                console.log('사용자 이메일 설정:', email);
-            } else {
-                console.log("사용자 정보 조회 실패", response.status);
-                
+            } else {                
                 try {
                     const result = await response.json();
                     
@@ -47,16 +44,9 @@ function Notification() {
                         return;
                     }
                 } catch (e) {
-                    console.log("사용자 정보 파싱 실패");
                 }
-                
-                // 실패 시 기본값 유지 (이미 test@example.com으로 설정됨)
-                console.log('기본 이메일 사용:', userEmail);
             }
         } catch (error) {
-            console.error("사용자 정보 조회 오류:", error);
-            // 오류 시 기본값 유지 (이미 test@example.com으로 설정됨)
-            console.log('기본 이메일 사용:', userEmail);
         }
     }, [navigate, userEmail]);
 
@@ -73,7 +63,6 @@ function Notification() {
                 return [];
             }
         } catch (error) {
-            console.error('알림 조회 실패:', error);
             return [];
         } finally {
             setIsLoading(false);
@@ -105,11 +94,9 @@ function Notification() {
     }, [userEmail]);
 
     const connectWebSocket = useCallback(() => {
-        console.log(`🔄 WebSocket 연결 시도: ${userEmail}`);
         
         // 기존 연결이 있으면 먼저 해제
         if (stompClientRef.current) {
-            console.log('🔌 기존 연결 해제');
             stompClientRef.current.deactivate();
         }
 
@@ -127,30 +114,23 @@ function Notification() {
             heartbeatOutgoing: 10000,
             reconnectDelay: 5000,
             onConnect: (frame) => {
-                console.log("✅ STOMP CONNECTED - userEmail:", userEmail);
                 setIsConnected(true);
 
                 // 받은 메시지를 state에 추가하는 함수
                 const handleMessage = (message) => {
-                    console.log("📨 원본 메시지 수신:", message.body);
                     
                     let body = message.body;
                     let parsed;
                     try {
                         parsed = JSON.parse(body);
-                        console.log("📝 파싱된 메시지:", parsed);
                     } catch {
                         parsed = { content: body, type: "TEXT" };
-                        console.log("📝 파싱 실패, 기본값 사용:", parsed);
                     }
                     
                     // PAYMENT와 DIET 타입만 알림에 표시
                     if (parsed.type !== 'PAYMENT' && parsed.type !== 'DIET') {
-                        console.log(`⚠️ 알림에서 제외된 타입: ${parsed.type}`);
                         return;
                     }
-                    
-                    console.log(`✅ 알림 추가: ${parsed.type} - ${parsed.content}`);
                     
                     const notification = {
                         notificationId: parsed.notificationId || Date.now(),
@@ -161,11 +141,9 @@ function Notification() {
                     };
                     
                     setMessages(prev => {
-                        console.log(`📊 이전 메시지 수: ${prev.length}, 새 메시지 추가 후: ${prev.length + 1}`);
                         return [notification, ...prev];
                     });
                     setUnreadCount(prev => {
-                        console.log(`📢 읽지 않은 알림 수: ${prev} → ${prev + 1}`);
                         return prev + 1;
                     });
                 };
@@ -174,31 +152,23 @@ function Notification() {
                 const sub = client.subscribe(
                     "/user/queue/notification",
                     (msg) => {
-                        console.log("📥 /user/queue/notification 수신:", msg.body);
                         handleMessage(msg);
                     }
                 );
-
-                console.log("📡 구독 완료 - ID:", sub.id, "경로: /user/queue/notification");
             },
             onWebSocketError: (err) => {
-                console.error("❌ WebSocket Error:", err);
                 setIsConnected(false);
             },
             onStompError: (frame) => {
-                console.error("❌ STOMP ERROR:", frame.headers?.message || frame);
                 setIsConnected(false);
             },
             onDisconnect: (receipt) => {
-                console.log("🔌 STOMP DISCONNECTED:", receipt);
                 setIsConnected(false);
             },
         });
 
         client.activate();
         stompClientRef.current = client;
-        
-        console.log("🚀 STOMP 클라이언트 활성화 완료");
     }, [userEmail]);
 
     // 단일 알림 읽음 처리

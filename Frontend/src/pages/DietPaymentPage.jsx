@@ -1,5 +1,4 @@
 // src/pages/DietPaymentPage.jsx
-import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../CSS/DietPaymentPage.css';
 
@@ -8,7 +7,6 @@ function DietPaymentPage() {
     const navigate = useNavigate();
     const { price, orderDetails } = location.state; 
 
-    // Generate a string with the name of the first ordered meal and indicate the number of additional meals
     const mealCount = orderDetails.reduce((total, day) => total + day.meals.length, 0);
     const firstMealName = orderDetails[0].meals[0].name || orderDetails[0].meals[0].title;
     const additionalMealsCount = mealCount - 1;
@@ -18,7 +16,6 @@ function DietPaymentPage() {
 
     let weeklyId = 1;
 
-    // 🔥 수정된 함수: 실제 유저 정보 가져오기
     const getUserEmail = async () => {
         try {
             const response = await fetch('http://nimn.store/api/users', {
@@ -158,7 +155,7 @@ function DietPaymentPage() {
         try {
             await handleCreatUserDiet();
 
-            // 🔥 실제 유저 정보 가져오기
+            // 실제 유저 정보 가져오기
             const userData = await fetch('http://nimn.store/api/users', {
                 method: 'GET',
                 credentials: 'include'
@@ -196,17 +193,17 @@ function DietPaymentPage() {
             const { IMP } = window;
             IMP.init('imp77151582');
     
-            // 🔥 실제 사용자 데이터로 수정
+            // 실제 사용자 데이터로 수정
             const data = {
                 pg: `html5_inicis.INIpayTest`,
                 pay_method: 'card',
                 merchant_uid: `${orderId}`,
                 name: orderedMealNames,
                 amount: totalPrice,
-                buyer_email: userInfo.email, // 실제 이메일
-                buyer_name: userInfo.name, // 실제 이름
-                buyer_tel: userInfo.phone_number, // 실제 전화번호
-                buyer_addr: `${userInfo.road_address} ${userInfo.detail_address}`, // 실제 주소
+                buyer_email: userInfo.email,
+                buyer_name: userInfo.name,
+                buyer_tel: userInfo.phone_number,
+                buyer_addr: `${userInfo.road_address} ${userInfo.detail_address}`,
                 buyer_postcode: '123-456',
                 m_redirect_url: 'http://nimn.store/dietpaymentcomplete',
             };

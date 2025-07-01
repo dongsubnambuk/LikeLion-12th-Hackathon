@@ -50,7 +50,6 @@
 
 .meal-card-content p {
   margin: 0 0 4px;
-  /* 마진을 줄임 */
   color: #666;
   font-size: 14px;
   width: 85%;
@@ -76,13 +75,11 @@
 .nutrition-label {
   display: block;
   font-size: 10px;
-  /* 폰트 크기 줄임 */
   color: #888;
 }
 
 .nutrition-value {
   font-size: 12px;
-  /* 폰트 크기 줄임 */
   font-weight: bold;
   color: #333;
 }

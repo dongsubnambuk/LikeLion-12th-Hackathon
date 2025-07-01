@@ -7,8 +7,6 @@ import '../CSS/UserInfoUpdate.css';
 function UserInfoUpdate() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
     const [phoneNumber, setphoneNumber] = useState("");
     const [zipCode, setZipcode] = useState("");
     const [roadAddress, setRoadAddress] = useState("");
@@ -91,16 +89,12 @@ function UserInfoUpdate() {
             const result = await response.json();
 
             if (response.status === 200) {
-                console.log(result);
-                console.log("회원정보 수정 성공");
                 alert("회원정보 수정 성공");
                 navigate('/'); 
             } else {
-                console.log("회원정보 수정 실패");
                 alert("회원정보 수정 실패: " + result.message);
             }
         } catch (error) {
-            console.error('Update error:', error);
             alert("회원정보 수정 중 오류가 발생했습니다.");
         }
     };
@@ -124,11 +118,9 @@ function UserInfoUpdate() {
                     setDetailAddress(result.detailAddress || "");
                     setZipcode(result.zipCode || ""); // 우편번호도 설정
                 } else {
-                    console.log("사용자 정보 조회 실패");
                     alert("사용자 정보 조회 실패: " + result.message);
                 }
             } catch (error) {
-                console.error('Fetch user info error:', error);
                 alert("사용자 정보 조회 중 오류가 발생했습니다.");
             }
         };

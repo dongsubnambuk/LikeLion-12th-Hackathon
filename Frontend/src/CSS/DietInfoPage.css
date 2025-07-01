@@ -110,23 +110,23 @@
 }
 
 .dietInfoPage_nutritionItem:nth-child(1) {
-    border-left-color: #ff7f50; /* 탄수화물 - 코랄 */
+    border-left-color: #ff7f50;
 }
 
 .dietInfoPage_nutritionItem:nth-child(2) {
-    border-left-color: #4682b4; /* 단백질 - 스틸블루 */
+    border-left-color: #4682b4;
 }
 
 .dietInfoPage_nutritionItem:nth-child(3) {
-    border-left-color: #32cd32; /* 지방 - 라임그린 */
+    border-left-color: #32cd32;
 }
 
 .dietInfoPage_nutritionItem:nth-child(4) {
-    border-left-color: #da70d6; /* 당류 - 오키드 */
+    border-left-color: #da70d6;
 }
 
 .dietInfoPage_nutritionItem:nth-child(5) {
-    border-left-color: #ff4500; /* 나트륨 - 오렌지레드 */
+    border-left-color: #ff4500;
 }
 
 .dietInfoPage_nutritionLabel {

@@ -383,7 +383,6 @@ const MainPage = ({ onNotificationCountChange }) => {
 
   return (
     <div className="main-page-main-container">
-      {/* Hero Slider Section */}
       <section className="main-page-hero-slider">
         <Swiper
           spaceBetween={0}
@@ -416,7 +415,6 @@ const MainPage = ({ onNotificationCountChange }) => {
         </Swiper>
       </section>
 
-      {/* Today's Meals Section */}
       <section className="main-page-today-meals-section">
         <div className="main-page-section-header">
           <h2>
@@ -479,7 +477,6 @@ const MainPage = ({ onNotificationCountChange }) => {
         </div>
       </section>
 
-      {/* Features Section */}
       <section className="main-page-features-section">
         <div className="main-page-section-header">
           <h2>우리 동네 영양사만의 <br /> 특별함</h2>
@@ -497,7 +494,6 @@ const MainPage = ({ onNotificationCountChange }) => {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="main-page-cta-section">
         <div className="main-page-cta-content">
           <h2>건강한 식습관,<br />지금 시작하세요!</h2>

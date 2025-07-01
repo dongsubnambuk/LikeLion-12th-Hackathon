@@ -61,7 +61,7 @@ const WeeklyFoodMenu = () => {
         const dietData = await dietResponse.json();
         const weeklyData = dietData.dailyDiets || dietData;
         
-        // 🔥 수정된 부분: 데이터가 없거나 빈 배열인 경우 처리
+        // 데이터가 없거나 빈 배열인 경우 처리
         if (!weeklyData || weeklyData.length === 0) {
           throw new Error('이번 주 식단이 없습니다.');
         }
@@ -70,7 +70,7 @@ const WeeklyFoodMenu = () => {
 
       } catch (error) {
         setError(error.message);
-        setMealData(null); // 🔥 수정된 부분: 더미데이터 대신 null 설정
+        setMealData(null); // 더미데이터 대신 null 설정
       } finally {
         setIsLoading(false);
       }
@@ -113,7 +113,7 @@ const WeeklyFoodMenu = () => {
     );
   }
 
-  // 🔥 추가된 부분: 에러 상태 처리
+  // 에러 상태 처리
   if (error || !mealData || mealData.length === 0) {
     return (
       <div className="weekly-food-menu-empty-container">

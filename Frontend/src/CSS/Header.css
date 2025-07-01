@@ -1,5 +1,5 @@
 .header-header {
-  position: fixed; /* sticky에서 fixed로 변경 */
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -48,14 +48,14 @@
 .header-user-greeting {
   font-size: 15px;
   font-weight: 600;
-  color: #9d9274; /* #9d9274 */
+  color: #9d9274;
   letter-spacing: -0.3px;
 }
 
 .header-login-button {
   background: none;
-  border: 1.5px solid #9d9274; /* #9d9274 */
-  color: #9d9274; /* #9d9274 */
+  border: 1.5px solid #9d9274;
+  color: #9d9274;
   padding: 8px 18px;
   border-radius: 24px;
   font-size: 14px;
@@ -66,7 +66,7 @@
 }
 
 .header-login-button:hover {
-  background: #9d9274; /* #9d9274 */
+  background: #9d9274;
   color: white;
   transform: translateY(-1px);
 }
@@ -101,8 +101,8 @@
 }
 
 .header-action-button:hover {
-  background: rgba(157, 146, 116, 0.08); /* #9d9274 기반 */
-  color: #9d9274; /* #9d9274 */
+  background: rgba(157, 146, 116, 0.08);
+  color: #9d9274;
 }
 
 .header-notification-badge {
@@ -145,7 +145,7 @@
 }
 
 .header-back-button:hover {
-  color: #9d9274; /* #9d9274 */
+  color: #9d9274;
 }
 
 .header-page-title {
@@ -188,7 +188,6 @@
   }
 }
 
-/* 🔥 추가된 부분: 로딩 플레이스홀더 */
 .header-loading-placeholder {
     width: 60px;
     height: 20px;

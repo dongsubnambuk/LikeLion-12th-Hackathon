@@ -62,13 +62,13 @@ const AppContent = () => {
     }
   };
 
-  // 🔥 로그인 성공 핸들러
+  // 로그인 성공 핸들러
   const handleLoginSuccess = (userData) => {
     setIsLoggedIn(true);
     setUserInfo(userData);
   };
 
-  // 🔥 로그아웃 핸들러
+  // 로그아웃 핸들러
   const handleLogoutSuccess = () => {
     setIsLoggedIn(false);
     setUserInfo(null);

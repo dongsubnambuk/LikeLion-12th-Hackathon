@@ -46,38 +46,6 @@ const SelectionMeals = () => {
         return <div>Loading...</div>;
     }
 
-
-    //-----------수정코드
-    // setMealData(
-    // [
-    //     {
-    //          day: '2024년 7월 20일 토요일',
-    //          mealOption:[
-    //              {
-    //              mealType: "아침"
-    //              foodMenus: [
-    //                              { title: '김치찌개 정식',
-    //                  description: '김치찌개, 시금치 나물, 가지볶음 ...',
-    //                                  },
-    //                              { title: '된장찌개 정식',
-    //                  description: '된장찌개, 고등어 구이, 시금치.. ',
-    //                                  },
-    //                          ]
-    //              },
-    //              {
-    //               mealType: "점심"
-    //              foodMenus: [
-    //                          { title: '김치찌개 정식',
-    //              description: '김치찌개, 시금치 나물, 가지볶음 ...',
-    //                              },
-    //                          { title: '된장찌개 정식',
-    //              description: '된장찌개, 고등어 구이, 시금치 나물 ...',
-    //                              },
-    //                          ]
-    //              }
-    //  ]
-
-
     return (
         <div className="selection-meals-container">
             {mealData.map((dayPlan, dayIndex) => (

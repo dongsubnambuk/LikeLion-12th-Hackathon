@@ -8,7 +8,6 @@
   margin: 0 auto;
   background: white;
   border-top: 1px solid #e9ecef;
-  /* box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1); */
   z-index: 1000;
   padding-bottom: env(safe-area-inset-bottom);
 }
@@ -36,11 +35,6 @@
   min-width: 60px;
   position: relative;
 }
-
-/* .bottom-nav-nav-item:hover {
-  background: rgba(157, 146, 116, 0.1);
-  transform: translateY(-2px);
-} */
 
 .bottom-nav-nav-item.bottom-nav-active::before {
   content: '';
