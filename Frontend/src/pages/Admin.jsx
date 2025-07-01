@@ -52,13 +52,11 @@ function Admin() {
         navigate("/");
       } else {
         // 로그아웃 API 실패 시에도 프론트엔드에서 로그아웃 처리
-        console.log("로그아웃 API 실패, 프론트엔드에서 로그아웃 처리");
         localStorage.removeItem("token");
         localStorage.removeItem("email");
         navigate("/");
       }
     } catch (error) {
-      console.error('Logout error:', error);
       // 에러 발생 시에도 프론트엔드에서 로그아웃 처리
       localStorage.removeItem("token");
       localStorage.removeItem("email");
@@ -86,11 +84,8 @@ function Admin() {
           name: result.name || "관리자",
           role: "관리자"
         });
-      } else {
-        console.log("관리자 정보 조회 실패");
       }
     } catch (error) {
-      console.error('Fetch admin info error:', error);
     }
   };
 
@@ -120,7 +115,6 @@ function Admin() {
       
       setOrders(processedOrders);
     } catch (error) {
-      console.error('Fetch orders error:', error);
       setOrders([]);
     }
   };
@@ -143,7 +137,6 @@ function Admin() {
       const imageUrl = URL.createObjectURL(blob);
       return imageUrl;
     } catch (error) {
-      console.error('Image fetch error:', error);
       return "";
     }
   };
@@ -175,7 +168,6 @@ function Admin() {
       
       setDietList(processedDietList);
     } catch (error) {
-      console.error('Fetch diet list error:', error);
       setDietList([]);
     }
   };
@@ -227,7 +219,6 @@ function Admin() {
       setPrice('');
       alert('식단이 생성되었습니다!');
     } catch (error) {
-      console.error('Fetch error:', error);
       alert('식단 생성 중 오류가 발생했습니다.');
     } finally {
       setLoading(false);

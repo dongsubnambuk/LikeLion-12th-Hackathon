@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import SelectionMenuCard from './SelectionMenuCard';
 import '../CSS/SelectionMenus.css';
 

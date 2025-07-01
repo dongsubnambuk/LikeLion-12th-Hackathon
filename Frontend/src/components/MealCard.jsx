@@ -1,4 +1,3 @@
-import React from 'react';
 import '../CSS/MealCard.css';
 
 const MealCard = ({ meals, isLoggedIn }) => {

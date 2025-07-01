@@ -120,7 +120,6 @@ function Signup(){
                 setIsEmailChecked(false);
             }
         } catch (error) {
-            console.error("Email check error: ", error);
             setEmailError("이메일 확인 중 오류가 발생했습니다.");
             setIsEmailChecked(false);
         } finally {
@@ -154,12 +153,10 @@ function Signup(){
             if (response.ok) {
                 setIsCodeSent(true);
                 setCodeSuccess("인증번호가 발송되었습니다. 이메일을 확인해주세요.");
-                console.log("인증번호 발송 성공 - 세션 확인:", response.headers.get('set-cookie'));
             } else {
                 setCodeError("인증번호 발송에 실패했습니다.");
             }
         } catch (error) {
-            console.error("Send verification code error: ", error);
             setCodeError("인증번호 발송 중 오류가 발생했습니다.");
         } finally {
             setIsCodeSending(false);
@@ -207,7 +204,6 @@ function Signup(){
                 }
             }
         } catch (error) {
-            console.error("Network error: ", error);
             setCodeError("네트워크 오류가 발생했습니다.");
         } finally {
             setIsCodeVerifying(false);
@@ -262,7 +258,7 @@ function Signup(){
     const isFormValid = () => {
         return (
             isEmailChecked &&
-            isCodeVerified && // 이메일 인증 완료 추가
+            isCodeVerified &&
             password &&
             confirmPassword &&
             password === confirmPassword &&
@@ -315,16 +311,13 @@ function Signup(){
             });
 
             if (response.status === 201) {
-                console.log("회원가입 성공");
                 alert("회원가입이 완료되었습니다!");
                 navigate('/login');
             } else {
-                console.log("회원가입 실패");
                 const result = await response.json();
                 alert("회원가입 실패: " + (result.message || "알 수 없는 오류"));
             }
         } catch (error) {
-            console.error("Signup error: ", error);
             alert("회원가입 중 오류가 발생했습니다.");
         }
     };

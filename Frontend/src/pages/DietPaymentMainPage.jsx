@@ -6,7 +6,6 @@ import foodImg from '../images/food.png';
 
 function DietPaymentMainPage() {
     const navigate = useNavigate();
-    const [isLoggedIn] = useState(true);
     const [mealData, setMealData] = useState([]);
     const [allMealsPrice, setAllMealsPrice] = useState(0);
     const [totalMeals, setTotalMeals] = useState(0);
@@ -26,7 +25,6 @@ function DietPaymentMainPage() {
             // price가 null, undefined, 또는 다른 타입인 경우
             return 0;
         } catch (error) {
-            console.error('가격 파싱 오류:', error, '원본 가격:', price);
             return 0;
         }
     };
@@ -63,7 +61,6 @@ function DietPaymentMainPage() {
                 setError('저장된 식단 데이터가 없습니다.');
             }
         } catch (error) {
-            console.error('데이터 로드 오류:', error);
             setError('식단 데이터를 불러오는 중 오류가 발생했습니다.');
         }
     }, []);
@@ -79,7 +76,6 @@ function DietPaymentMainPage() {
             }, 0);
             setAllMealsPrice(totalPrice);
         } catch (error) {
-            console.error('총 가격 계산 오류:', error);
             setAllMealsPrice(0);
         }
     };
@@ -94,7 +90,6 @@ function DietPaymentMainPage() {
             }, 0);
             setTotalMeals(total);
         } catch (error) {
-            console.error('총 식단 수 계산 오류:', error);
             setTotalMeals(0);
         }
     };
@@ -103,7 +98,6 @@ function DietPaymentMainPage() {
         try {
             navigate(`/dietpayment`, { state: { price: allMealsPrice, orderDetails: mealData } });
         } catch (error) {
-            console.error('결제 페이지 이동 오류:', error);
             alert('결제 페이지로 이동하는 중 오류가 발생했습니다.');
         }
     };
@@ -123,12 +117,10 @@ function DietPaymentMainPage() {
             }
             return '';
         } catch (error) {
-            console.error('날짜 범위 계산 오류:', error);
             return '';
         }
     };
 
-    // 🔥 수정된 부분: 식사 시간 한국어 변환
     const getMealTypeIcon = (mealType) => {
         // 영어를 한국어로 변환
         let koreanMealType = mealType;
@@ -148,7 +140,6 @@ function DietPaymentMainPage() {
         }
     };
 
-    // 🔥 수정된 부분: 식사 시간 한국어 변환 함수
     const getMealTypeText = (mealType) => {
         if (mealType === 'Breakfast' || mealType === 'BREAKFAST') {
             return '아침';
@@ -168,7 +159,6 @@ function DietPaymentMainPage() {
                 return total + (price * count);
             }, 0);
         } catch (error) {
-            console.error('일별 총액 계산 오류:', error);
             return 0;
         }
     };
@@ -179,7 +169,6 @@ function DietPaymentMainPage() {
             const count = typeof meal.count === 'number' ? meal.count : 1;
             return price * count;
         } catch (error) {
-            console.error('식단별 총액 계산 오류:', error);
             return 0;
         }
     };
@@ -321,7 +310,6 @@ function DietPaymentMainPage() {
                 </div>
             </div>
 
-            {/* 🔥 수정된 부분: 결제 버튼 섹션 크기 축소 */}
             <div className="diet-payment-main-page-payment-section">
                 <div className="diet-payment-main-page-final-amount">
                     <span className="diet-payment-main-page-final-label">최종 결제 금액</span>

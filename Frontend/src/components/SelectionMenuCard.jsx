@@ -21,9 +21,6 @@ const SelectionMenuCard = ({ meals, index, optionIndex, dateIndex }) => {
     }
 
     const changeMenuIndex = (date, type, option) => {
-        //console.log('옵션 선택한 것 : ', mealData[date].mealOptions[type].foodMenus[option])
-        // mealData[date].mealOptions[type].foodMenus[option] 과 mealData[date].mealOptions[type].foodMenus[0]의 값을 교체
-
         const updatedMealData = [...mealData]; // 상태를 변경하기 전에 깊은 복사를 수행합니다.
         
         // 현재 메뉴와 교체할 메뉴를 선택합니다.
@@ -41,10 +38,6 @@ const SelectionMenuCard = ({ meals, index, optionIndex, dateIndex }) => {
     }
 
     const handleChoiceMenu = () => {
-
-
-        // 전달할 데이터를 state로 설정
-        //console.log('전달 할 값 : ', dateIndex, optionIndex, index - 1)
         changeMenuIndex(dateIndex, optionIndex, index - 1);
         navigate('/dietselection');
 

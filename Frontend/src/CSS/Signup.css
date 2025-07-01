@@ -8,7 +8,7 @@ html, body {
     flex-direction: column;
     max-width: 500px;
     margin: 0 auto;
-    height: calc(100vh - 120px); /* 네비게이션 높이를 더 크게 설정 (120px) */
+    height: calc(100vh - 120px);
     max-height: calc(100vh - 120px);
     box-sizing: border-box;
 }
@@ -253,7 +253,7 @@ html, body {
 .signup_verification_send_btn {
     width: 100%;
     height: 48px;
-    background: rgb(157, 146, 116); /* 메인 색상으로 변경 */
+    background: rgb(157, 146, 116);
     color: white!important;
     border: none;
     border-radius: 12px;
@@ -261,14 +261,14 @@ html, body {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 3px 12px rgba(157, 146, 116, 0.25); /* 메인 색상 반영 */
+    box-shadow: 0 3px 12px rgba(157, 146, 116, 0.25);
     letter-spacing: 0.3px;
 }
 
 .signup_verification_send_btn:hover {
     background: rgb(127, 116, 86); /* 메인 색상의 호버 효과 */
     transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(157, 146, 116, 0.35); /* 메인 색상 반영 */
+    box-shadow: 0 6px 18px rgba(157, 146, 116, 0.35);
 }
 
 .signup_verification_send_btn:disabled {
@@ -298,7 +298,7 @@ html, body {
 .signup_verification_check_btn {
     height: 48px;
     padding: 0 20px;
-    background: rgb(157, 146, 116); /* 메인 색상으로 변경 */
+    background: rgb(157, 146, 116);
     color: white!important;
     border: none;
     border-radius: 12px;
@@ -309,14 +309,14 @@ html, body {
     white-space: nowrap;
     flex: 0.8;
     min-width: 100px;
-    box-shadow: 0 3px 12px rgba(157, 146, 116, 0.25); /* 메인 색상 반영 */
+    box-shadow: 0 3px 12px rgba(157, 146, 116, 0.25);
     letter-spacing: 0.3px;
 }
 
 .signup_verification_check_btn:hover {
-    background: rgb(127, 116, 86); /* 메인 색상의 호버 효과 */
+    background: rgb(127, 116, 86);
     transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(157, 146, 116, 0.35); /* 메인 색상 반영 */
+    box-shadow: 0 6px 18px rgba(157, 146, 116, 0.35);
 }
 
 .signup_verification_check_btn:disabled {

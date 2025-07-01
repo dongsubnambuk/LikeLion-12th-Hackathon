@@ -596,7 +596,6 @@
     opacity: 1;
 }
 
-/* 🔥 추가된 부분: 안내 문구 섹션 스타일 */
 .diet-selection-page-guide-section {
     background: linear-gradient(135deg, rgba(157, 146, 116, 0.1) 0%, rgba(184, 166, 136, 0.05) 100%);
     padding: 30px 20px;
@@ -664,7 +663,6 @@
     letter-spacing: -0.1px;
 }
 
-/* 🔥 추가된 부분: 식사 구분선 스타일 */
 .diet-selection-page-meal-divider {
     width: 100%;
     height: 2px;

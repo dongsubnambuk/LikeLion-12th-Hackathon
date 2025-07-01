@@ -41,17 +41,13 @@ const navigate = useNavigate();
                         return;
                     }
                 } catch (e) {
-                    console.error("로그아웃 응답 파싱 실패");
                 }
-                
-                console.error("로그아웃 실패");
                 if (onLogoutSuccess) {
                     onLogoutSuccess();
                 }
                 navigate("/");
             }
         } catch (error) {
-            console.error("로그아웃 오류:", error);
             if (onLogoutSuccess) {
                 onLogoutSuccess();
             }
@@ -68,8 +64,6 @@ const navigate = useNavigate();
                     method: "GET",
                     credentials: 'include',
                 });
-
-                console.log(Cookies.get('token')); 
           
                 if (response.status === 200) {
                     const result = await response.json();
@@ -87,9 +81,7 @@ const navigate = useNavigate();
                         roadAddress: result.roadAddress,
                         detailAddress: result.detailAddress,
                     });
-                } else {
-                    console.log("사용자 정보 조회 실패", response.status);
-                    
+                } else {                    
                     try {
                         const result = await response.json();
                         
@@ -110,7 +102,6 @@ const navigate = useNavigate();
                     }
                 }
             } catch (error) {
-                console.error("사용자 정보 조회 오류:", error);
                 alert("사용자 정보 조회 중 오류가 발생했습니다.");
             }
         };

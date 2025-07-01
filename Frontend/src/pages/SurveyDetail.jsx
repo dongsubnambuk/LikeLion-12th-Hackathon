@@ -63,9 +63,7 @@ function SurveyDetail() {
                 }
 
                 const result = await response.json();
-                console.log(result);
             } catch (error) {
-                console.error('Error:', error);
                 alert('설문 제출에 실패했습니다.');
             }
         });
