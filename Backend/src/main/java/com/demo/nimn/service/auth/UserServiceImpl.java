@@ -1,5 +1,7 @@
 package com.demo.nimn.service.auth;
 
+import com.demo.nimn.dto.auth.PasswordChangeDTO;
+import com.demo.nimn.dto.auth.UserDTO;
 import com.demo.nimn.dto.auth.UserDetails;
 import com.demo.nimn.dto.auth.UsersEmailDTO;
 import com.demo.nimn.entity.auth.Users;
@@ -7,12 +9,13 @@ import com.demo.nimn.repository.auth.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -20,7 +23,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    private UserServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder, @Autowired UserRepository userRepository) {
+    public UserServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder, @Autowired UserRepository userRepository) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
@@ -110,18 +113,73 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails updateUser(UserDetails user) {
-        String userPassword;
         Users userEntity = userRepository.findByEmail(user.getEmail());
 
-        if(user.getPassword() == null || user.getPassword().isEmpty()){
-            userPassword = userEntity.getPassword();
-        }
-        else {
-            userPassword = bCryptPasswordEncoder.encode(user.getPassword());
-            System.out.println(userPassword);
-        }
-        userEntity.updateUser(user, userPassword);
+        userEntity.updateUser(user);
         userRepository.save(userEntity);
+        return user;
+    }
+
+    @Transactional
+    @Override
+    public UserDTO changePassword(PasswordChangeDTO passwordChangeDto) {
+        String email = passwordChangeDto.getEmail();
+        String oldPassword = passwordChangeDto.getOldPassword();
+        String newPassword = passwordChangeDto.getNewPassword();
+
+        UserDTO user = UserDTO.builder()
+                .email(email)
+                .build();
+
+        Users userEntity = userRepository.findByEmail(email);
+        if (userEntity == null) {
+            throw new RuntimeException("사용자를 찾을 수 없습니다.");
+        }
+
+        // oldPassword가 일치함
+        if(bCryptPasswordEncoder.matches(oldPassword, userEntity.getPassword())){
+            if(bCryptPasswordEncoder.matches(newPassword, userEntity.getPassword())){
+                user = user.toBuilder()
+                        .password("중복")
+                        .build();
+                return user;
+            }
+            // 새로운 비밀번호를 encode 한 이후 set
+            userEntity.setPassword(bCryptPasswordEncoder.encode(passwordChangeDto.getNewPassword()));
+        }
+        // oldPassword가 일치하지 않음
+        else{
+            user = user.toBuilder()
+                    .password("불일치")
+                    .build();
+        }
+        return user;
+    }
+
+    @Transactional
+    @Override
+    public UserDTO updatePassword(PasswordChangeDTO passwordChangeDto) {
+        String email = passwordChangeDto.getEmail();
+        String newPassword = passwordChangeDto.getNewPassword();
+
+        UserDTO user = UserDTO.builder()
+                .email(email)
+                .build();
+
+        Users userEntity = userRepository.findByEmail(email);
+        if (userEntity == null) {
+            throw new RuntimeException("사용자를 찾을 수 없습니다.");
+        }
+
+        if(bCryptPasswordEncoder.matches(newPassword, userEntity.getPassword())){
+            user = user.toBuilder()
+                    .password("중복")
+                    .build();
+            return user;
+        }
+        // 새로운 비밀번호를 encode 한 이후 set
+        userEntity.setPassword(bCryptPasswordEncoder.encode(passwordChangeDto.getNewPassword()));
+
         return user;
     }
 
