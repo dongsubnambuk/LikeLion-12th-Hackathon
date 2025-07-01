@@ -15,7 +15,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.lang.Long.parseLong;
 
 @Slf4j
 @Service
@@ -35,8 +34,8 @@ public class FoodServiceImpl implements FoodService {
 
     @Transactional
     @Override
-    public FoodDTO createFood(String price) {
-        String foodPlanText = aiService.generateFood(price);
+    public FoodDTO createFood(Long price) {
+        String foodPlanText = aiService.generateFood(price.toString());
 
         Food food = convertToFood(foodPlanText);
 
@@ -60,12 +59,6 @@ public class FoodServiceImpl implements FoodService {
         reviewSummaryRepository.save(reviewSummary);
 
         food.setReviewSummary(reviewSummary);
-    }
-
-    @Override
-    public Food readFoodByFoodId(Long foodId) {
-        return foodRepository.findById(foodId)
-                .orElseThrow(() -> new IllegalStateException("Invalid Food Id: " + foodId));
     }
 
     @Override

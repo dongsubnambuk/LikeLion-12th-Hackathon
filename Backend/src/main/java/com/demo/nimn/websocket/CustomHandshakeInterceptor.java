@@ -1,6 +1,7 @@
 package com.demo.nimn.websocket;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -16,10 +17,10 @@ public class CustomHandshakeInterceptor implements HandshakeInterceptor {
 
     @Override
     public boolean beforeHandshake(
-            ServerHttpRequest request,
-            ServerHttpResponse response,
-            WebSocketHandler wsHandler,
-            Map<String, Object> attributes
+            @NotNull ServerHttpRequest request,
+            @NotNull ServerHttpResponse response,
+            @NotNull WebSocketHandler wsHandler,
+            @NotNull Map<String, Object> attributes
     ) throws Exception {
 
         String userEmail = null;
@@ -35,16 +36,15 @@ public class CustomHandshakeInterceptor implements HandshakeInterceptor {
                 attributes.put("user", new StompPrincipal(userEmail));
             } else {
                 log.warn("[Handshake] userEmail not found in query parameters");
+                throw new Exception("userEmail not found in query parameters");
             }
         }
 
-        // Header에서도 확인
         if (userEmail == null) {
             userEmail = request.getHeaders().getFirst("userEmail");
             if (userEmail != null) {
                 log.info("[Handshake] userEmail found in header: {}", userEmail);
                 attributes.put("userEmail", userEmail);
-                // 🔥 중요: login 속성 추가
                 attributes.put("login", userEmail);
                 attributes.put("user", new StompPrincipal(userEmail));
             }
@@ -60,9 +60,9 @@ public class CustomHandshakeInterceptor implements HandshakeInterceptor {
 
     @Override
     public void afterHandshake(
-            ServerHttpRequest request,
-            ServerHttpResponse response,
-            WebSocketHandler wsHandler,
+            @NotNull ServerHttpRequest request,
+            @NotNull ServerHttpResponse response,
+            @NotNull WebSocketHandler wsHandler,
             Exception exception
     ) {
         if (exception != null) {

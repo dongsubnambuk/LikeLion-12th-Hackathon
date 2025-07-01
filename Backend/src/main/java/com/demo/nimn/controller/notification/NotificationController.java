@@ -6,6 +6,7 @@ import com.demo.nimn.dto.notification.response.NotificationCountDTO;
 import com.demo.nimn.enums.NotificationType;
 import com.demo.nimn.service.notification.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -43,7 +44,8 @@ public class NotificationController {
             )
     })
     @GetMapping("/all")
-    public ResponseEntity<List<NotificationDTO>> getAllNotifications(@RequestParam String userEmail) {
+    public ResponseEntity<List<NotificationDTO>> getAllNotifications(@Parameter(description = "유저 이메일", example = "user@example.com")
+                                                                        @RequestParam String userEmail) {
         return  ResponseEntity.ok(notificationService.getAllNotificationsByUserEmail(userEmail));
     }
 
@@ -66,7 +68,8 @@ public class NotificationController {
             )
     })
     @PatchMapping("/{notificationId}")
-    public ResponseEntity<NotificationDTO> markAsRead(@PathVariable Long notificationId) {
+    public ResponseEntity<NotificationDTO> markAsRead(@Parameter(description = "알림 ID", example = "1")
+                                                        @PathVariable Long notificationId) {
         return  ResponseEntity.ok(notificationService.markAsRead(notificationId));
     }
 
@@ -89,7 +92,8 @@ public class NotificationController {
             )
     })
     @PatchMapping
-    public ResponseEntity<NotificationCountDTO> markAllAsRead(@RequestParam String userEmail) {
+    public ResponseEntity<NotificationCountDTO> markAllAsRead(@Parameter(description = "유저 이메일", example = "user@example.com")
+                                                                @RequestParam String userEmail) {
         return  ResponseEntity.ok(notificationService.markAllAsRead(userEmail));
     }
 
@@ -112,7 +116,8 @@ public class NotificationController {
             )
     })
     @GetMapping
-    public ResponseEntity<NotificationCountDTO> countUnreadNotifications(@RequestParam String userEmail) {
+    public ResponseEntity<NotificationCountDTO> countUnreadNotifications(@Parameter(description = "유저 이메일", example = "user@example.com")
+                                                                            @RequestParam String userEmail) {
         return ResponseEntity.ok(notificationService.countUnreadNotifications(userEmail));
     }
 
