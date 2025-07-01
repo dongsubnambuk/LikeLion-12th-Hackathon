@@ -1,6 +1,5 @@
 package com.demo.nimn.controller.notification;
 
-import com.demo.nimn.dto.food.FoodDTO;
 import com.demo.nimn.dto.notification.NotificationDTO;
 import com.demo.nimn.dto.notification.response.NotificationCountDTO;
 import com.demo.nimn.enums.NotificationType;
