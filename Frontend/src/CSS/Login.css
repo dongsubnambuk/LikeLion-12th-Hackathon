@@ -168,3 +168,36 @@
         padding: 6px 10px;
     }
 }
+.account-recovery-link {
+    font-size: 13px;
+    color: rgb(157, 146, 116);
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 4px 8px;
+    border-radius: 6px;
+    position: relative;
+}
+
+.account-recovery-link:hover {
+    color: rgb(127, 116, 86);
+    background-color: rgba(157, 146, 116, 0.05);
+    transform: translateY(-1px);
+}
+
+.account-recovery-link::after {
+    content: '';
+    position: absolute;
+    bottom: 1px;
+    left: 8px;
+    right: 8px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.account-recovery-link:hover::after {
+    transform: scaleX(1);
+}

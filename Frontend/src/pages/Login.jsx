@@ -1,4 +1,3 @@
-// src/pages/Login.jsx
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import '../CSS/Login.css';
@@ -12,6 +11,9 @@ function Login({ onLoginSuccess }) {
 
     const handleSignupClick = () => {
         navigate('/signup');
+    };
+    const handleAccountRecoveryClick = () => {
+        navigate('/account-recovery')
     };
 
     const changeEmail = (e) => {
@@ -44,7 +46,7 @@ function Login({ onLoginSuccess }) {
                 const token = Cookies.get('token');
                 const payload = JSON.parse(atob(token.split('.')[1]));
                 
-                // 사용자 정보 조회 후 상태 업데이트
+
                 try {
                     const userResponse = await fetch('http://nimn.store/api/users', {
                         method: 'GET',
@@ -53,12 +55,13 @@ function Login({ onLoginSuccess }) {
                     
                     if (userResponse.ok) {
                         const userData = await userResponse.json();
-                        // 부모 컴포넌트에 로그인 성공 알림
+
                         if (onLoginSuccess) {
                             onLoginSuccess(userData);
                         }
                     }
                 } catch (error) {
+                    console.error('사용자 정보 조회 실패:', error);
                 }
             
                 if (payload.role === "ROLE_ADMIN") {
@@ -70,6 +73,7 @@ function Login({ onLoginSuccess }) {
                 alert("로그인 실패: " + result.message);
             }
         } catch (error) {
+            console.error("Fetch error: ", error);
             alert("로그인 중 오류가 발생했습니다.");
         }
     };
@@ -84,9 +88,12 @@ function Login({ onLoginSuccess }) {
 
                 <button className="login-btn" onClick={handleLogin}>로그인</button>
                 <div className="login-options">
-                    {/* <div>
-                        <a href="/find-id">아이디 찾기</a> | <a href="/find-password">비밀번호 찾기</a>
-                    </div> */}
+                <span 
+                        className="account-recovery-link" 
+                        onClick={handleAccountRecoveryClick}
+                    >
+                        계정 찾기
+                    </span>
                 </div>
                 <p className="signup-link">
                     아직 회원이 아니신가요? <span onClick={handleSignupClick}>회원가입</span>
