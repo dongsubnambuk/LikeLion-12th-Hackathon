@@ -23,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Users userData = userRepository.findByEmail(email);
 
         if (userData != null) {
-            //UserDetails에 담아서 return하면 AutneticationManager가 검증 함
+            //UserDetails에 담아서 return하면 AutneticationManager가 검증
             return new CustomUserDetails(userData);
         }
 

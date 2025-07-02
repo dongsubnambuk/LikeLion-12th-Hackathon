@@ -1,7 +1,7 @@
 package com.demo.nimn.controller.diet;
 
-import com.demo.nimn.dto.diet.Response.WeeklyDietDTO;
-import com.demo.nimn.dto.diet.Request.WeeklyDietRequestDTO;
+import com.demo.nimn.dto.diet.WeeklyDietDTO;
+import com.demo.nimn.dto.diet.WeeklyDietRequestDTO;
 import com.demo.nimn.service.diet.DietService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

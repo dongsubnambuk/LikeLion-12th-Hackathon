@@ -1,10 +1,10 @@
 package com.demo.nimn.service.diet;
 
-import com.demo.nimn.dto.diet.Request.UserDailyMealPlanDTO;
-import com.demo.nimn.dto.diet.Request.WeeklyDietRequestDTO;
-import com.demo.nimn.dto.diet.Response.DailyDietDTO;
-import com.demo.nimn.dto.diet.Request.DailyDietRequestDTO;
-import com.demo.nimn.dto.diet.Response.WeeklyDietDTO;
+import com.demo.nimn.dto.diet.UserDailyMealPlanDTO;
+import com.demo.nimn.dto.diet.WeeklyDietRequestDTO;
+import com.demo.nimn.dto.diet.DailyDietDTO;
+import com.demo.nimn.dto.diet.DailyDietRequestDTO;
+import com.demo.nimn.dto.diet.WeeklyDietDTO;
 import com.demo.nimn.entity.diet.DailyDiet;
 import com.demo.nimn.entity.diet.FoodSelection;
 import com.demo.nimn.entity.diet.WeeklyDiet;

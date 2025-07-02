@@ -1,7 +1,7 @@
 package com.demo.nimn.service.notification;
 
-import com.demo.nimn.dto.diet.Response.DailyDietDTO;
-import com.demo.nimn.dto.diet.Response.FoodSelectionDTO;
+import com.demo.nimn.dto.diet.DailyDietDTO;
+import com.demo.nimn.dto.diet.FoodSelectionDTO;
 import com.demo.nimn.dto.notification.NotificationDTO;
 import com.demo.nimn.dto.notification.response.NotificationCountDTO;
 import com.demo.nimn.dto.review.DailyDietReviewDTO;

@@ -1,6 +1,6 @@
 package com.demo.nimn.controller.diet;
 
-import com.demo.nimn.dto.diet.Response.FoodSelectionDTO;
+import com.demo.nimn.dto.diet.FoodSelectionDTO;
 import com.demo.nimn.service.diet.FoodSelectionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

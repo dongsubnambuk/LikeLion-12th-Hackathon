@@ -1,4 +1,4 @@
-package com.demo.nimn.dto.diet.Request;
+package com.demo.nimn.dto.diet;
 
 import lombok.*;
 

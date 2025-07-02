@@ -1,6 +1,6 @@
 package com.demo.nimn.service.payment;
 
-import com.demo.nimn.dto.diet.Response.WeeklyDietDTO;
+import com.demo.nimn.dto.diet.WeeklyDietDTO;
 import com.demo.nimn.dto.payment.*;
 import com.demo.nimn.entity.order.Order;
 import com.demo.nimn.entity.payment.*;
