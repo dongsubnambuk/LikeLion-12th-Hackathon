@@ -1,0 +1,451 @@
+.accountrecover_container {
+    background: #ffffff;
+    padding: 60px 20px 40px;
+    overflow-x: hidden;
+}
+
+.accountrecover_form {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    border: none;
+}
+
+
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.accountrecover_step-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 50px;
+    gap: 100px;
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.accountrecover_step {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #d0d0d0;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.accountrecover_step-active {
+    background: rgb(157, 146, 116);
+    width: 12px;
+    height: 12px;
+    box-shadow: 0 0 20px rgba(157, 146, 116, 0.4);
+
+}
+
+
+
+.accountrecover_step::after {
+    content: attr(data-step);
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: #888;
+    white-space: nowrap;
+    font-weight: 400;
+    width: max-content;
+    transition: all 0.3s ease;
+}
+
+.accountrecover_step-active::after {
+    color: rgb(157, 146, 116);
+    font-weight: 500;
+}
+
+.accountrecover_step-text {
+    display: none;
+}
+
+.accountrecover_step-content {
+    text-align: center;
+    max-width: 400px;
+    margin: 0 auto;
+    animation: slideInFromBottom 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes slideInFromBottom {
+    from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+.accountrecover_back-button {
+    margin-bottom: 20px;
+    text-align: left;
+    animation: fadeInLeft 0.6s ease-out;
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.accountrecover_btn-back {
+    background: #f8f9fa;
+    color: #6c757d;
+    border: 1px solid #dee2e6;
+    font-size: 13px;
+    padding: 8px 16px;
+    min-width: auto;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.accountrecover_btn-back:hover {
+    background: #e9ecef;
+    color: #495057;
+    transform: translateX(-2px);
+}
+
+.accountrecover_email-found {
+    margin-top: 15px;
+}
+
+.accountrecover_option-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.accountrecover_option-buttons .accountrecover_btn {
+    flex: 1;
+    min-width: 140px;
+    animation: slideInFromBottom 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.accountrecover_option-buttons .accountrecover_btn:first-child {
+    animation-delay: 0.1s;
+}
+
+.accountrecover_option-buttons .accountrecover_btn:last-child {
+    animation-delay: 0.2s;
+}
+
+.accountrecover_step-title {
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 20px;
+    font-weight: 600;
+    animation: slideInFromBottom 0.6s ease-out 0.1s both;
+}
+
+.accountrecover_email-display {
+    background: #f8f9fa;
+    padding: 16px 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    border: 1px solid #e9ecef;
+    text-align: left;
+    animation: slideInFromBottom 0.6s ease-out 0.2s both;
+    transition: all 0.3s ease;
+}
+
+
+
+.accountrecover_email-label {
+    color: #666;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.accountrecover_email-value {
+    color: #333;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.accountrecover_form-group {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    animation: slideInFromBottom 0.6s ease-out both;
+}
+
+.accountrecover_form-group:nth-child(2) { animation-delay: 0.1s; }
+.accountrecover_form-group:nth-child(3) { animation-delay: 0.2s; }
+.accountrecover_form-group:nth-child(4) { animation-delay: 0.3s; }
+
+.accountrecover_form-group.animate-in {
+    animation: elementSlideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes elementSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.accountrecover_form-input {
+    flex: 1;
+    min-width: 250px;
+    padding: 14px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #fff;
+    color: #333;
+    transform: translateY(0);
+}
+
+.accountrecover_form-input:focus {
+    outline: none;
+    border-color: rgb(157, 146, 116);
+    box-shadow: 0 0 0 3px rgba(157, 146, 116, 0.1);
+    transform: translateY(-2px);
+}
+
+.accountrecover_form-input::placeholder {
+    color: #adb5bd;
+    transition: all 0.3s ease;
+}
+
+.accountrecover_form-input:focus::placeholder {
+    opacity: 0.7;
+    transform: translateY(-2px);
+}
+
+.accountrecover_btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    min-width: 120px;
+    position: relative;
+    overflow: hidden;
+}
+
+.accountrecover_btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.accountrecover_btn:hover::before {
+    left: 100%;
+}
+
+.accountrecover_btn-text {
+    display: block;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.accountrecover_btn-primary {
+    background: rgb(157, 146, 116);
+    color: white;
+    box-shadow: 0 2px 8px rgba(157, 146, 116, 0.3);
+    transform: translateY(0);
+}
+
+.accountrecover_btn-primary:hover:not(:disabled) {
+    background: rgb(140, 130, 104);
+    box-shadow: 0 8px 25px rgba(157, 146, 116, 0.4);
+    transform: translateY(-3px);
+}
+
+.accountrecover_btn-primary:active:not(:disabled) {
+    transform: translateY(-1px);
+    transition: transform 0.1s ease;
+}
+
+.accountrecover_btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #ccc;
+    transform: none;
+    box-shadow: none;
+}
+
+.accountrecover_btn-secondary {
+    background: #6c757d;
+    color: white;
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+.accountrecover_btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+}
+
+.accountrecover_btn-full-width {
+    width: 100%;
+    margin-top: 10px;
+    padding: 14px 24px;
+    animation: slideInFromBottom 0.6s ease-out 0.4s both;
+}
+
+
+.accountrecover_action-buttons {
+    margin-top: 30px;
+    text-align: center;
+    animation: slideInFromBottom 0.6s ease-out 0.3s both;
+}
+
+.accountrecover_error-message {
+    color: #dc3545;
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+    animation: shakeIn 0.6s ease-out both;
+}
+
+@keyframes shakeIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    25% {
+        transform: translateX(5px);
+    }
+    50% {
+        transform: translateX(-5px);
+    }
+    75% {
+        transform: translateX(2px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.accountrecover_success-message {
+    color: #155724;
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+    animation: successSlideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes successSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    50% {
+        transform: translateY(-5px) scale(1.02);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.accountrecover_btn:disabled .accountrecover_btn-text {
+    animation: loadingPulse 1.5s infinite;
+}
+
+@keyframes loadingPulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.accountrecover_input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 250px;
+}
+
+.accountrecover_input-wrapper .accountrecover_form-input {
+    padding-right: 50px; 
+}
+
+.accountrecover_eye-btn {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 8px;
+    font-size: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.accountrecover_eye-btn:hover {
+    color: rgb(157, 146, 116);
+    background: rgba(157, 146, 116, 0.1);
+    transform: scale(1.1);
+}

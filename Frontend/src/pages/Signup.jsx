@@ -37,7 +37,7 @@ function Signup(){
         setIsOpen(false);
     };
 
-    // Modal 스타일
+
     const SignupCustomStyles = {
         overlay: {
             backgroundColor: "rgba(0,0,0,0.5)",
@@ -531,7 +531,6 @@ function Signup(){
                 )}
             </div>
 
-            {/* 고정된 회원가입 버튼 */}
             <div className="signup_button_container">
                 <button 
                     className="signup_btn" 

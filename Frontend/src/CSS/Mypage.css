@@ -1,13 +1,10 @@
-/* src/CSS/Mypage.css */
-
-/* 전체 컨테이너 */
 .mypage_container {
     min-height: 80vh;
     background: rgba(157, 146, 116, 0.1);
     padding: 20px;
 }
 
-/* 프로필 카드 */
+
 .mypage_profile_card {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
@@ -46,7 +43,7 @@
     letter-spacing: -0.2px;
 }
 
-/* 섹션 공통 */
+
 .mypage_section {
     margin-bottom: 30px;
 }
@@ -59,7 +56,7 @@
     letter-spacing: -0.3px;
 }
 
-/* 정보 리스트 */
+
 .mypage_info_list {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
@@ -119,7 +116,7 @@
     line-height: 1.4;
 }
 
-/* 메뉴 리스트 */
+
 .mypage_menu_list {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
@@ -142,6 +139,7 @@
     text-align: left;
     transition: all 0.3s ease;
     border-radius: 12px;
+    margin-top: 5px;
 }
 
 .mypage_menu_item:last-child {
@@ -215,7 +213,7 @@
     transform: translateX(4px);
 }
 
-/* 액션 리스트 */
+
 .mypage_action_list {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
@@ -291,7 +289,6 @@
     background: rgba(231, 76, 60, 0.2);
 }
 
-/* 모달 */
 .mypage_modal_overlay {
     position: fixed;
     top: 0;
@@ -386,7 +383,6 @@
     background: rgba(231, 76, 60, 0.05);
 }
 
-/* 반응형 디자인 */
 @media (max-width: 768px) {
     .mypage_container {
         padding: 15px;

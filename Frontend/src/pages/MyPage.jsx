@@ -4,7 +4,7 @@ import { Avatar } from 'antd';
 import '../CSS/Mypage.css';
 import Cookies from 'js-cookie';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faReceipt, faSignOutAlt, faUserMinus, faChevronRight, faMapMarkerAlt, faPhone } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faReceipt, faSignOutAlt, faUserMinus, faChevronRight, faMapMarkerAlt, faPhone,faLock } from "@fortawesome/free-solid-svg-icons";
 
 function MyPage({ onLogoutSuccess }) { 
 
@@ -15,7 +15,7 @@ const [address, setAddress] = useState({ roadAddress: '', detailAddress: '' });
 const [phoneNumber, setphoneNumber] = useState(''); 
 const navigate = useNavigate();
 
-    // 로그아웃 함수
+
     const handleLogout = async () => {
         try {
             const response = await fetch('http://nimn.store/api/users/logout', {
@@ -24,7 +24,6 @@ const navigate = useNavigate();
             });
             
             if (response.ok) {
-                // 부모 컴포넌트에 로그아웃 성공 알림
                 if (onLogoutSuccess) {
                     onLogoutSuccess();
                 }
@@ -68,7 +67,7 @@ const navigate = useNavigate();
                 if (response.status === 200) {
                     const result = await response.json();
                     
-                    // 토큰 만료 체크
+
                     if (result.message === "토큰소멸") {
                         alert("로그인이 만료되었습니다. 다시 로그인 해주세요");
                         navigate('/login');
@@ -85,7 +84,7 @@ const navigate = useNavigate();
                     try {
                         const result = await response.json();
                         
-                        // 토큰 만료 체크
+
                         if (result.message === "토큰소멸") {
                             alert("로그인이 만료되었습니다. 다시 로그인 해주세요");
                             navigate('/login');
@@ -111,7 +110,6 @@ const navigate = useNavigate();
     return(
         <>
         <div className="mypage_container">
-            {/* 프로필 카드 */}
             <div className="mypage_profile_card">
                 <Avatar 
                     src={Image || ""} 
@@ -124,7 +122,6 @@ const navigate = useNavigate();
                 </div>
             </div>
 
-            {/* 계정정보 섹션 */}
             <div className="mypage_section">
                 <h3 className="mypage_section_title">계정 정보</h3>
                 <div className="mypage_info_list">
@@ -151,7 +148,6 @@ const navigate = useNavigate();
                 </div>
             </div>
 
-            {/* 서비스 섹션 */}
             <div className="mypage_section">
                 <h3 className="mypage_section_title">서비스</h3>
                 <div className="mypage_menu_list">
@@ -163,6 +159,19 @@ const navigate = useNavigate();
                             <div className="mypage_menu_text">
                                 <span className="mypage_menu_title">내 정보 수정</span>
                                 <span className="mypage_menu_subtitle">개인정보 및 계정 설정</span>
+                            </div>
+                        </div>
+                        <FontAwesomeIcon icon={faChevronRight} className="mypage_menu_arrow"/>
+                    </button>
+
+                    <button className="mypage_menu_item" onClick={() => navigate('/password-change')}>
+                        <div className="mypage_menu_content">
+                            <div className="mypage_menu_icon_wrapper">
+                                <FontAwesomeIcon icon={faLock} className="mypage_menu_icon"/>
+                            </div>
+                            <div className="mypage_menu_text">
+                                <span className="mypage_menu_title">비밀번호 변경</span>
+                                <span className="mypage_menu_subtitle">계정 보안 강화</span>
                             </div>
                         </div>
                         <FontAwesomeIcon icon={faChevronRight} className="mypage_menu_arrow"/>
@@ -183,7 +192,6 @@ const navigate = useNavigate();
                 </div>
             </div>
 
-            {/* 계정 관리 섹션 */}
             <div className="mypage_section">
                 <h3 className="mypage_section_title">계정 관리</h3>
                 <div className="mypage_action_list">

@@ -1,4 +1,3 @@
-// src/pages/WeeklyFoodMenu.jsx
 import React, { useState, useEffect } from 'react';
 import '../CSS/WeeklyFoodMenu.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -7,7 +6,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import foodImg from '../images/food.png';
-import logoImg from '../images/logo.png'; // 로고 이미지
+import logoImg from '../images/logo.png'; 
 
 const WeeklyFoodMenu = () => {
   const [mealData, setMealData] = useState(null);
@@ -70,7 +69,7 @@ const WeeklyFoodMenu = () => {
 
       } catch (error) {
         setError(error.message);
-        setMealData(null); // 더미데이터 대신 null 설정
+        setMealData(null); 
       } finally {
         setIsLoading(false);
       }

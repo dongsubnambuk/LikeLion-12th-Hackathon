@@ -1,4 +1,3 @@
-// src/pages/DietPaymentPage.jsx
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../CSS/DietPaymentPage.css';
 

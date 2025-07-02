@@ -7,6 +7,7 @@ import lombok.*;
 @Entity
 @Table(name = "t_user")
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,8 +35,7 @@ public class Users {
 
 //    private String imgUrl;
 
-    public void updateUser(UserDetails user, String userPassword){
-        this.password = userPassword;
+    public void updateUser(UserDetails user){
         this.phoneNumber = user.getPhoneNumber();
         this.roadAddress = user.getRoadAddress();
         this.detailAddress = user.getDetailAddress();

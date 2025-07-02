@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import './App.css';
@@ -13,33 +12,34 @@ import UserInfoUpdate from './pages/UserInfoUpdate';
 import OrderList from './pages/OrderList';
 import WeeklyFoodMenu from './pages/WeeklyFoodMenu';
 import Survey from './pages/Survey';
-import SurveyDetail from './pages/SurveyDetail';
 import Notification from './pages/Notification';
 import DietSelection from './pages/DietSelectionPage';
 import DietPaymentMain from './pages/DietPaymentMainPage';
 import DietPayment from './pages/DietPaymentPage';
 import Admin from './pages/Admin';
 import DietPaymentComplete from './pages/DietPaymentComplete';
+import AccountRecovery from './pages/AccountRecovery';
+import PasswordChange from './pages/PasswordChange';
 
 const AppContent = () => {
   const location = useLocation();
   const isAdminPage = location.pathname === '/admin';
   
-  // 알림 개수 상태 관리
+
   const [notificationCount, setNotificationCount] = useState(0);
   const [surveyCount, setSurveyCount] = useState(0);
 
-  // 로그인 상태 전역 관리
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
 
-  // 알림 개수 업데이트 콜백 함수
+
   const handleNotificationCountChange = (notifCount, survCount) => {
     setNotificationCount(notifCount);
     setSurveyCount(survCount);
   };
 
-  // 로그인 상태 확인 함수
+
   const checkAuthStatus = async () => {
     try {
       const response = await fetch('http://nimn.store/api/users', {
@@ -61,13 +61,13 @@ const AppContent = () => {
     }
   };
 
-  // 로그인 성공 핸들러
+
   const handleLoginSuccess = (userData) => {
     setIsLoggedIn(true);
     setUserInfo(userData);
   };
 
-  // 로그아웃 핸들러
+
   const handleLogoutSuccess = () => {
     setIsLoggedIn(false);
     setUserInfo(null);
@@ -82,34 +82,33 @@ const AppContent = () => {
     let unloadHandled = false;
 
     const handleBeforeUnload = (event) => {
-      // Chrome 브라우저에서 새로고침 시 로컬 스토리지 유지
+
       if (unloadHandled) {
         localStorage.clear();
       } else {
-        // 기본 새로고침 경고 메시지 처리
+
         event.preventDefault();
-        event.returnValue = ''; // 일부 브라우저에서 기본 경고 메시지를 표시합니다.
+        event.returnValue = ''; 
       }
     };
 
     const handleVisibilityChange = () => {
-      // Safari 브라우저에서 페이지가 보이지 않을 때 로컬 스토리지 비우기
+
       if (document.visibilityState === 'hidden') {
         localStorage.clear();
       }
     };
 
     const handleUnload = () => {
-      // 페이지가 완전히 닫힐 때 로컬 스토리지 비우기
       unloadHandled = true;
       localStorage.clear();
     };
 
     if (isSafari) {
-      // Safari 브라우저일 경우 visibilitychange 이벤트를 사용합니다.
+
       document.addEventListener('visibilitychange', handleVisibilityChange);
     } else {
-      // Safari가 아닐 경우 beforeunload와 unload 이벤트를 사용합니다.
+
       window.addEventListener('beforeunload', handleBeforeUnload);
       window.addEventListener('unload', handleUnload);
     }
@@ -131,13 +130,13 @@ const AppContent = () => {
           <Route path="/admin" element={<Admin />} />
         </Routes>
       ) : (
-        // Layout에 알림 개수 props 전달
+
         <Layout 
           notificationCount={notificationCount} 
           surveyCount={surveyCount}
         >
           <Routes>
-            {/* MainPage에 알림 개수 콜백 함수 전달 */}
+
             <Route 
               path="/" 
               element={
@@ -155,12 +154,13 @@ const AppContent = () => {
             <Route path="/orderlist" element={<OrderList />} />
             <Route path="/weeklyfoodmenu" element={<WeeklyFoodMenu />} />
             <Route path="/survey" element={<Survey />} />
-            <Route path="/survey-detail" element={<SurveyDetail />} />
             <Route path="/notification" element={<Notification />} />
             <Route path="/dietselection" element={<DietSelection />} />
             <Route path="/dietpaymentmain" element={<DietPaymentMain />} />
             <Route path="/dietpayment" element={<DietPayment />} />
             <Route path="/dietpaymentcomplete" element={<DietPaymentComplete />} />
+            <Route path="/account-recovery" element={<AccountRecovery />} />
+            <Route path="/password-change" element={<PasswordChange />} />
           </Routes>
         </Layout>
       )}

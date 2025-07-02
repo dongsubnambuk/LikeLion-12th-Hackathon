@@ -1,4 +1,3 @@
-// src/components/Header.jsx
 import React, { useState, useEffect } from "react";
 import '../CSS/Header.css';
 import logo from '../images/logo.png';
@@ -15,12 +14,10 @@ const Header = ({ notificationCount, surveyCount, userInfo }) => {
         checkLoginStatus();
     }, []);
 
-    // 페이지 변경 시마다 로그인 상태 확인
     useEffect(() => {
         checkLoginStatus();
     }, [location.pathname]);
 
-    // 쿠키 기반 로그인 상태 확인
     const checkLoginStatus = async () => {
         setIsLoading(true);
         try {
@@ -103,6 +100,10 @@ const Header = ({ notificationCount, surveyCount, userInfo }) => {
                 return '주문 완료';
             case '/admin':
                 return '관리자 페이지';
+            case '/account-recovery':
+                return '계정 찾기';
+            case '/password-change':
+                return '비밀번호 변경';
             default:
                 return 'NutriHub';
         }
@@ -110,7 +111,7 @@ const Header = ({ notificationCount, surveyCount, userInfo }) => {
 
     const isMainPage = location.pathname === '/';
 
-    // 로딩 중일 때 처리
+
     if (isLoading && isMainPage) {
         return (
             <header className="header-header">

@@ -1,9 +1,6 @@
 package com.demo.nimn.controller.auth;
 
-import com.demo.nimn.dto.auth.CustomUserDetails;
-import com.demo.nimn.dto.auth.UserDTO;
-import com.demo.nimn.dto.auth.UserDetails;
-import com.demo.nimn.dto.auth.UsersEmailDTO;
+import com.demo.nimn.dto.auth.*;
 import com.demo.nimn.service.auth.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -24,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/users")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UserController (UserService userService){
@@ -156,5 +153,41 @@ public class UserController {
     public UserDetails updateUser(@RequestBody UserDetails user){
         return userService.updateUser(user);
     }
+
+    @Operation(summary = "로그인 상태 비밀번호 변경", description = "유저의 비밀번호를 변경한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공, 응답 password 값 = null"),
+            @ApiResponse(responseCode = "401", description = "실패, 응답 password 값 = 중복 or 불일치 "),
+            @ApiResponse(responseCode = "403", description = "권한 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    @PutMapping("/password")
+    public ResponseEntity<UserDTO> updatePassword(@RequestBody PasswordChangeDTO passwordChangeDTO){
+        UserDTO user = userService.changePassword(passwordChangeDTO);
+        if(user.getPassword() == null){
+            return ResponseEntity.ok().body(user);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(user);
+        }
+    }
+
+
+    @Operation(summary = "비로그인 상태 비밀번호 변경", description = "유저의 비밀번호를 변경한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공, 응답 password 값 = null"),
+            @ApiResponse(responseCode = "401", description = "실패, 응답 password 값 = 중복"),
+            @ApiResponse(responseCode = "403", description = "권한 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    @PutMapping("/reset-password")
+    public ResponseEntity<UserDTO> changePassword(@RequestBody PasswordChangeDTO passwordChangeDTO){
+        UserDTO user = userService.updatePassword(passwordChangeDTO);
+        if(user.getPassword() == null){
+            return ResponseEntity.ok().body(user);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(user);
+        }
+    }
+
 
 }

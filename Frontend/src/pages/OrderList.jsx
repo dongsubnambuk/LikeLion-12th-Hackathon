@@ -8,8 +8,8 @@ function OrderList() {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    // 사용자 정보 조회 및 이메일 추출 (기본값 설정)
-    const [userEmail, setUserEmail] = useState('gisela5142@asimarif.com'); // 기본값
+
+    const [userEmail, setUserEmail] = useState(''); 
 
     useEffect(() => {
         const handleGetUser = async () => {
@@ -47,7 +47,7 @@ function OrderList() {
                     }
                 }
             } catch (error) {
-                // 에러가 발생해도 기본 이메일로 진행
+
             }
         };
 
@@ -85,7 +85,6 @@ function OrderList() {
             }
         };
     
-        // userEmail이 설정되면 (기본값이든 실제값이든) 결제 내역 조회
         handlePaymentGet();
     }, [userEmail]);
     
