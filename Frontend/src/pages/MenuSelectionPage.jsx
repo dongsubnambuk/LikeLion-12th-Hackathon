@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 import '../CSS/MenuSelectionPage.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css'; // Swiper 기본 CSS
-import 'swiper/css/navigation'; // Navigation 모듈의 CSS
-import 'swiper/css/pagination'; // Pagination 모듈의 CSS
-import { Navigation, Pagination } from 'swiper/modules'; // 모듈을 swiper/modules에서 가져오기
+import 'swiper/css'; 
+import 'swiper/css/navigation'; 
+import 'swiper/css/pagination'; 
+import { Navigation, Pagination } from 'swiper/modules'; 
 import SelectionMenus from "../components/SelectionMenus";
 
 const MenuSelectionPage = () => {

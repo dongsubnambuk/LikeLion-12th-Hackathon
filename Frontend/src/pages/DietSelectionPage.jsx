@@ -1,4 +1,3 @@
-// DietSelectionPage.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import '../CSS/DietSelectionPage.css';
@@ -69,7 +68,7 @@ function DietSelectionPage() {
     const extractImageId = (imagePath) => {
         if (!imagePath) return null;
         
-        // "/api/image/test28" 형태에서 "test28" 추출
+
         const match = imagePath.match(/\/api\/image\/(.+)$/);
         if (match && match[1]) {
             const imageId = match[1];
@@ -91,7 +90,6 @@ function DietSelectionPage() {
         return `http://nimn.store/api/image/${imageId}`;
     };
 
-    // 실제 API에서 받은 데이터를 내부 구조로 변환
     const transformApiData = (apiData) => {
         const mealTypeMapping = {
             'Breakfast': '아침',
@@ -112,7 +110,6 @@ function DietSelectionPage() {
                 foodTimeLabel: mealTypeMapping[choiceSet.foodTime] || choiceSet.foodTime,
                 foods: choiceSet.foods.map(food => ({
                     ...food,
-                    // 이미지 URL 처리
                     image: getImageUrl(food.image),
                     originalImagePath: food.image
                 })),
@@ -170,7 +167,7 @@ function DietSelectionPage() {
                 if (response.ok) {
                     const result = await response.json();
 
-                    // 실제 API 데이터 사용
+
                     const transformedData = transformApiData(result);
                     setMealData(transformedData);
 

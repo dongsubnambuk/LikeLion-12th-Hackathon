@@ -1,4 +1,3 @@
-// src/pages/MainPage.jsx
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -322,7 +321,6 @@ const MainPage = ({ onNotificationCountChange }) => {
           }
         };
       } else {
-        // 배포 환경: 폴링 방식
         // 초기 로드
         updateNotificationCounts();
         

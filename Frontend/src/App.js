@@ -12,7 +12,6 @@ import UserInfoUpdate from './pages/UserInfoUpdate';
 import OrderList from './pages/OrderList';
 import WeeklyFoodMenu from './pages/WeeklyFoodMenu';
 import Survey from './pages/Survey';
-import SurveyDetail from './pages/SurveyDetail';
 import Notification from './pages/Notification';
 import DietSelection from './pages/DietSelectionPage';
 import MenuSelection from './pages/MenuSelectionPage';
@@ -156,7 +155,6 @@ const AppContent = () => {
             <Route path="/orderlist" element={<OrderList />} />
             <Route path="/weeklyfoodmenu" element={<WeeklyFoodMenu />} />
             <Route path="/survey" element={<Survey />} />
-            <Route path="/survey-detail" element={<SurveyDetail />} />
             <Route path="/notification" element={<Notification />} />
             <Route path="/dietselection" element={<DietSelection />} />
             <Route path="/menuselection" element={<MenuSelection />} />

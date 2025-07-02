@@ -68,10 +68,18 @@ function Survey() {
         }
     }, [userEmail]);
 
+    const getCurrentDate = () => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
     // 일일 리뷰 조회 API
     const getDailyReviewAPI = useCallback(async (userEmail, date) => {
         try {
-            const response = await fetch(`http://nimn.store/api/review/daily?userEmail=${userEmail}&date=2025-07-07`, {
+            const response = await fetch(`http://nimn.store/api/review/daily?userEmail=${userEmail}&date=${getCurrentDate()}`, {
                 method: "GET",
                 credentials: 'include',
             });
