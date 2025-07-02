@@ -16,7 +16,6 @@ import Survey from './pages/Survey';
 import SurveyDetail from './pages/SurveyDetail';
 import Notification from './pages/Notification';
 import DietSelection from './pages/DietSelectionPage';
-import MenuSelection from './pages/MenuSelectionPage';
 import DietPaymentMain from './pages/DietPaymentMainPage';
 import DietPayment from './pages/DietPaymentPage';
 import Admin from './pages/Admin';
@@ -159,7 +158,6 @@ const AppContent = () => {
             <Route path="/survey-detail" element={<SurveyDetail />} />
             <Route path="/notification" element={<Notification />} />
             <Route path="/dietselection" element={<DietSelection />} />
-            <Route path="/menuselection" element={<MenuSelection />} />
             <Route path="/dietpaymentmain" element={<DietPaymentMain />} />
             <Route path="/dietpayment" element={<DietPayment />} />
             <Route path="/dietpaymentcomplete" element={<DietPaymentComplete />} />
