@@ -11,17 +11,12 @@ import com.demo.nimn.repository.notification.NotificationRepository;
 import com.demo.nimn.service.diet.DietService;
 import com.demo.nimn.service.payment.PaymentService;
 import com.demo.nimn.service.review.ReviewService;
-import com.demo.nimn.websocket.CustomChannelInterceptor;
 import com.demo.nimn.websocket.SessionManageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.user.SimpUser;
-import org.springframework.messaging.simp.user.SimpSession;
-import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -103,11 +98,6 @@ public class NotificationServiceImpl implements NotificationService {
         );
 
         try {
-            // 브로드캐스트
-            simpMessagingTemplate.convertAndSend(
-                    "/queue/broadcast-notification",
-                    notificationDTO
-            );
             // 개인 알림
             simpMessagingTemplate.convertAndSendToUser(
                     userEmail,
@@ -195,7 +185,6 @@ public class NotificationServiceImpl implements NotificationService {
     // 리뷰 알림
     @Scheduled(cron = "0 0 21 ? * *")
     public void sendReview() {
-        // TODO-dg: ReviewService의 getDailyDietReviewsByDate 메소드를 사용하면 날짜에 해당하는 DailyReview들 가져올 수 있음.
         List<DailyDietReviewDTO> reviewList = reviewService.getDailyDietReviewsByDate(LocalDate.now());
         for (DailyDietReviewDTO dailyReviewDTO : reviewList) {
             sendNotification(NotificationType.REVIEW,

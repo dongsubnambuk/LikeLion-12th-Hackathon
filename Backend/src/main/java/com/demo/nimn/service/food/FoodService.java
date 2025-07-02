@@ -6,9 +6,8 @@ import com.demo.nimn.entity.food.Food;
 import java.util.List;
 
 public interface FoodService {
-    FoodDTO createFood(String price);
-    Food readFoodByFoodId(Long foodMenuId);
-    FoodDTO readFoodDTOByFoodId(Long foodMenuId);
+    FoodDTO createFood(Long price);
+    FoodDTO readFoodDTOByFoodId(Long foodId);
     List<FoodDTO> readAll();
     FoodDTO convertToFoodDTO(Food food);
 }

@@ -5,6 +5,7 @@ import com.demo.nimn.dto.food.WeeklyFoodPlanDTO;
 import com.demo.nimn.service.food.FoodService;
 import com.demo.nimn.service.food.WeeklyFoodPlanService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -49,7 +50,8 @@ public class FoodController {
             )
     })
     @PostMapping(value = "/food")
-    public ResponseEntity<FoodDTO> createFood(@RequestParam(name = "price") String price) {
+    public ResponseEntity<FoodDTO> createFood(@Parameter(description = "가격", schema = @Schema(defaultValue = "0"), example = "10000")
+                                                @RequestParam(name = "price", defaultValue = "0") Long price) {
         FoodDTO foodDTO = foodService.createFood(price);
         return ResponseEntity.created(URI.create("/foods/food/" + foodDTO.getId())).body(foodDTO);
     }
@@ -122,7 +124,8 @@ public class FoodController {
             )
     })
     @GetMapping(value = "/food/{foodId}")
-    public ResponseEntity<FoodDTO> readByFoodId(@PathVariable("foodId") Long foodId) {
+    public ResponseEntity<FoodDTO> readByFoodId(@Parameter(description = "음식 ID", example = "1")
+                                                @PathVariable("foodId") Long foodId) {
         return ResponseEntity.ok(foodService.readFoodDTOByFoodId(foodId));
     }
 }
