@@ -201,7 +201,7 @@ function Admin() {
         name: result.name || "",
         main1: result.main1 || "",
         main2: result.main2 || "",
-        price: result.price || `${price}원`,
+        price: result.price || `${price}`,
         side1: result.side1 || "",
         side2: result.side2 || "",
         side3: result.side3 || "",
@@ -253,7 +253,7 @@ function Admin() {
     if (priceFilter === 'all') {
       return dietList;
     }
-    return dietList.filter(diet => diet.price === `${priceFilter}원`);
+    return dietList.filter(diet => diet.price === parseInt(priceFilter));
   };
 
   const filteredDietList = getFilteredDietList();
@@ -373,7 +373,7 @@ function Admin() {
                       >
                         <div className="admin_dashboard_diet_info">
                           <div className="admin_dashboard_diet_name">{diet.name}</div>
-                          <div className="admin_dashboard_diet_detail">{diet.price} • {diet.calories}</div>
+                          <div className="admin_dashboard_diet_detail">{`${diet.price}원`} • {diet.calories}</div>
                         </div>
                       </div>
                     ))}
@@ -392,7 +392,7 @@ function Admin() {
                       <div key={order.id} className="admin_dashboard_order_item">
                         <div className="admin_dashboard_order_info">
                           <div className="admin_dashboard_order_name">{order.userName}</div>
-                          <div className="admin_dashboard_order_detail">{order.amount}</div>
+                          <div className="admin_dashboard_order_detail"> {order.amount.replace(/(\d+)/, (match) => parseInt(match).toLocaleString())}</div>
                         </div>
                         <div className="admin_dashboard_order_date">{order.paymentDate}</div>
                       </div>
@@ -426,7 +426,9 @@ function Admin() {
                       <td className="admin_table_cell">{order.id}</td>
                       <td className="admin_table_cell">{order.paymentDate}</td>
                       <td className="admin_table_cell">{order.userName}</td>
-                      <td className="admin_table_cell">{order.amount}</td>
+                      <td className="admin_table_cell">
+                        {order.amount.replace(/(\d+)/, (match) => parseInt(match).toLocaleString())}
+                      </td>
                       <td className="admin_table_cell">{order.uid}</td>
                     </tr>
                   ))}
@@ -650,7 +652,7 @@ function Admin() {
                                 <div className="admin_diet_list_info">
                                   <div className="admin_diet_list_name">{diet.name}</div>
                                   <div className="admin_diet_list_details">
-                                    <span>{diet.price}</span>
+                                    <span>{diet.price}원</span>
                                     <span>•</span>
                                     <span>{diet.calories}</span>
                                     <span>•</span>
@@ -712,7 +714,7 @@ function Admin() {
                                   <span className="admin_info_text">{selectedDiet.calories}</span>
                                 </div>
                                 <div className="admin_diet_info">
-                                  <span className="admin_info_text">{selectedDiet.price}</span>
+                                  <span className="admin_info_text">{selectedDiet.price}원</span>
                                 </div>
                               </div>
                             </div>
@@ -776,7 +778,7 @@ function Admin() {
                               <div className="admin_summary_stats">
                                 <div className="admin_summary_item">
                                   <span className="admin_summary_label">가격대</span>
-                                  <span className="admin_summary_value">{selectedDiet.price}</span>
+                                  <span className="admin_summary_value">{`${selectedDiet.price}원`}</span>
                                 </div>
                                 <div className="admin_summary_item">
                                   <span className="admin_summary_label">칼로리</span>
