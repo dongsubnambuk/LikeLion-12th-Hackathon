@@ -89,8 +89,8 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     @GetMapping(value = "/isExist")
-    public boolean existEmail (@RequestParam String email){
-        return userService.existsByEmail(email);
+    public ResponseEntity<Boolean> existEmail (@RequestParam String email){
+        return ResponseEntity.ok().body(userService.existsByEmail(email));
     }
 
 
@@ -102,8 +102,9 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     @GetMapping(value = "/all")
-    public UsersEmailDTO getAllUsersEmail (){
-        return userService.getAllUsersEmail();
+    public ResponseEntity<UsersEmailDTO> getAllUsersEmail (){
+
+        return ResponseEntity.ok().body(userService.getAllUsersEmail());
     }
 
 
@@ -150,8 +151,8 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     @PutMapping
-    public UserDetails updateUser(@RequestBody UserDetails user){
-        return userService.updateUser(user);
+    public ResponseEntity<UserDetails> updateUser(@RequestBody UserDetails user){
+        return ResponseEntity.ok().body(userService.updateUser(user));
     }
 
     @Operation(summary = "로그인 상태 비밀번호 변경", description = "유저의 비밀번호를 변경한다.")

@@ -1,7 +1,7 @@
 package com.demo.nimn.controller.diet;
 
 import com.demo.nimn.dto.diet.DailyDietDTO;
-import com.demo.nimn.dto.diet.DailyRequestDTO;
+import com.demo.nimn.dto.diet.GetDailyDTO;
 import com.demo.nimn.service.diet.DietService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,8 +35,8 @@ public class DailyDietController {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     @PostMapping("/read")
-    public ResponseEntity<List<DailyDietDTO>> getDailyDietsByUserEmailAndDate(@RequestBody DailyRequestDTO dailyRequestDTO) {
-        List<DailyDietDTO> dailyDiets = dietService.getByUserEmailAndDate(dailyRequestDTO.getUserEmail(), dailyRequestDTO.getDate());
+    public ResponseEntity<List<DailyDietDTO>> getDailyDietsByUserEmailAndDate(@RequestBody GetDailyDTO getDailyDTO) {
+        List<DailyDietDTO> dailyDiets = dietService.getByUserEmailAndDate(getDailyDTO.getUserEmail(), getDailyDTO.getDate());
         return ResponseEntity.ok(dailyDiets);
     }
 

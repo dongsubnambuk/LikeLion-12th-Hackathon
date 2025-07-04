@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DailyRequestDTO {
+public class GetDailyDTO {
     String userEmail;
     LocalDate date;
 }

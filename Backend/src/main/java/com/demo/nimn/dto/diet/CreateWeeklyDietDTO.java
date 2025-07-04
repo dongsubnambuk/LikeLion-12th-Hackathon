@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WeeklyDietRequestDTO {
+public class CreateWeeklyDietDTO {
     private Long weeklyId;
     private LocalDate startDate;
     private LocalDate endDate;

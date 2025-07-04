@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @Builder
-public class FoodSelectionCreateDTO {
+public class CreateFoodSelectionDTO {
     private Long foodSelectionId;
     private String foodTime;
     private Long foodId;

@@ -12,9 +12,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DailyDietRequestDTO {
+public class CreateDailyDietDTO {
     private Long dailyDietId;
     private LocalDate date;
-    private List<FoodSelectionRequestDTO> foodSelections;
+    private List<CreateFoodSelectionDTO> foodSelections;
     private String userEmail;
 }

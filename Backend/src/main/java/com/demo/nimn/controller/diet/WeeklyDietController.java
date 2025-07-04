@@ -1,7 +1,7 @@
 package com.demo.nimn.controller.diet;
 
 import com.demo.nimn.dto.diet.WeeklyDietDTO;
-import com.demo.nimn.dto.diet.WeeklyDietRequestDTO;
+import com.demo.nimn.dto.diet.CreateWeeklyDietDTO;
 import com.demo.nimn.service.diet.DietService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,7 +32,7 @@ public class WeeklyDietController {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     @PostMapping("/create") // 유저 일주일 식단 생성
-    public ResponseEntity<WeeklyDietDTO> createWeeklyDiet(@RequestBody WeeklyDietRequestDTO weeklyDietDTO) {
+    public ResponseEntity<WeeklyDietDTO> createWeeklyDiet(@RequestBody CreateWeeklyDietDTO weeklyDietDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(dietService.createWeeklyDiet(weeklyDietDTO));
     }
 

@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDailyMealPlanDTO {
+public class UserDailyFoodPlanDTO {
     LocalDate date;
     List<Long> foodMenuIds;
 }
