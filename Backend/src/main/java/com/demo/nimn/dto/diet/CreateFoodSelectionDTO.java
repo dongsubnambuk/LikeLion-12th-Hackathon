@@ -1,4 +1,4 @@
-package com.demo.nimn.dto.diet.Request;
+package com.demo.nimn.dto.diet;
 
 import lombok.*;
 
@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @Builder
-public class FoodSelectionRequestDTO {
+public class CreateFoodSelectionDTO {
     private Long foodSelectionId;
     private String foodTime;
     private Long foodId;

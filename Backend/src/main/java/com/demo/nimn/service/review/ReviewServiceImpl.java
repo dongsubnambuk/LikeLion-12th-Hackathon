@@ -1,8 +1,8 @@
 package com.demo.nimn.service.review;
 
-import com.demo.nimn.dto.diet.Response.DailyDietDTO;
-import com.demo.nimn.dto.diet.Response.FoodSelectionDTO;
-import com.demo.nimn.dto.diet.Response.WeeklyDietDTO;
+import com.demo.nimn.dto.diet.DailyDietDTO;
+import com.demo.nimn.dto.diet.FoodSelectionDTO;
+import com.demo.nimn.dto.diet.WeeklyDietDTO;
 import com.demo.nimn.dto.review.DailyDietReviewDTO;
 import com.demo.nimn.dto.review.ReviewDTO;
 import com.demo.nimn.dto.review.ReviewSummaryDTO;

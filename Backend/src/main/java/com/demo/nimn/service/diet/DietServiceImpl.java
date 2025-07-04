@@ -1,10 +1,10 @@
 package com.demo.nimn.service.diet;
 
-import com.demo.nimn.dto.diet.Request.UserDailyMealPlanDTO;
-import com.demo.nimn.dto.diet.Request.WeeklyDietRequestDTO;
-import com.demo.nimn.dto.diet.Response.DailyDietDTO;
-import com.demo.nimn.dto.diet.Request.DailyDietRequestDTO;
-import com.demo.nimn.dto.diet.Response.WeeklyDietDTO;
+import com.demo.nimn.dto.diet.UserDailyFoodPlanDTO;
+import com.demo.nimn.dto.diet.CreateWeeklyDietDTO;
+import com.demo.nimn.dto.diet.DailyDietDTO;
+import com.demo.nimn.dto.diet.CreateDailyDietDTO;
+import com.demo.nimn.dto.diet.WeeklyDietDTO;
 import com.demo.nimn.entity.diet.DailyDiet;
 import com.demo.nimn.entity.diet.FoodSelection;
 import com.demo.nimn.entity.diet.WeeklyDiet;
@@ -53,7 +53,7 @@ public class DietServiceImpl implements DietService {
     }
 
     // 클라이언트 요청 DTO를 실제 DB에 저장 가능한 DailyDiet 엔티티로 변환
-    private DailyDiet convertToDailyDietEntity(DailyDietRequestDTO dailyDietDTO) {
+    private DailyDiet convertToDailyDietEntity(CreateDailyDietDTO dailyDietDTO) {
         return DailyDiet.builder()
                 .userEmail(dailyDietDTO.getUserEmail())
                 .foodSelections(foodSelectionService.convertToMealSelectionEntities(dailyDietDTO.getFoodSelections()))
@@ -73,7 +73,7 @@ public class DietServiceImpl implements DietService {
 
     // 여러 개의 요청 DTO 리스트를 DailyDiet 엔티티 리스트로 변환
     @Override
-    public List<DailyDiet> convertToDailyDietEntities(List<DailyDietRequestDTO> dailyDietDTOS) {
+    public List<DailyDiet> convertToDailyDietEntities(List<CreateDailyDietDTO> dailyDietDTOS) {
         return dailyDietDTOS.stream().map(this::convertToDailyDietEntity).collect(Collectors.toList());
     }
 
@@ -89,7 +89,7 @@ public class DietServiceImpl implements DietService {
     // 새로운 주간 식단 생성
     @Override
     @Transactional
-    public WeeklyDietDTO createWeeklyDiet(WeeklyDietRequestDTO weeklyDietDTO) {
+    public WeeklyDietDTO createWeeklyDiet(CreateWeeklyDietDTO weeklyDietDTO) {
         if (weeklyDietRepository.existsByCurrentWeeklyMealPlan(weeklyDietDTO.getStartDate(), weeklyDietDTO.getUserEmail())) {
             return null;
         }
@@ -113,7 +113,7 @@ public class DietServiceImpl implements DietService {
     }
 
     // WeeklyDietDTO를 WeeklyDiet 엔티티로 변환
-    public WeeklyDiet convertToWeeklyDietEntity(WeeklyDietRequestDTO weeklyDietDTO) {
+    public WeeklyDiet convertToWeeklyDietEntity(CreateWeeklyDietDTO weeklyDietDTO) {
         return WeeklyDiet.builder()
                 .userEmail(weeklyDietDTO.getUserEmail())
                 .startDate(weeklyDietDTO.getStartDate())
@@ -143,19 +143,19 @@ public class DietServiceImpl implements DietService {
     }
 
     // 하루치 식단을 UserDailyMealPlanDTO로 변환
-    public UserDailyMealPlanDTO convertToDailyMealPlanDTO(DailyDiet dailyDiet) {
-        return UserDailyMealPlanDTO.builder()
+    public UserDailyFoodPlanDTO convertToDailyMealPlanDTO(DailyDiet dailyDiet) {
+        return UserDailyFoodPlanDTO.builder()
                 .date(dailyDiet.getDate())
                 .foodMenuIds(convertToFoodMenuIds(dailyDiet))
                 .build();
     }
 
     // 한 주간의 DailyDiet 리스트를 전부 UserDailyMealPlanDTO로 변환
-    public List<UserDailyMealPlanDTO> convertToDailyMealPlanDTOS(WeeklyDiet weeklyDiet) {
-        List<UserDailyMealPlanDTO> userDailyMealPlanDTOS = new ArrayList<>();
+    public List<UserDailyFoodPlanDTO> convertToDailyMealPlanDTOS(WeeklyDiet weeklyDiet) {
+        List<UserDailyFoodPlanDTO> userDailyFoodPlanDTOS = new ArrayList<>();
         for (DailyDiet dailyDiet : weeklyDiet.getDailyDiets()) {
-            userDailyMealPlanDTOS.add(convertToDailyMealPlanDTO(dailyDiet));
+            userDailyFoodPlanDTOS.add(convertToDailyMealPlanDTO(dailyDiet));
         }
-        return userDailyMealPlanDTOS;
+        return userDailyFoodPlanDTOS;
     }
 }

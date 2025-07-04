@@ -1,8 +1,7 @@
 package com.demo.nimn.service.diet;
 
-import com.demo.nimn.dto.diet.Response.FoodSelectionDTO;
-import com.demo.nimn.dto.diet.Request.FoodSelectionRequestDTO;
-import com.demo.nimn.dto.food.FoodDTO;
+import com.demo.nimn.dto.diet.FoodSelectionDTO;
+import com.demo.nimn.dto.diet.CreateFoodSelectionDTO;
 import com.demo.nimn.entity.diet.FoodSelection;
 import com.demo.nimn.entity.food.Food;
 import com.demo.nimn.repository.diet.FoodSelectionRepository;
@@ -35,7 +34,7 @@ public class FoodSelectionServiceImpl implements FoodSelectionService {
     }
 
     // 클라이언트에서 보낸 요청 DTO를 실제 DB 저장용 FoodSelection 엔티티로 변환
-    public FoodSelection convertToMealSelectionEntity(FoodSelectionRequestDTO mealSelectionDTO) {
+    public FoodSelection convertToMealSelectionEntity(CreateFoodSelectionDTO mealSelectionDTO) {
         Food food = foodRepository.getReferenceById(mealSelectionDTO.getFoodId());
 
         return FoodSelection.builder()
@@ -57,7 +56,7 @@ public class FoodSelectionServiceImpl implements FoodSelectionService {
     }
     // DTO 리스트를 엔티티 리스트로 일괄 변환
     @Override
-    public List<FoodSelection> convertToMealSelectionEntities(List<FoodSelectionRequestDTO> mealSelectionDTOS){
+    public List<FoodSelection> convertToMealSelectionEntities(List<CreateFoodSelectionDTO> mealSelectionDTOS){
         return mealSelectionDTOS.stream().map(this::convertToMealSelectionEntity).collect(Collectors.toList());
     }
     // FoodSelection 엔티티 리스트를 DTO 리스트로 일괄 변환

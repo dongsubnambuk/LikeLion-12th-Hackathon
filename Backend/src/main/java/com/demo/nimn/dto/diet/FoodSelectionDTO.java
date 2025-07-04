@@ -1,4 +1,4 @@
-package com.demo.nimn.dto.diet.Response;
+package com.demo.nimn.dto.diet;
 
 import com.demo.nimn.dto.food.FoodDTO;
 import lombok.*;
@@ -11,8 +11,8 @@ import lombok.*;
 @Builder
 public class FoodSelectionDTO {
     private Long foodSelectionId;
-    private String userEmail;
     private String foodTime;
     private FoodDTO foodMenu;
     private int count;
+    private String userEmail;
 }
