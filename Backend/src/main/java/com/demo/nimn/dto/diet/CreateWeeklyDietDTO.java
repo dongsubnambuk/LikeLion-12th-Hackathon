@@ -16,6 +16,6 @@ public class WeeklyDietRequestDTO {
     private Long weeklyId;
     private LocalDate startDate;
     private LocalDate endDate;
-    private List<DailyDietRequestDTO> dailyDiets;
+    private List<CreateDailyDietDTO> dailyDiets;
     private String userEmail;
 }
