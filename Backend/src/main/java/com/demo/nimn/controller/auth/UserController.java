@@ -3,6 +3,7 @@ package com.demo.nimn.controller.auth;
 import com.demo.nimn.dto.auth.*;
 import com.demo.nimn.service.auth.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,12 +12,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name="유저 API", description = "로그인 관련 API")
+@Tag(name="유저 API", description = "로그인 및 유저 정보 관리")
 @RestController
 @RequestMapping(value = "/users")
 public class UserController {
@@ -27,12 +26,13 @@ public class UserController {
     public UserController (UserService userService){
         this.userService = userService;
     }
+
     @Operation(summary = "로그인", description = "로그인에 성공하면 응답 Cookie에 jwt를 포함")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "401", description = "인증 실패"),
-            @ApiResponse(responseCode = "403", description = "로그인 실패"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
+            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content()),
+            @ApiResponse(responseCode = "403", description = "로그인 실패", content = @Content()),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content())
     })
     @PostMapping("/login")
     public void login (@RequestBody UserDTO userDTO) {
@@ -41,8 +41,8 @@ public class UserController {
     @Operation(summary = "회원가입", description = "회원가입을 진행합니다")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "회원가입 성공"),
-            @ApiResponse(responseCode = "403", description = "회원가입 실패"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
+            @ApiResponse(responseCode = "403", description = "회원가입 실패", content = @Content()),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content())
     })
     @PostMapping(value = "/signup")
     public ResponseEntity<?> join (@RequestBody UserDetails userDetails){
@@ -68,8 +68,8 @@ public class UserController {
     @Operation(summary = "로그아웃", description = "로그아웃을 진행, 쿠키에 담긴 jwt 토큰을 삭제합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
-            @ApiResponse(responseCode = "401", description = "인증 실패"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
+            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content()),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content())
     })
     @PostMapping(value = "/logout")
     public ResponseEntity<?> logout (HttpServletRequest request, HttpServletResponse response){
@@ -85,8 +85,8 @@ public class UserController {
     @Operation(summary = "이메일 존재 여부 조회", description = "해당 이메일의 존재 여부를 boolean 타입으로 확인")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "401", description = "인증 실패"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
+            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content()),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content())
     })
     @GetMapping(value = "/isExist")
     public ResponseEntity<Boolean> existEmail (@RequestParam String email){
@@ -97,9 +97,9 @@ public class UserController {
     @Operation(summary = "모든 유저 이메일 조회", description = "존재하는 모든 유저의 이메일을 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "401", description = "인증 실패"),
-            @ApiResponse(responseCode = "403", description = "권한 없음"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
+            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content()),
+            @ApiResponse(responseCode = "403", description = "권한 없음", content = @Content()),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content())
     })
     @GetMapping(value = "/all")
     public ResponseEntity<UsersEmailDTO> getAllUsersEmail (){
@@ -111,12 +111,12 @@ public class UserController {
     @Operation(summary = "로그인 유저 정보조회", description = "로그인한 유저의 정보를 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "401", description = "인증 실패"),
-            @ApiResponse(responseCode = "403", description = "권한 없음"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
+            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content()),
+            @ApiResponse(responseCode = "403", description = "권한 없음", content = @Content()),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content())
     })
     @GetMapping
-    public ResponseEntity<?> getUserDetail(@AuthenticationPrincipal CustomUserDetails userDetail){
+    public ResponseEntity<UserDetails> getUserDetail(@AuthenticationPrincipal CustomUserDetails userDetail){
         String email = userDetail.getUsername();
 
         UserDetails userDetails = userService.getUserDetail(email);
@@ -146,9 +146,9 @@ public class UserController {
     @Operation(summary = "로그인 유저 정보 수정", description = "로그인한 유저의 정보를 수정한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "401", description = "인증 실패"),
-            @ApiResponse(responseCode = "403", description = "권한 없음"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
+            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content()),
+            @ApiResponse(responseCode = "403", description = "권한 없음", content = @Content()),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content())
     })
     @PutMapping
     public ResponseEntity<UserDetails> updateUser(@RequestBody UserDetails user){
@@ -158,9 +158,9 @@ public class UserController {
     @Operation(summary = "로그인 상태 비밀번호 변경", description = "유저의 비밀번호를 변경한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공, 응답 password 값 = null"),
-            @ApiResponse(responseCode = "401", description = "실패, 응답 password 값 = 중복 or 불일치 "),
-            @ApiResponse(responseCode = "403", description = "권한 없음"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
+            @ApiResponse(responseCode = "401", description = "실패, 응답 password 값 = 중복 or 불일치 ", content = @Content()),
+            @ApiResponse(responseCode = "403", description = "권한 없음", content = @Content()),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content())
     })
     @PutMapping("/password")
     public ResponseEntity<UserDTO> updatePassword(@RequestBody PasswordChangeDTO passwordChangeDTO){
@@ -176,9 +176,9 @@ public class UserController {
     @Operation(summary = "비로그인 상태 비밀번호 변경", description = "유저의 비밀번호를 변경한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공, 응답 password 값 = null"),
-            @ApiResponse(responseCode = "401", description = "실패, 응답 password 값 = 중복"),
-            @ApiResponse(responseCode = "403", description = "권한 없음"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
+            @ApiResponse(responseCode = "401", description = "실패, 응답 password 값 = 중복", content = @Content()),
+            @ApiResponse(responseCode = "403", description = "권한 없음", content = @Content()),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content())
     })
     @PutMapping("/reset-password")
     public ResponseEntity<UserDTO> changePassword(@RequestBody PasswordChangeDTO passwordChangeDTO){
@@ -189,6 +189,4 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(user);
         }
     }
-
-
 }

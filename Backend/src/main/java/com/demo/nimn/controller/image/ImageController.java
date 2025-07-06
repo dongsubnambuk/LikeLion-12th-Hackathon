@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-@Tag(name = "이미지 API", description = "이미지 업로드, 다운로드, 수정, 삭제 기능을 제공하는 API")
+@Tag(name = "이미지 API", description = "이미지 업로드, 다운로드, 수정, 삭제")
 @RestController
 @RequestMapping(value = "/image")
 public class ImageController {
