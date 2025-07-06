@@ -12,7 +12,13 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .components(new Components())
-                .info(apiInfo());
+                .info(apiInfo())
+                .addServersItem(new io.swagger.v3.oas.models.servers.Server()
+                        .url("https://nimn.store")
+                        .description("Production server"))
+                .addServersItem(new io.swagger.v3.oas.models.servers.Server()
+                        .url("http://localhost:8080")
+                        .description("Local development server"));
     }
 
     private Info apiInfo() {
