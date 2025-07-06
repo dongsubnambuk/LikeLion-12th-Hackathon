@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
-@Tag(name = "음식 API", description = "AI를 사용한 식단 및 이미지 자동 생성")
+@Tag(name = "음식 API", description = "식단에 포함되는 음식 관리")
 @RestController
 @RequestMapping(value = "/foods")
 public class FoodController {
@@ -31,7 +31,7 @@ public class FoodController {
         this.weeklyFoodPlanService = weeklyFoodPlanService;
     }
 
-    @Operation(summary = "음식 생성(CreateFood)", description = "입력된 가격을 기준으로, 영양을 고려한 새로운 음식 데이터를 생성합니다.")
+    @Operation(summary = "음식 생성", description = "입력된 가격을 기준으로, 영양을 고려한 새로운 음식 데이터를 생성합니다.")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "201",
@@ -56,7 +56,7 @@ public class FoodController {
         return ResponseEntity.created(URI.create("/foods/food/" + foodDTO.getId())).body(foodDTO);
     }
 
-    @Operation(summary = "한 주 식단 선택지 생성(CreateWeeklyFoodPlan)", description = "다음 주 월요일부터 일주일간의 식단 선택지를 생성합니다. 이미 생성된 경우 기존 데이터를 반환합니다.")
+    @Operation(summary = "한 주 식단 선택지 생성", description = "다음 주 월요일부터 일주일간의 식단 선택지를 생성합니다. 이미 생성된 경우 기존 데이터를 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "201",
@@ -74,7 +74,7 @@ public class FoodController {
         return ResponseEntity.created(URI.create("/foods/plans/weekly")).body(weeklyFoodPlanService.createWeeklyPlan());
     }
 
-    @Operation(summary = "한 주 식단 선택지 조회(ReadWeeklyFoodPlan)", description = "다음 주 월요일 기준의 주간 식단 선택지를 조회합니다. 식단이 없을 경우 자동으로 생성하여 반환합니다.")
+    @Operation(summary = "한 주 식단 선택지 조회", description = "다음 주 월요일 기준의 주간 식단 선택지를 조회합니다. 식단이 없을 경우 자동으로 생성하여 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -92,7 +92,7 @@ public class FoodController {
         return ResponseEntity.ok(weeklyFoodPlanService.readWeeklyFoodPlan());
     }
 
-    @Operation(summary = "모든 음식 목록 조회(ReadAllFood)", description = "현재 저장된 모든 음식 데이터를 리스트로 조회합니다.")
+    @Operation(summary = "모든 음식 목록 조회", description = "현재 저장된 모든 음식 데이터를 리스트로 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -110,7 +110,7 @@ public class FoodController {
         return ResponseEntity.ok(foodService.readAll());
     }
 
-    @Operation(summary = "특정 음식 조회(ReadByFoodId)", description = "음식 ID를 기반으로 특정 음식의 상세 정보를 조회합니다.")
+    @Operation(summary = "특정 음식 조회", description = "음식 ID를 기반으로 특정 음식의 상세 정보를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",

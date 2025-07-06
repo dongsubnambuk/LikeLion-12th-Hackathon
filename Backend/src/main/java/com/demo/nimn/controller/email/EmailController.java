@@ -4,6 +4,7 @@ import com.demo.nimn.dto.email.EmailDTO;
 import com.demo.nimn.dto.email.EmailRequestDto;
 import com.demo.nimn.service.email.MailService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,22 +13,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name="이메일 API", description = "이메일 인증 관련 API")
+@Tag(name="이메일 API", description = "이메일 인증 관리")
 @RestController
 @RequestMapping("/email")
 public class EmailController {
     private final MailService mailService;
-    private int number; // 이메일 인증 숫자를 저장하는 변수
 
     public EmailController(MailService mailService) {
         this.mailService = mailService;
     }
 
-    @Operation(summary = "인증 이메일 전송", description = "해당 이메일로 인증 메일을 전송합니다.")
+    @Operation(summary = "인증 코드 전송", description = "해당 이메일로 인증 메일을 전송합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "401", description = "인증 실패"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
+            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content()),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content())
     })
     // 인증 이메일 전송
     @PostMapping("/send")
@@ -36,7 +36,8 @@ public class EmailController {
         String email = emailRequestDto.getEmail();
 
         try {
-            number = mailService.sendMail(email);
+            // 이메일 인증 숫자를 저장하는 변수
+            int number = mailService.sendMail(email);
             session.setMaxInactiveInterval(60 * 3); // 세션 저장 시간 3분 설정
             session.setAttribute("email", email);
             session.setAttribute("authCode", number); // 이메일 인증 코드 세션에 저장
@@ -63,8 +64,8 @@ public class EmailController {
     @Operation(summary = "인증번호 일치여부 확인", description = "인증번호 검증을 진행합니다")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "401", description = "인증 실패"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
+            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content()),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content())
     })
     @PostMapping("/check")
     public ResponseEntity<EmailDTO> mailCheck(
@@ -132,6 +133,4 @@ public class EmailController {
                     .build());
         }
     }
-
-
 }
