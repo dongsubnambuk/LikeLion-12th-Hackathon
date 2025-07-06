@@ -14,7 +14,7 @@ function OrderList() {
     useEffect(() => {
         const handleGetUser = async () => {
             try {
-                const response = await fetch('http://nimn.store/api/users', {
+                const response = await fetch('https://nimn.store/api/users', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ function OrderList() {
     useEffect(() => {
         const handlePaymentGet = async () => {
             try {
-                const response = await fetch(`http://nimn.store/api/payment?purchaser=${userEmail}`, {
+                const response = await fetch(`https://nimn.store/api/payment?purchaser=${userEmail}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

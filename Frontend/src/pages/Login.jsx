@@ -28,7 +28,7 @@ function Login({ onLoginSuccess }) {
         event.preventDefault();
     
         try {
-            const response = await fetch('http://nimn.store/api/users/login', {
+            const response = await fetch('https://nimn.store/api/users/login', {
                 method: "POST",
                 credentials: "include", 
                 headers: {
@@ -48,7 +48,7 @@ function Login({ onLoginSuccess }) {
                 
 
                 try {
-                    const userResponse = await fetch('http://nimn.store/api/users', {
+                    const userResponse = await fetch('https://nimn.store/api/users', {
                         method: 'GET',
                         credentials: 'include'
                     });

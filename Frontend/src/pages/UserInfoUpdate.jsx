@@ -71,7 +71,7 @@ function UserInfoUpdate() {
     // 정보 수정 API
     const handlePUT = async () => {
         try {
-            const response = await fetch('http://nimn.store/api/users', {
+            const response = await fetch('https://nimn.store/api/users', {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',
@@ -103,7 +103,7 @@ function UserInfoUpdate() {
     useEffect(() => {
         const handleget = async () => {
             try {
-                const response = await fetch('http://nimn.store/api/users', {
+                const response = await fetch('https://nimn.store/api/users', {
                     method: "GET",
                     credentials: 'include' // 쿠키 인증
                 });
