@@ -18,7 +18,7 @@ const navigate = useNavigate();
 
     const handleLogout = async () => {
         try {
-            const response = await fetch('http://nimn.store/api/users/logout', {
+            const response = await fetch('https://nimn.store/api/users/logout', {
                 method: "POST",
                 credentials: 'include',
             });
@@ -59,7 +59,7 @@ const navigate = useNavigate();
     useEffect(() => {
         const handleget = async () => {
             try {
-                const response = await fetch('http://nimn.store/api/users', {
+                const response = await fetch('https://nimn.store/api/users', {
                     method: "GET",
                     credentials: 'include',
                 });

@@ -59,7 +59,7 @@ function AccountRecovery() {
         setEmailSuccess("");
 
         try {
-            const response = await fetch(`http://nimn.store/api/users/isExist?email=${encodeURIComponent(email)}`, {
+            const response = await fetch(`https://nimn.store/api/users/isExist?email=${encodeURIComponent(email)}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -97,7 +97,7 @@ function AccountRecovery() {
         setCodeSuccess("");
 
         try {
-            const response = await fetch('http://nimn.store/api/email/send', {
+            const response = await fetch('https://nimn.store/api/email/send', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -136,7 +136,7 @@ function AccountRecovery() {
         setCodeSuccess("");
 
         try {
-            const response = await fetch('http://nimn.store/api/email/check', {
+            const response = await fetch('https://nimn.store/api/email/check', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -196,7 +196,7 @@ function AccountRecovery() {
         setPasswordSuccess("");
 
         try {
-            const response = await fetch('http://nimn.store/api/users/reset-password', {
+            const response = await fetch('https://nimn.store/api/users/reset-password', {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"

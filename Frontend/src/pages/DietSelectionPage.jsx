@@ -87,7 +87,7 @@ function DietSelectionPage() {
         if (!imageId) return foodImg;
         
         // 숫자 ID로 이미지 URL 생성
-        return `http://nimn.store/api/image/${imageId}`;
+        return `https://nimn.store/api/image/${imageId}`;
     };
 
     const transformApiData = (apiData) => {
@@ -156,7 +156,7 @@ function DietSelectionPage() {
             setError(null);
 
             try {
-                const response = await fetch('http://nimn.store/api/foods/plans/weekly', {
+                const response = await fetch('https://nimn.store/api/foods/plans/weekly', {
                     method: "GET",
                     headers: {
                         "accept": "application/json",

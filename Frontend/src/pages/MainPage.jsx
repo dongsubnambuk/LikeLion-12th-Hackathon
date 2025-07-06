@@ -107,7 +107,7 @@ const MainPage = ({ onNotificationCountChange }) => {
   // 사용자 정보 조회 API
   const getUserInfo = useCallback(async () => {
     try {
-      const response = await fetch('http://nimn.store/api/users', {
+      const response = await fetch('https://nimn.store/api/users', {
         method: "GET",
         credentials: 'include',
       });
@@ -139,7 +139,7 @@ const MainPage = ({ onNotificationCountChange }) => {
     if (!userEmail) return [];
     
     try {
-      const response = await fetch(`http://nimn.store/api/notification/all?userEmail=${userEmail}`);
+      const response = await fetch(`https://nimn.store/api/notification/all?userEmail=${userEmail}`);
 
       if (response.ok) {
         const data = await response.json();
@@ -214,9 +214,7 @@ const MainPage = ({ onNotificationCountChange }) => {
 
     connectionAttempts.current += 1;
 
-    // 프로토콜 자동 감지 및 URL 수정
-    const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
-    const wsUrl = `${protocol}//nimn.store/ws/notification?userEmail=${userEmail}`;
+    const wsUrl = `https://nimn.store/ws/notification?userEmail=${userEmail}`;
 
     const socket = new SockJS(wsUrl);
 
