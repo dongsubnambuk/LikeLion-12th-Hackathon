@@ -150,9 +150,6 @@
     font-weight: bold;
 }
 
-.survey_completed_text {
-    font-size: 11px;
-}
 
 .survey_empty {
     color: #9d9274;
@@ -176,14 +173,7 @@
     opacity: 0.5;
 }
 
-/* Survey 모달 CSS */
-body.modal-open {
-    overflow: hidden;
-}
 
-.survey_modal_overlay ~ * {
-    pointer-events: none;
-}
 
 .survey_modal_overlay {
     position: fixed;
@@ -204,7 +194,7 @@ body.modal-open {
     border-radius: 20px;
     width: 90%;
     max-width: 900px;
-    height: 90vh;
+    height: 80vh;
     display: flex;
     flex-direction: column;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -497,9 +487,10 @@ body.modal-open {
 /* 반응형 디자인 */
 @media (max-width: 768px) {
     .survey_link_container {
-        height: 100vh;
-        padding: 20px 15px;
+
+        padding: 20px 30px; /* 모바일에서도 좌우 여백 유지 */
         gap: 15px;
+        overflow-x: hidden; /* 모바일에서도 좌우 스크롤 방지 */
     }
 
     .survey_content {
@@ -534,31 +525,85 @@ body.modal-open {
     }
 
     .survey_empty {
-        padding: 40px 15px;
+        padding: 40px 25px; /* 모바일에서 좌우 패딩 조정 */
         font-size: 16px;
         border-radius: 20px;
         max-width: none;
+        box-sizing: border-box;
+    }
+
+    /* 모달 개선 */
+    .survey_modal_overlay {
+        padding: 15px;
+        /* 모바일에서 안전한 여백 */
+        padding-top: max(15px, env(safe-area-inset-top));
+        padding-bottom: max(15px, env(safe-area-inset-bottom));
+        padding-left: max(15px, env(safe-area-inset-left));
+        padding-right: max(15px, env(safe-area-inset-right));
     }
 
     .survey_modal_container {
-        width: 100%;
-        height: 95vh;
+        width: 90%;
+        max-width: 400px; /* 모바일에서 더 작은 모달 */
+        /* 모바일 브라우저 주소창 대응 */
+        height: calc(90vh - 30px);
+        height: calc(90dvh - 30px);
+        max-height: calc(90vh - 30px);
+        max-height: calc(90dvh - 30px);
         border-radius: 15px;
+    }
+
+    .survey_modal_header {
+        padding: 15px 20px; /* 헤더 패딩 줄임 */
+        border-radius: 15px 15px 0 0;
+    }
+
+    .survey_modal_title {
+        font-size: 17px; /* 제목 폰트 크기 약간 줄임 */
+    }
+
+    .survey_modal_date {
+        font-size: 12px;
+    }
+
+    .survey_modal_close {
+        width: 36px;
+        height: 36px;
+        font-size: 20px;
+    }
+
+    .survey_modal_scroll_container {
+        padding: 15px;
     }
 
     .survey_modal_section {
         flex-direction: column;
         gap: 20px;
         padding: 20px;
+        margin-bottom: 15px;
     }
 
     .survey_modal_left,
     .survey_modal_right {
         width: 100%;
+        flex: none;
     }
 
     .survey_modal_right {
         padding-top: 0;
+        gap: 20px;
+    }
+
+    .survey_modal_item_title {
+        font-size: 15px;
+    }
+
+    .survey_modal_food_image {
+        height: 200px;
+    }
+
+    .survey_modal_food_name {
+        font-size: 16px;
     }
 
     .star {
@@ -573,12 +618,30 @@ body.modal-open {
     .comment_textarea {
         min-height: 70px;
     }
+
+    .survey_modal_submit {
+        padding: 10px 15px; /* 제출 버튼 영역 패딩 줄임 */
+    }
+
+    .survey_modal_submit_button {
+        padding: 10px 20px; /* 버튼 패딩 줄임 */
+        font-size: 14px; /* 버튼 폰트 크기 줄임 */
+        width: 100%;
+        max-width: 180px; /* 버튼 최대 너비 줄임 */
+    }
+
+    .individual_submit_button {
+        padding: 10px 20px;
+        font-size: 13px;
+        min-width: 120px;
+    }
 }
 
 @media (max-width: 480px) {
     .survey_link_container {
-        height: 100vh;
-        padding: 15px 10px;
+
+        padding: 15px 20px; /* 작은 화면에서도 좌우 여백 유지 */
+        overflow-x: hidden;
     }
 
     .survey_content {
@@ -604,26 +667,79 @@ body.modal-open {
         font-size: 9px;
     }
 
+    .survey_empty {
+        padding: 30px 20px; /* 작은 화면에서 패딩 조정 */
+        font-size: 15px;
+        border-radius: 15px;
+    }
+
+    /* 모달 개선 */
+    .survey_modal_overlay {
+        padding: 10px;
+        /* 작은 화면에서 노치 및 브라우저 UI 대응 */
+        padding-top: max(10px, env(safe-area-inset-top));
+        padding-bottom: max(10px, env(safe-area-inset-bottom));
+        padding-left: max(10px, env(safe-area-inset-left));
+        padding-right: max(10px, env(safe-area-inset-right));
+    }
+
     .survey_modal_container {
-        height: 100vh;
-        border-radius: 0;
+        width: 95%;
+        max-width: 350px; /* 더 작은 모달 */
+        /* 전체 화면에서 안전 영역 고려 */
+        height: calc(95vh - 20px);
+        height: calc(95dvh - 20px);
+        max-height: calc(95vh - 20px);
+        max-height: calc(95dvh - 20px);
+        border-radius: 10px;
+        /* iOS 노치 대응 */
+        border-top-left-radius: max(10px, env(safe-area-inset-top, 10px));
+        border-top-right-radius: max(10px, env(safe-area-inset-top, 10px));
     }
 
     .survey_modal_header {
-        padding: 20px 25px;
+        padding: 15px 20px;
+        border-radius: 10px 10px 0 0;
     }
 
     .survey_modal_title {
-        font-size: 20px;
+        font-size: 16px;
+    }
+
+    .survey_modal_date {
+        font-size: 12px;
+    }
+
+    .survey_modal_close {
+        width: 32px;
+        height: 32px;
+        font-size: 18px;
+    }
+
+    .survey_modal_scroll_container {
+        padding: 10px;
     }
 
     .survey_modal_section {
         padding: 15px;
         gap: 15px;
+        margin-bottom: 10px;
+    }
+
+    .survey_modal_item_title {
+        font-size: 14px;
     }
 
     .survey_modal_food_image {
-        height: 200px;
+        height: 180px;
+    }
+
+    .survey_modal_food_name {
+        font-size: 15px;
+    }
+
+    .survey_modal_right {
+        gap: 15px;
     }
 
     .star {
@@ -638,64 +754,104 @@ body.modal-open {
     .comment_textarea {
         min-height: 60px;
         padding: 10px;
+        font-size: 13px;
     }
 
     .survey_modal_submit {
-        padding: 15px 20px;
+        padding: 12px 15px;
     }
 
     .survey_modal_submit_button {
-        padding: 12px 30px;
-        font-size: 16px;
+        padding: 12px 24px;
+        font-size: 15px;
+        width: 100%;
+        max-width: 200px;
     }
-}
-/* 개별 제출 버튼 스타일 */
-.individual_submit_section {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
 
-.individual_submit_button {
-    cursor: pointer;
-    padding: 12px 24px;
-    background: #9d9274;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 0.2s ease;
-    min-width: 140px;
-    text-align: center;
-}
-
-.individual_submit_button:hover:not(:disabled) {
-    background: #8a825f;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(157, 146, 116, 0.3);
-}
-
-.individual_submit_button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
-
-/* 반응형 디자인 추가 */
-@media (max-width: 768px) {
-    .individual_submit_button {
-        padding: 10px 20px;
-        font-size: 13px;
-        min-width: 120px;
-    }
-}
-
-@media (max-width: 480px) {
     .individual_submit_button {
         padding: 8px 16px;
         font-size: 12px;
         min-width: 100px;
     }
 }
+
+/* 아주 작은 화면 (320px 이하) 대응 */
+@media (max-width: 320px) {
+    .survey_modal_overlay {
+        /* 최소 화면에서도 안전 영역 고려 */
+        padding-top: max(2px, env(safe-area-inset-top));
+        padding-bottom: max(2px, env(safe-area-inset-bottom));
+        padding-left: max(2px, env(safe-area-inset-left));
+        padding-right: max(2px, env(safe-area-inset-right));
+    }
+
+    .survey_modal_container {
+        /* 320px 이하에서만 높이 가장 많이 줄임 */
+        height: calc(60vh - 4px);
+        height: calc(60dvh - 4px);
+        max-height: calc(60vh - 4px);
+        max-height: calc(60dvh - 4px);
+    }
+
+    .survey_modal_header {
+        padding: 12px 15px;
+        /* iOS 노치 영역 추가 패딩 */
+        padding-top: max(12px, calc(env(safe-area-inset-top) + 5px));
+    }
+
+    .survey_modal_title {
+        font-size: 15px;
+    }
+
+    .survey_modal_scroll_container {
+        padding: 8px;
+    }
+
+    .survey_modal_section {
+        padding: 12px;
+    }
+
+    .survey_modal_food_image {
+        height: 160px;
+    }
+
+    .star {
+        font-size: 22px;
+    }
+
+    .survey_modal_submit {
+        padding: 10px 12px;
+        /* iOS 하단 홈 인디케이터 대응 */
+        padding-bottom: max(10px, calc(env(safe-area-inset-bottom) + 5px));
+    }
+
+    .survey_modal_submit_button {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}
+
+
+    @media (max-width: 768px) {
+        .survey_modal_container {
+            /* 768px 이하에서만 높이 줄임 */
+            height: calc(70dvh - 30px);
+            max-height: calc(70dvh - 30px);
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .survey_modal_container {
+            /* 480px 이하에서만 높이 더 줄임 */
+
+            max-height: calc(65dvh - 20px);
+        }
+    }
+    
+    @media (max-width: 320px) {
+        .survey_modal_container {
+            /* 320px 이하에서만 높이 가장 많이 줄임 */
+            height: calc(60dvh - 4px);
+            max-height: calc(60dvh - 4px);
+        }
+    }
