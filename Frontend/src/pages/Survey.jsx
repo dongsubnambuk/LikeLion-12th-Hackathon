@@ -68,6 +68,30 @@ function Survey() {
         }
     }, [userEmail]);
 
+    // 알림 읽음 처리 API 추가
+    const markNotificationAsReadAPI = useCallback(async (notificationId) => {
+        try {
+            const response = await fetch(`https://nimn.store/api/notification/${notificationId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include'
+            });
+            
+            if (response.ok) {
+                console.log(`알림 ${notificationId} 읽음 처리 완료`);
+                return true;
+            } else {
+                console.error(`알림 ${notificationId} 읽음 처리 실패`);
+                return false;
+            }
+        } catch (error) {
+            console.error('알림 읽음 처리 중 오류:', error);
+            return false;
+        }
+    }, []);
+
     const getCurrentDate = () => {
         const today = new Date();
         const year = today.getFullYear();
@@ -164,7 +188,8 @@ function Survey() {
                                 notificationContent: parsed.content,
                                 isCompleted: false,
                                 reviews: reviewData.reviews,
-                                dailyReviewId: reviewData.id
+                                dailyReviewId: reviewData.id,
+                                notificationId: parsed.notificationId || null // 알림 ID 추가
                             };
                             
                             setSurveys(prev => {
@@ -234,7 +259,8 @@ function Survey() {
                                 notificationContent: notification.content,
                                 isCompleted: notification.check || false,
                                 reviews: reviewData.reviews,
-                                dailyReviewId: reviewData.id
+                                dailyReviewId: reviewData.id,
+                                notificationId: notification.notificationId || null // 알림 ID 추가
                             };
                         }
                     }
@@ -390,6 +416,12 @@ function Survey() {
             const success = await updateDailyReviewAPI(selectedSurvey.dailyReviewId, requestBody);
             
             if (success) {
+                // 리뷰 제출 성공 시 알림 읽음 처리
+                if (selectedSurvey.notificationId) {
+                    await markNotificationAsReadAPI(selectedSurvey.notificationId);
+                }
+                
+                // 설문 완료 상태 업데이트
                 setSurveys(prevSurveys => 
                     prevSurveys.map(survey => 
                         survey.id === selectedSurvey.id 
@@ -451,9 +483,13 @@ function Survey() {
                                     <span className="survey_meta_icon">📝</span>
                                     <span className="survey_meta_text">설문조사</span>
                                     <span className="survey_meta_text">{survey.reviewDate}</span>
-                                    <span className="survey_meta_text">ID: {survey.dailyReviewId}</span>
                                 </div>
                                 {!survey.isCompleted && <div className="survey_notification_dot"></div>}
+                                {survey.isCompleted && (
+                                    <div className="survey_completed_badge">
+                                        <span className="survey_completed_icon">✓</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))
