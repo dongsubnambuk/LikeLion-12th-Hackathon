@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import '../CSS/DietInfoPage.css';
-import cat from '../images/cat2.png';
+import logo from '../images/logo.png';
 
 function DietInfoPage({ style }) {
     const location = useLocation();
@@ -17,7 +17,7 @@ function DietInfoPage({ style }) {
                         className="dietInfoPage_image" 
                         alt={item.name}
                         onError={(e) => {
-                            e.target.src = cat;
+                            e.target.src = logo;
                         }}
                     />
                 </div>

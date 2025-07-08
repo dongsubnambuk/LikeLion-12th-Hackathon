@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LeftOutlined, RightOutlined, StarFilled } from '@ant-design/icons';
 import '../CSS/AllDietPage.css';
-import cat from '../images/cat2.png';
+import logo from'../images/logo.png';
 
 function AllDietPage() {
     const navigate = useNavigate();
@@ -58,8 +58,8 @@ function AllDietPage() {
 
     // 이미지 URL 생성 함수
     const getImageUrl = (imageId) => {
-        if (!imageId) return cat;
-        return `https://nimn.store/api/image/${imageId}`;
+        if (!imageId) return logo;
+        return `https://nimn.store${imageId}`;
     };
 
     // 영양 정보 포맷팅 함수
@@ -333,7 +333,7 @@ function AllDietPage() {
                                         alt={item.name} 
                                         className="allDietPage_meal_image_content"
                                         onError={(e) => {
-                                            e.target.src = cat;
+                                            e.target.src = logo;
                                         }}
                                     />
                                 </div>
