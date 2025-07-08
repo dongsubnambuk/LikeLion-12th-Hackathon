@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import '../CSS/Admin.css';
 import { useNavigate } from 'react-router-dom';
+import logo from '../images/logo.png';
 
 function Admin() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -121,7 +122,7 @@ function Admin() {
 
   // 이미지 다운로드 함수
   const fetchImage = async (imagePath) => {
-    if (!imagePath) return "";
+    if (!imagePath) return logo;
     
     try {
       const response = await fetch(`https://nimn.store${imagePath}`, {
@@ -211,7 +212,7 @@ function Admin() {
         fat: result.fat || "",
         sugar: result.sugar || "",
         sodium: result.sodium || "",
-        image: imageUrl
+        image: imageUrl || logo
       });
       
       setItemVisible(true);

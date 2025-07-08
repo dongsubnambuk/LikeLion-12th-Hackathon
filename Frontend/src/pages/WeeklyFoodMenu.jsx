@@ -5,7 +5,6 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
-import foodImg from '../images/food.png';
 import logoImg from '../images/logo.png'; 
 
 const WeeklyFoodMenu = () => {
@@ -196,7 +195,7 @@ const WeeklyFoodMenu = () => {
                           alt={meal.foodMenu.name}
                           className="weekly-food-menu-meal-image"
                           onError={(e) => {
-                            e.target.src = foodImg;
+                            e.target.src = logoImg;
                           }}
                         />
                       </div>
@@ -261,7 +260,7 @@ const WeeklyFoodMenu = () => {
                   alt={selectedMealDetail.name}
                   className="weekly-food-menu-modal-image"
                   onError={(e) => {
-                    e.target.src = foodImg;
+                    e.target.src = logoImg;
                   }}
                 />
                 <div className="weekly-food-menu-modal-price">

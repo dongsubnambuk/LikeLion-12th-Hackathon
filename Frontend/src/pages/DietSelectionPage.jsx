@@ -6,7 +6,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
-import foodImg from '../images/food.png';
+
+import logo from '../images/logo.png';
 
 function DietSelectionPage() {
     const navigate = useNavigate();
@@ -81,10 +82,10 @@ function DietSelectionPage() {
 
     // 이미지 URL 생성 함수
     const getImageUrl = (imagePath) => {
-        if (!imagePath) return foodImg;
+        if (!imagePath) return logo;
         
         const imageId = extractImageId(imagePath);
-        if (!imageId) return foodImg;
+        if (!imageId) return logo;
         
         // 숫자 ID로 이미지 URL 생성
         return `https://nimn.store/api/image/${imageId}`;
@@ -339,7 +340,7 @@ function DietSelectionPage() {
                                                     alt={mealSet.selectedFood.name}
                                                     className="diet-selection-page-meal-image"
                                                     onError={(e) => {
-                                                        e.target.src = foodImg;
+                                                        e.target.src = logo;
                                                     }}
                                                 />
                                             </div>
@@ -423,7 +424,7 @@ function DietSelectionPage() {
                                                                 alt={food.name}
                                                                 className="diet-selection-page-option-image"
                                                                 onError={(e) => {
-                                                                    e.target.src = foodImg;
+                                                                    e.target.src = logo;
                                                                 }}
                                                             />
                                                             <div className="diet-selection-page-option-info">
@@ -489,7 +490,7 @@ function DietSelectionPage() {
                                     alt={selectedMealDetail.name}
                                     className="diet-selection-page-modal-image"
                                     onError={(e) => {
-                                        e.target.src = foodImg;
+                                        e.target.src = logo;
                                     }}
                                 />
                                 <div className="diet-selection-page-modal-price">

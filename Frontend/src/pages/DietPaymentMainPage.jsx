@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import '../CSS/DietPaymentMainPage.css';
-import foodImg from '../images/food.png';
+import logo from '../images/logo.png';
 
 function DietPaymentMainPage() {
     const navigate = useNavigate();
@@ -43,7 +43,7 @@ function DietPaymentMainPage() {
                             ...foodMenu,
                             name: foodMenu.name || '식단명 없음',
                             price: foodMenu.price || '0원',
-                            image: foodMenu.image || foodImg,
+                            image: foodMenu.image || logo,
                             count: option.count || 1,
                             mealType: option.mealType || '식사',
                             main1: foodMenu.main1 || '',
@@ -282,7 +282,7 @@ function DietPaymentMainPage() {
                                                 alt={meal.name}
                                                 className="diet-payment-main-page-meal-image"
                                                 onError={(e) => {
-                                                    e.target.src = foodImg;
+                                                    e.target.src = logo;
                                                 }}
                                             />
                                         </div>
