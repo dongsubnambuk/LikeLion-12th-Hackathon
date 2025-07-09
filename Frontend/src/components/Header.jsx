@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import '../CSS/Header.css';
 import logo from '../images/logo.png';
 import { useNavigate, useLocation } from "react-router-dom";
+import { TbArrowBackUp } from "react-icons/tb";
 
 const Header = ({ notificationCount, surveyCount, userInfo }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -145,7 +146,7 @@ const Header = ({ notificationCount, surveyCount, userInfo }) => {
                             onClick={handleBackClick}
                             aria-label="뒤로가기"
                         >
-                            ← 뒤로
+                            <TbArrowBackUp size="20" />
                         </button>
                         <h1 className="header-page-title">{getPageTitle()}</h1>
                     </div>
