@@ -252,7 +252,7 @@ const WeeklyFoodMenu = () => {
                   }}
                 />
                 <div className="weekly-food-menu-modal-price">
-                  {selectedMealDetail.price}
+                  {selectedMealDetail.price}원
                 </div>
               </div>
               

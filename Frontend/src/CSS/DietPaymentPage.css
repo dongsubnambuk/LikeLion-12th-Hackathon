@@ -5,7 +5,7 @@
     min-height: 100vh;
     background: rgba(157, 146, 116, 0.1);
     padding: 20px;
-    padding-bottom: calc(100px + env(safe-area-inset-bottom));
+    background-color: white;
 }
 
 /* 헤더 섹션 */
@@ -342,16 +342,5 @@
     
     .diet-payment-page-notice-list li {
         font-size: 13px;
-    }
-}
-
-/* iPhone X 이상 기기의 홈 인디케이터 대응 */
-@supports (padding-bottom: env(safe-area-inset-bottom)) {
-    .diet-payment-page-container {
-        padding-bottom: calc(30px + env(safe-area-inset-bottom) + 8px);
-    }
-    
-    .diet-payment-page-button-section {
-        bottom: calc(80px + env(safe-area-inset-bottom) + 8px);
     }
 }

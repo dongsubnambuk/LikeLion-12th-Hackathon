@@ -26,11 +26,17 @@ function Login({ onLoginSuccess }) {
 
     const handleLogin = async (event) => {
         event.preventDefault();
-    
+
+        // 입력값 검증
+        if (!email.trim() || !password.trim()) {
+            alert('아이디와 비밀번호를 모두 입력해주세요.');
+            return;
+        }
+
         try {
             const response = await fetch('https://nimn.store/api/users/login', {
                 method: "POST",
-                credentials: "include", 
+                credentials: "include",
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -39,20 +45,20 @@ function Login({ onLoginSuccess }) {
                     password: password,
                 }),
             });
-    
+
             const result = await response.json();
-    
+
             if (response.status === 200) {
                 const token = Cookies.get('token');
                 const payload = JSON.parse(atob(token.split('.')[1]));
-                
+
 
                 try {
                     const userResponse = await fetch('https://nimn.store/api/users', {
                         method: 'GET',
                         credentials: 'include'
                     });
-                    
+
                     if (userResponse.ok) {
                         const userData = await userResponse.json();
 
@@ -63,7 +69,7 @@ function Login({ onLoginSuccess }) {
                 } catch (error) {
                     console.error('사용자 정보 조회 실패:', error);
                 }
-            
+
                 if (payload.role === "ROLE_ADMIN") {
                     navigate('/admin');
                 } else if (payload.role === "ROLE_USER") {
@@ -83,13 +89,31 @@ function Login({ onLoginSuccess }) {
             <div className="login-inner">
                 <img src={logo} className="logoImage-login" alt="logo" />
 
-                <input type="text" id="username" value={email} className="login-email" placeholder="아이디" onChange={changeEmail} />
-                <input type="password" id="password" value={password} className="login-password" placeholder="비밀번호" onChange={changePassword} />
+                <form onSubmit={handleLogin}>
+                    <input
+                        type="text"
+                        id="username"
+                        value={email}
+                        className="login-email"
+                        placeholder="아이디"
+                        onChange={changeEmail}
+                    />
+                    <input
+                        type="password"
+                        id="password"
+                        value={password}
+                        className="login-password"
+                        placeholder="비밀번호"
+                        onChange={changePassword}
+                    />
+
+                    <button type="submit" className="login-btn">로그인</button>
+                </form>
 
                 <button className="login-btn" onClick={handleLogin}>로그인</button>
                 <div className="login-options">
-                <span 
-                        className="account-recovery-link" 
+                    <span
+                        className="account-recovery-link"
                         onClick={handleAccountRecoveryClick}
                     >
                         계정 찾기
