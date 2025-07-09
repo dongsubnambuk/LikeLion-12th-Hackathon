@@ -92,15 +92,6 @@ const WeeklyFoodMenu = () => {
     return '';
   };
 
-  const getMealTypeIcon = (mealType) => {
-    switch(mealType) {
-      case '아침': return '🌅';
-      case '점심': return '☀️';
-      case '저녁': return '🌙';
-      default: return '🍽️';
-    }
-  };
-
   // 로딩 상태 처리
   if (isLoading) {
     return (
@@ -141,13 +132,13 @@ const WeeklyFoodMenu = () => {
     <div className="weekly-food-menu-container">
       {/* 헤더 섹션 */}
       <div className="weekly-food-menu-header">
-        <h1 className="weekly-food-menu-title">🍽️ 내 주간 식단</h1>
+        <h1 className="weekly-food-menu-title">내 주간 식단</h1>
         <p className="weekly-food-menu-period">{getDateRange()} 식단표</p>
       </div>
 
       {/* 주간 식단 상세 영역 */}
       <div className="weekly-food-menu-content">
-        <h2 className="weekly-food-menu-section-title">📋 주간 식단 상세</h2>
+        <h2 className="weekly-food-menu-section-title">주간 식단 상세</h2>
         
         <div className="weekly-food-menu-swiper-container">
           <Swiper
@@ -177,9 +168,6 @@ const WeeklyFoodMenu = () => {
                     <div key={mealIndex} className="weekly-food-menu-meal-card">
                       <div className="weekly-food-menu-meal-header">
                         <div className="weekly-food-menu-meal-type">
-                          <span className="weekly-food-menu-meal-icon">
-                            {getMealTypeIcon(meal.foodTime)}
-                          </span>
                           <span className="weekly-food-menu-meal-type-text">
                             {meal.foodTime}
                           </span>
@@ -226,7 +214,7 @@ const WeeklyFoodMenu = () => {
                             className="weekly-food-menu-detail-btn"
                             onClick={() => openMealDetailModal(meal.foodMenu)}
                           >
-                            📋 상세 정보 보기
+                            상세 정보 보기
                           </button>
                         </div>
                       </div>
@@ -270,7 +258,7 @@ const WeeklyFoodMenu = () => {
               
               <div className="weekly-food-menu-modal-info-section">
                 <div className="weekly-food-menu-modal-section">
-                  <h3 className="weekly-food-menu-modal-section-title">🍽️ 구성 메뉴</h3>
+                  <h3 className="weekly-food-menu-modal-section-title">구성 메뉴</h3>
                   <div className="weekly-food-menu-modal-menu-grid">
                     <div className="weekly-food-menu-modal-menu-item">
                       <span className="weekly-food-menu-modal-menu-label">메인 1</span>
@@ -296,7 +284,7 @@ const WeeklyFoodMenu = () => {
                 </div>
                 
                 <div className="weekly-food-menu-modal-section">
-                  <h3 className="weekly-food-menu-modal-section-title">📊 영양 정보</h3>
+                  <h3 className="weekly-food-menu-modal-section-title">영양 정보</h3>
                   <div className="weekly-food-menu-modal-nutrition-grid">
                     <div className="weekly-food-menu-modal-nutrition-item">
                       <span className="weekly-food-menu-modal-nutrition-label">칼로리</span>
@@ -321,16 +309,6 @@ const WeeklyFoodMenu = () => {
                     <div className="weekly-food-menu-modal-nutrition-item">
                       <span className="weekly-food-menu-modal-nutrition-label">나트륨</span>
                       <span className="weekly-food-menu-modal-nutrition-value">{selectedMealDetail.sodium}</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="weekly-food-menu-modal-section">
-                  <h3 className="weekly-food-menu-modal-section-title">🏷️ 기본 정보</h3>
-                  <div className="weekly-food-menu-modal-basic-info">
-                    <div className="weekly-food-menu-modal-basic-item">
-                      <span className="weekly-food-menu-modal-basic-label">식단 ID</span>
-                      <span className="weekly-food-menu-modal-basic-value">{selectedMealDetail.id}</span>
                     </div>
                   </div>
                 </div>

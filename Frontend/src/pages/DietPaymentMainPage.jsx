@@ -131,12 +131,6 @@ function DietPaymentMainPage() {
             koreanMealType = '저녁';
         }
 
-        switch(koreanMealType) {
-            case '아침': return '🌅';
-            case '점심': return '☀️';
-            case '저녁': return '🌙';
-            default: return '🍽️';
-        }
     };
 
     const getMealTypeText = (mealType) => {
@@ -199,7 +193,6 @@ function DietPaymentMainPage() {
         return (
             <div className="diet-payment-main-page-empty-container">
                 <div className="diet-payment-main-page-empty-content">
-                    <div className="diet-payment-main-page-empty-icon">📋</div>
                     <h2 className="diet-payment-main-page-empty-title">주문할 식단이 없습니다</h2>
                     <p className="diet-payment-main-page-empty-message">식단을 선택한 후 다시 시도해주세요.</p>
                     <button 
@@ -217,7 +210,7 @@ function DietPaymentMainPage() {
         <div className="diet-payment-main-page-container">
             {/* 헤더 섹션 */}
             <div className="diet-payment-main-page-header">
-                <h1 className="diet-payment-main-page-title">🛒 주문 확인</h1>
+                <h1 className="diet-payment-main-page-title">주문 확인</h1>
                 <p className="diet-payment-main-page-period">{getDateRange()} 식단 주문서</p>
             </div>
 
@@ -239,7 +232,7 @@ function DietPaymentMainPage() {
 
             {/* 주문 상세 내역 */}
             <div className="diet-payment-main-page-content">
-                <h2 className="diet-payment-main-page-section-title">📋 주문 상세 내역</h2>
+                <h2 className="diet-payment-main-page-section-title">주문 상세 내역</h2>
                 
                 <div className="diet-payment-main-page-meal-list">
                     {mealData.map((day, dayIndex) => (
@@ -318,7 +311,7 @@ function DietPaymentMainPage() {
                     className="diet-payment-main-page-payment-btn" 
                     onClick={handlePaymentConfirmClick}
                 >
-                    💳 결제하기
+                    결제하기
                 </button>
             </div>
         </div>

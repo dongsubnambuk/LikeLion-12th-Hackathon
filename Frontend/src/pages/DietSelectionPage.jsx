@@ -6,6 +6,11 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
+import { IoCloseCircleOutline, IoInformationCircle } from "react-icons/io5";
+import { FaMoneyCheckDollar } from "react-icons/fa6";
+import { RiSortNumberAsc } from "react-icons/ri";
+import { TbExchange } from "react-icons/tb";
+import { FaExchangeAlt } from "react-icons/fa";
 
 import logo from '../images/logo.png';
 
@@ -262,28 +267,28 @@ function DietSelectionPage() {
             {/* 안내 문구 섹션 */}
             <div className="diet-selection-page-guide-section">
                 <div className="diet-selection-page-guide-header">
-                    <h1 className="diet-selection-page-guide-title">🍽️ 주간 식단 선택</h1>
+                    <h1 className="diet-selection-page-guide-title">주간 식단 선택</h1>
                     <p className="diet-selection-page-guide-period">{getDateRange()}까지의 식단을 선택해주세요</p>
                 </div>
 
                 <div className="diet-selection-page-guide-content">
                     <div className="diet-selection-page-guide-item">
-                        <span className="diet-selection-page-guide-icon">👈👉</span>
+                        <span className="diet-selection-page-guide-icon"><FaExchangeAlt size={20}/></span>
                         <span className="diet-selection-page-guide-text">좌우로 슬라이드하여 각 날짜별 식단을 확인할 수 있습니다</span>
                     </div>
 
                     <div className="diet-selection-page-guide-item">
-                        <span className="diet-selection-page-guide-icon">🔄</span>
+                        <span className="diet-selection-page-guide-icon"><TbExchange size={20}/></span>
                         <span className="diet-selection-page-guide-text">'다른 메뉴 선택' 버튼으로 원하는 메뉴로 변경 가능합니다</span>
                     </div>
 
                     <div className="diet-selection-page-guide-item">
-                        <span className="diet-selection-page-guide-icon">🔢</span>
+                        <span className="diet-selection-page-guide-icon"><RiSortNumberAsc size={20}/></span>
                         <span className="diet-selection-page-guide-text">+/- 버튼으로 각 식단의 수량을 조절해주세요</span>
                     </div>
 
                     <div className="diet-selection-page-guide-item">
-                        <span className="diet-selection-page-guide-icon">💳</span>
+                        <span className="diet-selection-page-guide-icon"><FaMoneyCheckDollar size={20}/></span>
                         <span className="diet-selection-page-guide-text">선택 완료 후 다음 페이지에서 최종 확인 및 결제를 진행합니다</span>
                     </div>
                 </div>
@@ -372,7 +377,7 @@ function DietSelectionPage() {
                                                         className="diet-selection-page-detail-btn"
                                                         onClick={() => openMealDetailModal(mealSet.selectedFood)}
                                                     >
-                                                        📋 상세 정보 보기
+                                                        상세 정보 보기
                                                     </button>
                                                 </div>
                                             </div>
@@ -442,7 +447,7 @@ function DietSelectionPage() {
                                                                     openMealDetailModal(food);
                                                                 }}
                                                             >
-                                                                ℹ️
+                                                                <IoInformationCircle size={30} />
                                                             </button>
                                                         </div>
                                                     ))}
@@ -479,7 +484,7 @@ function DietSelectionPage() {
                                 className="diet-selection-page-modal-close-btn"
                                 onClick={closeMealDetailModal}
                             >
-                                ✕
+                                <IoCloseCircleOutline size={30}/>
                             </button>
                         </div>
                         
@@ -500,7 +505,7 @@ function DietSelectionPage() {
                             
                             <div className="diet-selection-page-modal-info-section">
                                 <div className="diet-selection-page-modal-section">
-                                    <h3 className="diet-selection-page-modal-section-title">🍽️ 구성 메뉴</h3>
+                                    <h3 className="diet-selection-page-modal-section-title">구성 메뉴</h3>
                                     <div className="diet-selection-page-modal-menu-grid">
                                         <div className="diet-selection-page-modal-menu-item">
                                             <span className="diet-selection-page-modal-menu-label">메인 1</span>
@@ -526,7 +531,7 @@ function DietSelectionPage() {
                                 </div>
                                 
                                 <div className="diet-selection-page-modal-section">
-                                    <h3 className="diet-selection-page-modal-section-title">📊 영양 정보</h3>
+                                    <h3 className="diet-selection-page-modal-section-title">영양 정보</h3>
                                     <div className="diet-selection-page-modal-nutrition-grid">
                                         <div className="diet-selection-page-modal-nutrition-item">
                                             <span className="diet-selection-page-modal-nutrition-label">칼로리</span>
@@ -551,16 +556,6 @@ function DietSelectionPage() {
                                         <div className="diet-selection-page-modal-nutrition-item">
                                             <span className="diet-selection-page-modal-nutrition-label">나트륨</span>
                                             <span className="diet-selection-page-modal-nutrition-value">{selectedMealDetail.sodium}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div className="diet-selection-page-modal-section">
-                                    <h3 className="diet-selection-page-modal-section-title">🏷️ 기본 정보</h3>
-                                    <div className="diet-selection-page-modal-basic-info">
-                                        <div className="diet-selection-page-modal-basic-item">
-                                            <span className="diet-selection-page-modal-basic-label">식단 ID</span>
-                                            <span className="diet-selection-page-modal-basic-value">{selectedMealDetail.id}</span>
                                         </div>
                                     </div>
                                 </div>

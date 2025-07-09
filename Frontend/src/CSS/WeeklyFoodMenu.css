@@ -182,7 +182,6 @@
 /* 식단 이미지 */
 .weekly-food-menu-meal-image-container {
     width: 100%;
-    height: 180px;
     margin-bottom: 12px;
     border-radius: 12px;
     overflow: hidden;
@@ -361,7 +360,7 @@
 .weekly-food-menu-modal-image {
     width: 100%;
     max-width: 300px;
-    height: 200px;
+    max-height: 300px;
     object-fit: cover;
     border-radius: 16px;
     box-shadow: 0 8px 25px rgba(157, 146, 116, 0.15);
@@ -514,10 +513,6 @@
     .weekly-food-menu-modal-nutrition-grid {
         grid-template-columns: 1fr;
     }
-    
-    .weekly-food-menu-modal-image {
-        height: 180px;
-    }
 }
 
 @media (max-width: 480px) {
@@ -541,10 +536,6 @@
         padding: 12px;
     }
     
-    .weekly-food-menu-meal-image-container {
-        height: 180px;
-    }
-    
     .weekly-food-menu-modal-overlay {
         padding: 10px 20px;
         padding-bottom: calc(75px + env(safe-area-inset-bottom));
@@ -565,10 +556,7 @@
     .weekly-food-menu-modal-title {
         font-size: 18px;
     }
-    
-    .weekly-food-menu-modal-image {
-        height: 180px;
-    }
+
 }
 
 /* Swiper 네비게이션 커스터마이징 */

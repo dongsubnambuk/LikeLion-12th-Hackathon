@@ -84,7 +84,7 @@ const Header = ({ notificationCount, surveyCount, userInfo }) => {
             case '/orderlist':
                 return '주문 내역';
             case '/weeklyfoodmenu':
-                return '1주 전체 식단';
+                return '내 식단';
             case '/survey':
                 return '설문조사';
             case '/notification':
