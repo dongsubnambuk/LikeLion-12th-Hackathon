@@ -237,14 +237,14 @@ function DietPaymentPage() {
         <div className="diet-payment-page-container">
             {/* 헤더 섹션 */}
             <div className="diet-payment-page-header">
-                <h1 className="diet-payment-page-title">💳 결제하기</h1>
+                <h1 className="diet-payment-page-title">결제하기</h1>
                 <p className="diet-payment-page-subtitle">주문 내역을 확인하고 결제를 진행해주세요</p>
             </div>
 
             {/* 결제 정보 카드 */}
             <div className="diet-payment-page-payment-card">
                 <div className="diet-payment-page-order-summary">
-                    <h2 className="diet-payment-page-section-title">📋 주문 요약</h2>
+                    <h2 className="diet-payment-page-section-title">주문 요약</h2>
                     
                     <div className="diet-payment-page-summary-grid">
                         <div className="diet-payment-page-summary-item">
@@ -281,7 +281,7 @@ function DietPaymentPage() {
                 </div>
 
                 <div className="diet-payment-page-notice-section">
-                    <h3 className="diet-payment-page-notice-title">⚠️ 결제 안내</h3>
+                    <h3 className="diet-payment-page-notice-title">결제 안내</h3>
                     <ul className="diet-payment-page-notice-list">
                         <li>결제 완료 후 주문 취소는 고객센터를 통해 가능합니다.</li>
                         <li>결제 오류 발생 시 고객센터로 문의해주세요.</li>
@@ -301,7 +301,7 @@ function DietPaymentPage() {
                     className="diet-payment-page-pay-btn"
                     onClick={requestPay}
                 >
-                    💳 {price.toLocaleString()}원 결제하기
+                    {price.toLocaleString()}원 결제하기
                 </button>
             </div>
         </div>

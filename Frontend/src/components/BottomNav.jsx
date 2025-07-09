@@ -54,13 +54,13 @@ const BottomNav = () => {
           if (userData) {
             navigate(path);
           } else {
-            navigate('/login');
+            navigate(path);
           }
         } else {
-          navigate('/login');
+          navigate(path);
         }
       } catch (error) {
-        navigate('/login');
+        navigate(path);
       }
     } else {
       navigate(path);
