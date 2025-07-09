@@ -94,12 +94,6 @@
     cursor: not-allowed;
 }
 
-.notification_item.notification_read:hover {
-    background: inherit; 
-    transform: none;
-    box-shadow: none;
-    border-color: inherit;
-}
 
 .notification_item:hover {
     background: #fafafa;
