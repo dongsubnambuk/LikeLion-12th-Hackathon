@@ -454,11 +454,6 @@ function DietSelectionPage() {
                                                 </div>
                                             </div>
                                         </div>
-
-                                        {/* 식사 구분선 */}
-                                        {!isLastMeal && (
-                                            <div className="diet-selection-page-meal-divider"></div>
-                                        )}
                                     </div>
                                 );
                             })}

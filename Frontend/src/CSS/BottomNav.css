@@ -97,10 +97,3 @@
     font-size: 9px;
   }
 }
-
-/* iPhone X 이상 기기의 홈 인디케이터 대응 */
-@supports (padding-bottom: env(safe-area-inset-bottom)) {
-  .bottom-nav-bottom-nav {
-    padding-bottom: calc(env(safe-area-inset-bottom) + 8px);
-  }
-}

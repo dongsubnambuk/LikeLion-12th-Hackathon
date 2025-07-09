@@ -89,7 +89,7 @@ function Login({ onLoginSuccess }) {
             <div className="login-inner">
                 <img src={logo} className="logoImage-login" alt="logo" />
 
-                <form onSubmit={handleLogin}>
+                <form onSubmit={handleLogin} className="login-input-form">
                     <input
                         type="text"
                         id="username"
@@ -110,7 +110,6 @@ function Login({ onLoginSuccess }) {
                     <button type="submit" className="login-btn">로그인</button>
                 </form>
 
-                <button className="login-btn" onClick={handleLogin}>로그인</button>
                 <div className="login-options">
                     <span
                         className="account-recovery-link"
