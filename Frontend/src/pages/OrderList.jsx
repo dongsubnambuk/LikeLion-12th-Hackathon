@@ -131,7 +131,7 @@ function OrderList() {
                     <div className="orderList_card" onClick={() => handleDetailClick(payment.weeklyDietId)}>
                         <div className="orderList_header">
                             <div className="orderList_orderNumber">
-                                주문 번호: PAY_{payment.id}
+                                주문 번호: {payment.id}
                             </div>
                         </div>
                         
