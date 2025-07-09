@@ -324,9 +324,6 @@ function AllDietPage() {
                     {getCurrentPageItems().map((item) => (
                         <div key={item.id} className="allDietPage_meal_wrapper">
                             <div className="allDietPage_meal_card" onClick={() => handleItemClick(item)}>
-                                <div className="allDietPage_meal_time">
-                                    <span className="allDietPage_time_label">{item.category}</span>
-                                </div>
                                 <div className="allDietPage_meal_image">
                                     <img 
                                         src={item.image} 
@@ -343,7 +340,7 @@ function AllDietPage() {
                                     
                                     <div className="allDietPage_nutrition_info">
                                         {item.calories && <span className="allDietPage_nutrition_info1">{item.calories}</span>}
-                                        {item.protein && <span className="allDietPage_nutrition_info2">{item.protein}</span>}
+                                        {item.protein && <span className="allDietPage_nutrition_info2">단백질 {item.protein}</span>}
                                     </div>
                                     
                                     <div className="allDietPage_price_info">

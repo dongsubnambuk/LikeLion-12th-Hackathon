@@ -3,6 +3,8 @@ import '../CSS/Header.css';
 import logo from '../images/logo.png';
 import { useNavigate, useLocation } from "react-router-dom";
 import { TbArrowBackUp } from "react-icons/tb";
+import { IoNotifications } from "react-icons/io5";
+import { FaPenToSquare } from "react-icons/fa6";
 
 const Header = ({ notificationCount, surveyCount, userInfo }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -183,7 +185,7 @@ const Header = ({ notificationCount, surveyCount, userInfo }) => {
                                         onClick={() => handleIconClick('/notification')}
                                         aria-label="알림"
                                     >
-                                        알림
+                                        <IoNotifications size={20}/>
                                         {notificationCount > 0 && (
                                             <span className="header-notification-badge">
                                                 {notificationCount}
@@ -195,7 +197,7 @@ const Header = ({ notificationCount, surveyCount, userInfo }) => {
                                         onClick={() => handleIconClick('/survey')}
                                         aria-label="설문조사"
                                     >
-                                        설문
+                                        <FaPenToSquare size={18}/>
                                         {surveyCount > 0 && (
                                             <span className="header-notification-badge">
                                                 {surveyCount}
