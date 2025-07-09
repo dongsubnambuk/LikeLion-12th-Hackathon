@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import '../CSS/Survey.css'; 
-import testfood from '../images/mainCardImg1.jpeg';
+import logo from '../images/logo.png';
 
 function Survey() {
     const navigate = useNavigate();
@@ -14,6 +14,7 @@ function Survey() {
     const [hoveredStars, setHoveredStars] = useState({});
     const [surveys, setSurveys] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isDataLoaded, setIsDataLoaded] = useState(false); // 데이터 로딩 완료 여부
     const stompClientRef = useRef(null);
 
     // 사용자 정보 조회 API
@@ -51,7 +52,6 @@ function Survey() {
     // 모든 알림 조회 API (REVIEW 타입만)
     const getAllNotificationsAPI = useCallback(async () => {
         try {
-            setIsLoading(true);
             const response = await fetch(`https://nimn.store/api/notification/all?userEmail=${userEmail}`);
             
             if (response.ok) {
@@ -63,8 +63,6 @@ function Survey() {
             }
         } catch (error) {
             return [];
-        } finally {
-            setIsLoading(false);
         }
     }, [userEmail]);
 
@@ -100,10 +98,10 @@ function Survey() {
         return `${year}-${month}-${day}`;
     };
 
-    // 일일 리뷰 조회 API
+    // 일일 리뷰 조회 API - 날짜 매개변수를 받아서 해당 날짜의 데이터를 조회
     const getDailyReviewAPI = useCallback(async (userEmail, date) => {
         try {
-            const response = await fetch(`https://nimn.store/api/review/daily?userEmail=${userEmail}&date=${getCurrentDate()}`, {
+            const response = await fetch(`https://nimn.store/api/review/daily?userEmail=${userEmail}&date=${date}`, {
                 method: "GET",
                 credentials: 'include',
             });
@@ -177,19 +175,23 @@ function Survey() {
                     }
                     
                     if (parsed.type === 'REVIEW' && parsed.dailyReviewId) {
-                        const today = new Date().toISOString().split('T')[0];
-                        const reviewData = await getDailyReviewAPI(userEmail, today);
+                        // 알림의 전송 시간을 기준으로 날짜 결정
+                        const reviewDate = parsed.sendTime ? 
+                            parsed.sendTime.split('T')[0] : 
+                            getCurrentDate();
+                        
+                        const reviewData = await getDailyReviewAPI(userEmail, reviewDate);
                         
                         if (reviewData && reviewData.reviews) {
                             const surveyData = {
                                 id: `${reviewData.id}_${Date.now()}`,
                                 userEmail: userEmail,
-                                reviewDate: reviewData.reviewDate || today,
+                                reviewDate: reviewData.reviewDate || reviewDate,
                                 notificationContent: parsed.content,
                                 isCompleted: false,
                                 reviews: reviewData.reviews,
                                 dailyReviewId: reviewData.id,
-                                notificationId: parsed.notificationId || null // 알림 ID 추가
+                                notificationId: parsed.notificationId || null
                             };
                             
                             setSurveys(prev => {
@@ -239,39 +241,49 @@ function Survey() {
 
     // 기존 알림 데이터 로드
     const loadExistingReviewNotifications = useCallback(async () => {
-        const notifications = await getAllNotificationsAPI();
-        if (notifications && notifications.length > 0) {
-            
-            const formattedSurveys = await Promise.all(
-                notifications.map(async (notification) => {
-                    if (notification.dailyReviewId) {
-                        const reviewDate = notification.sendTime ? 
-                            notification.sendTime.split('T')[0] : 
-                            new Date().toISOString().split('T')[0];
+        try {
+            const notifications = await getAllNotificationsAPI();
+            if (notifications && notifications.length > 0) {
+                
+                const formattedSurveys = await Promise.all(
+                    notifications.map(async (notification) => {
+                        if (notification.dailyReviewId) {
+                            // 알림의 전송 시간을 기준으로 날짜 결정 (알림 시간이 없으면 현재 날짜)
+                            const reviewDate = notification.sendTime ? 
+                                notification.sendTime.split('T')[0] : 
+                                getCurrentDate();
+                                
+                            const reviewData = await getDailyReviewAPI(userEmail, reviewDate);
                             
-                        const reviewData = await getDailyReviewAPI(userEmail, reviewDate);
-                        
-                        if (reviewData && reviewData.reviews) {
-                            return {
-                                id: `${reviewData.id}_${notification.notificationId || Date.now()}`,
-                                userEmail: userEmail,
-                                reviewDate: reviewData.reviewDate || reviewDate,
-                                notificationContent: notification.content,
-                                isCompleted: notification.check || false,
-                                reviews: reviewData.reviews,
-                                dailyReviewId: reviewData.id,
-                                notificationId: notification.notificationId || null // 알림 ID 추가
-                            };
+                            if (reviewData && reviewData.reviews) {
+                                return {
+                                    id: `${reviewData.id}_${notification.notificationId || Date.now()}`,
+                                    userEmail: userEmail,
+                                    reviewDate: reviewData.reviewDate || reviewDate,
+                                    notificationContent: notification.content,
+                                    isCompleted: notification.check || false,
+                                    reviews: reviewData.reviews,
+                                    dailyReviewId: reviewData.id,
+                                    notificationId: notification.notificationId || null
+                                };
+                            }
                         }
-                    }
-                    return null;
-                })
-            );
-            
-            const validSurveys = formattedSurveys.filter(survey => survey !== null);
-            const sortedSurveys = validSurveys.sort((a, b) => new Date(b.reviewDate) - new Date(a.reviewDate));
-            
-            setSurveys(sortedSurveys);
+                        return null;
+                    })
+                );
+                
+                const validSurveys = formattedSurveys.filter(survey => survey !== null);
+                const sortedSurveys = validSurveys.sort((a, b) => new Date(b.reviewDate) - new Date(a.reviewDate));
+                
+                setSurveys(sortedSurveys);
+            } else {
+                setSurveys([]); // 빈 배열로 설정
+            }
+        } catch (error) {
+            console.error('기존 알림 로드 중 오류:', error);
+            setSurveys([]); // 오류 시에도 빈 배열로 설정
+        } finally {
+            setIsDataLoaded(true); // 데이터 로딩 완료
         }
     }, [userEmail, getAllNotificationsAPI, getDailyReviewAPI]);
 
@@ -462,42 +474,45 @@ function Survey() {
     return (
         <>
             <div className="survey_link_container">
-                {isLoading && (
-                    <div style={{ padding: '10px', textAlign: 'center', color: '#666' }}>
-                        설문 목록을 불러오는 중...
+                {/* 데이터 로딩이 완료되지 않은 경우 아무것도 렌더링하지 않음 */}
+                {!isDataLoaded && null}
+
+                {/* 데이터 로딩 완료 후 결과에 따라 렌더링 */}
+                {isDataLoaded && surveys.length === 0 && (
+                    <div className="survey_empty">
+                        식단리뷰가 없습니다.
                     </div>
                 )}
 
-                {surveys.length > 0 ? (
-                    surveys.map((survey) => (
-                        <div 
-                            className={`survey_link ${survey.isCompleted ? 'survey_completed' : ''}`}
-                            key={survey.id} 
-                            onClick={() => survey.isCompleted ? null : openSurveyModal(survey)}
-                        >
-                            <div className="survey_content">
-                                <div className="survey_title">
-                                    {survey.notificationContent}
-                                </div>
-                                <div className="survey_meta">
-                                    <span className="survey_meta_icon">📝</span>
-                                    <span className="survey_meta_text">설문조사</span>
-                                    <span className="survey_meta_text">{survey.reviewDate}</span>
-                                </div>
-                                {!survey.isCompleted && <div className="survey_notification_dot"></div>}
-                                {survey.isCompleted && (
-                                    <div className="survey_completed_badge">
-                                        <span className="survey_completed_icon">✓</span>
-                                    </div>
-                                )}
+                {isDataLoaded && surveys.length > 0 && surveys.map((survey) => (
+                    <div 
+                        className={`survey_link ${survey.isCompleted ? 'survey_completed' : ''}`}
+                        key={survey.id} 
+                        onClick={() => {
+                            if (survey.isCompleted) {
+                                alert('이미 완료된 설문입니다.');
+                            } else {
+                                openSurveyModal(survey);
+                            }
+                        }}
+                    >
+                        <div className="survey_content">
+                            <div className="survey_title">
+                                {survey.notificationContent}
                             </div>
+                            <div className="survey_meta">
+                                <span className="survey_meta_text">식단 리뷰</span>
+                                <span className="survey_meta_text">{survey.reviewDate}</span>
+                            </div>
+                            {!survey.isCompleted && <div className="survey_notification_dot"></div>}
+                            {survey.isCompleted && (
+                                <div className="survey_completed_badge">
+                                    <span className="survey_completed_icon">✓</span>
+                                </div>
+                            )}
                         </div>
-                    ))
-                ) : (
-                    <div className="survey_empty">
-                        설문조사가 없습니다.
                     </div>
-                )}
+                ))}
             </div>
 
             {selectedSurvey && (
@@ -507,7 +522,7 @@ function Survey() {
                             <div className="survey_modal_header_content">
                                 <h2 className="survey_modal_title">식단 만족도 조사</h2>
                                 <p className="survey_modal_date">
-                                    {selectedSurvey.reviewDate} (ID: {selectedSurvey.dailyReviewId})
+                                    {selectedSurvey.reviewDate}
                                 </p>
                             </div>
                             <button className="survey_modal_close" onClick={closeSurveyModal}>✕</button>
@@ -524,11 +539,11 @@ function Survey() {
                                                 </h3>
                                                 <div className="survey_modal_food_image">
                                                     <img 
-                                                        src={review.foodImage ? `https://nimn.store${review.foodImage}` : testfood} 
+                                                        src={review.foodImage ? `https://nimn.store${review.foodImage}` : logo} 
                                                         className="survey_modal_logo_image" 
                                                         alt="food" 
                                                         onError={(e) => {
-                                                            e.target.src = testfood;
+                                                            e.target.src = logo;
                                                         }}
                                                     />
                                                 </div>
@@ -562,7 +577,7 @@ function Survey() {
                                     className="survey_modal_submit_button"
                                     disabled={isLoading}
                                 >
-                                    {isLoading ? '제출 중...' : '📝 설문 제출하기'}
+                                    {isLoading ? '제출 중...' : ' 설문 제출하기'}
                                 </button>
                             </div>
                         </form>

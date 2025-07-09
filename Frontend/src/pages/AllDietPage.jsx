@@ -253,6 +253,8 @@ function AllDietPage() {
                             // 표시용 영양정보
                             calories: nutrition.calories,
                             protein: nutrition.protein,
+                            fat: nutrition.fat,
+                            carbs: nutrition.carbs,
                             
                             // 모든 영양성분 정보
                             nutritionInfo: {
@@ -339,8 +341,14 @@ function AllDietPage() {
                                     <p className="allDietPage_meal_info_description">{item.description}</p>
                                     
                                     <div className="allDietPage_nutrition_info">
-                                        {item.calories && <span className="allDietPage_nutrition_info1">{item.calories}</span>}
-                                        {item.protein && <span className="allDietPage_nutrition_info2">단백질 {item.protein}</span>}
+                                        <div className="allDietPage_nutrition_row">
+                                            {item.calories && <span className="allDietPage_nutrition_info1">{item.calories}</span>}
+                                            {item.protein && <span className="allDietPage_nutrition_info2">단백질 {item.protein}</span>}
+                                        </div>
+                                        <div className="allDietPage_nutrition_row">
+                                            {item.fat && <span className="allDietPage_nutrition_info3">지방 {item.fat}</span>}
+                                            {item.carbs && <span className="allDietPage_nutrition_info4">탄수화물 {item.carbs}</span>}
+                                        </div>
                                     </div>
                                     
                                     <div className="allDietPage_price_info">
@@ -370,13 +378,13 @@ function AllDietPage() {
                                             </div>
                                         </div>
                                         <div className="allDietPage_review_view_text">
-                                            <span className="allDietPage_review_view_icon">👀</span>
+                                            <span className="allDietPage_review_view_icon"></span>
                                             <span className="allDietPage_review_view_label">리뷰 보기</span>
                                         </div>
                                     </div>
                                 ) : (
                                     <div className="allDietPage_no_review_external">
-                                        <div className="allDietPage_no_review_icon">💭</div>
+                                        <div className="allDietPage_no_review_icon"></div>
                                         <div className="allDietPage_no_review_content">
                                             <span className="allDietPage_no_review_title">아직 리뷰가 없어요</span>
                                         </div>
