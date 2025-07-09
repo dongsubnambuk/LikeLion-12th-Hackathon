@@ -10,7 +10,8 @@ function Notification() {
     const [unreadCount, setUnreadCount] = useState(0);
     const [isConnected, setIsConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [userEmail, setUserEmail] = useState('test1@example.com'); // 기본값
+    const [isDataLoaded, setIsDataLoaded] = useState(false); // 데이터 로딩 완료 여부
+    const [userEmail, setUserEmail] = useState('user5@example.com'); // 기본값
     const stompClientRef = useRef(null);
 
     // 사용자 정보 조회 API
@@ -53,7 +54,6 @@ function Notification() {
     // 모든 알림 조회 API
     const getAllNotificationsAPI = useCallback(async () => {
         try {
-            setIsLoading(true);
             const response = await fetch(`https://nimn.store/api/notification/all?userEmail=${userEmail}`);
             
             if (response.ok) {
@@ -64,8 +64,6 @@ function Notification() {
             }
         } catch (error) {
             return [];
-        } finally {
-            setIsLoading(false);
         }
     }, [userEmail]);
 
@@ -226,113 +224,129 @@ function Notification() {
     // 알림 데이터 로드 useEffect (userEmail이 변경될 때마다)
     useEffect(() => {
         const loadInitialNotifications = async () => {
-            const notifications = await getAllNotificationsAPI();
-            if (notifications && notifications.length > 0) {
-                // PAYMENT와 DIET 타입만 필터링
-                const filteredNotifications = notifications.filter(
-                    notification => notification.type === 'PAYMENT' || notification.type === 'DIET'
-                );
-                
-                // API 응답 데이터를 컴포넌트 상태에 맞게 변환 및 최신순 정렬
-                const formattedNotifications = filteredNotifications
-                    .map(notification => ({
-                        notificationId: notification.notificationId,
-                        content: notification.content,
-                        type: notification.type || "TEXT",
-                        sendTime: notification.sendTime,
-                        check: notification.check || false
-                    }))
-                    .sort((a, b) => new Date(b.sendTime) - new Date(a.sendTime)); // 최신순 정렬
-                
-                setMessages(formattedNotifications);
-                
-                // 읽지 않은 알림 개수 계산
-                const unreadCount = formattedNotifications.filter(notification => !notification.check).length;
-                setUnreadCount(unreadCount);
+            try {
+                const notifications = await getAllNotificationsAPI();
+                if (notifications && notifications.length > 0) {
+                    // PAYMENT와 DIET 타입만 필터링
+                    const filteredNotifications = notifications.filter(
+                        notification => notification.type === 'PAYMENT' || notification.type === 'DIET'
+                    );
+                    
+                    // API 응답 데이터를 컴포넌트 상태에 맞게 변환 및 최신순 정렬
+                    const formattedNotifications = filteredNotifications
+                        .map(notification => ({
+                            notificationId: notification.notificationId,
+                            content: notification.content,
+                            type: notification.type || "TEXT",
+                            sendTime: notification.sendTime,
+                            check: notification.check || false
+                        }))
+                        .sort((a, b) => new Date(b.sendTime) - new Date(a.sendTime)); // 최신순 정렬
+                    
+                    setMessages(formattedNotifications);
+                    
+                    // 읽지 않은 알림 개수 계산
+                    const unreadCount = formattedNotifications.filter(notification => !notification.check).length;
+                    setUnreadCount(unreadCount);
+                } else {
+                    setMessages([]);
+                    setUnreadCount(0);
+                }
+            } catch (error) {
+                console.error('알림 로드 중 오류:', error);
+                setMessages([]);
+                setUnreadCount(0);
+            } finally {
+                setIsDataLoaded(true); // 데이터 로딩 완료
             }
         };
 
-        loadInitialNotifications();
+        if (userEmail && userEmail !== '') {
+            loadInitialNotifications();
+        }
     }, [userEmail, getAllNotificationsAPI]);
 
     // WebSocket 연결 useEffect (userEmail이 변경될 때마다 항상 실행)
     useEffect(() => {
-        connectWebSocket();
+        if (userEmail && userEmail !== '') {
+            connectWebSocket();
 
-        return () => {
-            if (stompClientRef.current) {
-                stompClientRef.current.deactivate();
-            }
-        };
+            return () => {
+                if (stompClientRef.current) {
+                    stompClientRef.current.deactivate();
+                }
+            };
+        }
     }, [userEmail, connectWebSocket]);
 
     return (
         <>
             <div className="notification_container" data-count={messages.length}>
 
-                {/* 로딩 상태 표시 */}
-                {isLoading && (
-                    <div style={{ padding: '10px', textAlign: 'center', color: '#666' }}>
-                        알림 목록을 불러오는 중...
-                    </div>
-                )}
+                {/* 데이터 로딩이 완료되지 않은 경우 아무것도 렌더링하지 않음 */}
+                {!isDataLoaded && null}
 
-                {/* 읽지 않은 알림 개수 및 전체 읽음 처리 버튼 */}
-                {unreadCount > 0 && (
-                    <div className="notification_header">
-                        <span className="notification_unread_count">
-                            읽지 않은 알림 {unreadCount}개
-                        </span>
-                        <button 
-                            className="notification_mark_all_button"
-                            onClick={markAllAsRead}
-                            disabled={isLoading}
-                        >
-                            모두 읽음
-                        </button>
-                    </div>
-                )}
-
-                {/* 알림 목록 */}
-                {messages.length > 0 ? (
-                    messages.map((msg) => (
-                        <div 
-                            className={`notification_item ${msg.check ? 'notification_read' : 'notification_unread'}`}
-                            key={msg.notificationId}
-                            data-type={msg.type}
-                            onClick={() => markAsRead(msg.notificationId)}
-                        >
-                            <div className="notification_content">
-                                <span>{msg.content}</span>
+                {/* 데이터 로딩 완료 후 렌더링 */}
+                {isDataLoaded && (
+                    <>
+                        {/* 읽지 않은 알림 개수 및 전체 읽음 처리 버튼 */}
+                        {unreadCount > 0 && (
+                            <div className="notification_header">
+                                <span className="notification_unread_count">
+                                    읽지 않은 알림 {unreadCount}개
+                                </span>
+                                <button 
+                                    className="notification_mark_all_button"
+                                    onClick={markAllAsRead}
+                                    disabled={isLoading}
+                                >
+                                    모두 읽음
+                                </button>
                             </div>
-                            
-                            <div className="notification_meta">
-                                {msg.type && (
-                                    <div className="notification_type">
-                                        {msg.type === 'DIET' ? '🍎 식단' : 
-                                         msg.type === 'PAYMENT' ? '💳 결제' : '📝 기타'}
-                                    </div>
-                                )}
-                                {msg.sendTime && (
-                                    <div className="notification_timestamp">
-                                        {new Date(msg.sendTime).toLocaleString('ko-KR', {
-                                            month: 'short',
-                                            day: 'numeric',
-                                            hour: '2-digit',
-                                            minute: '2-digit'
-                                        })}
-                                    </div>
-                                )}
-                            </div>
+                        )}
 
-                            {/* 읽지 않은 알림 인디케이터 */}
-                            {!msg.check && <div className="notification_unread_indicator"></div>}
-                        </div>
-                    ))
-                ) : (
-                    <div className="notification_empty">
-                        📭 알림이 없습니다.
-                    </div>
+                        {/* 알림 목록 */}
+                        {messages.length > 0 ? (
+                            messages.map((msg) => (
+                                <div 
+                                    className={`notification_item ${msg.check ? 'notification_read' : 'notification_unread'}`}
+                                    key={msg.notificationId}
+                                    data-type={msg.type}
+                                    onClick={() => markAsRead(msg.notificationId)}
+                                >
+                                    <div className="notification_content">
+                                        <span>{msg.content}</span>
+                                    </div>
+                                    
+                                    <div className="notification_meta">
+                                        {msg.type && (
+                                            <div className="notification_type">
+                                                {msg.type === 'DIET' ? ' 식단' : 
+                                                 msg.type === 'PAYMENT' ? '결제' : ' 기타'}
+                                            </div>
+                                        )}
+                                        {msg.sendTime && (
+                                            <div className="notification_timestamp">
+                                                {new Date(msg.sendTime).toLocaleString('ko-KR', {
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                })}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* 읽지 않은 알림 인디케이터 */}
+                                    {!msg.check && <div className="notification_unread_indicator"></div>}
+                                </div>
+                            ))
+                        ) : (
+                            <div className="notification_empty">
+                                 알림이 없습니다.
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </>

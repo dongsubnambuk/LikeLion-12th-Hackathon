@@ -65,9 +65,7 @@
     border-color: #9d9274;
 }
 
-.survey_link.survey_completed {
-    cursor: not-allowed;
-}
+
 
 .survey_link.survey_completed:hover {
     background: #fafafa;
@@ -479,10 +477,6 @@
     background: #8a825f;
 }
 
-.survey_modal_submit_button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-}
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {

@@ -91,6 +91,14 @@
     border-left-color: #d0d0d0;
     border-left-width: 3px;
     opacity: 0.85;
+    cursor: not-allowed;
+}
+
+.notification_item.notification_read:hover {
+    background: inherit; 
+    transform: none;
+    box-shadow: none;
+    border-color: inherit;
 }
 
 .notification_item:hover {
@@ -244,21 +252,11 @@
     left: 0;
     right: 0;
     height: 20px;
-    background: linear-gradient(transparent, rgba(255, 255, 255, 0.8));
+
     pointer-events: none;
 }
 
-/* 애니메이션 효과 */
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
+
 
 .notification_item {
     animation: slideIn 0.3s ease-out;

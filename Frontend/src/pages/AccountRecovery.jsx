@@ -279,7 +279,7 @@ function AccountRecovery() {
                             onClick={handleGoBack}
                             className="accountrecover_btn accountrecover_btn-back"
                         >
-                            <span className="accountrecover_btn-text">← 이전 단계</span>
+                            <span className="accountrecover_btn-text">이전 단계</span>
                         </button>
                     </div>
                 )}

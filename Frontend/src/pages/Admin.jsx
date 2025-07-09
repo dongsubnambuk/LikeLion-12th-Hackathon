@@ -10,10 +10,12 @@ function Admin() {
   const [selectedDiet, setSelectedDiet] = useState(null);
   const [orders, setOrders] = useState([]);
   const [dietList, setDietList] = useState([]);
+  const [dietListWithImages, setDietListWithImages] = useState([]); // 이미지가 포함된 식단 목록
   const [currentPage, setCurrentPage] = useState(1);
   const [priceFilter, setPriceFilter] = useState('all');
   const [price, setPrice] = useState('');
   const [loading, setLoading] = useState(false);
+  const [imagesLoading, setImagesLoading] = useState(false); // 이미지 로딩 상태
   const [item, setItem] = useState({
     id: "",
     name: "",
@@ -38,8 +40,76 @@ function Admin() {
   });
   const navigate = useNavigate();
 
+  // 브라우저 히스토리 관리
+  useEffect(() => {
+    const handlePopState = (event) => {
+      if (event.state) {
+        const { tab, dietSubTab, dietDetailSubTab, selectedDiet } = event.state;
+        setActiveTab(tab || 'dashboard');
+        setDietSubTab(dietSubTab || 'create');
+        setDietDetailSubTab(dietDetailSubTab || 'list');
+        setSelectedDiet(selectedDiet || null);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    // 초기 상태를 히스토리에 추가
+    window.history.replaceState({
+      tab: activeTab,
+      dietSubTab: dietSubTab,
+      dietDetailSubTab: dietDetailSubTab,
+      selectedDiet: selectedDiet
+    }, '', window.location.pathname);
+
+    // 컴포넌트 언마운트 시 히스토리 정리
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      
+      // 히스토리 초기화 - 현재 페이지 상태만 남기고 모든 Admin 관련 히스토리 제거
+      if (window.history.state && (window.history.state.tab || window.history.state.dietSubTab)) {
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+    };
+  }, []);
+
+  // 탭 변경 시 히스토리 업데이트
+  const updateHistory = (newTab, newDietSubTab = dietSubTab, newDietDetailSubTab = dietDetailSubTab, newSelectedDiet = selectedDiet) => {
+    const state = {
+      tab: newTab,
+      dietSubTab: newDietSubTab,
+      dietDetailSubTab: newDietDetailSubTab,
+      selectedDiet: newSelectedDiet
+    };
+    
+    window.history.pushState(state, '', window.location.pathname);
+  };
+
+  // 탭 변경 핸들러들
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    if (tab === 'diet' && dietListWithImages.length === 0) {
+      loadDietListWithImages();
+    }
+    updateHistory(tab, dietSubTab, dietDetailSubTab, selectedDiet);
+  };
+
+  const handleDietSubTabChange = (subTab) => {
+    setDietSubTab(subTab);
+    setDietDetailSubTab('list');
+    if (subTab === 'list' && dietListWithImages.length === 0) {
+      loadDietListWithImages();
+    }
+    updateHistory(activeTab, subTab, 'list', selectedDiet);
+  };
+
   // 로그아웃 처리
   const handleLogout = async () => {
+    // 로그아웃 전 히스토리 정리
+    if (window.history.state && (window.history.state.tab || window.history.state.dietSubTab)) {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+    
     try {
       const response = await fetch('https://nimn.store/api/users/logout', {
         method: 'POST',
@@ -47,18 +117,15 @@ function Admin() {
       });
 
       if (response.ok) {
-        // 로컬스토리지 정리 (혹시 남아있을 수 있는 데이터)
         localStorage.removeItem("token");
         localStorage.removeItem("email");
         navigate("/");
       } else {
-        // 로그아웃 API 실패 시에도 프론트엔드에서 로그아웃 처리
         localStorage.removeItem("token");
         localStorage.removeItem("email");
         navigate("/");
       }
     } catch (error) {
-      // 에러 발생 시에도 프론트엔드에서 로그아웃 처리
       localStorage.removeItem("token");
       localStorage.removeItem("email");
       navigate("/");
@@ -104,10 +171,9 @@ function Admin() {
 
       const result = await response.json();
       
-      // API 응답 데이터를 UI에 맞는 형태로 변환
       const processedOrders = (result || []).map(order => ({
         id: order.id,
-        paymentDate: order.createdAt ? order.createdAt.split('T')[0] : '', // ISO 날짜에서 날짜 부분만 추출
+        paymentDate: order.createdAt ? order.createdAt.split('T')[0] : '',
         userName: order.purchaser || '알 수 없음',
         amount: order.totalPrice ? `${order.totalPrice}원` : '0원',
         weeklyDietId: order.weeklyDietId || '',
@@ -138,11 +204,11 @@ function Admin() {
       const imageUrl = URL.createObjectURL(blob);
       return imageUrl;
     } catch (error) {
-      return "";
+      return logo;
     }
   };
 
-  // 식단 목록 조회
+  // 식단 목록 조회 (이미지 없이)
   const fetchDietList = async () => {
     try {
       const response = await fetch('https://nimn.store/api/foods/plans', {
@@ -155,10 +221,23 @@ function Admin() {
       }
 
       const result = await response.json();
-      
-      // 각 식단의 이미지를 개별적으로 다운로드
+      setDietList(result || []);
+    } catch (error) {
+      setDietList([]);
+    }
+  };
+
+  // 식단 목록 조회 (이미지 포함) - 식단 탭에서만 호출
+  const loadDietListWithImages = async () => {
+    if (dietList.length === 0) {
+      await fetchDietList();
+    }
+    
+    setImagesLoading(true);
+    
+    try {
       const processedDietList = await Promise.all(
-        (result || []).map(async (diet) => {
+        dietList.map(async (diet) => {
           const imageUrl = await fetchImage(diet.image);
           return {
             ...diet,
@@ -167,9 +246,11 @@ function Admin() {
         })
       );
       
-      setDietList(processedDietList);
+      setDietListWithImages(processedDietList);
     } catch (error) {
-      setDietList([]);
+      setDietListWithImages(dietList.map(diet => ({ ...diet, image: logo })));
+    } finally {
+      setImagesLoading(false);
     }
   };
 
@@ -194,10 +275,9 @@ function Admin() {
 
       const result = await response.json();
       
-      // 생성된 식단의 이미지 다운로드
       const imageUrl = await fetchImage(result.image);
       
-      setItem({
+      const newItem = {
         id: result.id || "",
         name: result.name || "",
         main1: result.main1 || "",
@@ -213,10 +293,15 @@ function Admin() {
         sugar: result.sugar || "",
         sodium: result.sodium || "",
         image: imageUrl || logo
-      });
+      };
       
+      setItem(newItem);
       setItemVisible(true);
-      await fetchDietList(); // 목록 새로고침
+      
+      // 기존 목록 업데이트
+      await fetchDietList();
+      setDietListWithImages(prev => [newItem, ...prev]);
+      
       setPrice('');
       alert('식단이 생성되었습니다!');
     } catch (error) {
@@ -227,14 +312,36 @@ function Admin() {
   };
 
   // 식단 클릭 핸들러
-  const handleDietClick = (diet) => {
-    setSelectedDiet(diet);
+  const handleDietClick = async (diet) => {
+    let dietWithImage = diet;
+    
+    // 이미지가 없는 경우 또는 기본 logo인 경우 다운로드
+    if (!diet.image || diet.image === logo || typeof diet.image === 'string' && diet.image.includes('/api/')) {
+      const imageUrl = await fetchImage(diet.image);
+      dietWithImage = { ...diet, image: imageUrl };
+    }
+    
+    setSelectedDiet(dietWithImage);
+    
     if (activeTab === 'dashboard') {
       setActiveTab('diet');
       setDietSubTab('list');
       setDietDetailSubTab('detail');
+      
+      // 대시보드에서 클릭한 경우 이미지가 포함된 식단 목록도 업데이트
+      if (dietListWithImages.length === 0) {
+        loadDietListWithImages();
+      } else {
+        // 기존 목록에서 해당 식단의 이미지만 업데이트
+        setDietListWithImages(prev => prev.map(item => 
+          item.id === diet.id ? dietWithImage : item
+        ));
+      }
+      
+      updateHistory('diet', 'list', 'detail', dietWithImage);
     } else {
       setDietDetailSubTab('detail');
+      updateHistory(activeTab, dietSubTab, 'detail', dietWithImage);
     }
   };
 
@@ -243,27 +350,39 @@ function Admin() {
     setActiveTab('diet');
     setDietSubTab('list');
     setDietDetailSubTab('list');
+    if (dietListWithImages.length === 0) {
+      loadDietListWithImages();
+    }
+    updateHistory('diet', 'list', 'list', selectedDiet);
   };
 
   const handleViewMoreOrders = () => {
     setActiveTab('orders');
+    updateHistory('orders', dietSubTab, dietDetailSubTab, selectedDiet);
+  };
+
+  // 뒤로가기 핸들러
+  const handleBackToList = () => {
+    setDietDetailSubTab('list');
+    updateHistory(activeTab, dietSubTab, 'list', null);
   };
 
   // 가격 필터링
   const getFilteredDietList = () => {
+    const listToFilter = dietListWithImages.length > 0 ? dietListWithImages : dietList;
     if (priceFilter === 'all') {
-      return dietList;
+      return listToFilter;
     }
-    return dietList.filter(diet => diet.price === parseInt(priceFilter));
+    return listToFilter.filter(diet => diet.price === parseInt(priceFilter));
   };
 
   const filteredDietList = getFilteredDietList();
 
   // 컴포넌트 마운트 시 데이터 로드
   useEffect(() => {
-    fetchAdminInfo(); // 관리자 정보 조회
-    fetchDietList();
-    fetchOrders(); // 주문 목록 조회
+    fetchAdminInfo();
+    fetchDietList(); // 이미지 없는 기본 목록만 로드
+    fetchOrders();
   }, []);
 
   // 페이지네이션 계산
@@ -287,23 +406,23 @@ function Admin() {
         <nav className="admin_nav">
           <button 
             className={`admin_nav_button ${activeTab === 'dashboard' ? 'admin_nav_active' : ''}`}
-            onClick={() => setActiveTab('dashboard')}
+            onClick={() => handleTabChange('dashboard')}
           >
-            <span className="admin_nav_icon">📊</span>
+            <span className="admin_nav_icon"></span>
             <span className="admin_nav_text">대시보드</span>
           </button>
           <button 
             className={`admin_nav_button ${activeTab === 'diet' ? 'admin_nav_active' : ''}`}
-            onClick={() => setActiveTab('diet')}
+            onClick={() => handleTabChange('diet')}
           >
-            <span className="admin_nav_icon">🍽️</span>
+            <span className="admin_nav_icon"></span>
             <span className="admin_nav_text">식단 관리</span>
           </button>
           <button 
             className={`admin_nav_button ${activeTab === 'orders' ? 'admin_nav_active' : ''}`}
-            onClick={() => setActiveTab('orders')}
+            onClick={() => handleTabChange('orders')}
           >
-            <span className="admin_nav_icon">📦</span>
+            <span className="admin_nav_icon"></span>
             <span className="admin_nav_text">주문 관리</span>
           </button>
         </nav>
@@ -337,7 +456,7 @@ function Admin() {
                 <div className="admin_dashboard_card">
                   <div className="admin_card_header">
                     <h3 className="admin_card_title">생성된 식단</h3>
-                    <span className="admin_card_icon diet_icon">🍽️</span>
+
                   </div>
                   <div className="admin_card_content">
                     <div className="admin_card_number">{dietList.length}</div>
@@ -348,7 +467,7 @@ function Admin() {
                 <div className="admin_dashboard_card">
                   <div className="admin_card_header">
                     <h3 className="admin_card_title">총 주문</h3>
-                    <span className="admin_card_icon">📦</span>
+            
                   </div>
                   <div className="admin_card_content">
                     <div className="admin_card_number">{orders.length}</div>
@@ -463,21 +582,15 @@ function Admin() {
               <div className="admin_diet_subtabs">
                 <button 
                   className={`admin_subtab_btn ${dietSubTab === 'create' ? 'admin_subtab_active' : ''}`}
-                  onClick={() => {
-                    setDietSubTab('create');
-                    setDietDetailSubTab('list');
-                  }}
+                  onClick={() => handleDietSubTabChange('create')}
                 >
-                  🍽️ 식단 생성하기
+                  식단 생성하기
                 </button>
                 <button 
                   className={`admin_subtab_btn ${dietSubTab === 'list' ? 'admin_subtab_active' : ''}`}
-                  onClick={() => {
-                    setDietSubTab('list');
-                    setDietDetailSubTab('list');
-                  }}
+                  onClick={() => handleDietSubTabChange('list')}
                 >
-                  📋 생성된 식단 ({dietList.length})
+                  생성된 식단 ({dietList.length})
                 </button>
               </div>
 
@@ -638,8 +751,16 @@ function Admin() {
                           <span className="admin_list_count">총 {filteredDietList.length}개</span>
                         </div>
                       </div>
+                      
+                      {imagesLoading && (
+                        <div className="admin_spinner_container">
+                          <div className="admin_spinner"></div>
+                          <p className="admin_loading_text">이미지를 불러오는 중...</p>
+                        </div>
+                      )}
+                      
                       <div className="admin_diet_list_content">
-                        {filteredDietList.length > 0 ? (
+                        {!imagesLoading && filteredDietList.length > 0 ? (
                           <div className="admin_diet_list">
                             {filteredDietList.map((diet) => (
                               <div 
@@ -648,7 +769,7 @@ function Admin() {
                                 onClick={() => handleDietClick(diet)}
                               >
                                 <div className="admin_diet_list_image">
-                                  <img src={diet.image} alt={diet.name} />
+                                  <img src={diet.image || logo} alt={diet.name} />
                                 </div>
                                 <div className="admin_diet_list_info">
                                   <div className="admin_diet_list_name">{diet.name}</div>
@@ -671,20 +792,19 @@ function Admin() {
                               </div>
                             ))}
                           </div>
-                        ) : (
+                        ) : !imagesLoading && filteredDietList.length === 0 ? (
                           <div className="admin_empty_state">
-                            <div className="admin_empty_icon">🍽️</div>
                             <div className="admin_empty_text">해당 가격대의 식단이 없습니다.</div>
                             <div className="admin_empty_subtext">
                               <button 
                                 className="admin_empty_link"
-                                onClick={() => setDietSubTab('create')}
+                                onClick={() => handleDietSubTabChange('create')}
                               >
                                 새로운 식단 생성하기
                               </button>
                             </div>
                           </div>
-                        )}
+                        ) : null}
                       </div>
                     </div>
                   )}
@@ -695,9 +815,9 @@ function Admin() {
                       <div className="admin_diet_detail_header">
                         <button 
                           className="admin_back_btn"
-                          onClick={() => setDietDetailSubTab('list')}
+                          onClick={handleBackToList}
                         >
-                          ← 목록으로 돌아가기
+                          목록으로 돌아가기
                         </button>
                         <h3 className="admin_detail_main_title">{selectedDiet.name}</h3>
                       </div>
