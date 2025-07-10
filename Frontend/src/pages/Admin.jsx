@@ -755,7 +755,7 @@ function Admin() {
                       {imagesLoading && (
                         <div className="admin_spinner_container">
                           <div className="admin_spinner"></div>
-                          <p className="admin_loading_text">이미지를 불러오는 중...</p>
+                          <p className="admin_loading_text">식단 불러오는 중...</p>
                         </div>
                       )}
                       
