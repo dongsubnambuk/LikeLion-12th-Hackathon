@@ -16,5 +16,12 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     @Query("select new com.demo.nimn.dto.notification.NotificationDTO(n.id, n.content, n.type, n.sendTime, n.dailyReviewId, n.check, 0) from Notification n where n.userEmail = :userEmail")
     List<NotificationDTO> findAllByUserEmail(String userEmail);
 
-    List<Notification> findAllByUserEmailAndCheckIsFalse(String userEmail);
+    @Query("""
+    SELECT n
+      FROM Notification n
+     WHERE n.check = false
+       AND n.userEmail = :userEmail
+       AND n.type <> com.demo.nimn.enums.NotificationType.REVIEW
+    """)
+    List<Notification> finaAllByNonChecked(String userEmail);
 }

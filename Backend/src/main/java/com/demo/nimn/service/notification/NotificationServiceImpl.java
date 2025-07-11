@@ -215,7 +215,7 @@ public class NotificationServiceImpl implements NotificationService {
     // 유저의 모든 안읽은 메일 확인 전환
     @Override
     public NotificationCountDTO markAllAsRead(String userEmail) {
-        List<Notification> notifications = notificationRepository.findAllByUserEmailAndCheckIsFalse(userEmail);
+        List<Notification> notifications = notificationRepository.finaAllByNonChecked(userEmail);
 
         for (Notification notification : notifications) {
             notification.setCheck(Boolean.TRUE);
