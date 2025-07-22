@@ -100,7 +100,7 @@ npm start
 
 <p align="center">
   <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/ee0341a7-8aa1-4e41-b792-fff6408c4c56" />
-  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/e0c9f0e4-2259-4d82-9426-8df917bf6fed" />
+  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/715ea513-062a-40a7-894c-e6ac4a611484" />
   <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/7428b858-da32-40bc-bde4-4ef7b5a1da4f" />
 </p>
 
@@ -149,9 +149,9 @@ npm start
 ###  7.4. 결제 및 알림 시스템
 
 <p align="center">
-  <img width="300" height="638" alt="Image" src="https://github.com/user-attachments/assets/1c6b92c2-a4df-4cd6-a8fb-86836e8e4df7" />
-  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/602c6cc9-e95d-4381-9c4f-4240aa5f26c2" />
-  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/0cb4ada2-fae1-4dee-b730-041d3633a8b9" />
+  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/07054986-6252-42d5-85e9-3897ce31becc" />
+  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/659856ab-7e55-42a3-9162-7a1663afd62b" />
+  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/b54c9208-949d-4905-885f-4ae9c8745361" />
 </p>
 
 **핵심 기능:**
@@ -163,8 +163,8 @@ npm start
 
 ###  7.5. 리뷰 및 평가 시스템
 <p align="center" >
-  <img width="500" height="508" alt="Image" src="https://github.com/user-attachments/assets/4ca5f494-3767-44da-aa2d-5ab1e455e99d" />
-  <img width="500" height="508" alt="Image" src="https://github.com/user-attachments/assets/3732a89d-0032-4e18-97cc-ae4cf5cb580a" />
+ <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/dadd0e3c-7ee0-4b92-b92a-40eb4abace54" />
+<img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/277817be-2690-4b26-b6b7-6092f0ff11dd" />
 </p>
 
 **핵심 기능:**
@@ -175,9 +175,9 @@ npm start
 ###  7.6. 쿠키 및 이메일 인증 시스템
 
 <p align="center" >
-  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/12a51414-2a36-46d9-82df-3f0eb9408095" />
-  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/c5057165-dcfa-44eb-acbc-6a25568d18cf" />
-  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/a6dc9c5d-9283-47df-b1c1-732b4e9d6722" />
+  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/19c61132-4e03-4d8b-9bca-c2f501367860" />
+  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/5e13dee9-d550-4b0f-b848-a2c36f52c4c1" />
+  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/d904bec2-4aa7-4e9e-ada4-9b0710ebf8bd" />
 </p>
 
 **핵심 기능:**
