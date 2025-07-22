@@ -1,29 +1,30 @@
+<h1 align="center">우리동네영양사</h1>
+
 <p align="center">
   <img width="200px;" src="Frontend/src/images/logo.png" alt="로고"/>
 </p>
-<h1 align="center">우리동네영양사</h1>
 
-## 프로젝트 개요
+## 1. 프로젝트 개요
 
->개발 기간: 2024년 7월 ~ 2024년 8월  
+개발 기간: 2024년 7월 ~ 2024년 8월  
 리펙토링 기간: 2025년 6월 ~ 2025년 7월
 
-## 배포 주소
+## 2. 배포 주소
 
->메인 서비스:https://nimn.store
+메인 서비스: https://nimn.store
 
-## 팀 소개
+## 3. 팀 소개
 
 | **프로필** | ![종현](https://avatars.githubusercontent.com/u/127838675?v=4) | ![세민](https://avatars.githubusercontent.com/u/113248843?v=4) | ![동균](https://avatars.githubusercontent.com/u/107734276?v=4) | ![동섭](https://avatars.githubusercontent.com/u/105368619?v=40559e2f4-9356-4df9-b373-a06030bc0abb) | ![경락](https://avatars.githubusercontent.com/u/81566899?v=4) |
 | :-: | :-: | :-: | :-: | :-: | :-: |
-| **이름** | **[이종현(Lead)](https://github.com/2-jjong)** | **[류세민](https://github.com/ryusemin)** | **[한동균](https://github.com/hdg5639)** | **[서동섭](https://github.com/dongsubnambuk)** | **[손경락](https://github.com/ganglike248)** |
-| **역할** | Backend | Backend | Backend | Frontend |Frontend |
+| **이름** | **[이종현](https://github.com/2-jjong)** | **[류세민](https://github.com/ryusemin)** | **[한동균](https://github.com/hdg5639)** | **[서동섭](https://github.com/dongsubnambuk)** | **[손경락](https://github.com/ganglike248)** |
+| **역할** | PM, Backend | Backend | Backend | Frontend |Frontend |
 
-## 프로젝트 소개
+## 4. 프로젝트 소개
 
-> 우리 동네 영양사는 바쁜 현대인들을 위한 건강한 도시락 정기 구독 서비스이며, AI 영양사가 추천하는 균형잡힌 영양식단을 받아볼 수 있습니다.
+ 우리 동네 영양사는 바쁜 현대인들을 위한 건강한 도시락 정기 구독 서비스이며, AI 영양사가 추천하는 균형잡힌 영양식단을 받아볼 수 있습니다.
 
-### 서비스 상세 소개
+### 핵심 가치
 
 - **시간 절약**: 식단 계획, 쇼핑, 요리 시간을 절약하여 바쁜 일상 속에서도 건강한 식사 가능
 - **개인 맞춤화**: AI 기반 영양 분석을 통한 개인별 건강 목표에 최적화된 식단 제공
@@ -40,20 +41,37 @@
 - **편의성**: 완성된 도시락을 자택으로 배송하여 최대 편의성 제공
 - **지속가능성**: 개인 피드백을 통한 지속적인 서비스 개선
 
-## 기술 스택
+## 5. 기술 스택
 
-### Frontend
+###  Frontend
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Font Awesome](https://img.shields.io/badge/Font%20Awesome-339AF0?style=for-the-badge&logo=font-awesome&logoColor=white)
+![SockJS](https://img.shields.io/badge/SockJS-010101?style=for-the-badge&logo=spring&logoColor=white)
+![STOMP](https://img.shields.io/badge/STOMP-6DB33F?style=for-the-badge&logo=websocket&logoColor=white)
 
-### Backend
+###  Backend
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
+![Spring Security](https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=spring-security&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
+![WebSocket](https://img.shields.io/badge/WebSocket-333333?style=for-the-badge&logo=websocket&logoColor=white)
+![JPA](https://img.shields.io/badge/JPA-59666C?style=for-the-badge&logo=hibernate&logoColor=white)
+
+###  Database
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 
 ### DevOps & Deployment
 ![AWS](https://img.shields.io/badge/Amazon_AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
 ![EC2](https://img.shields.io/badge/Amazon_EC2-FF9900?style=for-the-badge&logo=amazon-ec2&logoColor=white)
 ![Nginx](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
+![Route 53](https://img.shields.io/badge/Route_53-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white)
 
-## 실행 방법
+### External APIs
+![OpenAI](https://img.shields.io/badge/OpenAI_API-412991?style=for-the-badge&logo=openai&logoColor=white)
+![Iamport](https://img.shields.io/badge/Iamport-0084FF?style=for-the-badge&logoColor=white)
+
+
+## 6. 실행 방법
 
 ### 요구사항
 
@@ -76,62 +94,96 @@ npm install
 npm start
 ```
 
-## 주요 기능
+## 7. 주요 기능
 
-### 1. 구독 설정 기능
+### 7.1. 메인페이지 및 전체 식단 소개
 
 <p align="center">
-  <img width="300" src="https://github.com/user-attachments/assets/d5a31e28-e57d-425a-ba57-0f84cdc21cb3" alt="구독설정1"/>
-  <img width="300" src="https://github.com/user-attachments/assets/a92e407e-ac25-4f65-8fa5-70a519090e59" alt="구독설정2"/>
-  <img width="300" src="https://github.com/user-attachments/assets/490dbda7-ddfc-43f9-a46e-4c3ac38f2b52" alt="구독설정3"/>
+  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/ee0341a7-8aa1-4e41-b792-fff6408c4c56" />
+  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/e0c9f0e4-2259-4d82-9426-8df917bf6fed" />
+  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/7428b858-da32-40bc-bde4-4ef7b5a1da4f" />
+</p>
+
+**핵심 기능:**
+- **접근성**: 사용자들의 진입 접근성을 고려해 웹사이트에서도 모바일 화면으로 볼 수 있게 구현
+  
+- **상단바**: 사용자들이 알림 또는 식단 리뷰를 쉽게 확인할 수 있는 진입점과 알림이 몇 개 왔는지 확인 가능
+  
+- **식단별 리뷰**: 전체 식단에서 각 식단별 리뷰 확인 가능
+
+---
+
+### 7.2. 구독 설정 기능
+
+<p align="center">
+<img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/4287ae27-ef39-4d61-b9c1-529a4b32475f" />
+<img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/eecc9ea9-7be7-4492-90e5-c52bf999678b" />
+<img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/2301bab9-275d-40b7-9aa8-77e8000de3da" />
 </p>
 
 **핵심 기능:**
 - **주 단위 구독**: 한 주 단위로 유연한 구독 설정
--  **식사 선택**: 아침, 점심, 저녁 중 원하는 식사만 선택 가능
+  
+-  **식사 선택**: 아침, 점심, 저녁 중 원하는 식사만 선택 가능 및 대체 식단 선택 가능
 
 ---
 
-### 2. 생성형AI 맞춤 식단 생성
-
+### 7.3. 생성형AI 맞춤 식단 생성
 
 <div align="center">
-  <img width="320" height="200" alt="AI식단1" src="https://github.com/user-attachments/assets/6376af80-010c-4d1a-997b-6c8a9a386e6d" />
-  <img width="320" height="400" alt="AI식단2" src="https://github.com/user-attachments/assets/b7c0e9b0-ac87-4666-918d-d75bb4c35e1b" />
-  <img width="320" height="200" alt="AI식단3" src="https://github.com/user-attachments/assets/d8234e5a-6cad-4859-b00d-645e65514f3a" />
+  <img width="700" height="600" alt="AI식단1" src="https://github.com/user-attachments/assets/6376af80-010c-4d1a-997b-6c8a9a386e6d" />
+  <img width="700" height="600" alt="AI식단2" src="https://github.com/user-attachments/assets/b7c0e9b0-ac87-4666-918d-d75bb4c35e1b" />
+  <img width="700" height="600" alt="AI식단3" src="https://github.com/user-attachments/assets/d8234e5a-6cad-4859-b00d-645e65514f3a" />
 </div>
 
 
 **핵심 기능:**
--  **개인 맞춤 추천**: 사용자의 선호도 기반 식단 반영
--  **영양 균형 관리**: 칼로리, 탄수화물, 단백질, 지방 등 영양성분 표시
--  **3가지 가격대**: 4,000원, 5,500원, 7,000원 메뉴로 구성
+-  **개인 맞춤 추천**: 사용자의 식단 리뷰를 통한 피드백을 반영한 OpenAI 기반 식단 생성
+  
+-  **영양 균형 관리**: 칼로리, 탄수화물, 단백질, 지방 등 영양성분을 표시하여 한눈에 영양 성분 확인 가능
+
+-  **3가지 가격대**: 4,000원, 5,500원, 7,000원 메뉴로 구성으로 각 금액에 맞는 다양한 식단 생성
 
 ---
 
-###  3. 결제 및 알림 시스템
+###  7.4. 결제 및 알림 시스템
 
 <p align="center">
-  <img width="450" src="https://github.com/user-attachments/assets/bd74cf0c-4621-4756-bfe2-d39715456700" alt="결제시스템"/>
-  <img width="300" src="https://github.com/user-attachments/assets/5043070a-ec48-49fd-b732-80bb0867a512" alt="알림시스템"/>
+  <img width="300" height="638" alt="Image" src="https://github.com/user-attachments/assets/1c6b92c2-a4df-4cd6-a8fb-86836e8e4df7" />
+  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/602c6cc9-e95d-4381-9c4f-4240aa5f26c2" />
+  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/0cb4ada2-fae1-4dee-b730-041d3633a8b9" />
 </p>
 
 **핵심 기능:**
--  **아임포트 결제**: 안전한 PG사 연동 결제 시스템
--  **실시간 알림**: WebSocket 기반으로 오늘의 메뉴, 리뷰 알림
+-  **아임포트 결제**: 포트원(아임포트)의 API를 연동하여 카카오페이, 네이버페이, 신용카드 등 다양한 결제 플랫폼 제공
+
+-  **실시간 알림**: WebSocket 기반으로 알림을 전송(09시, 12시, 18시)하여 오늘의 식단을 안내 받을 수 있음. 또한 구독기간 중 매일 21시에 식단 리뷰 알림이 전송되어 금일 식단에 대한 리뷰 요청 알림 제공
 
 ---
 
-###  4. 리뷰 및 평가 시스템
-
-<p align="center">
-  <img width="600" src="https://github.com/user-attachments/assets/fefb3fa5-9cb5-41fc-845b-35b62d904b71" alt="리뷰시스템"/>
+###  7.5. 리뷰 및 평가 시스템
+<p align="center" >
+  <img width="500" height="508" alt="Image" src="https://github.com/user-attachments/assets/4ca5f494-3767-44da-aa2d-5ab1e455e99d" />
+  <img width="500" height="508" alt="Image" src="https://github.com/user-attachments/assets/3732a89d-0032-4e18-97cc-ae4cf5cb580a" />
 </p>
 
 **핵심 기능:**
--  **별점 평가**: 5점 만점 별점 시스템
--  **상세 리뷰**: 음식에 대한 상세한 후기 작성
--  **리뷰 통계**: 음식별 평균 평점 및 리뷰 수 표시
+-  **별점 평가 및 상세 리뷰**: 사용자 피드백 기반 맞춤형 식단 개선을 위해 5점 만점 별점 평가와 상세 후기를 작성할 수 있는 직관적인 리뷰 시스템 제공
+
+---
+
+###  7.6. 쿠키 및 이메일 인증 시스템
+
+<p align="center" >
+  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/12a51414-2a36-46d9-82df-3f0eb9408095" />
+  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/c5057165-dcfa-44eb-acbc-6a25568d18cf" />
+  <img width="300" height="780" alt="Image" src="https://github.com/user-attachments/assets/a6dc9c5d-9283-47df-b1c1-732b4e9d6722" />
+</p>
+
+**핵심 기능:**
+-  **JWT 쿠키 기반 인증**: 클라이언트 측에서 토큰을 직접 관리할 필요가 없는 쿠키를 활용하여 JavaScript를 통한 토큰 탈취 방지
+
+-  **이메일 인증 시스템**: 실제 사용 가능한 이메일인지 확인하며, 추후 비밀번호 분실 시 안전한 계정 복구를 돕기 위한 이메일 인증 시스템 도입
 
 ---
 
