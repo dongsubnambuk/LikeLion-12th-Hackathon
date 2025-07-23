@@ -6,8 +6,9 @@
 
 ## 1. 프로젝트 개요
 
-개발 기간: 2024년 7월 ~ 2024년 8월  
-리펙토링 기간: 2025년 6월 ~ 2025년 7월
+### 진행기간
+- 개발 기간: 2024년 7월 ~ 2024년 8월  
+- 리펙토링 기간: 2025년 6월 ~ 2025년 7월
 
 ### 서비스 소개
 우리 동네 영양사는 바쁜 현대인들을 위한 건강한 도시락 정기 구독 서비스이며, AI 영양사가 추천하는 균형잡힌 영양식단을 받아볼 수 있습니다.
@@ -29,15 +30,20 @@
 - **편의성**: 완성된 도시락을 자택으로 배송하여 최대 편의성 제공
 - **지속가능성**: 개인 피드백을 통한 지속적인 서비스 개선
 
+## 2. 서비스 아키텍처
 
-## 2. 팀 소개
+<div align="center">
+  <img width="1000" height="600" alt="Image" src="https://github.com/user-attachments/assets/bfcc7fdd-c466-486d-a171-74aa1482cc60" />
+</div>
+
+## 3. 팀 소개
 
 | **프로필** | ![종현](https://avatars.githubusercontent.com/u/127838675?v=4) | ![세민](https://avatars.githubusercontent.com/u/113248843?v=4) | ![동균](https://avatars.githubusercontent.com/u/107734276?v=4) | ![동섭](https://avatars.githubusercontent.com/u/105368619?v=40559e2f4-9356-4df9-b373-a06030bc0abb) | ![경락](https://avatars.githubusercontent.com/u/81566899?v=4) |
 | :-: | :-: | :-: | :-: | :-: | :-: |
 | **이름** | **[이종현](https://github.com/2-jjong)** | **[류세민](https://github.com/ryusemin)** | **[한동균](https://github.com/hdg5639)** | **[서동섭](https://github.com/dongsubnambuk)** | **[손경락](https://github.com/ganglike248)** |
 | **역할** | PM, Backend | Backend | Backend | Frontend |Frontend |
 
-## 3. 기술 스택
+## 4. 기술 스택
 
 ###  Frontend
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
@@ -67,7 +73,7 @@
 ![Iamport](https://img.shields.io/badge/Iamport-0084FF?style=for-the-badge&logoColor=white)
 
 
-## 4. 실행 방법
+## 5. 실행 방법
 
 ### 요구사항
 
@@ -90,9 +96,9 @@ npm install
 npm start
 ```
 
-## 5. 주요 기능
+## 6. 주요 기능
 
-### 5.1. 메인페이지 및 전체 식단 소개
+### 6.1. 메인페이지 및 전체 식단 소개
 
 <table style="margin: 0 auto;">
   <tr>
@@ -109,7 +115,7 @@ npm start
 
 ---
 
-### 5.2. 구독 설정 기능
+### 6.2. 구독 설정 기능
 
 <table style="margin: 0 auto;">
   <tr>
@@ -125,7 +131,7 @@ npm start
 
 ---
 
-### 5.3. 생성형AI 맞춤 식단 생성
+### 6.3. 생성형AI 맞춤 식단 생성
 
 <div align="center">
 <table style="margin: 0 auto;">
@@ -142,7 +148,7 @@ npm start
 
 ---
 
-### 5.4. 결제 및 알림 시스템
+### 6.4. 결제 및 알림 시스템
 
 <table style="margin: 0 auto;">
   <tr>
@@ -158,7 +164,7 @@ npm start
 
 ---
 
-### 5.5. 리뷰 및 평가 시스템
+### 6.5. 리뷰 및 평가 시스템
 
 <div align="center">
 <table style="margin: 0 auto;">
@@ -174,7 +180,7 @@ npm start
 
 ---
 
-### 5.6. 쿠키 및 이메일 인증 시스템
+### 6.6. 쿠키 및 이메일 인증 시스템
 
 <table style="margin: 0 auto;">
   <tr>
