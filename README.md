@@ -32,9 +32,9 @@
 
 ## 2. 서비스 아키텍처
 
-<div align="center">
-  <img width="1000" height="600" alt="Image" src="https://github.com/user-attachments/assets/bfcc7fdd-c466-486d-a171-74aa1482cc60" />
-</div>
+
+  ![Image](https://github.com/user-attachments/assets/62c5a478-6494-41aa-bbc0-b4c1c8a2a7ee)
+
 
 ## 3. 팀 소개
 
@@ -199,4 +199,3 @@ npm start
 <p align="center">
   <strong> 건강한 식단, 편리한 생활을 위한 우리동네영양사를 경험해보세요!</strong>
 </p>
-
